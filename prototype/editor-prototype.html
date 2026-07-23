@@ -1,318 +1,501 @@
-<!-- PROTOTYPE — throwaway. EDITOR layout ("A2"): single-screen selection window,
-     all tables visible with dropdown affordances. The share CARD is a separate,
-     still-open design (user consciously splits editor UX from card presentation).
-     "T" or the Σ tab toggles the trait-tally drawer (visible during sigil selection).
-     Master-trait data = REAL Io rows from Maygi's MasterTraits CSV. -->
+<!-- PROTOTYPE — throwaway. EDITOR, carousel design (ticket 006 resolution,
+     2026-07-23 — supersedes the earlier single-screen A2 editor):
+     a windowed carousel on the card's slash background. Column width is fixed
+     at the MT unit (window/3); the window takes each page's own width and
+     ROLLS off/on screen when flipping (no in-frame sliding):
+       ① 40% — portrait+status | Skills · Over Mastery · Summons (one stack)
+       ② 46% — portrait+status | Weapon over Sigils (sigils col = 1.3 units)
+       ③ 60% — Master Traits only, 3 style columns
+     Trait checklist docks to the card's right edge on non-MT pages; ✕
+     collapses it to a Σ tab at the same anchor. Visual language =
+     card-prototype.html's A6 "slash match" with ▾ select affordances
+     re-skinned for the light theme. Same Io build data. -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>GBFR Sharecard — EDITOR prototype A2</title>
+<title>GBFR Sharecard — EDITOR prototype (carousel)</title>
 <style>
   :root{
     --bg:#0d1020; --panel:#171b30; --panel2:#1e2340; --line:#2c3357;
     --ink:#e8ebff; --dim:#8b93bd; --accent:#e8b34b;
     --insight:#b06cf0; --essence:#4bb3e8; --crux:#e85f6a; --sel:#2c8f5e;
+    /* faint GBFR-style crest tile (circles + four-pointed stars) — same as card */
+    --slashTex:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.06'%3E%3Ccircle cx='130' cy='130' r='95'/%3E%3Ccircle cx='130' cy='130' r='58'/%3E%3Cpath d='M130 12 L156 104 L248 130 L156 156 L130 248 L104 156 L12 130 L104 104 Z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23003a5c' stroke-opacity='.09'%3E%3Cpath d='M130 34 L151 109 L226 130 L151 151 L130 226 L109 151 L34 130 L109 109 Z'/%3E%3C/g%3E%3C/svg%3E");
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:#05060c;color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif}
-  #stage{position:relative;width:1920px;height:1080px;transform-origin:top left;margin:0 auto}
-  .card{position:absolute;inset:0;display:flex;background:
-    radial-gradient(1200px 700px at 70% -10%,#232a52 0%,var(--bg) 55%)}
-  .icon{display:inline-block;width:17px;height:17px;border-radius:4px;flex:none;
+  html,body{background:#05060c;color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;
+    overflow-x:hidden}
+  /* editor stage is the same fixed 1920x1080 as the card; wrapper scales it */
+  #stage{position:relative;width:1920px;height:1080px;transform-origin:top left;
+    /* slash radials: the hand-tuned 2026-07-23 card values, frozen */
+    --sx:-150px;--gx:80%;--gy:42%;--gr:620px;--ge:65%;
+    --pgx:50%;--pgy:50%;--pgr:650px;--pge:100%}
+  #stage .card{outline:1px solid rgba(232,179,75,.35)} /* debug: exact 1920x1080 bounds */
+  .card{position:absolute;inset:0;overflow:hidden}
+  .icon{display:inline-block;width:16px;height:16px;border-radius:4px;flex:none;
     background:linear-gradient(135deg,#3a4370,#232a52);border:1px solid var(--line)}
-  .icon.sm{width:14px;height:14px}
-  h3{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
-     border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:8px}
+  .icon.sm{width:13px;height:13px}
+  h3{font-size:14.5px;letter-spacing:.1em;text-transform:uppercase;
+     padding-bottom:4px;margin-bottom:7px}
   .lvl{color:var(--accent);font-variant-numeric:tabular-nums;font-weight:600}
   .dim{color:var(--dim)}
-
-  /* ---- columns ---- */
-  .c1{width:330px;background:rgba(0,0,0,.28);padding:16px;display:flex;flex-direction:column;
-      gap:13px;border-right:1px solid var(--line)}
-  .c2{width:480px;padding:16px;border-right:1px solid var(--line);display:flex;
-      flex-direction:column;gap:13px}
-  .c3{flex:1;padding:16px;display:flex;flex-direction:column;gap:10px}
-  .mtGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-  .skillGrid{display:flex;flex-direction:column;gap:6px}
-  .skill{display:flex;align-items:center;gap:9px;background:var(--panel);border-radius:5px;
-    padding:7px 12px;font-size:14px}
-  .skill .orb{width:18px;height:18px;border-radius:50%;flex:none;
-    background:radial-gradient(circle at 35% 30%,#ffd98a,#c2571b);border:1px solid #0006}
-  .skill .diamond{margin-left:auto;width:24px;height:24px;flex:none;transform:rotate(45deg);
-    background:linear-gradient(135deg,#8a2f35,#3d1114);border:1.5px solid #c46a4a;
-    border-radius:4px;margin-right:5px}
-  .summonGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:760px}
-  .summonCard{background:var(--panel);border-radius:6px;padding:8px 11px;display:flex;
-    flex-direction:column;gap:5px;font-size:13.5px}
-  .summonCard .row{display:flex;align-items:center;gap:7px}
-  .summonCard .row .grow{flex:1}
-  .summonCard .row .lvl{margin-left:auto}
-  .status{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
-  .status .stat{background:rgba(0,0,0,.22);border-radius:5px;padding:4px 9px;
-    display:flex;align-items:baseline;gap:7px}
-  .status .stat .lbl{font-size:11.5px;color:var(--dim)}
-  .status .stat .lvl{font-size:18.5px;margin-left:auto}
-  .charLvl{position:absolute;top:8px;left:8px;z-index:2;background:rgba(5,6,12,.75);
-    border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:13px}
-  .charLvl b{font-size:17px;color:var(--accent)}
-
-  /* ---- col 1: identity / over mastery / summons ---- */
-  .portraitWrap{position:relative;height:320px}
-  .portrait{position:absolute;inset:0;background:center/cover;
-    background-image:url("https://cdn.gbf.wiki/relink/Cmn_imgchr_0400_2.png");
-    background-position:38% 20%;background-size:190%;
-    -webkit-mask-image:linear-gradient(#000 55%,transparent 97%),
-      linear-gradient(90deg,transparent 0%,#000 14%,#000 86%,transparent 100%);
-    -webkit-mask-composite:source-in;
-    mask-image:linear-gradient(#000 55%,transparent 97%),
-      linear-gradient(90deg,transparent 0%,#000 14%,#000 86%,transparent 100%);
-    mask-composite:intersect}
-  .nameBadge{position:absolute;left:0;right:0;bottom:6px;padding:6px 16px;
-    background:linear-gradient(90deg,transparent,rgba(5,6,12,.9) 25%,rgba(5,6,12,.9) 75%,transparent);
-    font-size:26px;font-weight:700;display:flex;align-items:center;gap:10px;
-    justify-content:center}
-  .nameBadge .elem{width:20px;height:20px;border-radius:50%;flex:none;align-self:center;
-    background:radial-gradient(circle at 35% 30%,#ffd98a,#c2571b);border:1px solid #0006}
-  .kv{display:grid;grid-template-columns:1fr auto;gap:3px 8px;font-size:14px}
-  .kv>span{padding:2.5px 0;border-bottom:1px solid rgba(44,51,87,.5)}
-  .summon{display:grid;grid-template-columns:17px 1fr auto;gap:7px;align-items:center;
-    font-size:13.5px;padding:3.5px 0;border-bottom:1px solid rgba(44,51,87,.5)}
-  .summon .eb{grid-column:2/4;font-size:12px;color:var(--dim);padding-bottom:3px}
-
-  /* ---- col 2: weapon + sigils ---- */
-  .weapon{background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:8px;padding:11px 13px}
-  .wpnHead{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
-  .wpnName{font-size:18px;font-weight:700}
-  .wpnBase{display:flex;gap:16px;font-size:14px;margin:5px 0 7px;align-items:baseline}
-  .wpnBase .lvl{font-size:18px}
-  .trow{display:grid;grid-template-columns:17px 1fr auto;gap:7px;align-items:center;
-    font-size:13.5px;padding:3px 0;border-bottom:1px solid rgba(44,51,87,.45)}
-  .trow .rot{color:var(--essence);font-size:13px;margin-left:4px}
-  .imbue h4{font-size:11.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;
-    margin:8px 0 3px;display:flex;justify-content:space-between}
-  .sigilGrid{display:flex;flex-direction:column;gap:5px}
-  .sigil{display:grid;grid-template-columns:1fr 1fr 34px;gap:8px;align-items:center;
-    background:var(--panel);border-radius:5px;padding:5px 8px;font-size:14px}
-  .sigil .cell{display:flex;align-items:center;gap:7px;min-width:0}
+  .brand{position:absolute;bottom:8px;right:16px;font-size:11.5px;letter-spacing:.05em}
+  /* shared pieces (lifted from the card) */
+  .stat2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+    grid-auto-flow:column;gap:6px 8px}
+  .stat{background:rgba(0,0,0,.28);border-radius:5px;padding:4px 8px;display:flex;
+    align-items:baseline;gap:6px;min-width:0}
+  .stat .lbl{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis}
+  .stat .lvl{font-size:16px;margin-left:auto}
+  /* hanging unit suffix on the weapon base-stat chips (read-only, so the card's
+     number-alignment trick is kept there; the editable status cells drop it) */
+  .wbase .lvl{position:relative}
+  .wbase .lvl .suf{font-style:normal;font-size:70%;position:absolute;left:100%;bottom:1px}
+  .stat .sIcon,.wbase .sIcon{width:12px;height:12px;flex:none;align-self:center;
+    background:linear-gradient(135deg,#5a6f96,#2c3f63);transform:rotate(45deg);
+    border-radius:2px;margin-right:2px}
+  .s-hp .sIcon{background:linear-gradient(135deg,#8fdf63,#2f9c3c)}
+  .vA .s-hp .lvl{color:#3fa32e}
+  .vA .s-atk .lvl{color:#d9861f}
+  .kvline{display:flex;gap:8px;font-size:14px;padding:3px 0;align-items:baseline}
+  .kvline .lvl{margin-left:auto}
+  .grow{flex:1;min-width:0}
+  .sigil{display:grid;grid-template-columns:1fr 1fr 52px;gap:7px;align-items:center;
+    background:rgba(23,27,48,.85);border-radius:5px;padding:4px 8px;font-size:14.5px}
+  .sigil .cell{display:flex;align-items:center;gap:6px;min-width:0}
   .sigil .cell span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .sigil .sec{color:var(--dim)}
   .sigil .lvl{text-align:right}
-
-  /* ---- col 3: master traits, one card per style ---- */
-  .styleCol{background:rgba(0,0,0,.22);border-radius:8px;padding:10px 11px;display:flex;
-    flex-direction:column;gap:6px;border-top:3px solid var(--sc)}
-  .styleCol h4{font-size:16px;color:var(--sc)}
-  .rank{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;
+  .styleCol{background:rgba(0,0,0,.24);border-radius:8px;padding:11px 12px;display:flex;
+    flex-direction:column;gap:7px;border-top:3px solid var(--sc)}
+  .styleCol h4{font-size:17.5px;color:var(--sc)}
+  .rank{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;
     margin-top:3px;display:flex;justify-content:space-between}
-  .opts{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-  .opt{font-size:12.5px;line-height:1.15;padding:4px 6px;border-radius:4px;background:var(--panel);
-    color:var(--dim);border:1px solid transparent;height:30px;overflow:hidden;
-    display:flex;align-items:center;gap:5px}
-  .opt.long{font-size:11px;line-height:1.06;padding:2px 4px;gap:4px}
-  .opt.long .icon.sm{width:12px;height:12px}
-  .opt.on{background:rgba(44,143,94,.25);color:var(--ink);border-color:var(--sel)}
-  .mtFoot{grid-column:1/-1;font-size:12px;color:var(--dim);text-align:right}
-  .brand{position:absolute;bottom:6px;left:14px;font-size:11px;color:var(--dim)}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .opt{font-size:13px;line-height:1.12;padding:3px 7px;border-radius:4px;background:rgba(23,27,48,.6);
+    color:#5d6489;height:34px;overflow:hidden;display:flex;align-items:center;gap:6px}
+  .opt.long{font-size:11px;line-height:1.06;padding:2px 5px;gap:4px}
+  .opt.on{background:rgba(44,143,94,.28);color:var(--ink);box-shadow:inset 0 0 0 1px var(--sel)}
+  .skillRow{display:flex;align-items:center;gap:8px;font-size:15px;padding:3.5px 0;
+    border-bottom:1px solid rgba(44,51,87,.45)}
+  .orb{width:16px;height:16px;border-radius:50%;flex:none;
+    background:radial-gradient(circle at 35% 30%,#ffd98a,#c2571b);border:1px solid #0006}
+  .diamond{margin-left:auto;width:20px;height:20px;flex:none;transform:rotate(45deg);
+    background:linear-gradient(135deg,#8a2f35,#3d1114);border:1.5px solid #c46a4a;border-radius:3px}
+  /* trait + equip bonus each on their own full line */
+  .summonCard{background:rgba(23,27,48,.85);border-radius:6px;padding:8px 11px;
+    font-size:15px;display:flex;flex-direction:column;gap:5px}
+  .summonCard b{font-size:16px}
+  .summonCard .r{display:flex;gap:6px;align-items:center;min-width:0}
+  .summonCard .r .lvl{margin-left:auto}
+  .wpanel{background:rgba(0,0,0,.24);border:1px solid var(--line);border-radius:8px;
+    padding:10px 13px;position:relative}
+  /* render rides the panel's top-right corner as a thumb — a full-width image
+     strip doesn't fit the single-unit weapon+sigils stack */
+  .wpanel .wimg{position:absolute;top:2px;right:8px;width:180px;height:62px;
+    pointer-events:none;
+    background:url("weapon-caduceus-relink.png") center/contain no-repeat;
+    transform:rotate(-14deg)}
+  .wname{font-size:17px;font-weight:700}
+  .wbase{display:flex;gap:4px;font-size:12.5px;margin:4px 0 6px;align-items:baseline}
+  .wbase>span{padding:2px 12px 2px 13px;display:inline-flex;align-items:center;gap:7px;
+    flex:1;min-width:0;
+    background:linear-gradient(90deg,rgba(106,147,181,.3),
+      rgba(106,147,181,.4) calc(100% - 12px),rgba(106,147,181,0))
+      bottom/100% 40% no-repeat;
+    clip-path:polygon(17px 0,100% 0,100% 100%,0 100%)}
+  .wbase>span .lvl{margin-left:auto}
+  .wbase .lvl{font-size:16px}
+  .trow{display:grid;grid-template-columns:16px 1fr auto;gap:7px;align-items:center;
+    font-size:14.5px;padding:3px 0;border-bottom:1px solid rgba(44,51,87,.4)}
+  .imh{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;
+    margin:12px 0 2px;display:flex;justify-content:space-between;align-items:center}
 
-  /* ---- editor affordances (always on — this IS the editor) ---- */
-  .sel{position:relative;border:1px solid var(--line);border-radius:4px;
-    background:var(--panel2);padding-right:16px !important}
-  .sel::after{content:"▾";position:absolute;right:4px;top:50%;transform:translateY(-50%);
-    font-size:9px;color:var(--dim)}
-  .opt{cursor:pointer}
-  .opt{border-color:var(--line)}
-  .opt.on{border-color:var(--sel)}
-  .lvl.sel{padding:1px 16px 1px 5px}
+  /* ===== windowed carousel scaffold (the thing under evaluation) ===== */
+  .mainWrap{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px}
+  .tabs{display:flex;gap:8px;align-items:center;justify-content:center}
+  .tabs .tab{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:14.5px;
+    letter-spacing:.09em;text-transform:uppercase;padding:9px 26px;border-radius:5px;
+    color:#5f7188;background:rgba(255,255,255,.55);box-shadow:inset 0 0 0 1px #dbe6f0}
+  .tabs .tab.on{color:#0e3348;
+    background:linear-gradient(90deg,#79b6d4 0%,#9cc6dd 60%,#b9d7e8 100%);box-shadow:none}
+  .tabs .tab:not(.on):hover{background:rgba(255,255,255,.9)}
+  /* arrows flank the window and swallow ALL remaining horizontal space at the
+     window's height — bare glyph normally, the whole hit area lights on hover */
+  /* 85% tall (up from 80%) so the sigil stack fits at its default spacing */
+  .carouselRow{display:flex;width:100%;height:83%;align-items:stretch}
+  .arr{flex:1;border:0;cursor:pointer;font-family:inherit;font-size:150px;line-height:1;
+    background:transparent;color:rgba(14,51,72,.35)}
+  .arr:hover{color:#0e3348}
+  /* glyph pinned at a fixed distance from the stage edge — the strip still
+     flexes with the window width, but the arrow itself never moves */
+  #prev{text-align:left;padding-left:110px}
+  #next{text-align:right;padding-right:110px}
+  /* hover wash: ~40% white at the outer edge fading to nothing toward the window */
+  #prev:hover{background:linear-gradient(90deg,rgba(255,255,255,.4) 0%,rgba(255,255,255,0) 100%)}
+  #next:hover{background:linear-gradient(270deg,rgba(255,255,255,.4) 0%,rgba(255,255,255,0) 100%)}
+  /* the window: 80% tall; 60% wide = 3 column units (master traits), 40% = 2
+     units on the other pages — column width never changes. Page changes roll
+     the WHOLE window off-screen and the next one (already at its own size)
+     rolls in from the opposite side — content never slides inside the frame */
+  /* winWrap carries the width + the roll transform; toggle and popover live
+     inside it, so they travel with the card */
+  .winWrap{position:relative;width:60%;flex:none;height:100%}
+  .winWrap.narrow{width:40%}   /* page ①: 2 equal units */
+  .winWrap.gear{width:46%}     /* page ②: unit + 1.3-unit sigils column */
+  .viewport{width:100%;height:100%;overflow:hidden;border-radius:12px;
+    background:rgba(255,255,255,.45);border:1px solid #c3d4e4;
+    box-shadow:0 8px 40px rgba(23,60,90,.18);backdrop-filter:blur(4px)}
+  .page.pGear{grid-template-columns:1fr 1.3fr}
+  /* non-MT pages are 2-equal-column grids (portrait | stack); only the
+     master-traits page spreads to its own 3 columns inside a full-width span */
+  .page{height:100%;overflow:hidden;padding:14px 16px;display:grid;
+    grid-template-columns:repeat(2,1fr);gap:14px}
 
-  /* ---- trait tally drawer ---- */
-  #tallyTab{position:absolute;right:0;top:340px;z-index:5;writing-mode:vertical-rl;
-    background:var(--accent);color:#1a1405;font-weight:700;font-size:13px;
-    padding:10px 6px;border-radius:6px 0 0 6px;cursor:pointer;letter-spacing:.06em}
-  #tally{position:absolute;right:0;top:0;height:100%;width:300px;z-index:4;
-    background:#10132a;border-left:2px solid var(--accent);padding:16px;
-    transform:translateX(100%);transition:transform .18s ease;overflow-y:auto}
-  #tally.open{transform:none}
-  #tally.open + #tallyTab{right:300px}
-  .tallyRow{display:flex;align-items:center;gap:8px;font-size:13.5px;
-    padding:3.5px 0;border-bottom:1px solid rgba(44,51,87,.5)}
-  .tallyRow .lvl{margin-left:auto}
-  .tallyRow .max{color:var(--dim);font-size:11.5px;width:34px;text-align:right}
+  /* ---- per-page identity column (pages ① and ②) ---- */
+  .pcol{position:relative;display:flex;flex-direction:column;
+    justify-content:flex-end;min-width:0}
+  .pcol .p{position:absolute;left:0;right:0;top:0;height:76%;background:top/cover;
+    background-image:url("https://cdn.gbf.wiki/relink/Cmn_imgchr_0400_2.png");
+    background-position:center -30px;background-size:auto 115%;
+    mask-image:linear-gradient(#000 92%,transparent 99%),
+      linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+    mask-composite:intersect;
+    -webkit-mask-image:linear-gradient(#000 92%,transparent 99%),
+      linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+    -webkit-mask-composite:source-in}
+  .pcol .lvlChip{position:absolute;top:6px;left:6px;z-index:2;background:rgba(5,6,12,.75);
+    border:1px solid var(--line);border-radius:6px;padding:2px 10px;font-size:13px}
+  .pcol .lvlChip b{font-size:16px;color:var(--accent)}
+  .pcol .nb{position:relative;z-index:2;padding:5px 14px;
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    background:linear-gradient(90deg,transparent,rgba(5,63,99,.88) 30%,rgba(5,63,99,.88) 70%,transparent);
+    font-size:22px;font-weight:700;margin:0 8px 12px;color:#fff}
+  .pcol section{position:relative;z-index:2;border-radius:8px;padding:10px 12px}
+
+  /* ---- page layouts ----
+     card-prototype rhythm: heading→its body 7px, section→section 18px
+     (flex gap = 18, h3's 7px margin pulled back by -11 nets the 7) */
+  .col{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .pg3{grid-column:1/-1;min-width:0;display:flex;flex-direction:column;gap:14px}
+  .mtGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;flex:1;align-items:start}
+  .sStack{display:flex;flex-direction:column;gap:3px}
+  .sigilStack{display:flex;flex-direction:column;gap:2px}
+  .skillStack{display:flex;flex-direction:column;gap:6px}
+
+  /* ===== light theme + diagonal slash (card A6) ===== */
+  .vA{color:#16233b;background:linear-gradient(160deg,#f4f8fc 0%,#e8eff7 60%,#dfe9f4 100%)}
+  .vA::before{content:"";position:absolute;left:var(--sx);top:-360px;width:720px;height:1800px;
+    background:
+      var(--slashTex) 0 0/260px 260px repeat,
+      radial-gradient(circle var(--gr) at var(--gx) var(--gy),
+        #4cc4e2 0%,#2aa6cb calc(var(--ge)*.32),#1a86ad calc(var(--ge)*.57),
+        #10719c calc(var(--ge)*.77),#0a5d86 var(--ge),
+        #053f63 calc(var(--ge)*1.3));
+    transform:rotate(13deg);transform-origin:top left;z-index:0}
+  .vA::after{content:"";position:absolute;left:calc(var(--sx) + 730px);top:-360px;width:26px;
+    height:1800px;background:rgba(255,255,255,.55);
+    transform:rotate(13deg);transform-origin:top left;z-index:0}
+  .vA h3{color:#0e3348;border:none;padding:4px 12px;border-radius:4px;
+    background:linear-gradient(90deg,#79b6d4 0%,#9cc6dd 45%,rgba(156,198,221,0) 100%)}
+  /* heading→body 7px under the 18px section gaps (same trick as the card);
+     row2's sub-columns have gap:0, so the h3's own 7px margin already lands right */
+  .col>h3,.pg3>h3{margin-bottom:-7px} /* keeps heading→body at 7px under the 14px gap */
+  .vA h3{font-size:15px}
+  .kvline:last-child,.skillRow:last-child,.trow:last-child,
+  .trow:has(+.imh){border-bottom:none;padding-bottom:0}
+  .vA .summonCard>.r.strip{margin:-8px -11px 3px;padding:4px 11px;
+    background:linear-gradient(90deg,#ecaf4a 0%,#d37c35 55%,#be5230 100%);
+    border-radius:6px 6px 0 0;align-items:center}
+  .vA .summonCard>.r.strip b{color:#fff;text-shadow:0 1px 2px rgba(90,30,0,.55)}
+  .vA .summonCard>.r.strip .icon{border-color:#a5502a;
+    background:linear-gradient(135deg,#ffd9a0,#c96a2c)}
+  .vA .dim,.vA .rank,.vA .stat .lbl{color:#5f7188}
+  .vA .lvl{color:#b06e12}
+  .vA .pcol section{background:rgba(255,255,255,.78);backdrop-filter:blur(3px);
+    box-shadow:0 1px 6px rgba(23,60,90,.12)}
+  .vA .stat{background:rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px #dbe6f0}
+  .vA .kvline,.vA .skillRow{border-color:#d7e2ee}
+  .vA .wpanel{background:rgba(255,255,255,.8);border-color:#c3d4e4;
+    box-shadow:0 1px 6px rgba(23,60,90,.1)}
+  .vA .trow{border-color:#dbe6f0}
+  .vA .sigil{background:rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px #dbe6f0}
+  .vA .sigil .sec{color:#5f7188}
+  .vA .summonCard{background:rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px #dbe6f0}
+  .vA .icon{background:linear-gradient(135deg,#c2d3e6,#93aecb);border-color:#a5bcd4}
+  .vA .brand{color:#7c8da3}
+
+  /* ===== master traits — slash-match panels (card mt6), full-window page ③ ===== */
+  .mt6 .pg3>h3{color:#fff;text-shadow:0 1px 3px rgba(10,50,70,.5);
+    background:linear-gradient(90deg,#2aa6cb 0%,#10719c 45%,rgba(16,113,156,0) 100%)}
+  .mt6 .styleCol{color:#f2fafd;
+    background:
+      var(--slashTex) 0 0/260px 260px repeat,
+      radial-gradient(circle var(--pgr) at var(--pgx) var(--pgy),
+        #1a86ad 0%,#10719c calc(var(--pge)*.32),#0a5d86 calc(var(--pge)*.57),
+        #053f63 calc(var(--pge)*.77),#04304f var(--pge),#02203a calc(var(--pge)*1.3));
+    box-shadow:0 1px 8px rgba(5,63,99,.4),inset 0 0 44px rgba(76,196,226,.15)}
+  .mt6 .styleCol h4{color:#fff;text-shadow:0 1px 3px rgba(10,50,70,.55)}
+  .vA .mtH{display:flex;justify-content:space-between;align-items:baseline}
+  .vA .mtH span{font-size:13.5px;text-transform:none;letter-spacing:.02em;
+    font-weight:600;color:#d5eef8;text-shadow:none}
+  /* stretched: extra air above each rank header + taller panel padding fills
+     the 83% window so the MT page sits vertically snug */
+  .mt6 .styleCol .rank{color:#d5eef8;margin-top:17px}
+  .mt6 .styleCol{padding-top:14px;padding-bottom:14px}
+  .mt6 .opt{background:rgba(11,46,61,.3);color:#a8d4e4}
+  .mt6 .opt.on{color:#fff;
+    background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(26,134,173,.3));
+    box-shadow:inset 0 0 0 1px #b8ecf8}
+  .mt6 .styleCol .icon{background:linear-gradient(135deg,#7fd4f8,#2f6ec2);border-color:#5090d8}
+  .pg3 .opt{cursor:pointer}
+  .pg3 .opt:hover{box-shadow:inset 0 0 0 1px #7fd4f8}
+
+  /* ---- trait checklist: persistent popover, pinned over the window's right edge ---- */
+  /* trait checklist: appended flush to the card's right edge, rolls with it */
+  #chkPop{position:absolute;left:calc(100% + 14px);top:0;width:280px;
+    z-index:3;background:rgba(255,255,255,.94);border:1px solid #c3d4e4;border-radius:10px;
+    box-shadow:0 10px 34px rgba(23,60,90,.3);padding:12px 14px;backdrop-filter:blur(4px)}
+  #chkPop .trow{font-size:13.5px;padding:2.5px 0}
+  /* popover header: title + × close button */
+  #chkPop h3{display:flex;align-items:center;justify-content:space-between}
+  #chkClose{border:0;background:transparent;cursor:pointer;font-family:inherit;
+    font-size:17px;line-height:1;color:#5f7188;padding:0 2px}
+  #chkClose:hover{color:#0e3348}
+  /* closed state: the popover collapses into a slim Σ tab flush on the card's
+     right edge — same anchor, two states. Non-MT pages only, like the popover */
+  #chkTab{position:absolute;left:100%;top:10px;z-index:3;border:0;cursor:pointer;
+    font-family:inherit;font-weight:700;font-size:14px;letter-spacing:.08em;
+    writing-mode:vertical-rl;padding:12px 7px;border-radius:0 8px 8px 0;
+    color:#0e3348;background:linear-gradient(#79b6d4,#9cc6dd);
+    box-shadow:2px 2px 10px rgba(23,60,90,.25)}
+  #chkTab:hover{background:linear-gradient(#8cc2dd,#b0d2e5)}
+  .hidden{display:none !important}
+
+  /* ===== editor affordances, light-theme skin (this IS the editor) ===== */
+  .sel{position:relative;border:1px solid #b7cadd;border-radius:4px;
+    background:rgba(255,255,255,.92);padding:1px 18px 1px 6px;cursor:pointer}
+  .sel::after{content:"▾";position:absolute;right:5px;top:50%;transform:translateY(-50%);
+    font-size:9px;color:#5f7188}
+  .skillRow.sel{padding:6px 24px 6px 9px;border-bottom:none}
+  .skillRow.sel .diamond{margin-right:8px}
+  .sigil .cell.sel,.sigil .lvl.sel{padding:2px 14px 2px 4px}
+  .strip .sel{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.45)}
+  .strip .sel::after{color:rgba(255,255,255,.75)}
+  .imh .sel{text-transform:none;letter-spacing:0}
 </style>
 </head>
 <body>
 <div id="stage"></div>
 
 <script>
-/* ------- sample Build (Io) — master traits are REAL rows from Maygi's CSV ------- */
+/* ---- same Io build as the card prototype ---- */
 const D = {
   name:"Io", level:100,
-  status:[
-    { t:"HP", v:"124210" }, { t:"ATK", v:"73460" },
-    { t:"Crit. Hit Rate", v:"95%" }, { t:"Stun Power", v:"326" },
-  ],
+  status:[["HP","124210"],["ATK","73460"],["Crit. Hit Rate","95%"],["Stun Power","326"]],
   skills:["Stargaze","Concentration","Mystic Vortex","Flowery Seven"],
-  overMastery:[
-    { t:"Critical Hit Rate Up", v:"+20%" },
-    { t:"Normal Attack DMG Cap Up", v:"+16%" },
-    { t:"Skill DMG Cap Up", v:"+16%" },
-    { t:"Attack Power Up", v:"+800" },
-  ],
+  overMastery:[["Critical Hit Rate Up","+20%"],["Normal Attack DMG Cap Up","+16%"],
+    ["Skill DMG Cap Up","+16%"],["Attack Power Up","+800"]],
   summons:[
     { n:"Bahamut", t:"War Elemental", l:15, ebT:"ATK", ebV:"+2410" },
     { n:"Kaguya", t:"Berserker Echo", l:15, ebT:"HP", ebV:"+4800" },
     { n:"Alexiel", t:"Spartan Echo", l:15, ebT:"Skill DMG Cap", ebV:"+80%" },
     { n:"Belial", t:"Supplementary DMG", l:15, ebT:"Crit Rate", ebV:"+24%" },
   ],
-  weapon:{
-    name:"Caduceus +99", series:"Terminus", level:150, hp:1159, atk:20583, crit:0, stun:0,
-    traits:[
-      { t:"Catastrophe Nova", l:35, rot:false },
-      { t:"Tyranny",          l:25, rot:true  },   /* ⇄ rotatable 2nd slot */
-      { t:"DMG Cap",          l:15, rot:false },
-      { t:"Sigil Booster",    l:1,  rot:false },
-      { t:"Unbound Master",   l:55, rot:false },
-    ],
-    wrightstone:{ name:"Sage's Wrightstone",
-      rows:[ {t:"HP",l:20},{t:"Nimble Onslaught",l:15},{t:"Autorevive",l:10} ] },
-  },
+  weapon:{ name:"Caduceus +99", series:"Terminus", level:150, hp:1159, atk:20583, crit:0, stun:0,
+    traits:[["Catastrophe Nova",35,0],["Tyranny",25,1],["DMG Cap",15,0],
+      ["Sigil Booster",1,0],["Unbound Master",55,0]],
+    ws:{ name:"Sage's Wrightstone", rows:[["HP",20],["Nimble Onslaught",15],["Autorevive",10]] } },
   sigils:[
-    { p:"Stun Power", s:"Damage Cap", l:15 },
-    { p:"Stun Power", s:"Damage Cap", l:15 },
-    { p:"Stun Power", s:"Damage Cap", l:15 },
-    { p:"HP", s:"Celestial Aqua", l:15 },
-    { p:"HP", s:"Celestial Ventus", l:15 },
-    { p:"Quick Cooldown", s:"Celestial Lumen", l:15 },
-    { p:"Quick Cooldown", s:"Fatebreaker", l:15 },
-    { p:"Quick Cooldown", s:"Supplementary DMG", l:15 },
-    { p:"Cascade", s:"Supplementary DMG", l:15 },
-    { p:"Improved Dodge", s:"Steady Focus", l:15 },
-    { p:"Character Sigil", s:"Quick Charge", l:15 },
-    { p:"Warpath", s:"Quick Charge", l:15 },
+    ["Stun Power","Damage Cap",15],["Stun Power","Damage Cap",15],["Stun Power","Damage Cap",15],
+    ["HP","Celestial Aqua",15],["HP","Celestial Ventus",15],["Quick Cooldown","Celestial Lumen",15],
+    ["Quick Cooldown","Fatebreaker",15],["Quick Cooldown","Supplementary DMG",15],
+    ["Cascade","Supplementary DMG",15],["Improved Dodge","Steady Focus",15],
+    ["Character Sigil","Quick Charge",15],["Warpath","Quick Charge",15],
   ],
   perks:"Insight Perk 2 · Essence Perk 3 · Crux Perk 1",
 };
-
-/* Io master traits, verbatim from the MasterTraits CSV (ids 1–30 per style). */
 const MT = {
   Insight:{ v:"--insight", ranks:{
-    "Style Rank 1":["SG Charge -5%","SG Cap 35%","DMG Cap +20%","Max HP +15k"],
-    "Style Rank 2":["(*) Stargaze BATK +5%","(**) Stargaze V DMG +10%","(**) Concen. Dura. +10%","Concen. CD -5%","Mystic Vortex CD -5%","DMG Cap +25%","ATK +30%","Cap 100% with Poison"],
-    "Style Rank 3":["(*) Stargaze BATK +10%","(**) Stargaze V DMG +15%","(**) Concentration Cut 20%","SG Cap 35%","Concentration CD -5%","Cap +20% * Basic","Guard Break +7%","Max HP +15k"],
-    "Style Rank EX":["(**) Stargaze V DMG +25%","Vortex DEF Up 10%","Gravity Cap 45%","Dodge Shield 1000","Cap +20% * Basic","Crit Rate +25%","Crit DMG +9%","DMG Cap +30%","Summon Cost -1","DMG Cap +30%"],
-  }, sel:{ "Style Rank 1":[1,2],"Style Rank 2":[5,6],"Style Rank 3":[3],"Style Rank EX":[7] } },
+    "Rank 1":["SG Charge -5%","SG Cap 35%","DMG Cap +20%","Max HP +15k"],
+    "Rank 2":["(*) Stargaze BATK +5%","(**) Stargaze V DMG +10%","(**) Concen. Dura. +10%","Concen. CD -5%","Mystic Vortex CD -5%","DMG Cap +25%","ATK +30%","Cap 100% with Poison"],
+    "Rank 3":["(*) Stargaze BATK +10%","(**) Stargaze V DMG +15%","(**) Concentration Cut 20%","SG Cap 35%","Concentration CD -5%","Cap +20% * Basic","Guard Break +7%","Max HP +15k"],
+    "Rank EX":["(**) Stargaze V DMG +25%","Vortex DEF Up 10%","Gravity Cap 45%","Dodge Shield 1000","Cap +20% * Basic","Crit Rate +25%","Crit DMG +9%","DMG Cap +30%","Summon Cost -1","DMG Cap +30%"],
+  }, sel:{ "Rank 1":[1,2],"Rank 2":[5,6],"Rank 3":[3],"Rank EX":[7] } },
   Essence:{ v:"--essence", ranks:{
-    "Style Rank 1":["Skill CD -2%","SG Cap 35%","DMG Cap +20%","DEF +5%"],
-    "Style Rank 2":["Skill CD -3%","Skills ATK +10% (*)","Lightning CD -5%","Freeze ATK +10%","Fire ATK +10%","Skill DMG Cap 35%","Max HP +15k","Burn DMG Cap 100"],
-    "Style Rank 3":["(**) Magic Chain Dur +20%","(**) Magic Chain Dmg x1.5","(***) Fire+Lightning AoE Dura. 10%","DMG Cap +30%","Gravity Well ATK 10%","ATK+10%*Attack","Chain Burst Cap 40%","ATK +30%"],
-    "Style Rank EX":["Freeze+Lightning +10% (***)","Lightning Paralyze+2s","Freeze DMG Cap 45%","Fire DMG Cap 45%","DMG Cap +30%","ATK+20% Cap+50% Restriction 50%","ATK+10% * Attack","DMG Cap +30%","Summon Cost +1","DMG Cap +30%"],
-  }, sel:{ "Style Rank 1":[0,2],"Style Rank 2":[0,1,5],"Style Rank 3":[0,1,3,6],"Style Rank EX":[1,2,4,5,7] } },
+    "Rank 1":["Skill CD -2%","SG Cap 35%","DMG Cap +20%","DEF +5%"],
+    "Rank 2":["Skill CD -3%","Skills ATK +10% (*)","Lightning CD -5%","Freeze ATK +10%","Fire ATK +10%","Skill DMG Cap 35%","Max HP +15k","Burn DMG Cap 100"],
+    "Rank 3":["(**) Magic Chain Dur +20%","(**) Magic Chain Dmg x1.5","(***) Fire+Lightning AoE Dura. 10%","DMG Cap +30%","Gravity Well ATK 10%","ATK+10%*Attack","Chain Burst Cap 40%","ATK +30%"],
+    "Rank EX":["Freeze+Lightning +10% (***)","Lightning Paralyze+2s","Freeze DMG Cap 45%","Fire DMG Cap 45%","DMG Cap +30%","ATK+20% Cap+50% Restriction 50%","ATK+10% * Attack","DMG Cap +30%","Summon Cost +1","DMG Cap +30%"],
+  }, sel:{ "Rank 1":[0,2],"Rank 2":[0,1,5],"Rank 3":[0,1,3,6],"Rank EX":[1,2,4,5,7] } },
   Crux:{ v:"--crux", ranks:{
-    "Style Rank 1":["SG Charge -5%","SG ATK +10%","DMG Cap +20%","Max HP +15k"],
-    "Style Rank 2":["F7 CD -1%","F7 ATK 10%","Charging F7 DEF +5%","F7 Cap 45%","Heal Winds→Shield 3k","Normal A. Cap 35%","Crit Rate +15%","Cap 100% with Blight"],
-    "Style Rank 3":["F7 Charge -5%","(**) F7 ATK+10% Cap+50%","Charge Unique -5%","Skill DMG Cap 35%","F7 Stack ATK -5%","HP+10k*Def-Supp","Crit DMG +9%","Crit Rate +25%"],
-    "Style Rank EX":["(***) F7 DMG Enhanced","Heal Winds→Shield 3k","F7 Cap 45%","Crit Gauge -10%","DEF+6%/Def-Supp sigil","Stun Power +4","WE DMG dealt +10%","DMG Cap +30%","Primal Burst +25%","DMG Cap +30%"],
-  }, sel:{ "Style Rank 1":[2],"Style Rank 2":[5],"Style Rank 3":[7],"Style Rank EX":[7,9] } },
+    "Rank 1":["SG Charge -5%","SG ATK +10%","DMG Cap +20%","Max HP +15k"],
+    "Rank 2":["F7 CD -1%","F7 ATK 10%","Charging F7 DEF +5%","F7 Cap 45%","Heal Winds→Shield 3k","Normal A. Cap 35%","Crit Rate +15%","Cap 100% with Blight"],
+    "Rank 3":["F7 Charge -5%","(**) F7 ATK+10% Cap+50%","Charge Unique -5%","Skill DMG Cap 35%","F7 Stack ATK -5%","HP+10k*Def-Supp","Crit DMG +9%","Crit Rate +25%"],
+    "Rank EX":["(***) F7 DMG Enhanced","Heal Winds→Shield 3k","F7 Cap 45%","Crit Gauge -10%","DEF+6%/Def-Supp sigil","Stun Power +4","WE DMG dealt +10%","DMG Cap +30%","Primal Burst +25%","DMG Cap +30%"],
+  }, sel:{ "Rank 1":[2],"Rank 2":[5],"Rank 3":[7],"Rank EX":[7,9] } },
 };
-const PTS = { "Style Rank 1":10,"Style Rank 2":10,"Style Rank 3":10,"Style Rank EX":20 };
-const ic = c => `<span class="icon ${c||''}"></span>`;
+const PTS={ "Rank 1":10,"Rank 2":10,"Rank 3":10,"Rank EX":20 };
+const ic=c=>`<span class="icon ${c||''}"></span>`;
+const tl=l=>String(l).padStart(2," "); // figure-space pad, keeps T.Lvl columns aligned
+
+/* ---- fragments: card visuals + ▾ select affordances ---- */
+const statCells = ()=>{const cls=["hp","atk","crit","stun"];
+  return D.status.map(([t,v],i)=>`<div class="stat s-${cls[i]}"><span class="sIcon"></span>
+  <span class="lbl">${t}</span><span class="lvl sel">${v}</span></div>`).join("");};
+/* per-page identity column: card c1, sized to the window */
+const identityCol = cls=>`<div class="pcol ${cls||""}">
+  <div class="p"></div>
+  <div class="lvlChip">Lvl <b>${D.level}</b></div>
+  <div class="nb"><span class="orb" style="width:18px;height:18px"></span>${D.name}</div>
+  <section><div class="stat2x2">${statCells()}</div></section>
+</div>`;
+const omLines = ()=>D.overMastery.map(([t,v])=>`<div class="kvline">
+  <span class="sel grow">${t}</span><span class="lvl sel">${v}</span></div>`).join("");
+const skillRows = ()=>D.skills.map(s=>`<div class="skillRow sel"><span class="orb"></span>${s}
+  <span class="diamond"></span></div>`).join("");
+const sigilRows = ()=>D.sigils.map(([p,s,l])=>`<div class="sigil">
+  <div class="cell sel">${ic()}<span>${p}</span></div>
+  <div class="cell sec sel">${ic('sm')}<span>${s}</span></div>
+  <div class="lvl sel">${l}</div></div>`).join("");
+const summonCards = ()=>D.summons.map(s=>`<div class="summonCard">
+  <div class="r strip">${ic('sm')}<b class="sel grow">${s.n}</b></div>
+  <div class="r"><span class="sel grow">${s.t}</span><span class="lvl sel">Lvl ${s.l}</span></div>
+  <div class="r"><span class="sel grow dim">${s.ebT}</span><span class="lvl sel">${s.ebV}</span></div>
+</div>`).join("");
+const weaponPanel = ()=>`<div class="wpanel">
+  <div style="display:flex;align-items:baseline;gap:8px"><span class="wname sel">${D.weapon.name}</span>
+    <span class="dim" style="font-size:12px">${D.weapon.series} · Lv. ${D.weapon.level}</span></div>
+  <div class="wimg"></div>
+  <div class="wbase"><span class="s-hp"><span class="sIcon"></span><span class="lvl">${D.weapon.hp}</span></span>
+    <span class="s-atk"><span class="sIcon"></span><span class="lvl">${D.weapon.atk}</span></span>
+    <span class="s-crit"><span class="sIcon"></span><span class="lvl">${D.weapon.crit}<i class="suf">%</i></span></span>
+    <span class="s-stun"><span class="sIcon"></span><span class="lvl">${D.weapon.stun}</span></span></div>
+  ${D.weapon.traits.map(([t,l,r])=>`<div class="trow">${ic('sm')}
+    <span class="${r?'sel':''}">${t}${r?' <span style="color:var(--essence)">⇄</span>':''}</span>
+    <span class="lvl">T.Lvl ${tl(l)}</span></div>`).join("")}
+  <div class="imh"><span>Imbued Traits</span><span class="sel">${D.weapon.ws.name}</span></div>
+  ${D.weapon.ws.rows.map(([t,l])=>`<div class="trow">${ic('sm')}<span class="sel">${t}</span>
+    <span class="lvl">T.Lvl ${tl(l)}</span></div>`).join("")}
+</div>`;
+/* the checklist column: sigils + wrightstone tally, always visible on ② */
+const checklistRows = ()=>{
+  const acc={},add=(t,l)=>{ if(t) acc[t]=(acc[t]||0)+l; };
+  D.sigils.forEach(([p,s,l])=>{ add(p,l); add(s,l); });
+  D.weapon.ws.rows.forEach(([t,l])=>add(t,l));
+  return Object.entries(acc).sort((a,b)=>b[1]-a[1]).map(([t,l])=>
+    `<div class="trow">${ic('sm')}<span>${t}</span><span class="lvl">${tl(l)}</span></div>`).join("");};
+const styleCard = (style,S)=>`<div class="styleCol" style="--sc:var(${S.v})">
+  <h4>${style}</h4>
+  ${Object.entries(S.ranks).map(([rank,opts])=>`
+    <div class="rank"><span>${rank.replace("Rank","Style Rank")}</span><span>${PTS[rank]} pts</span></div>
+    <div class="opts">${opts.map((o,i)=>
+      `<div class="opt ${S.sel[rank].includes(i)?'on':''}">${ic('sm')}${o}</div>`).join("")}</div>`).join("")}
+</div>`;
+const mtCards = ()=>Object.entries(MT).map(([s,S])=>styleCard(s,S)).join("");
+
+/* ---- pages ---- */
+const PAGES=["Skills & Summons","Gear & Sigils","Master Traits"];
+const page1 = ()=>`${identityCol()}<div class="col">
+  <h3>Skills</h3><div class="wpanel"><div class="skillStack">${skillRows()}</div></div>
+  <h3>Over Mastery</h3><div class="wpanel">${omLines()}</div>
+  <h3>Summons</h3><div class="sStack">${summonCards()}</div>
+</div>`;
+const page2 = ()=>`${identityCol()}<div class="col">
+  <h3>Weapon</h3>${weaponPanel()}
+  <h3>Sigils</h3><div class="sigilStack">${sigilRows()}</div>
+</div>`;
+const page3 = ()=>`<div class="pg3">
+  <h3 class="mtH">Master Traits<span>${D.perks}</span></h3>
+  <div class="mtGrid">${mtCards()}</div>
+</div>`;
 
 function render(){
-  const card = `<div class="card" id="card">
-    <div class="c1">
-      <div class="portraitWrap"><div class="portrait"></div>
-        <div class="charLvl">Lvl <b>${D.level}</b></div>
-        <div class="nameBadge"><span class="elem"></span>${D.name}</div>
-      </div>
-      <div><h3>Status</h3><div class="status">
-        ${D.status.map(s=>`<div class="stat"><span class="lbl">${s.t}</span>
-          <span class="lvl">${s.v}</span></div>`).join("")}
-      </div></div>
-      <div><h3>Over Mastery</h3><div class="kv">
-        ${D.overMastery.map(m=>`<span class="sel">${m.t}</span><span class="lvl sel">${m.v}</span>`).join("")}
-      </div></div>
-      <div><h3>Skills</h3><div class="skillGrid">
-        ${D.skills.map(s=>`<div class="skill sel"><span class="orb"></span><span>${s}</span>
-          <span class="diamond"></span></div>`).join("")}
-      </div></div>
+  document.getElementById("stage").innerHTML=`<div class="card vA mt6">
+  <div class="mainWrap">
+    <div class="tabs">
+      ${PAGES.map((t,i)=>`<button class="tab" data-i="${i}">${t}</button>`).join("")}
     </div>
-    <div class="c2">
-      <h3>Weapon</h3>
-      <div class="weapon">
-        <div class="wpnHead"><span class="wpnName sel">${D.weapon.name}</span>
-          <span class="dim">${D.weapon.series} · Lv. ${D.weapon.level}</span></div>
-        <div class="wpnBase">
-          <span>HP <span class="lvl">${D.weapon.hp}</span></span>
-          <span>ATK <span class="lvl">${D.weapon.atk}</span></span>
-          <span>Crit <span class="lvl">${D.weapon.crit}%</span></span>
-          <span>Stun <span class="lvl">${D.weapon.stun}</span></span></div>
-        ${D.weapon.traits.map(t=>`<div class="trow">${ic('sm')}
-          <span class="${t.rot?'sel':''}">${t.t}${t.rot?'<span class="rot"> ⇄</span>':''}</span>
-          <span class="lvl">T.Lvl ${t.l}</span></div>`).join("")}
-        <div class="imbue"><h4><span>Imbued Traits</span><span>${D.weapon.wrightstone.name}</span></h4>
-          ${D.weapon.wrightstone.rows.map(r=>`<div class="trow">${ic('sm')}
-            <span class="sel">${r.t}</span><span class="lvl">T.Lvl ${r.l}</span></div>`).join("")}
-        </div>
+    <div class="carouselRow">
+      <button class="arr" id="prev">‹</button>
+      <div class="winWrap">
+        <div class="viewport"></div>
+        <button id="chkTab">Σ Checklist</button>
+        <div id="chkPop"><h3>Trait Checklist<button id="chkClose" title="close">✕</button></h3>
+          <div class="imh" style="margin-top:0"><span>sigils + wrightstone</span></div>
+          ${checklistRows()}</div>
       </div>
-      <div><h3>Sigils</h3><div class="sigilGrid">
-        ${D.sigils.map(s=>`<div class="sigil">
-          <div class="cell sel">${ic()}<span>${s.p}</span></div>
-          <div class="cell sec sel">${ic('sm')}<span>${s.s}</span></div>
-          <div class="lvl sel">${s.l}</div></div>`).join("")}
-      </div></div>
+      <button class="arr" id="next">›</button>
     </div>
-    <div class="c3">
-      <h3>Master Traits</h3>
-      <div class="mtGrid">
-      ${Object.entries(MT).map(([style,S])=>`
-        <div class="styleCol" style="--sc:var(${S.v})">
-          <h4>${style}</h4>
-          ${Object.entries(S.ranks).map(([rank,opts])=>`
-            <div class="rank"><span>${rank}</span><span>${PTS[rank]} pts</span></div>
-            <div class="opts">
-              ${opts.map((o,i)=>`<div class="opt ${S.sel[rank].includes(i)?'on':''}">${ic('sm')}${o}</div>`).join("")}
-            </div>`).join("")}
-        </div>`).join("")}
-      </div>
-      <div class="mtFoot">${D.perks}</div>
-      <h3>Summons</h3>
-      <div class="summonGrid">
-        ${D.summons.map(s=>`<div class="summonCard">
-          <div class="row">${ic('sm')}<b class="sel grow" style="padding:1px 18px 1px 5px">${s.n}</b></div>
-          <div class="row"><span class="sel grow">${s.t}</span><span class="lvl sel">${s.l}</span></div>
-          <div class="row dim" style="font-size:12.5px">
-            <span class="sel grow">${s.ebT}</span><span class="lvl sel">${s.ebV}</span></div>
-        </div>`).join("")}
-      </div>
-    </div>
-    <div id="tally"><h3>Trait Totals <span class="dim" style="float:right;font-size:11px">sigils + wrightstone</span></h3>
-      ${tallyRows()}</div>
-    <div id="tallyTab">Σ TOTALS (T)</div>
-    <div class="brand">gbfr-sharecard — editor</div>
-  </div>`;
-  document.getElementById("stage").innerHTML = card;
-  document.getElementById("tallyTab").onclick = toggleTally;
-  /* uniform-height master-trait cells: shrink labels that overflow */
-  document.querySelectorAll(".opt").forEach(el=>{
-    if(el.scrollHeight>el.clientHeight+1) el.classList.add("long");
-  });
+  </div>
+  <div class="brand">gbfr-sharecard — editor (carousel) · ←/→ flips pages</div>
+</div>`;
+  document.getElementById("chkTab").onclick=()=>{chkOpen=true;updateChk();};
+  document.getElementById("chkClose").onclick=()=>{chkOpen=false;updateChk();};
+  document.querySelectorAll(".tab").forEach(el=>el.onclick=()=>go(+el.dataset.i));
+  document.getElementById("prev").onclick=()=>go(page-1,-1);
+  document.getElementById("next").onclick=()=>go(page+1,1);
+  setPage(0);
   fit();
 }
-/* ---- trait tally: the one v1 calculation (sigils + wrightstone) ---- */
-function tallyRows(){
-  const acc = {};
-  const add = (t,l)=>{ if(t) acc[t]=(acc[t]||0)+l; };
-  D.sigils.forEach(s=>{ add(s.p,s.l); add(s.s,s.l); });
-  D.weapon.wrightstone.rows.forEach(r=>add(r.t,r.l));
-  return Object.entries(acc).sort((a,b)=>b[1]-a[1]).map(([t,l])=>
-    `<div class="tallyRow"><span class="icon sm"></span>${t}<span class="lvl">${l}</span></div>`).join("");
+
+/* ---- carousel state: the whole window rolls out, the next rolls in ---- */
+let page=0,anim=false;
+const pageFns=[page1,page2,page3];
+const OFF=1900; // px — clears the stage edge incl. the appended checklist popover
+let chkOpen=true;
+function updateChk(){
+  const onMt=page===2;
+  document.getElementById("chkPop").classList.toggle("hidden",onMt||!chkOpen);
+  document.getElementById("chkTab").classList.toggle("hidden",onMt||chkOpen);
 }
-function toggleTally(){ document.getElementById("tally").classList.toggle("open"); }
-addEventListener("keydown",e=>{ if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
-  if(e.key==="t"||e.key==="T") toggleTally(); });
-function fit(){ const s=Math.min(1,(window.innerWidth-20)/1920);
+function setPage(p){
+  const vp=document.querySelector(".viewport"),ww=document.querySelector(".winWrap");
+  // 2-unit window on non-MT pages, 3-unit on master traits
+  ww.classList.toggle("narrow",p===0);
+  ww.classList.toggle("gear",p===1);
+  vp.innerHTML=`<div class="page ${p===1?"pGear":""}">${pageFns[p]()}</div>`;
+  document.querySelectorAll(".tab").forEach((t,j)=>t.classList.toggle("on",j===p));
+  // uniform-height master-trait cells: shrink labels that overflow
+  vp.querySelectorAll(".opt").forEach(el=>{
+    if(el.scrollHeight>el.clientHeight+1)el.classList.add("long");});
+  // master-trait cells toggle (the one live interaction — everything else is affordance-only)
+  vp.querySelectorAll(".pg3 .opt").forEach(el=>{
+    el.onclick=()=>el.classList.toggle("on");});
+  updateChk();
+}
+function go(i,dir){
+  const target=(i+PAGES.length)%PAGES.length;
+  if(anim||target===page)return;
+  dir=dir||(target>page?1:-1); // tabs infer direction from index order
+  page=target;
+  const vp=document.querySelector(".winWrap"); // roll the wrap: card + toggle + popover
+  anim=true;
+  vp.style.transition="transform .12s ease-in";
+  vp.style.transform=`translateX(${-dir*OFF}px)`; // out one side…
+  setTimeout(()=>{
+    setPage(target); // …swap while off-screen (window takes its own width)…
+    vp.style.transition="none";
+    vp.style.transform=`translateX(${dir*OFF}px)`;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      vp.style.transition="transform .12s ease-out";
+      vp.style.transform="translateX(0)"; // …and roll in from the other
+      setTimeout(()=>{anim=false;vp.style.transition="none";},130);
+    }));
+  },125);
+}
+addEventListener("keydown",e=>{
+  if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
+  if(e.key==="ArrowLeft")go(page-1,-1);
+  if(e.key==="ArrowRight")go(page+1,1);
+});
+
+function fit(){const s=Math.min(1,(window.innerWidth-20)/1920);
   const st=document.getElementById("stage");
-  st.style.transform=`scale(${s})`; st.style.height=`${1080*s}px`; }
+  st.style.transform=`scale(${s})`;st.style.height=`${1080*s}px`;}
 addEventListener("resize",fit);
 render();
 </script>
