@@ -1,0 +1,124 @@
+/* Character select: centered window, 6-column grid of square portrait tiles.
+   Framing frozen at zoom 180% / y 20%, with a per-character y override. */
+
+.selWrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.selWrap .win {
+  width: 58%;
+}
+.selWrap .sub {
+  font-size: 12.5px;
+  color: #5f7188;
+  margin-top: -6px;
+  padding: 0 2px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.tile {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 0 0 1px #dbe6f0;
+}
+.tile .art {
+  position: absolute;
+  inset: 0;
+  background-size: auto 180%;
+  background-repeat: no-repeat;
+}
+/* name text and its fade strip are separate layers - the fade keeps its
+   ~32px height regardless of the name's font size */
+.tile .fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32px;
+  background: linear-gradient(transparent, rgba(5, 40, 63, 0.85));
+}
+.tile .nm {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 5px 3px;
+  font-size: 19px;
+  font-weight: 600;
+  text-align: center;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(10, 40, 60, 0.8);
+}
+.tile.off {
+  cursor: default;
+}
+.tile.off .art {
+  filter: grayscale(1) brightness(1.06);
+  opacity: 0.4;
+}
+.tile.off .nm {
+  color: #c9d6e2;
+}
+.tile.off .fade {
+  background: linear-gradient(transparent, rgba(70, 90, 105, 0.7));
+}
+.tile:not(.off):hover {
+  box-shadow:
+    inset 0 0 0 2px var(--accent),
+    0 2px 12px rgba(23, 60, 90, 0.3);
+}
+/* gold trim = availability; "Saved" badge = an auto-save exists */
+.tile:not(.off) .fade {
+  background: linear-gradient(
+    transparent,
+    rgba(236, 175, 74, 0.55) 35%,
+    rgba(211, 124, 53, 0.92)
+  );
+}
+.tile:not(.off) .nm {
+  text-shadow: 0 1px 2px rgba(90, 30, 0, 0.55);
+}
+.tile .built {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: linear-gradient(90deg, #ecaf4a, #d37c35);
+  border-radius: 4px;
+  padding: 1px 7px;
+  text-shadow: 0 1px 2px rgba(90, 30, 0, 0.55);
+  box-shadow: 0 1px 4px rgba(90, 30, 0, 0.3);
+}
+.tile .soon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5f7188;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+.tile.off:hover .soon {
+  opacity: 1;
+}
