@@ -1,0 +1,502 @@
+<!-- PROTOTYPE — throwaway. The SHARE CARD (read-only 1920x1080 presentation), separate
+     from the editor by design. Single design: variant A layout (light + diagonal slash)
+     with the A6 "slash match" master-traits colorway; a fixed tuner panel adjusts the
+     slash/panel radials live. Same Io build data as the editor prototype; master
+     traits = real Maygi CSV rows. -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GBFR Sharecard — CARD prototype</title>
+<style>
+  :root{
+    --bg:#0d1020; --panel:#171b30; --panel2:#1e2340; --line:#2c3357;
+    --ink:#e8ebff; --dim:#8b93bd; --accent:#e8b34b;
+    --insight:#b06cf0; --essence:#4bb3e8; --crux:#e85f6a; --sel:#2c8f5e;
+    /* faint GBFR-style crest tile (circles + four-pointed stars), used as texture
+       on the slash and anything colored to match it */
+    --slashTex:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.06'%3E%3Ccircle cx='130' cy='130' r='95'/%3E%3Ccircle cx='130' cy='130' r='58'/%3E%3Cpath d='M130 12 L156 104 L248 130 L156 156 L130 248 L104 156 L12 130 L104 104 Z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23003a5c' stroke-opacity='.09'%3E%3Cpath d='M130 34 L151 109 L226 130 L151 151 L130 226 L109 151 L34 130 L109 109 Z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#05060c;color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;
+    overflow-x:hidden}
+  /* the card is ALWAYS exactly 1920x1080 — the wrapper only scales it visually.
+     (The unscaled 1920px layout box previously caused a horizontal scrollbar that made
+     the card look wider than 1080p; overflow-x:hidden kills that illusion.) */
+  #stage{position:relative;width:1920px;height:1080px;transform-origin:top left;
+    /* slash-tuner defaults (overridden live by the sliders); --gr = circle radius.
+       Values tuned by hand 2026-07-23 — resolved gradient:
+       radial-gradient(circle 620px at 80% 42%,
+         #4cc4e2 0%,#2aa6cb 21%,#1a86ad 37%,#10719c 50%,#0a5d86 65%,#053f63 85%) */
+    --sx:-150px;--gx:80%;--gy:42%;--gr:620px;--ge:65%;
+    /* mt6 panel-radial tuner vars (darkened ramp, per-panel geometry).
+       Tuned by hand 2026-07-23 — centered glow, full-length fade:
+       radial-gradient(circle 650px at 50% 50%,
+         #1a86ad 0%,#10719c 32%,#0a5d86 57%,#053f63 77%,#04304f 100%,#02203a 130%) */
+    --pgx:50%;--pgy:50%;--pgr:650px;--pge:100%}
+  #stage .card{outline:1px solid rgba(232,179,75,.35)} /* debug: exact 1920x1080 bounds */
+  .card{position:absolute;inset:0;overflow:hidden;background:
+    radial-gradient(1300px 800px at 72% -12%,#252c55 0%,var(--bg) 58%)}
+  .icon{display:inline-block;width:16px;height:16px;border-radius:4px;flex:none;
+    background:linear-gradient(135deg,#3a4370,#232a52);border:1px solid var(--line)}
+  .icon.sm{width:13px;height:13px}
+  h3{font-size:14.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
+     border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:7px}
+  .lvl{color:var(--accent);font-variant-numeric:tabular-nums;font-weight:600}
+  .dim{color:var(--dim)}
+  .brand{position:absolute;bottom:8px;right:16px;font-size:11.5px;color:var(--dim);
+    letter-spacing:.05em}
+  /* shared read-only pieces */
+  /* column-flow like example.png's Status bar: HP/ATK stack left, Crit/Stun right */
+  .stat2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+    grid-auto-flow:column;gap:6px 10px}
+  .stat{background:rgba(0,0,0,.28);border-radius:5px;padding:4px 10px;display:flex;
+    align-items:baseline;gap:8px}
+  .stat .lbl{font-size:11.5px;color:var(--dim)}
+  .stat .lvl{font-size:18px;margin-left:auto;position:relative}
+  /* unit suffix: 70% size, absolutely positioned past the number so it takes no
+     width — numbers right-align to each other, the "%" hangs in the cell padding
+     (shared by the status cells and the weapon base-stat chips) */
+  .stat .lvl .suf,.wbase .lvl .suf{font-style:normal;font-size:70%;
+    position:absolute;left:100%;bottom:1px}
+  .wbase .lvl{position:relative}
+  /* stat icon placeholders + value colors per example.png:
+     HP green gem / green value, ATK steel sword / orange value,
+     Crit+Stun steel icons / ink values */
+  .stat .sIcon,.wbase .sIcon{width:12px;height:12px;flex:none;align-self:center;
+    background:linear-gradient(135deg,#5a6f96,#2c3f63);transform:rotate(45deg);
+    border-radius:2px;margin-right:2px}
+  .s-hp .sIcon{background:linear-gradient(135deg,#8fdf63,#2f9c3c)}
+  .vA .s-hp .lvl{color:#3fa32e}
+  .vA .s-atk .lvl{color:#d9861f}
+  /* indented together so the hanging % gets real padding and the right-column
+     numbers still align with each other */
+  .vA .s-crit .lvl,.vA .s-stun .lvl{color:#16233b;margin-right:9px}
+  .kvline{display:flex;gap:8px;font-size:14.5px;padding:3.5px 0;align-items:baseline;
+    border-bottom:1px solid rgba(44,51,87,.45)}
+  .kvline .lvl{margin-left:auto}
+  .sigil{display:grid;grid-template-columns:1fr 1fr 30px;gap:8px;align-items:center;
+    background:rgba(23,27,48,.85);border-radius:5px;padding:5.5px 9px;font-size:14.5px}
+  .sigil .cell{display:flex;align-items:center;gap:7px;min-width:0}
+  .sigil .cell span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sigil .sec{color:var(--dim)}
+  .sigil .lvl{text-align:right}
+  .styleCol{background:rgba(0,0,0,.24);border-radius:8px;padding:11px 12px;display:flex;
+    flex-direction:column;gap:7px;border-top:3px solid var(--sc)}
+  .styleCol h4{font-size:17.5px;color:var(--sc)}
+  .rank{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;
+    margin-top:3px;display:flex;justify-content:space-between}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .opt{font-size:13.5px;line-height:1.12;padding:3px 7px;border-radius:4px;background:rgba(23,27,48,.6);
+    color:#5d6489;height:34px;overflow:hidden;display:flex;align-items:center;gap:6px}
+  .opt.long{font-size:11.5px;line-height:1.06;padding:2px 5px;gap:4px}
+  .opt.on{background:rgba(44,143,94,.28);color:var(--ink);box-shadow:inset 0 0 0 1px var(--sel)}
+  .skillRow{display:flex;align-items:center;gap:8px;font-size:13.5px;padding:3.5px 0;
+    border-bottom:1px solid rgba(44,51,87,.45)}
+  .orb{width:16px;height:16px;border-radius:50%;flex:none;
+    background:radial-gradient(circle at 35% 30%,#ffd98a,#c2571b);border:1px solid #0006}
+  .diamond{margin-left:auto;width:20px;height:20px;flex:none;transform:rotate(45deg);
+    background:linear-gradient(135deg,#8a2f35,#3d1114);border:1.5px solid #c46a4a;border-radius:3px}
+  .summonCard{background:rgba(23,27,48,.85);border-radius:6px;padding:8px 11px;
+    font-size:13.5px;display:flex;flex-direction:column;gap:3px}
+  .summonCard b{font-size:14.5px}
+  .summonCard .r{display:flex;gap:6px;align-items:baseline;min-width:0}
+  .summonCard .r .dim{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .summonCard .r .lvl{margin-left:auto}
+  .summonCard .halves{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .summonCard .halves .r:first-child{padding-right:10px;border-right:1px solid rgba(44,51,87,.6)}
+  .wpanel{background:rgba(0,0,0,.24);border:1px solid var(--line);border-radius:8px;padding:10px 13px}
+  /* weapon render — fills the height c2 lost when Skills moved back to the
+     portrait column. Local copy of the RELINK in-game render (Fextralife thumb;
+     the gbf.wiki CDN only has the mainline painted art, which looked off) */
+  .wpanel .wimg{height:140px;margin:2px 0 4px;
+    background:url("weapon-caduceus-relink.png") center/contain no-repeat;
+    /* oversized, laid diagonally so the longer render still fits the strip */
+    transform:rotate(-18deg) scale(1.4)}
+  .wname{font-size:17px;font-weight:700}
+  /* gear-select.png treatment: EACH base stat sits on its own small chip —
+     the section-heading strip blue at 30%, slanted left edge, fading right */
+  .wbase{display:flex;gap:4px;font-size:12.5px;margin:4px 0 6px;align-items:baseline}
+  /* band hugs the bottom 40% of the line, hard 3px fade at the right; clip slant
+     is oversized since only the lower 40% of the clipped box is visible */
+  .wbase>span{padding:2px 12px 2px 13px;display:inline-flex;align-items:center;gap:7px;
+    flex:1;min-width:0; /* equal-width chips; values right-align within them */
+    /* midpoint of heading blue (#79b6d4) and placeholder steel (#5a6f96), 30% */
+    background:linear-gradient(90deg,rgba(106,147,181,.3),
+      rgba(106,147,181,.4) calc(100% - 12px),rgba(106,147,181,0))
+      bottom/100% 40% no-repeat;
+    clip-path:polygon(17px 0,100% 0,100% 100%,0 100%)}
+  .wbase>span .lvl{margin-left:auto}
+  .wbase .lvl{font-size:16px}
+  .trow{display:grid;grid-template-columns:16px 1fr auto;gap:7px;align-items:center;
+    font-size:13px;padding:2.5px 0;border-bottom:1px solid rgba(44,51,87,.4)}
+  .imh{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;
+    margin:15px 0 2px;display:flex;justify-content:space-between}
+
+  /* ===== A — refined three-column, full-body art column ===== */
+  .vA{display:flex}
+  .vA .c1{width:430px;position:relative;background:rgba(0,0,0,.3);
+    border-right:1px solid var(--line);
+    display:flex;flex-direction:column;justify-content:flex-end}
+  /* full-body art: top ~70% of the column, content overlays it from below */
+  .vA .p{position:absolute;left:0;right:0;top:0;height:70%;background:top/cover;
+    background-image:url("https://cdn.gbf.wiki/relink/Cmn_imgchr_0400_2.png");
+    background-position:center -50px;background-size:auto 115%;
+    mask-image:linear-gradient(#000 92%,transparent 99%),
+      linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+    mask-composite:intersect;
+    -webkit-mask-image:linear-gradient(#000 92%,transparent 99%),
+      linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+    -webkit-mask-composite:source-in}
+  .vA .lvlChip{position:absolute;top:10px;left:10px;z-index:2;background:rgba(5,6,12,.75);
+    border:1px solid var(--line);border-radius:6px;padding:2px 10px;font-size:12.5px}
+  .vA .lvlChip b{font-size:16px;color:var(--accent)}
+  .vA .nb{position:relative;z-index:2;padding:6px 16px;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    /* matte navy = the slash's outermost band (#053f63) */
+    background:linear-gradient(90deg,transparent,rgba(5,63,99,.88) 30%,rgba(5,63,99,.88) 70%,transparent);
+    font-size:26px;font-weight:700;margin:0 14px 16px;color:#fff} /* inset to the stack's 14px so the band stops where the status div stops */
+  /* bottom stack: overlays the art when it needs the room */
+  .vA .stack{position:relative;z-index:2;padding:0 14px 56px;display:flex;
+    flex-direction:column;gap:17px}
+  .vA .stack section{background:rgba(8,10,22,.72);border-radius:8px;padding:12px 14px;
+    backdrop-filter:blur(2px)}
+  .vA .c2{width:460px;padding:14px;border-right:1px solid var(--line);
+    display:flex;flex-direction:column;gap:11px}
+  /* 11px matches c2's inter-section gap (Weapon→Sigils→Skills) */
+  .vA .c3{flex:1;padding:14px;display:flex;flex-direction:column;gap:11px}
+  .vA .mtGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .vA .bottomRow{display:grid;grid-template-columns:330px 1fr;gap:16px;align-items:start}
+  .vA .sGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .vA .sigilStack{display:flex;flex-direction:column;gap:3.5px}
+
+  /* ===== A: LIGHT THEME + diagonal highlight (example.png style) ===== */
+  .vA{color:#16233b;background:linear-gradient(160deg,#f4f8fc 0%,#e8eff7 60%,#dfe9f4 100%)}
+  /* the blue slash cutting through at an angle, behind the art column.
+     example.png: bright cyan glow behind the character radiating outward into a
+     darker, MORE saturated teal at the edges, with a faint crest texture over it */
+  .vA::before{content:"";position:absolute;left:var(--sx);top:-360px;width:720px;height:1800px;
+    background:
+      var(--slashTex) 0 0/260px 260px repeat,
+      radial-gradient(circle var(--gr) at var(--gx) var(--gy),
+        #4cc4e2 0%,#2aa6cb calc(var(--ge)*.32),#1a86ad calc(var(--ge)*.57),
+        #10719c calc(var(--ge)*.77),#0a5d86 var(--ge),
+        #053f63 calc(var(--ge)*1.3)); /* outermost: near-navy, per example.png top edge */
+    transform:rotate(13deg);transform-origin:top left;z-index:0}
+  .vA::after{content:"";position:absolute;left:calc(var(--sx) + 730px);top:-360px;width:26px;
+    height:1800px;background:rgba(255,255,255,.55);
+    transform:rotate(13deg);transform-origin:top left;z-index:0}
+  /* tuner guides: same box/transform as ::before so the dashes show its true bounds */
+  .guides{display:none;position:absolute;left:var(--sx);top:-360px;width:720px;height:1800px;
+    transform:rotate(13deg);transform-origin:top left;z-index:5;pointer-events:none;
+    outline:2px dashed rgba(255,60,60,.8)}
+  .guides .gEllipse{position:absolute;left:var(--gx);top:var(--gy);
+    width:calc(var(--gr)*2);height:calc(var(--gr)*2);transform:translate(-50%,-50%);
+    border:2px dashed rgba(255,170,0,.85);border-radius:50%}
+  .guides .gDot{position:absolute;left:var(--gx);top:var(--gy);width:14px;height:14px;
+    transform:translate(-50%,-50%);border-radius:50%;background:rgba(255,60,60,.9)}
+  body.guides-on .guides{display:block}
+  /* mt6-panel guides: circle + center dot on the FIRST style card only (all three
+     share the same per-panel geometry, so one guide is enough) */
+  .styleCol{position:relative}
+  body.guides-on .mt6 .mtGrid .styleCol:first-child::before{content:"";position:absolute;
+    left:var(--pgx);top:var(--pgy);width:calc(var(--pgr)*2);height:calc(var(--pgr)*2);
+    transform:translate(-50%,-50%);border:2px dashed rgba(255,170,0,.85);
+    border-radius:50%;pointer-events:none;z-index:6}
+  body.guides-on .mt6 .mtGrid .styleCol:first-child::after{content:"";position:absolute;
+    left:var(--pgx);top:var(--pgy);width:12px;height:12px;transform:translate(-50%,-50%);
+    border-radius:50%;background:rgba(255,60,60,.9);pointer-events:none;z-index:6}
+  /* keep all three columns above the slash */
+  .vA .c1,.vA .c2,.vA .c3{position:relative;z-index:1}
+  .vA .c1{background:transparent;border-right:none}
+  .vA h3{color:#0e3348;border:none;padding:4px 12px;border-radius:4px;
+    background:linear-gradient(90deg,#79b6d4 0%,#9cc6dd 45%,rgba(156,198,221,0) 100%)}
+  /* uniform heading→body gap (match Summons: 7px): cancel the column flex-gap
+     that was adding extra space under the Weapon/Sigils/Master Traits headings */
+  .vA .c2>h3{margin-bottom:-4px}
+  .vA .c3>h3{margin-bottom:-4px} /* keeps the heading→body gap at 7px under the 11px column gap */
+  /* +2px on everything EXCEPT the master-trait option cells */
+  .vA h3{font-size:16.5px}
+  .vA .kvline{font-size:16.5px;padding:4.5px 0} /* row rhythm matches weapon traits */
+  .vA .stat .lbl{font-size:13.5px}
+  .vA .stat .lvl{font-size:21px}
+  .vA .sigil{font-size:16.5px}
+  .vA .skillRow{font-size:16.5px;padding:6px 0}
+  .vA .summonCard{font-size:16.5px}
+  .vA .summonCard b{font-size:17.5px}
+  .vA .wname{font-size:19px}
+  .vA .wbase{font-size:14.5px}
+  .vA .wbase .lvl{font-size:20px}
+  .vA .trow{font-size:16.5px;padding:4.5px 0} /* match sigil row size/rhythm */
+  .vA .imh{font-size:13px}
+  /* no separator/padding under the last row of any row table (incl. the trait
+     list that ends at the Imbued Traits header). Must sit AFTER the .vA sizing
+     rules above — equal specificity, so source order decides. */
+  .kvline:last-child,.skillRow:last-child,.trow:last-child,
+  .trow:has(+.imh){border-bottom:none;padding-bottom:0}
+  .vA .nb{font-size:28px}
+  .vA .lvlChip{font-size:14.5px}
+  .vA .lvlChip b{font-size:18px}
+  .vA .styleCol h4{font-size:19.5px}
+  .vA .rank{font-size:14px}
+  /* summon name strip — orange-to-red like example.png's skill bars */
+  .vA .summonCard > .r:first-child{margin:-8px -11px 3px;padding:5px 11px;
+    /* midway between the original vivid (#f5b13f→#d4482a) and the brown take */
+    background:linear-gradient(90deg,#ecaf4a 0%,#d37c35 55%,#be5230 100%);
+    border-radius:6px 6px 0 0;align-items:center}
+  .vA .summonCard > .r:first-child b{color:#fff;text-shadow:0 1px 2px rgba(90,30,0,.55)}
+  .vA .summonCard > .r:first-child .icon{border-color:#a5502a;
+    background:linear-gradient(135deg,#ffd9a0,#c96a2c)}
+  /* one-line trait + value; hierarchy: main trait (left) stands out,
+     equip bonus (right) stays muted */
+  .vA .summonCard .halves .r .lvl{margin-left:4px;color:#5f7188;font-weight:600}
+  .vA .summonCard .halves .r:first-child .dim{color:#16233b;font-weight:400}
+  .vA .summonCard .halves .r:first-child .lvl{color:#b06e12}
+  .vA .summonCard .halves{grid-template-columns:6fr 5fr}
+  .vA .dim,.vA .rank,.vA .stat .lbl{color:#5f7188}
+  .vA .lvl{color:#b06e12}
+  .vA .stack section{background:rgba(255,255,255,.78);backdrop-filter:blur(3px);
+    box-shadow:0 1px 6px rgba(23,60,90,.12)}
+  .vA .stat{background:rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px #dbe6f0}
+  .vA .kvline,.vA .skillRow{border-color:#d7e2ee}
+  .vA .wpanel{background:rgba(255,255,255,.8);border-color:#c3d4e4;
+    box-shadow:0 1px 6px rgba(23,60,90,.1)}
+  .vA .trow{border-color:#dbe6f0}
+  .vA .sigil{background:rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px #dbe6f0}
+  .vA .sigil .sec{color:#5f7188}
+  /* ===== master traits — "slash match" (the winning colorway of the A1–A6 round) =====
+     panels reuse the slash's exact color ramp so the MT section and the card-bg
+     highlight are one system; selected cells pop gold off the blue. Placed after the
+     vA block so equal-specificity rules here win. */
+  .mt6 .c3>h3{color:#fff;text-shadow:0 1px 3px rgba(10,50,70,.5);
+    background:linear-gradient(90deg,#2aa6cb 0%,#10719c 45%,rgba(16,113,156,0) 100%)}
+  .mt6 .styleCol{color:#f2fafd;
+    background:
+      var(--slashTex) 0 0/260px 260px repeat,
+      /* mt-game-palette.css's darkness applied to the slash ramp: same geometry
+         sliders, but the ramp starts two steps darker so panels sit at the depth
+         of the saved game-palette version */
+      radial-gradient(circle var(--pgr) at var(--pgx) var(--pgy),
+        #1a86ad 0%,#10719c calc(var(--pge)*.32),#0a5d86 calc(var(--pge)*.57),
+        #053f63 calc(var(--pge)*.77),#04304f var(--pge),#02203a calc(var(--pge)*1.3));
+    box-shadow:0 1px 8px rgba(5,63,99,.4),inset 0 0 44px rgba(76,196,226,.15)}
+  .mt6 .styleCol h4{color:#fff;text-shadow:0 1px 3px rgba(10,50,70,.55)}
+  /* perks ride the right end of the MT heading strip; dark ink because the
+     strip's gradient has faded out by there */
+  .vA .mtH{display:flex;justify-content:space-between;align-items:baseline}
+  .vA .mtH span{font-size:13.5px;text-transform:none;letter-spacing:.02em;
+    font-weight:600;color:#3d6478;text-shadow:none}
+  /* extra air above each rank header stretches the panels so the MT grid's
+     bottom lines up with where the sigils column ends */
+  .mt6 .styleCol .rank{color:#d5eef8;margin-top:11px}
+  .mt6 .opt{background:rgba(11,46,61,.3);color:#a8d4e4}
+  /* active cell: the mt-game-palette.css recipe (diagonal gradient wash + 1px
+     bright inset ring + soft glow), retinted from cyan/violet to this palette's
+     white/cyan */
+  .mt6 .opt.on{color:#fff;
+    background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(26,134,173,.3));
+    box-shadow:inset 0 0 0 1px #b8ecf8}
+  .mt6 .styleCol .icon{background:linear-gradient(135deg,#7fd4f8,#2f6ec2);border-color:#5090d8}
+  .vA .summonCard{background:rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px #dbe6f0}
+  .vA .summonCard .halves .r:first-child{border-color:#d7e2ee}
+  .vA .icon{background:linear-gradient(135deg,#c2d3e6,#93aecb);border-color:#a5bcd4}
+  .vA .brand{color:#7c8da3}
+  /* badge + level chip stay dark for contrast over art/slash */
+  /* (a dark in-game-palette Master Traits treatment lives in tmp/mt-game-palette.css
+     for a future variant — didn't fit A's light theme) */
+
+  /* ---- slash tuner (not part of the design) ---- */
+  #tuner{position:fixed;top:14px;right:14px;z-index:99;display:flex;flex-direction:column;
+    gap:6px;background:#fff;color:#111;border-radius:10px;padding:10px 14px;font-size:12px;
+    font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.6);width:240px}
+  #tuner b{letter-spacing:.05em;text-transform:uppercase}
+  #tuner label{display:grid;grid-template-columns:56px 1fr 44px;gap:6px;align-items:center}
+  #tuner label.chk{display:flex;gap:6px}
+  #tuner input[type=range]{width:100%}
+  #tuner output{text-align:right;font-variant-numeric:tabular-nums}
+  #tuner button{border:0;background:#eee;border-radius:6px;padding:4px 8px;cursor:pointer;
+    font-weight:600}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="tuner">
+  <b>bg highlight</b>
+  <label>offset<input type="range" id="t-sx" min="-500" max="300" step="10"><output></output></label>
+  <label>center x<input type="range" id="t-gx" min="0" max="100"><output></output></label>
+  <label>center y<input type="range" id="t-gy" min="0" max="100"><output></output></label>
+  <label>radius<input type="range" id="t-gr" min="200" max="1600" step="10"><output></output></label>
+  <label>dark end<input type="range" id="t-ge" min="30" max="160"><output></output></label>
+  <label class="chk"><input type="checkbox" id="t-guides">show guides</label>
+  <b>mt6 panels</b>
+  <label>center x<input type="range" id="t-pgx" min="-50" max="150"><output></output></label>
+  <label>center y<input type="range" id="t-pgy" min="-50" max="150"><output></output></label>
+  <label>radius<input type="range" id="t-pgr" min="100" max="1400" step="10"><output></output></label>
+  <label>dark end<input type="range" id="t-pge" min="30" max="160"><output></output></label>
+  <button id="t-copy">copy css</button>
+</div>
+
+<script>
+/* ---- same Io build as the editor prototype ---- */
+const D = {
+  name:"Io", level:100,
+  status:[["HP","124210"],["ATK","73460"],["Crit. Hit Rate","95%"],["Stun Power","326"]],
+  skills:["Stargaze","Concentration","Mystic Vortex","Flowery Seven"],
+  overMastery:[["Critical Hit Rate Up","+20%"],["Normal Attack DMG Cap Up","+16%"],
+    ["Skill DMG Cap Up","+16%"],["Attack Power Up","+800"]],
+  summons:[
+    { n:"Bahamut", t:"War Elemental", l:15, ebT:"ATK", ebV:"+2410" },
+    { n:"Kaguya", t:"Berserker Echo", l:15, ebT:"HP", ebV:"+4800" },
+    { n:"Alexiel", t:"Spartan Echo", l:15, ebT:"Skill DMG Cap", ebV:"+80%" },
+    { n:"Belial", t:"Supplementary DMG", l:15, ebT:"Crit Rate", ebV:"+24%" },
+  ],
+  weapon:{ name:"Caduceus +99", series:"Terminus", level:150, hp:1159, atk:20583, crit:0, stun:0,
+    traits:[["Catastrophe Nova",35,0],["Tyranny",25,1],["DMG Cap",15,0],
+      ["Sigil Booster",1,0],["Unbound Master",55,0]],
+    ws:{ name:"Sage's Wrightstone", rows:[["HP",20],["Nimble Onslaught",15],["Autorevive",10]] } },
+  sigils:[
+    ["Stun Power","Damage Cap",15],["Stun Power","Damage Cap",15],["Stun Power","Damage Cap",15],
+    ["HP","Celestial Aqua",15],["HP","Celestial Ventus",15],["Quick Cooldown","Celestial Lumen",15],
+    ["Quick Cooldown","Fatebreaker",15],["Quick Cooldown","Supplementary DMG",15],
+    ["Cascade","Supplementary DMG",15],["Improved Dodge","Steady Focus",15],
+    ["Character Sigil","Quick Charge",15],["Warpath","Quick Charge",15],
+  ],
+  perks:"Insight Perk 2 · Essence Perk 3 · Crux Perk 1",
+};
+const MT = {
+  Insight:{ v:"--insight", ranks:{
+    "Rank 1":["SG Charge -5%","SG Cap 35%","DMG Cap +20%","Max HP +15k"],
+    "Rank 2":["(*) Stargaze BATK +5%","(**) Stargaze V DMG +10%","(**) Concen. Dura. +10%","Concen. CD -5%","Mystic Vortex CD -5%","DMG Cap +25%","ATK +30%","Cap 100% with Poison"],
+    "Rank 3":["(*) Stargaze BATK +10%","(**) Stargaze V DMG +15%","(**) Concentration Cut 20%","SG Cap 35%","Concentration CD -5%","Cap +20% * Basic","Guard Break +7%","Max HP +15k"],
+    "Rank EX":["(**) Stargaze V DMG +25%","Vortex DEF Up 10%","Gravity Cap 45%","Dodge Shield 1000","Cap +20% * Basic","Crit Rate +25%","Crit DMG +9%","DMG Cap +30%","Summon Cost -1","DMG Cap +30%"],
+  }, sel:{ "Rank 1":[1,2],"Rank 2":[5,6],"Rank 3":[3],"Rank EX":[7] } },
+  Essence:{ v:"--essence", ranks:{
+    "Rank 1":["Skill CD -2%","SG Cap 35%","DMG Cap +20%","DEF +5%"],
+    "Rank 2":["Skill CD -3%","Skills ATK +10% (*)","Lightning CD -5%","Freeze ATK +10%","Fire ATK +10%","Skill DMG Cap 35%","Max HP +15k","Burn DMG Cap 100"],
+    "Rank 3":["(**) Magic Chain Dur +20%","(**) Magic Chain Dmg x1.5","(***) Fire+Lightning AoE Dura. 10%","DMG Cap +30%","Gravity Well ATK 10%","ATK+10%*Attack","Chain Burst Cap 40%","ATK +30%"],
+    "Rank EX":["Freeze+Lightning +10% (***)","Lightning Paralyze+2s","Freeze DMG Cap 45%","Fire DMG Cap 45%","DMG Cap +30%","ATK+20% Cap+50% Restriction 50%","ATK+10% * Attack","DMG Cap +30%","Summon Cost +1","DMG Cap +30%"],
+  }, sel:{ "Rank 1":[0,2],"Rank 2":[0,1,5],"Rank 3":[0,1,3,6],"Rank EX":[1,2,4,5,7] } },
+  Crux:{ v:"--crux", ranks:{
+    "Rank 1":["SG Charge -5%","SG ATK +10%","DMG Cap +20%","Max HP +15k"],
+    "Rank 2":["F7 CD -1%","F7 ATK 10%","Charging F7 DEF +5%","F7 Cap 45%","Heal Winds→Shield 3k","Normal A. Cap 35%","Crit Rate +15%","Cap 100% with Blight"],
+    "Rank 3":["F7 Charge -5%","(**) F7 ATK+10% Cap+50%","Charge Unique -5%","Skill DMG Cap 35%","F7 Stack ATK -5%","HP+10k*Def-Supp","Crit DMG +9%","Crit Rate +25%"],
+    "Rank EX":["(***) F7 DMG Enhanced","Heal Winds→Shield 3k","F7 Cap 45%","Crit Gauge -10%","DEF+6%/Def-Supp sigil","Stun Power +4","WE DMG dealt +10%","DMG Cap +30%","Primal Burst +25%","DMG Cap +30%"],
+  }, sel:{ "Rank 1":[2],"Rank 2":[5],"Rank 3":[7],"Rank EX":[7,9] } },
+};
+const PTS={ "Rank 1":10,"Rank 2":10,"Rank 3":10,"Rank EX":20 };
+const ic=c=>`<span class="icon ${c||''}"></span>`;
+// pad trait levels to 2 chars with a figure space (digit-width, so tabular-nums
+// keep "T.Lvl  1" and "T.Lvl 35" aligned)
+const tl=l=>String(l).padStart(2," ");
+
+/* ---- shared read-only fragments ---- */
+const statCells = ()=>{const cls=["hp","atk","crit","stun"];
+  return D.status.map(([t,v],i)=>{
+    // split trailing unit (e.g. "95%") so numbers align to themselves and the
+    // unit hangs outside the number column
+    const m=v.match(/^([\d,.]+)(\D*)$/),num=m?m[1]:v,
+      suf=m&&m[2]?`<i class="suf">${m[2]}</i>`:"";
+    return `<div class="stat s-${cls[i]}"><span class="sIcon"></span><span class="lbl">${t}</span>
+  <span class="lvl">${num}${suf}</span></div>`;}).join("");};
+const omLines = ()=>D.overMastery.map(([t,v])=>`<div class="kvline">${t}
+  <span class="lvl">${v}</span></div>`).join("");
+const skillRows = ()=>D.skills.map(s=>`<div class="skillRow"><span class="orb"></span>${s}
+  <span class="diamond"></span></div>`).join("");
+const sigilRows = ()=>D.sigils.map(([p,s,l])=>`<div class="sigil">
+  <div class="cell">${ic()}<span>${p}</span></div>
+  <div class="cell sec">${ic('sm')}<span>${s}</span></div>
+  <div class="lvl">${l}</div></div>`).join("");
+const summonCards = ()=>D.summons.map(s=>`<div class="summonCard">
+  <div class="r">${ic('sm')}<b>${s.n}</b></div>
+  <div class="halves">
+    <div class="r"><span class="dim">${s.t}</span><span class="lvl">${s.l}</span></div>
+    <div class="r"><span class="dim">${s.ebT}</span><span class="lvl">${s.ebV}</span></div>
+  </div></div>`).join("");
+const weaponPanel = ()=>`<div class="wpanel">
+  <div style="display:flex;align-items:baseline;gap:8px"><span class="wname">${D.weapon.name}</span>
+    <span class="dim" style="font-size:12px">${D.weapon.series} · Lv. ${D.weapon.level}</span></div>
+  <div class="wimg"></div>
+  <div class="wbase"><span class="s-hp"><span class="sIcon"></span><span class="lvl">${D.weapon.hp}</span></span>
+    <span class="s-atk"><span class="sIcon"></span><span class="lvl">${D.weapon.atk}</span></span>
+    <span class="s-crit"><span class="sIcon"></span><span class="lvl">${D.weapon.crit}<i class="suf">%</i></span></span>
+    <span class="s-stun"><span class="sIcon"></span><span class="lvl">${D.weapon.stun}</span></span></div>
+  ${D.weapon.traits.map(([t,l,r])=>`<div class="trow">${ic('sm')}<span>${t}${r?' <span style="color:var(--essence)">⇄</span>':''}</span>
+    <span class="lvl">T.Lvl ${tl(l)}</span></div>`).join("")}
+  <div class="imh"><span>Imbued Traits</span><span>${D.weapon.ws.name}</span></div>
+  ${D.weapon.ws.rows.map(([t,l])=>`<div class="trow">${ic('sm')}<span>${t}</span>
+    <span class="lvl">T.Lvl ${tl(l)}</span></div>`).join("")}
+</div>`;
+const styleCard = (style,S)=>`<div class="styleCol" style="--sc:var(${S.v})">
+  <h4>${style}</h4>
+  ${Object.entries(S.ranks).map(([rank,opts])=>`
+    <div class="rank"><span>${rank.replace("Rank","Style Rank")}</span><span>${PTS[rank]} pts</span></div>
+    <div class="opts">${opts.map((o,i)=>
+      `<div class="opt ${S.sel[rank].includes(i)?'on':''}">${ic('sm')}${o}</div>`).join("")}</div>`).join("")}
+</div>`;
+const mtCards = ()=>Object.entries(MT).map(([s,S])=>styleCard(s,S)).join("");
+const brand = ()=>`<div class="brand">gbfr-sharecard · ddk-epic.github.io/gbfr-sharecard</div>`;
+
+/* ===== the card — variant A layout; mtClass picks the master-traits colorway ===== */
+function renderA(mtClass){ return `<div class="card vA ${mtClass}">
+  <div class="guides"><div class="gEllipse"></div><div class="gDot"></div></div>
+  <div class="c1">
+    <div class="p"></div>
+    <div class="lvlChip">Lvl <b>${D.level}</b></div>
+    <div class="nb"><span class="orb" style="width:20px;height:20px"></span>${D.name}</div>
+    <div class="stack">
+      <section><div class="stat2x2">${statCells()}</div></section>
+      <section><h3>Skills</h3>${skillRows()}</section>
+    </div>
+  </div>
+  <div class="c2"><h3>Weapon</h3>${weaponPanel()}
+    <h3>Sigils</h3><div class="sigilStack">${sigilRows()}</div></div>
+  <div class="c3"><h3 class="mtH">Master Traits<span>${D.perks}</span></h3>
+    <div class="mtGrid">${mtCards()}</div>
+    <div class="bottomRow">
+      <div><h3>Over Mastery</h3><div class="wpanel">${omLines()}</div></div>
+      <div><h3>Summons</h3><div class="sGrid">${summonCards()}</div></div>
+    </div></div>
+  ${brand()}
+</div>`; }
+
+/* ---- single design now: A6 "slash match" won the colorway round ---- */
+function render(){
+  document.getElementById("stage").innerHTML=renderA("mt6");
+  document.querySelectorAll(".opt").forEach(el=>{
+    if(el.scrollHeight>el.clientHeight+1)el.classList.add("long");});
+  fit();}
+function fit(){const s=Math.min(1,(window.innerWidth-20)/1920);
+  const st=document.getElementById("stage");
+  st.style.transform=`scale(${s})`;st.style.height=`${1080*s}px`;}
+addEventListener("resize",fit);
+render();
+
+/* ---- slash tuner: sliders drive the CSS vars on #stage (survives re-render) ---- */
+const TUN={sx:-150,gx:80,gy:42,gr:620,ge:65,pgx:50,pgy:50,pgr:650,pge:100}; // mirrors #stage defaults
+const stage=document.getElementById("stage");
+const unit=k=>k==="sx"||k==="gr"||k==="pgr"?"px":"%";
+function applyTun(){for(const k in TUN)stage.style.setProperty("--"+k,TUN[k]+unit(k));}
+document.querySelectorAll("#tuner input[type=range]").forEach(el=>{
+  const k=el.id.slice(2),out=el.nextElementSibling;
+  el.value=TUN[k];out.textContent=TUN[k]+unit(k);
+  el.oninput=()=>{TUN[k]=+el.value;out.textContent=el.value+unit(k);applyTun();};
+});
+document.getElementById("t-guides").onchange=e=>
+  document.body.classList.toggle("guides-on",e.target.checked);
+document.getElementById("t-copy").onclick=e=>{
+  const g=TUN,st=(e,p)=>Math.round(e*p)+"%";
+  navigator.clipboard.writeText(
+`--sx:${g.sx}px;--gx:${g.gx}%;--gy:${g.gy}%;--gr:${g.gr}px;--ge:${g.ge}%;
+--pgx:${g.pgx}%;--pgy:${g.pgy}%;--pgr:${g.pgr}px;--pge:${g.pge}%;
+/* resolved slash: ::before left:${g.sx}px, ::after left:${g.sx+730}px,
+   radial-gradient(circle ${g.gr}px at ${g.gx}% ${g.gy}%,
+     #4cc4e2 0%,#2aa6cb ${st(g.ge,.32)},#1a86ad ${st(g.ge,.57)},#10719c ${st(g.ge,.77)},#0a5d86 ${g.ge}%,#053f63 ${st(g.ge,1.3)})
+   resolved mt6 panels:
+   radial-gradient(circle ${g.pgr}px at ${g.pgx}% ${g.pgy}%,
+     #1a86ad 0%,#10719c ${st(g.pge,.32)},#0a5d86 ${st(g.pge,.57)},#053f63 ${st(g.pge,.77)},#04304f ${g.pge}%,#02203a ${st(g.pge,1.3)}) */`);
+  e.target.textContent="copied!";setTimeout(()=>e.target.textContent="copy css",900);
+};
+applyTun();
+</script>
+</body>
+</html>
