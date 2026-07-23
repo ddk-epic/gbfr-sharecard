@@ -44,6 +44,9 @@ export const wrightstoneName = (mainTrait: TraitId | null | undefined) => {
   return prefix ? `${prefix} Wrightstone` : "Wrightstone";
 };
 
+export const bonusValueText = (bonusType: BonusTypeId, value: number) =>
+  bonusTypeById.get(bonusType)?.unit === "percent" ? `+${value}%` : `+${value}`;
+
 export const portraitUrl = (characterId: string) =>
   `${import.meta.env.BASE_URL}${characterById.get(characterId)?.portrait ?? ""}`;
 
@@ -65,7 +68,7 @@ export const summonEquipTiers = (
 
 const io = ioJson as CharacterCatalog;
 
-/** v1 ships Io only - the lookup shape is ready for the v2 roster. */
+/** Only Io has a catalog so far; the lookup shape is ready for the roster. */
 export function characterCatalog(id: string): CharacterCatalog {
   if (id !== "io") throw new Error(`no catalog for character: ${id}`);
   return io;
