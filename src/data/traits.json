@@ -1,0 +1,952 @@
+[
+  {
+    "id": "atk",
+    "name": "ATK",
+    "maxLevel": 50
+  },
+  {
+    "id": "aegis",
+    "name": "Aegis",
+    "maxLevel": 45
+  },
+  {
+    "id": "ain",
+    "name": "Ain",
+    "maxLevel": 15
+  },
+  {
+    "id": "alpha",
+    "name": "Alpha",
+    "maxLevel": 30
+  },
+  {
+    "id": "attack-down-resistance",
+    "name": "Attack Down Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "auto-potion",
+    "name": "Auto Potion",
+    "maxLevel": 15
+  },
+  {
+    "id": "autorevive",
+    "name": "Autorevive",
+    "maxLevel": 20
+  },
+  {
+    "id": "berserker",
+    "name": "Berserker",
+    "maxLevel": 30
+  },
+  {
+    "id": "berserker-echo",
+    "name": "Berserker Echo",
+    "maxLevel": 15
+  },
+  {
+    "id": "beta",
+    "name": "Beta",
+    "maxLevel": 30
+  },
+  {
+    "id": "blight-resistance",
+    "name": "Blight Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "boundary",
+    "name": "Boundary",
+    "maxLevel": 15
+  },
+  {
+    "id": "break-assassin",
+    "name": "Break Assassin",
+    "maxLevel": 30
+  },
+  {
+    "id": "burn-resistance",
+    "name": "Burn Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "butterfly-s-grace",
+    "name": "Butterfly's Grace",
+    "maxLevel": 15
+  },
+  {
+    "id": "butterfly-s-valor",
+    "name": "Butterfly's Valor",
+    "maxLevel": 15
+  },
+  {
+    "id": "butterfly-s-warpath",
+    "name": "Butterfly's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "cascade",
+    "name": "Cascade",
+    "maxLevel": 20
+  },
+  {
+    "id": "catastrophe",
+    "name": "Catastrophe",
+    "maxLevel": 30
+  },
+  {
+    "id": "catastrophe-nova",
+    "name": "Catastrophe Nova",
+    "maxLevel": 35
+  },
+  {
+    "id": "celestial-aqua",
+    "name": "Celestial Aqua",
+    "maxLevel": 15
+  },
+  {
+    "id": "celestial-incendo",
+    "name": "Celestial Incendo",
+    "maxLevel": 15
+  },
+  {
+    "id": "celestial-lumen",
+    "name": "Celestial Lumen",
+    "maxLevel": 15
+  },
+  {
+    "id": "celestial-nyx",
+    "name": "Celestial Nyx",
+    "maxLevel": 15
+  },
+  {
+    "id": "celestial-terra",
+    "name": "Celestial Terra",
+    "maxLevel": 15
+  },
+  {
+    "id": "celestial-ventus",
+    "name": "Celestial Ventus",
+    "maxLevel": 15
+  },
+  {
+    "id": "character-sigil",
+    "name": "Character Sigil",
+    "maxLevel": 15
+  },
+  {
+    "id": "charged-attack-dmg",
+    "name": "Charged Attack DMG",
+    "maxLevel": 30
+  },
+  {
+    "id": "combo-booster",
+    "name": "Combo Booster",
+    "maxLevel": 30
+  },
+  {
+    "id": "combo-finisher-dmg",
+    "name": "Combo Finisher DMG",
+    "maxLevel": 30
+  },
+  {
+    "id": "concentrated-fire",
+    "name": "Concentrated Fire",
+    "maxLevel": 30
+  },
+  {
+    "id": "crabby-resonance",
+    "name": "Crabby Resonance",
+    "maxLevel": 45
+  },
+  {
+    "id": "crabmiration",
+    "name": "Crabmiration",
+    "maxLevel": 45
+  },
+  {
+    "id": "crabvestment-returns",
+    "name": "Crabvestment Returns",
+    "maxLevel": 15
+  },
+  {
+    "id": "crimson-s-clout",
+    "name": "Crimson's Clout",
+    "maxLevel": 15
+  },
+  {
+    "id": "crimson-s-flight",
+    "name": "Crimson's Flight",
+    "maxLevel": 15
+  },
+  {
+    "id": "crimson-s-warpath",
+    "name": "Crimson's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "critical-hit-dmg",
+    "name": "Critical Hit DMG",
+    "maxLevel": 30
+  },
+  {
+    "id": "critical-hit-rate",
+    "name": "Critical Hit Rate",
+    "maxLevel": 45
+  },
+  {
+    "id": "dmg-cap",
+    "name": "DMG Cap",
+    "maxLevel": 65
+  },
+  {
+    "id": "dmg-cap-cardinal",
+    "name": "DMG Cap Cardinal",
+    "maxLevel": 15
+  },
+  {
+    "id": "dmg-cap-cobalt",
+    "name": "DMG Cap Cobalt",
+    "maxLevel": 15
+  },
+  {
+    "id": "dmg-cap-ecru",
+    "name": "DMG Cap Ecru",
+    "maxLevel": 15
+  },
+  {
+    "id": "dmg-cap-sage",
+    "name": "DMG Cap Sage",
+    "maxLevel": 15
+  },
+  {
+    "id": "dark-huntress-s-surge",
+    "name": "Dark Huntress's Surge",
+    "maxLevel": 15
+  },
+  {
+    "id": "dark-huntress-s-volley",
+    "name": "Dark Huntress's Volley",
+    "maxLevel": 15
+  },
+  {
+    "id": "dark-huntress-s-warpath",
+    "name": "Dark Huntress's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "darkflame-resistance",
+    "name": "Darkflame Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "defense-down-resistance",
+    "name": "Defense Down Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "divergence",
+    "name": "Divergence",
+    "maxLevel": 15
+  },
+  {
+    "id": "dizzy-resistance",
+    "name": "Dizzy Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "dodge-payback",
+    "name": "Dodge Payback",
+    "maxLevel": 30
+  },
+  {
+    "id": "dragonslayer-s-dominance",
+    "name": "Dragonslayer's Dominance",
+    "maxLevel": 15
+  },
+  {
+    "id": "dragonslayer-s-ingenuity",
+    "name": "Dragonslayer's Ingenuity",
+    "maxLevel": 15
+  },
+  {
+    "id": "dragonslayer-s-warpath",
+    "name": "Dragonslayer's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "drain",
+    "name": "Drain",
+    "maxLevel": 45
+  },
+  {
+    "id": "ebony-s-poise",
+    "name": "Ebony's Poise",
+    "maxLevel": 15
+  },
+  {
+    "id": "ebony-s-presence",
+    "name": "Ebony's Presence",
+    "maxLevel": 15
+  },
+  {
+    "id": "ebony-s-warpath",
+    "name": "Ebony's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "enmity",
+    "name": "Enmity",
+    "maxLevel": 30
+  },
+  {
+    "id": "eternal-rage-s-ethos",
+    "name": "Eternal Rage's Ethos",
+    "maxLevel": 15
+  },
+  {
+    "id": "eternal-rage-s-mettle",
+    "name": "Eternal Rage's Mettle",
+    "maxLevel": 15
+  },
+  {
+    "id": "eternal-rage-s-warpath",
+    "name": "Eternal Rage's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "exploiter",
+    "name": "Exploiter",
+    "maxLevel": 45
+  },
+  {
+    "id": "fast-learner",
+    "name": "Fast Learner",
+    "maxLevel": 15
+  },
+  {
+    "id": "fatebreaker",
+    "name": "Fatebreaker",
+    "maxLevel": 15
+  },
+  {
+    "id": "fearless-drive",
+    "name": "Fearless Drive",
+    "maxLevel": 15
+  },
+  {
+    "id": "fearless-heart",
+    "name": "Fearless Heart",
+    "maxLevel": 15
+  },
+  {
+    "id": "fearless-spirit",
+    "name": "Fearless Spirit",
+    "maxLevel": 15
+  },
+  {
+    "id": "firm-stance",
+    "name": "Firm Stance",
+    "maxLevel": 15
+  },
+  {
+    "id": "flight-over-fight",
+    "name": "Flight over Fight",
+    "maxLevel": 15
+  },
+  {
+    "id": "fortifying-vigor",
+    "name": "Fortifying Vigor",
+    "maxLevel": 50
+  },
+  {
+    "id": "founder-s-strategy",
+    "name": "Founder's Strategy",
+    "maxLevel": 15
+  },
+  {
+    "id": "founder-s-truth",
+    "name": "Founder's Truth",
+    "maxLevel": 15
+  },
+  {
+    "id": "founder-s-warpath",
+    "name": "Founder's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "gamma",
+    "name": "Gamma",
+    "maxLevel": 30
+  },
+  {
+    "id": "garrison",
+    "name": "Garrison",
+    "maxLevel": 45
+  },
+  {
+    "id": "gilding-vigor",
+    "name": "Gilding Vigor",
+    "maxLevel": 50
+  },
+  {
+    "id": "glaciate-resistance",
+    "name": "Glaciate Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "glass-cannon",
+    "name": "Glass Cannon",
+    "maxLevel": 15
+  },
+  {
+    "id": "greater-aegis",
+    "name": "Greater Aegis",
+    "maxLevel": 30
+  },
+  {
+    "id": "guard-payback",
+    "name": "Guard Payback",
+    "maxLevel": 30
+  },
+  {
+    "id": "guardian-s-conviction",
+    "name": "Guardian's Conviction",
+    "maxLevel": 15
+  },
+  {
+    "id": "guardian-s-honor",
+    "name": "Guardian's Honor",
+    "maxLevel": 15
+  },
+  {
+    "id": "guardian-s-warpath",
+    "name": "Guardian's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "guts",
+    "name": "Guts",
+    "maxLevel": 20
+  },
+  {
+    "id": "hp",
+    "name": "HP",
+    "maxLevel": 50
+  },
+  {
+    "id": "head-start",
+    "name": "Head Start",
+    "maxLevel": 30
+  },
+  {
+    "id": "held-under-resistance",
+    "name": "Held Under Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "helmsman-s-navigation",
+    "name": "Helmsman's Navigation",
+    "maxLevel": 15
+  },
+  {
+    "id": "helmsman-s-tenacity",
+    "name": "Helmsman's Tenacity",
+    "maxLevel": 15
+  },
+  {
+    "id": "helmsman-s-warpath",
+    "name": "Helmsman's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "hero-s-creed",
+    "name": "Hero's Creed",
+    "maxLevel": 15
+  },
+  {
+    "id": "hero-s-warpath",
+    "name": "Hero's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "hero-s-will",
+    "name": "Hero's Will",
+    "maxLevel": 15
+  },
+  {
+    "id": "holy-knight-s-grandeur",
+    "name": "Holy Knight's Grandeur",
+    "maxLevel": 15
+  },
+  {
+    "id": "holy-knight-s-luster",
+    "name": "Holy Knight's Luster",
+    "maxLevel": 15
+  },
+  {
+    "id": "holy-knight-s-warpath",
+    "name": "Holy Knight's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "immortal-shell",
+    "name": "Immortal Shell",
+    "maxLevel": 15
+  },
+  {
+    "id": "improved-dodge",
+    "name": "Improved Dodge",
+    "maxLevel": 15
+  },
+  {
+    "id": "improved-guard",
+    "name": "Improved Guard",
+    "maxLevel": 30
+  },
+  {
+    "id": "improved-healing",
+    "name": "Improved Healing",
+    "maxLevel": 30
+  },
+  {
+    "id": "injury-to-insult",
+    "name": "Injury to Insult",
+    "maxLevel": 30
+  },
+  {
+    "id": "instilling-vigor",
+    "name": "Instilling Vigor",
+    "maxLevel": 50
+  },
+  {
+    "id": "less-is-more",
+    "name": "Less Is More",
+    "maxLevel": 30
+  },
+  {
+    "id": "life-on-the-line",
+    "name": "Life on the Line",
+    "maxLevel": 30
+  },
+  {
+    "id": "linked-together",
+    "name": "Linked Together",
+    "maxLevel": 30
+  },
+  {
+    "id": "lord-s-ambition",
+    "name": "Lord's Ambition",
+    "maxLevel": 15
+  },
+  {
+    "id": "lord-s-procession",
+    "name": "Lord's Procession",
+    "maxLevel": 15
+  },
+  {
+    "id": "lord-s-warpath",
+    "name": "Lord's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "low-profile",
+    "name": "Low Profile",
+    "maxLevel": 15
+  },
+  {
+    "id": "lucky-charge",
+    "name": "Lucky Charge",
+    "maxLevel": 20
+  },
+  {
+    "id": "mage-s-aspiration",
+    "name": "Mage's Aspiration",
+    "maxLevel": 15
+  },
+  {
+    "id": "mage-s-savvy",
+    "name": "Mage's Savvy",
+    "maxLevel": 15
+  },
+  {
+    "id": "mage-s-warpath",
+    "name": "Mage's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "natural-defenses",
+    "name": "Natural Defenses",
+    "maxLevel": 15
+  },
+  {
+    "id": "nimble-defense",
+    "name": "Nimble Defense",
+    "maxLevel": 30
+  },
+  {
+    "id": "nimble-onslaught",
+    "name": "Nimble Onslaught",
+    "maxLevel": 30
+  },
+  {
+    "id": "overdrive-assassin",
+    "name": "Overdrive Assassin",
+    "maxLevel": 30
+  },
+  {
+    "id": "paralysis-resistance",
+    "name": "Paralysis Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "path-to-mastery",
+    "name": "Path to Mastery",
+    "maxLevel": 15
+  },
+  {
+    "id": "phantasm-s-concord",
+    "name": "Phantasm's Concord",
+    "maxLevel": 15
+  },
+  {
+    "id": "phantasm-s-harmony",
+    "name": "Phantasm's Harmony",
+    "maxLevel": 15
+  },
+  {
+    "id": "phantasm-s-warpath",
+    "name": "Phantasm's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "poison-resistance",
+    "name": "Poison Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "potent-greens",
+    "name": "Potent Greens",
+    "maxLevel": 30
+  },
+  {
+    "id": "potion-hoarder",
+    "name": "Potion Hoarder",
+    "maxLevel": 15
+  },
+  {
+    "id": "power-hungry",
+    "name": "Power Hungry",
+    "maxLevel": 30
+  },
+  {
+    "id": "precise-resilience",
+    "name": "Precise Resilience",
+    "maxLevel": 30
+  },
+  {
+    "id": "precise-wrath",
+    "name": "Precise Wrath",
+    "maxLevel": 15
+  },
+  {
+    "id": "provoke",
+    "name": "Provoke",
+    "maxLevel": 15
+  },
+  {
+    "id": "quick-charge",
+    "name": "Quick Charge",
+    "maxLevel": 30
+  },
+  {
+    "id": "quick-cooldown",
+    "name": "Quick Cooldown",
+    "maxLevel": 45
+  },
+  {
+    "id": "regen",
+    "name": "Regen",
+    "maxLevel": 45
+  },
+  {
+    "id": "roll-of-the-die",
+    "name": "Roll of the Die",
+    "maxLevel": 15
+  },
+  {
+    "id": "rose-s-blooming",
+    "name": "Rose's Blooming",
+    "maxLevel": 15
+  },
+  {
+    "id": "rose-s-profusion",
+    "name": "Rose's Profusion",
+    "maxLevel": 15
+  },
+  {
+    "id": "rose-s-warpath",
+    "name": "Rose's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "rupie-tycoon",
+    "name": "Rupie Tycoon",
+    "maxLevel": 15
+  },
+  {
+    "id": "sba-sealed-resistance",
+    "name": "SBA Sealed Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "sandtomb-resistance",
+    "name": "Sandtomb Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "seven-net",
+    "name": "Seven Net",
+    "maxLevel": 6
+  },
+  {
+    "id": "seven-star-boundary",
+    "name": "Seven-Star Boundary",
+    "maxLevel": 15
+  },
+  {
+    "id": "sigil-booster",
+    "name": "Sigil Booster",
+    "maxLevel": 15
+  },
+  {
+    "id": "skill-sealed-resistance",
+    "name": "Skill Sealed Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "skilled-assault",
+    "name": "Skilled Assault",
+    "maxLevel": 30
+  },
+  {
+    "id": "slow-resistance",
+    "name": "Slow Resistance",
+    "maxLevel": 15
+  },
+  {
+    "id": "spartan-echo",
+    "name": "Spartan Echo",
+    "maxLevel": 15
+  },
+  {
+    "id": "spirit-edge-s-fury",
+    "name": "Spirit Edge's Fury",
+    "maxLevel": 15
+  },
+  {
+    "id": "spirit-edge-s-rally",
+    "name": "Spirit Edge's Rally",
+    "maxLevel": 15
+  },
+  {
+    "id": "spirit-edge-s-warpath",
+    "name": "Spirit Edge's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "stamina",
+    "name": "Stamina",
+    "maxLevel": 30
+  },
+  {
+    "id": "status-resistance",
+    "name": "Status Resistance",
+    "maxLevel": 30
+  },
+  {
+    "id": "steady-focus",
+    "name": "Steady Focus",
+    "maxLevel": 15
+  },
+  {
+    "id": "steel-nerves",
+    "name": "Steel Nerves",
+    "maxLevel": 15
+  },
+  {
+    "id": "stout-heart",
+    "name": "Stout Heart",
+    "maxLevel": 15
+  },
+  {
+    "id": "stronghold",
+    "name": "Stronghold",
+    "maxLevel": 30
+  },
+  {
+    "id": "stun-power",
+    "name": "Stun Power",
+    "maxLevel": 45
+  },
+  {
+    "id": "super-ultimate-perfect-dodge",
+    "name": "Super Ultimate Perfect Dodge",
+    "maxLevel": 15
+  },
+  {
+    "id": "supernova",
+    "name": "Supernova",
+    "maxLevel": 15
+  },
+  {
+    "id": "supplementary-dmg",
+    "name": "Supplementary DMG",
+    "maxLevel": 45
+  },
+  {
+    "id": "supplements",
+    "name": "Supplements",
+    "maxLevel": 15
+  },
+  {
+    "id": "supreme-primarch-s-awe",
+    "name": "Supreme Primarch's Awe",
+    "maxLevel": 15
+  },
+  {
+    "id": "supreme-primarch-s-nimbus",
+    "name": "Supreme Primarch's Nimbus",
+    "maxLevel": 15
+  },
+  {
+    "id": "supreme-primarch-s-warpath",
+    "name": "Supreme Primarch's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "swordmaster-s-art",
+    "name": "Swordmaster's Art",
+    "maxLevel": 15
+  },
+  {
+    "id": "swordmaster-s-prowess",
+    "name": "Swordmaster's Prowess",
+    "maxLevel": 15
+  },
+  {
+    "id": "swordmaster-s-warpath",
+    "name": "Swordmaster's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "throw-dmg",
+    "name": "Throw DMG",
+    "maxLevel": 30
+  },
+  {
+    "id": "two-crown-boundary",
+    "name": "Two-Crown Boundary",
+    "maxLevel": 15
+  },
+  {
+    "id": "tyranny",
+    "name": "Tyranny",
+    "maxLevel": 30
+  },
+  {
+    "id": "unbound-exertion",
+    "name": "Unbound Exertion",
+    "maxLevel": 15
+  },
+  {
+    "id": "unbound-master",
+    "name": "Unbound Master",
+    "maxLevel": 55
+  },
+  {
+    "id": "unbound-strike",
+    "name": "Unbound Strike",
+    "maxLevel": 15
+  },
+  {
+    "id": "unbound-technique",
+    "name": "Unbound Technique",
+    "maxLevel": 15
+  },
+  {
+    "id": "untouchable",
+    "name": "Untouchable",
+    "maxLevel": 15
+  },
+  {
+    "id": "uplift",
+    "name": "Uplift",
+    "maxLevel": 45
+  },
+  {
+    "id": "versalis-foundation",
+    "name": "Versalis Foundation",
+    "maxLevel": 15
+  },
+  {
+    "id": "versalis-heart",
+    "name": "Versalis Heart",
+    "maxLevel": 15
+  },
+  {
+    "id": "versalis-ignition",
+    "name": "Versalis Ignition",
+    "maxLevel": 15
+  },
+  {
+    "id": "veteran-s-insight",
+    "name": "Veteran's Insight",
+    "maxLevel": 15
+  },
+  {
+    "id": "veteran-s-vision",
+    "name": "Veteran's Vision",
+    "maxLevel": 15
+  },
+  {
+    "id": "veteran-s-warpath",
+    "name": "Veteran's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "war-elemental",
+    "name": "War Elemental",
+    "maxLevel": 15
+  },
+  {
+    "id": "warpath",
+    "name": "Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "weak-point-dmg",
+    "name": "Weak Point DMG",
+    "maxLevel": 45
+  },
+  {
+    "id": "white-dragon-s-glory",
+    "name": "White Dragon's Glory",
+    "maxLevel": 15
+  },
+  {
+    "id": "white-dragon-s-oath",
+    "name": "White Dragon's Oath",
+    "maxLevel": 15
+  },
+  {
+    "id": "white-dragon-s-warpath",
+    "name": "White Dragon's Warpath",
+    "maxLevel": 15
+  },
+  {
+    "id": "window-of-opportunity",
+    "name": "Window of Opportunity",
+    "maxLevel": 15
+  }
+]

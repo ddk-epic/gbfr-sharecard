@@ -1,0 +1,257 @@
+[
+  {
+    "id": "little-witch-scepter",
+    "name": "Little Witch Scepter",
+    "series": "Defender",
+    "characterId": "io",
+    "defaultAtk": 9201,
+    "defaultHp": 4289,
+    "rows": [
+      {
+        "trait": "hp",
+        "level": 35
+      },
+      {
+        "trait": "dmg-cap-ecru",
+        "level": 15
+      },
+      {
+        "trait": "unbound-exertion",
+        "level": 15
+      },
+      {
+        "options": [
+          "greater-aegis",
+          "regen",
+          "garrison",
+          "stronghold",
+          "improved-guard",
+          "status-resistance"
+        ],
+        "level": 25
+      },
+      {
+        "options": [
+          "regen",
+          "garrison",
+          "stronghold",
+          "improved-guard",
+          "status-resistance"
+        ],
+        "level": 10
+      }
+    ]
+  },
+  {
+    "id": "tupsimati",
+    "name": "Tupsimati",
+    "series": "Executioner",
+    "characterId": "io",
+    "defaultAtk": 20518,
+    "defaultHp": 3097,
+    "rows": [
+      {
+        "trait": "exploiter",
+        "level": 35
+      },
+      {
+        "trait": "dmg-cap-cardinal",
+        "level": 15
+      },
+      {
+        "trait": "unbound-technique",
+        "level": 15
+      },
+      {
+        "options": [
+          "break-assassin",
+          "quick-cooldown",
+          "uplift",
+          "nimble-onslaught",
+          "status-resistance"
+        ],
+        "level": 25
+      },
+      {
+        "options": [
+          "break-assassin",
+          "quick-cooldown",
+          "cascade",
+          "uplift",
+          "nimble-onslaught",
+          "status-resistance",
+          "autorevive"
+        ],
+        "level": 10
+      }
+    ]
+  },
+  {
+    "id": "colossus-cane-omega",
+    "name": "Colossus Cane Omega",
+    "series": "Stinger",
+    "characterId": "io",
+    "defaultAtk": 19497,
+    "defaultHp": 3269,
+    "rows": [
+      {
+        "trait": "critical-hit-rate",
+        "level": 35
+      },
+      {
+        "trait": "dmg-cap-cobalt",
+        "level": 15
+      },
+      {
+        "trait": "unbound-technique",
+        "level": 15
+      },
+      {
+        "options": [
+          "critical-hit-dmg",
+          "life-on-the-line",
+          "overdrive-assassin",
+          "dodge-payback",
+          "firm-stance",
+          "status-resistance"
+        ],
+        "level": 25
+      },
+      {
+        "options": [
+          "critical-hit-dmg",
+          "life-on-the-line",
+          "overdrive-assassin",
+          "dodge-payback",
+          "firm-stance",
+          "status-resistance",
+          "guts"
+        ],
+        "level": 10
+      }
+    ]
+  },
+  {
+    "id": "zhezl",
+    "name": "Zhezl",
+    "series": "Stunner",
+    "characterId": "io",
+    "defaultAtk": 19858,
+    "defaultHp": 3786,
+    "rows": [
+      {
+        "trait": "stun-power",
+        "level": 35
+      },
+      {
+        "trait": "dmg-cap-sage",
+        "level": 15
+      },
+      {
+        "trait": "unbound-exertion",
+        "level": 15
+      },
+      {
+        "options": [
+          "stamina",
+          "linked-together",
+          "guard-payback",
+          "aegis",
+          "status-resistance"
+        ],
+        "level": 25
+      },
+      {
+        "options": [
+          "stamina",
+          "linked-together",
+          "guard-payback",
+          "aegis",
+          "status-resistance",
+          "potion-hoarder"
+        ],
+        "level": 10
+      }
+    ]
+  },
+  {
+    "id": "gambanteinn",
+    "name": "Gambanteinn",
+    "series": "Ascension",
+    "characterId": "io",
+    "defaultAtk": 19711,
+    "defaultHp": 4478,
+    "rows": [
+      {
+        "trait": "atk",
+        "level": 35
+      },
+      {
+        "trait": "sigil-booster",
+        "level": 2
+      },
+      {
+        "trait": "unbound-strike",
+        "level": 15
+      },
+      {
+        "options": [
+          "hp",
+          "critical-hit-rate",
+          "stun-power",
+          "linked-together",
+          "combo-booster",
+          "supplementary-dmg",
+          "drain",
+          "precise-wrath",
+          "precise-resilience"
+        ],
+        "level": 25
+      },
+      {
+        "options": ["supernova", "dmg-cap"],
+        "level": 15
+      }
+    ]
+  },
+  {
+    "id": "caduceus",
+    "name": "Caduceus",
+    "series": "Terminus",
+    "characterId": "io",
+    "defaultAtk": 20583,
+    "defaultHp": 1159,
+    "rows": [
+      {
+        "trait": "catastrophe-nova",
+        "level": 35
+      },
+      {
+        "options": [
+          "enmity",
+          "stamina",
+          "tyranny",
+          "combo-booster",
+          "overdrive-assassin",
+          "guard-payback",
+          "glass-cannon",
+          "regen",
+          "drain"
+        ],
+        "level": 25
+      },
+      {
+        "trait": "dmg-cap",
+        "level": 15
+      },
+      {
+        "trait": "sigil-booster",
+        "level": 1
+      },
+      {
+        "trait": "unbound-master",
+        "level": 55
+      }
+    ]
+  }
+]

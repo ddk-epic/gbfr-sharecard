@@ -1,0 +1,209 @@
+[
+  {
+    "id": "gran",
+    "name": "Gran",
+    "artId": "0001",
+    "portrait": "portraits/gran.webp",
+    "portraitY": 20,
+    "element": "Wind",
+    "enabled": false
+  },
+  {
+    "id": "djeeta",
+    "name": "Djeeta",
+    "artId": "0101",
+    "portrait": "portraits/djeeta.webp",
+    "portraitY": 20,
+    "element": "Wind",
+    "enabled": false
+  },
+  {
+    "id": "katalina",
+    "name": "Katalina",
+    "artId": "0200",
+    "portrait": "portraits/katalina.webp",
+    "portraitY": 20,
+    "element": "Water",
+    "enabled": false
+  },
+  {
+    "id": "rackam",
+    "name": "Rackam",
+    "artId": "0300",
+    "portrait": "portraits/rackam.webp",
+    "portraitY": 20,
+    "element": "Fire",
+    "enabled": false
+  },
+  {
+    "id": "io",
+    "name": "Io",
+    "artId": "0400",
+    "portrait": "portraits/io.webp",
+    "portraitY": 20,
+    "element": "Light",
+    "enabled": true
+  },
+  {
+    "id": "eugen",
+    "name": "Eugen",
+    "artId": "0500",
+    "portrait": "portraits/eugen.webp",
+    "portraitY": 20,
+    "element": "Earth",
+    "enabled": false
+  },
+  {
+    "id": "rosetta",
+    "name": "Rosetta",
+    "artId": "0600",
+    "portrait": "portraits/rosetta.webp",
+    "portraitY": 20,
+    "element": "Dark",
+    "enabled": false
+  },
+  {
+    "id": "ferry",
+    "name": "Ferry",
+    "artId": "0700",
+    "portrait": "portraits/ferry.webp",
+    "portraitY": 20,
+    "element": "Light",
+    "enabled": false
+  },
+  {
+    "id": "lancelot",
+    "name": "Lancelot",
+    "artId": "0800",
+    "portrait": "portraits/lancelot.webp",
+    "portraitY": 20,
+    "element": "Water",
+    "enabled": false
+  },
+  {
+    "id": "vane",
+    "name": "Vane",
+    "artId": "0900",
+    "portrait": "portraits/vane.webp",
+    "portraitY": 20,
+    "element": "Water",
+    "enabled": false
+  },
+  {
+    "id": "percival",
+    "name": "Percival",
+    "artId": "1000",
+    "portrait": "portraits/percival.webp",
+    "portraitY": 20,
+    "element": "Fire",
+    "enabled": false
+  },
+  {
+    "id": "siegfried",
+    "name": "Siegfried",
+    "artId": "1100",
+    "portrait": "portraits/siegfried.webp",
+    "portraitY": 20,
+    "element": "Earth",
+    "enabled": false
+  },
+  {
+    "id": "charlotta",
+    "name": "Charlotta",
+    "artId": "1200",
+    "portrait": "portraits/charlotta.webp",
+    "portraitY": 20,
+    "element": "Light",
+    "enabled": false
+  },
+  {
+    "id": "yodarha",
+    "name": "Yodarha",
+    "artId": "1300",
+    "portrait": "portraits/yodarha.webp",
+    "portraitY": 20,
+    "element": "Wind",
+    "enabled": false
+  },
+  {
+    "id": "narmaya",
+    "name": "Narmaya",
+    "artId": "1400",
+    "portrait": "portraits/narmaya.webp",
+    "portraitY": 20,
+    "element": "Dark",
+    "enabled": false
+  },
+  {
+    "id": "ghandagoza",
+    "name": "Ghandagoza",
+    "artId": "1500",
+    "portrait": "portraits/ghandagoza.webp",
+    "portraitY": 20,
+    "element": "Fire",
+    "enabled": false
+  },
+  {
+    "id": "zeta",
+    "name": "Zeta",
+    "artId": "1600",
+    "portrait": "portraits/zeta.webp",
+    "portraitY": 20,
+    "element": "Fire",
+    "enabled": false
+  },
+  {
+    "id": "vaseraga",
+    "name": "Vaseraga",
+    "artId": "1700",
+    "portrait": "portraits/vaseraga.webp",
+    "portraitY": 20,
+    "element": "Dark",
+    "enabled": false
+  },
+  {
+    "id": "cagliostro",
+    "name": "Cagliostro",
+    "artId": "1800",
+    "portrait": "portraits/cagliostro.webp",
+    "portraitY": 20,
+    "element": "Earth",
+    "enabled": false
+  },
+  {
+    "id": "id",
+    "name": "Id",
+    "artId": "1901",
+    "portrait": "portraits/id.webp",
+    "portraitY": 20,
+    "element": "Dark",
+    "enabled": false
+  },
+  {
+    "id": "sandalphon",
+    "name": "Sandalphon",
+    "artId": "2100",
+    "portrait": "portraits/sandalphon.webp",
+    "portraitY": 20,
+    "element": "Light",
+    "enabled": false
+  },
+  {
+    "id": "seofon",
+    "name": "Seofon",
+    "artId": "2200",
+    "portrait": "portraits/seofon.webp",
+    "portraitY": 20,
+    "element": "Wind",
+    "enabled": false
+  },
+  {
+    "id": "tweyen",
+    "name": "Tweyen",
+    "artId": "2300",
+    "portrait": "portraits/tweyen.webp",
+    "portraitY": 20,
+    "element": "Light",
+    "enabled": false
+  }
+]

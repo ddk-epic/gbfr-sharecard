@@ -1,0 +1,101 @@
+[
+  {
+    "id": "attack-power-up",
+    "name": "Attack Power Up",
+    "unit": "flat",
+    "overMastery": {
+      "min": 200,
+      "max": 1000
+    }
+  },
+  {
+    "id": "health-up",
+    "name": "Health Up",
+    "unit": "flat",
+    "overMastery": {
+      "min": 400,
+      "max": 2000
+    }
+  },
+  {
+    "id": "critical-hit-rate-up",
+    "name": "Critical Hit Rate Up",
+    "unit": "percent",
+    "overMastery": {
+      "min": 2,
+      "max": 20
+    }
+  },
+  {
+    "id": "stun-power-up",
+    "name": "Stun Power Up",
+    "unit": "percent",
+    "overMastery": {
+      "min": 2,
+      "max": 20
+    }
+  },
+  {
+    "id": "skill-damage-up",
+    "name": "Skill Damage Up",
+    "unit": "percent",
+    "overMastery": {
+      "min": 2,
+      "max": 20
+    }
+  },
+  {
+    "id": "skybound-art-damage-up",
+    "name": "Skybound Art Damage Up",
+    "unit": "percent",
+    "overMastery": {
+      "min": 2,
+      "max": 20
+    }
+  },
+  {
+    "id": "chain-burst-damage-up",
+    "name": "Chain Burst Damage Up",
+    "unit": "percent",
+    "overMastery": {
+      "min": 2,
+      "max": 20
+    }
+  },
+  {
+    "id": "normal-attack-damage-cap-up",
+    "name": "Normal Attack Damage Cap Up",
+    "unit": "percent",
+    "overMastery": {
+      "min": 2,
+      "max": 20
+    }
+  },
+  {
+    "id": "skill-damage-cap-up",
+    "name": "Skill Damage Cap Up",
+    "unit": "percent",
+    "overMastery": {
+      "min": 2,
+      "max": 20
+    }
+  },
+  {
+    "id": "skybound-art-damage-cap-up",
+    "name": "Skybound Art Damage Cap Up",
+    "unit": "percent",
+    "overMastery": {
+      "min": 2,
+      "max": 20
+    }
+  },
+  {
+    "id": "healing-cap-up",
+    "name": "Healing Cap Up",
+    "unit": "percent",
+    "overMastery": {
+      "min": 2,
+      "max": 20
+    }
+  }
+]

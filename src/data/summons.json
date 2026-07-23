@@ -1,0 +1,702 @@
+[
+  {
+    "id": "ahriman",
+    "name": "Ahriman",
+    "traits": [
+      "quick-charge",
+      "dodge-payback",
+      "provoke",
+      "defense-down-resistance"
+    ],
+    "equipTier": "low"
+  },
+  {
+    "id": "albacore",
+    "name": "Albacore",
+    "traits": [
+      "natural-defenses",
+      "path-to-mastery",
+      "rupie-tycoon",
+      "fast-learner"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "ancient-dragon",
+    "name": "Ancient Dragon",
+    "traits": [
+      "auto-potion",
+      "greater-aegis",
+      "guts",
+      "less-is-more",
+      "drain",
+      "hp"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "aqua-gyre",
+    "name": "Aqua Gyre",
+    "traits": ["stun-power", "atk", "precise-resilience"],
+    "equipTier": "low"
+  },
+  {
+    "id": "ballistic-ballista",
+    "name": "Ballistic Ballista",
+    "traits": ["dmg-cap", "aegis", "celestial-nyx", "enmity"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "beelzebub",
+    "name": "Beelzebub",
+    "traits": [
+      "spartan-echo",
+      "dmg-cap",
+      "supplementary-dmg",
+      "drain",
+      "celestial-lumen",
+      "improved-guard"
+    ],
+    "equipTier": "legendary"
+  },
+  {
+    "id": "behemoth",
+    "name": "Behemoth",
+    "traits": [
+      "stout-heart",
+      "supplementary-dmg",
+      "uplift",
+      "celestial-ventus",
+      "less-is-more",
+      "critical-hit-rate"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "blizzadile",
+    "name": "Blizzadile",
+    "traits": [
+      "potion-hoarder",
+      "celestial-ventus",
+      "critical-hit-rate",
+      "skilled-assault",
+      "glaciate-resistance"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "blood-dyed-rakshasa",
+    "name": "Blood-Dyed Rakshasa",
+    "traits": [
+      "greater-aegis",
+      "dmg-cap",
+      "quick-charge",
+      "celestial-ventus",
+      "garrison"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "cat",
+    "name": "Cat",
+    "traits": ["nimble-onslaught", "nimble-defense", "dodge-payback"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "cobra",
+    "name": "Cobra",
+    "traits": ["stun-power", "tyranny", "poison-resistance"],
+    "equipTier": "low"
+  },
+  {
+    "id": "corvell-earthwyrm",
+    "name": "Corvell Earthwyrm",
+    "traits": [
+      "potent-greens",
+      "autorevive",
+      "dmg-cap",
+      "sandtomb-resistance",
+      "celestial-terra",
+      "celestial-nyx"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "crew-alliance-rafale",
+    "name": "Crew Alliance Rafale",
+    "traits": ["celestial-ventus", "regen", "lucky-charge"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "cruel-overseer",
+    "name": "Cruel Overseer",
+    "traits": ["celestial-lumen", "critical-hit-rate", "weak-point-dmg"],
+    "equipTier": "low"
+  },
+  {
+    "id": "cyaegha",
+    "name": "Cyaegha",
+    "traits": [
+      "less-is-more",
+      "concentrated-fire",
+      "injury-to-insult",
+      "glaciate-resistance"
+    ],
+    "equipTier": "low"
+  },
+  {
+    "id": "dark-gyre",
+    "name": "Dark Gyre",
+    "traits": ["tyranny", "celestial-nyx", "combo-booster"],
+    "equipTier": "low"
+  },
+  {
+    "id": "droita-mother",
+    "name": "Droita Mother",
+    "traits": [
+      "less-is-more",
+      "steel-nerves",
+      "low-profile",
+      "paralysis-resistance"
+    ],
+    "equipTier": "low"
+  },
+  {
+    "id": "droita-mother-assault",
+    "name": "Droita Mother (Assault)",
+    "traits": [
+      "celestial-terra",
+      "stun-power",
+      "provoke",
+      "paralysis-resistance"
+    ],
+    "equipTier": "low"
+  },
+  {
+    "id": "elder-wyvern",
+    "name": "Elder Wyvern",
+    "traits": ["cascade", "stun-power", "injury-to-insult", "burn-resistance"],
+    "equipTier": "low"
+  },
+  {
+    "id": "elusious-windwyrm",
+    "name": "Elusious Windwyrm",
+    "traits": [
+      "natural-defenses",
+      "supplementary-dmg",
+      "divergence",
+      "celestial-terra",
+      "cascade",
+      "improved-guard"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "ennugi",
+    "name": "Ennugi",
+    "traits": [
+      "potent-greens",
+      "divergence",
+      "greater-aegis",
+      "less-is-more",
+      "slow-resistance",
+      "glass-cannon"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "evyl-blackwyrm",
+    "name": "Evyl Blackwyrm",
+    "traits": [
+      "spartan-echo",
+      "divergence",
+      "stronghold",
+      "celestial-incendo",
+      "slow-resistance",
+      "steel-nerves"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "family-zathba",
+    "name": "Family Zathba",
+    "traits": ["quick-cooldown", "steel-nerves", "head-start"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "fire-spirit",
+    "name": "Fire Spirit",
+    "traits": ["aegis", "critical-hit-rate", "steady-focus", "burn-resistance"],
+    "equipTier": "low"
+  },
+  {
+    "id": "flame-gyre",
+    "name": "Flame Gyre",
+    "traits": ["celestial-incendo", "life-on-the-line", "skilled-assault"],
+    "equipTier": "low"
+  },
+  {
+    "id": "folcan-defense-corps",
+    "name": "Folcan Defense Corps",
+    "traits": ["drain", "fatebreaker", "injury-to-insult"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "furycane",
+    "name": "Furycane",
+    "traits": [
+      "divergence",
+      "supplementary-dmg",
+      "regen",
+      "stronghold",
+      "critical-hit-dmg"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "furycane-nihilla",
+    "name": "Furycane Nihilla",
+    "traits": [
+      "potion-hoarder",
+      "guts",
+      "blight-resistance",
+      "fatebreaker",
+      "celestial-aqua"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "gerasene",
+    "name": "Gerasene",
+    "traits": [
+      "guts",
+      "drain",
+      "improved-healing",
+      "skilled-assault",
+      "slow-resistance"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "goblin-gladiator",
+    "name": "Goblin Gladiator",
+    "traits": [
+      "life-on-the-line",
+      "hp",
+      "charged-attack-dmg",
+      "defense-down-resistance"
+    ],
+    "equipTier": "low"
+  },
+  {
+    "id": "goblin-soldier",
+    "name": "Goblin Soldier",
+    "traits": ["linked-together", "atk", "enmity", "defense-down-resistance"],
+    "equipTier": "low"
+  },
+  {
+    "id": "goblin-warrior",
+    "name": "Goblin Warrior",
+    "traits": [
+      "greater-aegis",
+      "stun-power",
+      "critical-hit-dmg",
+      "charged-attack-dmg"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "goldslime",
+    "name": "Goldslime",
+    "traits": [
+      "war-elemental",
+      "path-to-mastery",
+      "rupie-tycoon",
+      "fast-learner"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "griffin",
+    "name": "Griffin",
+    "traits": ["uplift", "quick-cooldown", "stamina", "combo-finisher-dmg"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "hope-filled-skydwellers",
+    "name": "Hope-Filled Skydwellers",
+    "traits": ["regen", "aegis", "steady-focus"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "hornbird",
+    "name": "Hornbird",
+    "traits": ["quick-charge", "quick-cooldown", "combo-finisher-dmg"],
+    "equipTier": "low"
+  },
+  {
+    "id": "infernadile",
+    "name": "Infernadile",
+    "traits": [
+      "stronghold",
+      "fatebreaker",
+      "celestial-aqua",
+      "low-profile",
+      "burn-resistance"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "light-gyre",
+    "name": "Light Gyre",
+    "traits": ["linked-together", "hp", "overdrive-assassin"],
+    "equipTier": "low"
+  },
+  {
+    "id": "lilith",
+    "name": "Lilith",
+    "traits": [
+      "war-elemental",
+      "uplift",
+      "potion-hoarder",
+      "tyranny",
+      "linked-together",
+      "improved-healing"
+    ],
+    "equipTier": "legendary"
+  },
+  {
+    "id": "lucilius",
+    "name": "Lucilius",
+    "traits": [
+      "berserker-echo",
+      "alpha",
+      "beta",
+      "gamma",
+      "tyranny",
+      "celestial-terra"
+    ],
+    "equipTier": "legendary"
+  },
+  {
+    "id": "lurker-in-the-dark",
+    "name": "Lurker in the Dark",
+    "traits": ["divergence"],
+    "equipTier": "low"
+  },
+  {
+    "id": "managarmr",
+    "name": "Managarmr",
+    "traits": [
+      "greater-aegis",
+      "stronghold",
+      "quick-cooldown",
+      "regen",
+      "glaciate-resistance"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "managarmr-nihilla",
+    "name": "Managarmr Nihilla",
+    "traits": [
+      "nimble-onslaught",
+      "potion-hoarder",
+      "fatebreaker",
+      "nimble-defense",
+      "blight-resistance"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "mechanized-executioner",
+    "name": "Mechanized Executioner",
+    "traits": [
+      "nimble-onslaught",
+      "nimble-defense",
+      "concentrated-fire",
+      "weak-point-dmg"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "mellose-clan",
+    "name": "Mellose Clan",
+    "traits": ["aegis", "improved-healing", "berserker"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "nazarbonju",
+    "name": "Nazarbonju",
+    "traits": ["guts", "cascade", "glass-cannon", "glaciate-resistance"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "obsidian-raptor",
+    "name": "Obsidian Raptor",
+    "traits": [
+      "supplementary-dmg",
+      "celestial-terra",
+      "guard-payback",
+      "combo-booster"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "ominous-form",
+    "name": "Ominous Form",
+    "traits": ["regen", "celestial-ventus", "head-start", "slow-resistance"],
+    "equipTier": "low"
+  },
+  {
+    "id": "pyet-a",
+    "name": "Pyet-A",
+    "traits": [
+      "improved-dodge",
+      "nimble-onslaught",
+      "stronghold",
+      "celestial-terra",
+      "autorevive",
+      "improved-guard"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "quakadile",
+    "name": "Quakadile",
+    "traits": [
+      "autorevive",
+      "cascade",
+      "dodge-payback",
+      "provoke",
+      "greater-aegis"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "radis-whitewyrm",
+    "name": "Radis Whitewyrm",
+    "traits": [
+      "improved-dodge",
+      "stronghold",
+      "potion-hoarder",
+      "celestial-incendo",
+      "uplift",
+      "celestial-aqua"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "referee",
+    "name": "Referee",
+    "traits": ["alpha", "beta", "gamma"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "rock-golem",
+    "name": "Rock Golem",
+    "traits": ["autorevive", "cascade", "improved-guard", "power-hungry"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "rolan",
+    "name": "Rolan",
+    "traits": [
+      "war-elemental",
+      "uplift",
+      "autorevive",
+      "quick-cooldown",
+      "drain",
+      "aegis"
+    ],
+    "equipTier": "legendary"
+  },
+  {
+    "id": "ruby-golem",
+    "name": "Ruby Golem",
+    "traits": [
+      "guts",
+      "autorevive",
+      "celestial-lumen",
+      "fatebreaker",
+      "life-on-the-line"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "sand-reaper",
+    "name": "Sand Reaper",
+    "traits": ["regen", "tyranny", "low-profile", "poison-resistance"],
+    "equipTier": "low"
+  },
+  {
+    "id": "scarlet-shell-butcher",
+    "name": "Scarlet-Shell Butcher",
+    "traits": ["glass-cannon", "stamina", "combo-finisher-dmg"],
+    "equipTier": "low"
+  },
+  {
+    "id": "scarmiglione",
+    "name": "Scarmiglione",
+    "traits": [
+      "uplift",
+      "nimble-defense",
+      "precise-wrath",
+      "injury-to-insult",
+      "glaciate-resistance"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "seedhollow-guardians",
+    "name": "Seedhollow Guardians",
+    "traits": ["fatebreaker", "garrison", "overdrive-assassin"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "silent-watcher",
+    "name": "Silent Watcher",
+    "traits": [
+      "celestial-lumen",
+      "stamina",
+      "weak-point-dmg",
+      "paralysis-resistance"
+    ],
+    "equipTier": "low"
+  },
+  {
+    "id": "silver-wolf-corps",
+    "name": "Silver Wolf Corps",
+    "traits": ["nimble-defense", "precise-wrath", "power-hungry"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "silverslime",
+    "name": "Silverslime",
+    "traits": [
+      "improved-dodge",
+      "path-to-mastery",
+      "rupie-tycoon",
+      "fast-learner"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "storm-mane-gatekeeper",
+    "name": "Storm-Mane Gatekeeper",
+    "traits": [
+      "divergence",
+      "celestial-lumen",
+      "garrison",
+      "precise-resilience"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "sword-veil-fellowship",
+    "name": "Sword Veil Fellowship",
+    "traits": ["celestial-incendo", "improved-healing", "combo-finisher-dmg"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "timber-wolf",
+    "name": "Timber Wolf",
+    "traits": ["celestial-incendo", "linked-together", "steady-focus"],
+    "equipTier": "low"
+  },
+  {
+    "id": "true-believers",
+    "name": "True Believers",
+    "traits": ["less-is-more", "celestial-incendo", "power-hungry"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "vrazarek-firewyrm",
+    "name": "Vrazarek Firewyrm",
+    "traits": [
+      "stout-heart",
+      "dmg-cap",
+      "uplift",
+      "burn-resistance",
+      "quick-cooldown",
+      "atk"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "vulkan-bolla",
+    "name": "Vulkan Bolla",
+    "traits": [
+      "potion-hoarder",
+      "autorevive",
+      "burn-resistance",
+      "aegis",
+      "guard-payback"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "vulkan-bolla-nihilla",
+    "name": "Vulkan Bolla Nihilla",
+    "traits": [
+      "guts",
+      "nimble-onslaught",
+      "blight-resistance",
+      "celestial-ventus",
+      "celestial-nyx"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "water-spirit",
+    "name": "Water Spirit",
+    "traits": [
+      "drain",
+      "critical-hit-dmg",
+      "overdrive-assassin",
+      "glaciate-resistance"
+    ],
+    "equipTier": "low"
+  },
+  {
+    "id": "wee-pincer",
+    "name": "Wee Pincer",
+    "traits": ["crabvestment-returns", "dmg-cap", "cascade", "steel-nerves"],
+    "equipTier": "mid"
+  },
+  {
+    "id": "wheel-of-fate",
+    "name": "Wheel of Fate",
+    "traits": [
+      "auto-potion",
+      "supplementary-dmg",
+      "quick-charge",
+      "precise-wrath"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "wilinus-icewyrm",
+    "name": "Wilinus Icewyrm",
+    "traits": [
+      "berserker-echo",
+      "guts",
+      "glaciate-resistance",
+      "nimble-defense",
+      "celestial-lumen",
+      "guard-payback"
+    ],
+    "equipTier": "mid"
+  },
+  {
+    "id": "wyvern",
+    "name": "Wyvern",
+    "traits": [
+      "quick-charge",
+      "concentrated-fire",
+      "head-start",
+      "burn-resistance"
+    ],
+    "equipTier": "low"
+  }
+]
