@@ -148,8 +148,11 @@
     -webkit-mask-image:linear-gradient(#000 92%,transparent 99%),
       linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
     -webkit-mask-composite:source-in}
-  .vA .lvlChip{position:absolute;top:10px;left:10px;z-index:2;background:rgba(5,6,12,.75);
-    border:1px solid var(--line);border-radius:6px;padding:2px 10px;font-size:12.5px}
+  /* matte navy (the slash's outermost band) + white label — the old near-black
+     chip buried the dark-ink "Lvl" text */
+  .vA .lvlChip{position:absolute;top:10px;left:10px;z-index:2;background:rgba(5,63,99,.88);
+    border:1px solid rgba(255,255,255,.28);border-radius:6px;padding:2px 10px;
+    font-size:12.5px;color:#fff}
   .vA .lvlChip b{font-size:16px;color:var(--accent)}
   .vA .nb{position:relative;z-index:2;padding:6px 16px;
     display:flex;align-items:center;justify-content:center;gap:10px;
@@ -161,7 +164,7 @@
     flex-direction:column;gap:17px}
   .vA .stack section{background:rgba(8,10,22,.72);border-radius:8px;padding:12px 14px;
     backdrop-filter:blur(2px)}
-  .vA .c2{width:460px;padding:14px;border-right:1px solid var(--line);
+  .vA .c2{width:460px;padding:14px;
     display:flex;flex-direction:column;gap:11px}
   /* 11px matches c2's inter-section gap (Weapon→Sigils→Skills) */
   .vA .c3{flex:1;padding:14px;display:flex;flex-direction:column;gap:11px}
@@ -497,6 +500,13 @@ document.getElementById("t-copy").onclick=e=>{
   e.target.textContent="copied!";setTimeout(()=>e.target.textContent="copy css",900);
 };
 applyTun();
+
+/* ---- embed mode (?embed): the handoff prototype iframes this card —
+   hide the tuner + debug bounds outline so only the card itself shows ---- */
+if(new URLSearchParams(location.search).has("embed")){
+  document.getElementById("tuner").style.display="none";
+  document.querySelector("#stage .card").style.outline="none";
+}
 </script>
 </body>
 </html>
