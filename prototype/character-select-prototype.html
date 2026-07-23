@@ -1,18 +1,21 @@
-<!-- PROTOTYPE — throwaway. CHARACTER SELECT (ticket 008): the entry point before
-     the editor. Mirrors the in-game character filter — a grid of square portraits,
-     full roster (22 tiles), v1 = Io only enabled, the rest greyed. On the card's
-     A6 slash-match light theme (same vars as editor-prototype.html).
+<!-- PROTOTYPE — throwaway. CHARACTER SELECT (ticket 008 resolution): the entry
+     point before the editor. Mirrors the in-game character filter — a grid of
+     square portraits, full roster (22 tiles, in-game order, wide art cropped
+     square), on the card's A6 slash-match light theme. v1 = Io only enabled,
+     the rest greyed with a "v2" hover note.
 
-     Three variants, switchable via ?variant= or the floating bottom bar (keys 1/2/3
-     — NOT arrow keys; variant B needs those for carousel flips):
-       A — own screen: picking a character SCROLLS DOWN to the editor carousel,
-           which fades in during the scroll (slash background stays put)
-       B — page ⓪ of the editor carousel: a leading "Character" tab, select as
-           just another page; flipping right lands on Skills & Summons
-       C — in-game select mirror: big portrait preview riding the slash, saved-
-           build summary panel, roster grid docked as a bottom strip
-     Saved-build surfacing (localStorage per character, mocked): A = gold Lv chip
-     + accent ring on the tile; B = Σ dot; C = the whole summary panel. -->
+     Settled design (variants B "carousel page ⓪" and C "in-game mirror" rejected
+     — see commit 7a4c4ff for all three):
+     - Own screen: one centered window, 6-column grid of square portrait tiles.
+     - Gold fade strip on the tile = AVAILABILITY; "Saved" badge top-right =
+       an auto-save exists (possibly half-built). Fade strip and name text are
+       independent layers (strip stays ~32px whatever the font size).
+     - Handoff: picking a character SCROLLS DOWN 1080px to the editor carousel,
+       which fades in during the scroll; the slash background stays put.
+       "‹ Character" scrolls back up. (Editor here is a mock — the real one is
+       editor-prototype.html.)
+     - Portrait framing: global zoom 180% / y 20% (tuner panel included);
+       per-character y offsets are a known v1-spec need, out of scope here. -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -52,7 +55,7 @@
     height:1800px;background:rgba(255,255,255,.55);
     transform:rotate(13deg);transform-origin:top left;z-index:0}
 
-  /* ===== the roster tile (shared by all variants) ===== */
+  /* ===== the roster tile ===== */
   .tile{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer;
     background:rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px #dbe6f0}
   /* portrait framing driven by the tuner sliders (vars live on #stage).
@@ -93,7 +96,7 @@
     box-shadow:0 8px 40px rgba(23,60,90,.18);backdrop-filter:blur(4px);
     padding:16px 18px;display:flex;flex-direction:column;gap:12px}
 
-  /* ===== variant A — own screen; handoff = scroll down to the editor,
+  /* ===== the select screen; handoff = scroll down to the editor,
      which fades in during the scroll ===== */
   .vA .track{position:absolute;inset:0;z-index:1;
     transition:transform .55s cubic-bezier(.4,0,.2,1)}
@@ -128,91 +131,6 @@
   .mockStack{display:flex;flex-direction:column;gap:10px}
   .mockStack .ph{flex:1}
 
-  /* ===== variant B — page ⓪ of the editor carousel ===== */
-  .vB .mainWrap{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:14px}
-  .vB .tabs{display:flex;gap:8px}
-  .vB .tab{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:14.5px;
-    letter-spacing:.09em;text-transform:uppercase;padding:9px 26px;border-radius:5px;
-    color:#5f7188;background:rgba(255,255,255,.55);box-shadow:inset 0 0 0 1px #dbe6f0}
-  .vB .tab.on{color:#0e3348;background:linear-gradient(90deg,#79b6d4,#9cc6dd 60%,#b9d7e8)}
-  .vB .tab:not(.on):hover{background:rgba(255,255,255,.9)}
-  .vB .carouselRow{display:flex;width:100%;height:83%;align-items:stretch}
-  .vB .arr{flex:1;border:0;cursor:pointer;font-family:inherit;font-size:150px;line-height:1;
-    background:transparent;color:rgba(14,51,72,.35)}
-  .vB .arr:hover{color:#0e3348}
-  .vB #prev{text-align:left;padding-left:110px}
-  .vB #next{text-align:right;padding-right:110px}
-  .vB #prev:hover{background:linear-gradient(90deg,rgba(255,255,255,.4),rgba(255,255,255,0))}
-  .vB #next:hover{background:linear-gradient(270deg,rgba(255,255,255,.4),rgba(255,255,255,0))}
-  .vB .winWrap{position:relative;width:52%;flex:none;height:100%}
-  .vB .winWrap.narrow{width:40%}
-  .vB .viewport{width:100%;height:100%;overflow:hidden;border-radius:12px;
-    background:rgba(255,255,255,.45);border:1px solid #c3d4e4;
-    box-shadow:0 8px 40px rgba(23,60,90,.18);backdrop-filter:blur(4px)}
-  .vB .page{height:100%;overflow:hidden;padding:14px 16px;display:flex;
-    flex-direction:column;gap:12px}
-  .vB .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;align-content:start}
-  /* the currently-loaded character reads as selected, MT-cell style */
-  .vB .tile.cur{box-shadow:inset 0 0 0 2px #2c8f5e !important}
-  .vB .mockCols{flex:1}
-
-  /* ===== variant C — in-game select mirror: preview + docked bottom grid ===== */
-  .vC .preview{position:absolute;left:0;top:0;bottom:390px;width:44%;z-index:1;
-    pointer-events:none;
-    background-size:auto 96%;background-position:center bottom;background-repeat:no-repeat;
-    mask-image:linear-gradient(#000 90%,transparent 100%);
-    -webkit-mask-image:linear-gradient(#000 90%,transparent 100%)}
-  .vC .preview.off{filter:grayscale(1) opacity(.35)}
-  .vC .pName{position:absolute;left:70px;top:64px;z-index:2}
-  .vC .pName .nb{display:inline-flex;align-items:center;gap:12px;font-size:38px;font-weight:700;
-    color:#fff;padding:6px 34px;text-shadow:0 2px 4px rgba(5,40,63,.6);
-    background:linear-gradient(90deg,transparent,rgba(5,63,99,.88) 22%,rgba(5,63,99,.88) 78%,transparent)}
-  .vC .pName .orb{width:22px;height:22px;border-radius:50%;background:var(--el,#888);
-    border:1px solid rgba(255,255,255,.7)}
-  .vC .pName .sub{margin-top:8px;font-size:15px;color:#eaf4fa;text-shadow:0 1px 3px rgba(5,40,63,.7);
-    padding-left:36px;letter-spacing:.04em}
-  /* saved-build summary panel — THE saved-build surfacing in this variant */
-  .vC .buildPanel{position:absolute;right:64px;top:120px;width:430px;z-index:2}
-  .vC .buildPanel .win{gap:10px}
-  .vC .stat2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
-    grid-auto-flow:column;gap:6px 8px}
-  .vC .stat{background:rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px #dbe6f0;
-    border-radius:5px;padding:5px 9px;display:flex;align-items:baseline;gap:6px}
-  .vC .stat .lbl{font-size:11px;color:#5f7188;white-space:nowrap}
-  .vC .stat .lvl{font-size:16px;margin-left:auto}
-  .vC .krow{display:flex;gap:8px;font-size:14px;align-items:baseline;
-    border-bottom:1px solid #d7e2ee;padding:4px 2px}
-  .vC .krow:last-of-type{border-bottom:none}
-  .vC .krow .lvl{margin-left:auto}
-  .vC .cta{border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:16px;
-    letter-spacing:.07em;text-transform:uppercase;color:#fff;border-radius:6px;
-    padding:11px 0;margin-top:4px;text-shadow:0 1px 2px rgba(90,30,0,.55);
-    background:linear-gradient(90deg,#ecaf4a,#d37c35 55%,#be5230);
-    box-shadow:0 2px 10px rgba(190,82,48,.4)}
-  .vC .cta:hover{filter:brightness(1.07)}
-  .vC .cta.ghost{background:rgba(255,255,255,.8);color:#5f7188;text-shadow:none;
-    box-shadow:inset 0 0 0 1px #c3d4e4;cursor:default}
-  .vC .empty{font-size:13.5px;color:#5f7188;padding:6px 2px}
-  /* the docked roster strip: 11×2, in-game filter posture */
-  .vC .strip{position:absolute;left:0;right:0;bottom:0;height:390px;z-index:2;
-    padding:16px 64px 20px;display:flex;flex-direction:column;gap:8px;
-    background:linear-gradient(rgba(244,248,252,0),rgba(223,233,244,.92) 22%,#d5e2ef)}
-  .vC .strip .grid{display:grid;grid-template-columns:repeat(11,1fr);gap:9px;flex:1}
-  .vC .strip .tile .nm{font-size:11px;padding-top:10px}
-  .vC .strip h3{align-self:flex-start}
-
-  /* ===== floating variant switcher (not part of the design) ===== */
-  #switcher{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:99;
-    display:flex;align-items:center;gap:2px;background:#101418;color:#e8ebff;
-    border-radius:999px;padding:4px 8px;box-shadow:0 4px 24px rgba(0,0,0,.55);
-    font-size:13px;user-select:none}
-  #switcher button{border:0;background:transparent;color:#e8ebff;cursor:pointer;
-    font-size:16px;font-family:inherit;padding:2px 10px;border-radius:999px}
-  #switcher button:hover{background:#2a323c}
-  #switcher .lab{padding:0 10px;min-width:280px;text-align:center;white-space:nowrap}
-  #switcher .key{color:#8b93bd;font-size:11px;padding-right:6px}
-
   /* ===== portrait tuner (debug, not part of the design) ===== */
   #tuner{position:fixed;right:14px;top:14px;z-index:99;background:#101418;color:#e8ebff;
     border-radius:10px;padding:10px 14px;box-shadow:0 4px 24px rgba(0,0,0,.55);
@@ -224,7 +142,6 @@
 </style>
 </head>
 <body>
-<div id="stage"></div>
 <div id="tuner">
   <b>Portrait tuner</b>
   <label>zoom <input type="range" id="tz" min="100" max="300" value="180">
@@ -232,56 +149,41 @@
   <label>y <input type="range" id="ty" min="0" max="80" value="20">
     <span class="val" id="tyV">20%</span></label>
 </div>
-<div id="switcher">
-  <button id="swPrev" title="previous variant">‹</button>
-  <span class="lab" id="swLab"></span>
-  <button id="swNext" title="next variant">›</button>
-  <span class="key">keys 1·2·3</span>
-</div>
+<div id="stage"></div>
 
 <script>
 /* ---- roster: full 22, in-game order; wide art from relink.gbf.wiki CDN.
    v1: only Io enabled; Io has a mock saved build (localStorage stand-in) ---- */
-const EL={fire:"#e0583f",water:"#3f9fe0",earth:"#b07f3a",wind:"#43b06a",
-  light:"#e8c84b",dark:"#9b59d0"};
 const ROSTER=[
-  ["0001","Gran","wind"],["0101","Djeeta","wind"],["0200","Katalina","water"],
-  ["0300","Rackam","fire"],["0400","Io","light"],["0500","Eugen","earth"],
-  ["0600","Rosetta","wind"],["0700","Ferry","light"],["0800","Lancelot","water"],
-  ["0900","Vane","water"],["1000","Percival","fire"],["1100","Siegfried","earth"],
-  ["1200","Charlotta","light"],["1300","Yodarha","water"],["1400","Narmaya","dark"],
-  ["1500","Ghandagoza","fire"],["1600","Zeta","fire"],["1700","Vaseraga","dark"],
-  ["1800","Cagliostro","earth"],["1901","Id","dark"],["2100","Sandalphon","light"],
-  ["2200","Seofon","wind"],["2300","Tweyen","light"],
-].map(([id,name,el])=>({id,name,el,enabled:id==="0400"}));
+  ["0001","Gran"],["0101","Djeeta"],["0200","Katalina"],["0300","Rackam"],
+  ["0400","Io"],["0500","Eugen"],["0600","Rosetta"],["0700","Ferry"],
+  ["0800","Lancelot"],["0900","Vane"],["1000","Percival"],["1100","Siegfried"],
+  ["1200","Charlotta"],["1300","Yodarha"],["1400","Narmaya"],["1500","Ghandagoza"],
+  ["1600","Zeta"],["1700","Vaseraga"],["1800","Cagliostro"],["1901","Id"],
+  ["2100","Sandalphon"],["2200","Seofon"],["2300","Tweyen"],
+].map(([id,name])=>({id,name,enabled:id==="0400"}));
 const art=id=>`https://cdn.gbf.wiki/relink/Cmn_imgchr_${id}_2.png`;
 /* mock of the per-character auto-save (real thing: localStorage, keyed by id) */
-const SAVED={ "0400":{ level:100,
-  status:[["HP","124210"],["ATK","73460"],["Crit. Hit Rate","95%"],["Stun Power","326"]],
-  weapon:"Caduceus +99", sigils:12, updated:"2026-07-23" } };
+const SAVED={ "0400":{ level:100 } };
 
-const tile=(c,extra)=>{
-  const save=SAVED[c.id];
-  return `<div class="tile ${c.enabled?"":"off"} ${save?"hasSave":""} ${extra||""}"
-    data-id="${c.id}" style="--el:${EL[c.el]}">
+const tile=c=>`<div class="tile ${c.enabled?"":"off"}" data-id="${c.id}">
     <div class="art" style="background-image:url('${art(c.id)}')"></div>
     <div class="fade"></div>
-    ${save?`<span class="built">Saved</span>`:""}
+    ${SAVED[c.id]?`<span class="built">Saved</span>`:""}
     <div class="nm">${c.name}</div>
     <div class="v2">v2</div>
-  </div>`;};
-const gridHTML=extra=>ROSTER.map(c=>tile(c,extra)).join("");
+  </div>`;
+const gridHTML=()=>ROSTER.map(tile).join("");
 
-/* shared mock of editor page ① — just enough to demo the handoff */
+/* mock of editor page ① — just enough to demo the handoff */
 const mockPage1=`<div class="mockCols">
     <div class="ph mockP"></div>
     <div class="mockStack"><div class="ph" style="flex:.8"></div>
       <div class="ph"></div><div class="ph" style="flex:1.6"></div></div>
   </div>`;
 
-/* ===== variant A — own screen, roll handoff ===== */
-function renderA(){
-  card().innerHTML=`
+function render(){
+  document.getElementById("stage").innerHTML=`<div class="card vLight vA">
   <div class="track" id="track">
     <div class="scr">
       <div class="selWrap">
@@ -301,150 +203,15 @@ function renderA(){
       </div>
     </div>
   </div>
-  <div class="brand">gbfr-sharecard — character select · variant A (scroll down → editor fades in)</div>`;
+  <div class="brand">gbfr-sharecard — character select (scroll down → editor fades in)</div>
+</div>`;
   const track=document.getElementById("track");
-  wireTiles(()=>track.classList.add("down"));
-  document.getElementById("backBtn").onclick=()=>track.classList.remove("down");
-}
-
-/* ===== variant B — page ⓪ of the editor carousel ===== */
-let bPage=0,bAnim=false;
-function renderB(){
-  bPage=0;
-  card().innerHTML=`
-  <div class="mainWrap">
-    <div class="tabs">
-      <button class="tab" data-i="0">Character</button>
-      <button class="tab" data-i="1">Skills &amp; Summons</button>
-      <button class="tab" data-i="1">Gear &amp; Sigils</button>
-      <button class="tab" data-i="1">Master Traits</button>
-    </div>
-    <div class="carouselRow">
-      <button class="arr" id="prev">‹</button>
-      <div class="winWrap"><div class="viewport"></div></div>
-      <button class="arr" id="next">›</button>
-    </div>
-  </div>
-  <div class="brand">gbfr-sharecard — character select · variant B (carousel page ⓪) · ←/→ flips</div>`;
-  document.querySelectorAll(".vB .tab").forEach(el=>el.onclick=()=>goB(+el.dataset.i));
-  document.getElementById("prev").onclick=()=>goB(bPage-1,-1);
-  document.getElementById("next").onclick=()=>goB(bPage+1,1);
-  setPageB(0);
-}
-function setPageB(p){
-  const vp=document.querySelector(".vB .viewport"),ww=document.querySelector(".vB .winWrap");
-  ww.classList.toggle("narrow",p===1);
-  vp.innerHTML=p===0
-    ?`<div class="page"><h3>Character</h3><div class="grid">${gridHTML()}</div></div>`
-    :`<div class="page"><h3>Skills &amp; Summons <span class="dim"
-        style="text-transform:none;letter-spacing:0;font-size:12px">(mock page ①)</span></h3>
-      ${mockPage1}</div>`;
-  document.querySelectorAll(".vB .tab").forEach((t,j)=>
-    t.classList.toggle("on",(j===0)===(p===0)&&(p===0?j===0:j===1)));
-  if(p===0){document.querySelector('.vB .tile[data-id="0400"]').classList.add("cur");
-    wireTiles(()=>goB(1,1));}
-}
-function goB(i,dir){
-  const target=Math.max(0,Math.min(1,i));
-  if(bAnim||target===bPage)return;
-  dir=dir||(target>bPage?1:-1);bPage=target;bAnim=true;
-  const ww=document.querySelector(".vB .winWrap");
-  ww.style.transition="transform .12s ease-in";
-  ww.style.transform=`translateX(${-dir*2000}px)`;
-  setTimeout(()=>{
-    setPageB(target);
-    ww.style.transition="none";ww.style.transform=`translateX(${dir*2000}px)`;
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      ww.style.transition="transform .12s ease-out";ww.style.transform="translateX(0)";
-      setTimeout(()=>{bAnim=false;ww.style.transition="none";},130);
-    }));
-  },125);
-}
-
-/* ===== variant C — in-game select mirror ===== */
-function renderC(){
-  card().innerHTML=`
-  <div class="preview" id="cPrev"></div>
-  <div class="pName" id="cName"></div>
-  <div class="buildPanel" id="cPanel"></div>
-  <div class="strip">
-    <h3>Character Select</h3>
-    <div class="grid">${gridHTML()}</div>
-  </div>
-  <div class="brand">gbfr-sharecard — character select · variant C (in-game mirror: preview + strip)</div>`;
-  const show=c=>{
-    const save=SAVED[c.id];
-    const pv=document.getElementById("cPrev");
-    pv.style.backgroundImage=`url('${art(c.id)}')`;
-    pv.classList.toggle("off",!c.enabled);
-    document.getElementById("cName").innerHTML=`
-      <div class="nb"><span class="orb" style="--el:${EL[c.el]}"></span>${c.name}</div>
-      <div class="sub">${c.enabled?(save?`Lv ${save.level} · saved build`:"no saved build")
-        :"coming in v2"}</div>`;
-    document.getElementById("cPanel").innerHTML=`<div class="win">
-      <h3>${save?"Saved Build":"Build"}</h3>
-      ${save?`
-        <div class="stat2x2">${save.status.map(([t,v])=>`<div class="stat">
-          <span class="lbl">${t}</span><span class="lvl">${v}</span></div>`).join("")}</div>
-        <div>
-          <div class="krow"><span class="dim">Weapon</span><span class="lvl">${save.weapon}</span></div>
-          <div class="krow"><span class="dim">Sigils</span><span class="lvl">${save.sigils} / 12</span></div>
-          <div class="krow"><span class="dim">Last edited</span><span class="lvl">${save.updated}</span></div>
-        </div>
-        <button class="cta" id="cGo">Edit Build ›</button>`
-      :c.enabled
-        ?`<div class="empty">Nothing saved yet — start from a blank build.</div>
-          <button class="cta" id="cGo">New Build ›</button>`
-        :`<div class="empty">${c.name} joins the roster in v2.</div>
-          <button class="cta ghost">Locked</button>`}
-    </div>`;
-    const go=document.getElementById("cGo");
-    if(go)go.onclick=()=>alert("→ editor (editor-prototype.html)");
-  };
-  show(ROSTER.find(c=>c.id==="0400"));
-  document.querySelectorAll(".vC .tile").forEach(el=>{
-    const c=ROSTER.find(x=>x.id===el.dataset.id);
-    el.onmouseenter=()=>show(c);
-    el.onclick=()=>show(c);
-  });
-}
-
-/* ===== scaffold ===== */
-const card=()=>document.querySelector("#stage .card");
-function wireTiles(onPick){
   document.querySelectorAll(".tile:not(.off)").forEach(el=>
-    el.onclick=()=>onPick(el.dataset.id));
-}
-const VARIANTS=[
-  ["A","Own screen → roll handoff",renderA,"vA"],
-  ["B","Carousel page ⓪",renderB,"vB"],
-  ["C","In-game mirror: preview + strip",renderC,"vC"],
-];
-let vi=0;
-function setVariant(i,push){
-  vi=(i+VARIANTS.length)%VARIANTS.length;
-  const [key,name,fn,cls]=VARIANTS[vi];
-  document.getElementById("stage").innerHTML=`<div class="card vLight ${cls}"></div>`;
-  document.body.className="sw"+key;
-  fn();
-  document.getElementById("swLab").textContent=`${key} — ${name}`;
-  const u=new URL(location);u.searchParams.set("variant",key);
-  try{history.replaceState(null,"",u);}catch{} // file:// may refuse
+    el.onclick=()=>track.classList.add("down"));
+  document.getElementById("backBtn").onclick=()=>track.classList.remove("down");
   fit();
 }
-document.getElementById("swPrev").onclick=()=>setVariant(vi-1);
-document.getElementById("swNext").onclick=()=>setVariant(vi+1);
-addEventListener("keydown",e=>{
-  if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
-  if(e.key==="1")setVariant(0);
-  if(e.key==="2")setVariant(1);
-  if(e.key==="3")setVariant(2);
-  // arrow keys stay with variant B's carousel, matching the editor prototype
-  if(document.body.className==="swB"){
-    if(e.key==="ArrowLeft")goB(bPage-1,-1);
-    if(e.key==="ArrowRight")goB(bPage+1,1);
-  }
-});
+
 /* tuner: one pair of vars on #stage frames every tile at once */
 [["tz","%","--tz"],["ty","%","--ty"]].forEach(([id,unit,cssVar])=>{
   const inp=document.getElementById(id);
@@ -457,8 +224,7 @@ function fit(){const s=Math.min(1,(window.innerWidth-20)/1920);
   const st=document.getElementById("stage");
   st.style.transform=`scale(${s})`;st.style.height=`${1080*s}px`;}
 addEventListener("resize",fit);
-const q=new URL(location).searchParams.get("variant");
-setVariant(Math.max(0,VARIANTS.findIndex(v=>v[0]===q)));
+render();
 </script>
 </body>
 </html>
