@@ -6,5 +6,17 @@ export default tseslint.config(
   { ignores: ["dist", "node_modules"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      globals: {
+        fetch: "readonly",
+        console: "readonly",
+        Buffer: "readonly",
+        URL: "readonly",
+        process: "readonly",
+      },
+    },
+  },
   prettier,
 );
