@@ -1,0 +1,195 @@
+/* The shared shell: the 1920x1080 stage, the light slash theme, the 3-screen
+   vertical track, and the chrome reused across screens. */
+
+:root {
+  --line: #2c3357;
+  --ink: #e8ebff;
+  --dim: #8b93bd;
+  --accent: #e8b34b;
+  --insight: #b06cf0;
+  --essence: #4bb3e8;
+  --crux: #e85f6a;
+  /* faint crest tile: circles + four-pointed stars */
+  --slashTex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.06'%3E%3Ccircle cx='130' cy='130' r='95'/%3E%3Ccircle cx='130' cy='130' r='58'/%3E%3Cpath d='M130 12 L156 104 L248 130 L156 156 L130 248 L104 156 L12 130 L104 104 Z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23003a5c' stroke-opacity='.09'%3E%3Cpath d='M130 34 L151 109 L226 130 L151 151 L130 226 L109 151 L34 130 L109 109 Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  background: #05060c;
+  color: var(--ink);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ===== the fixed stage, scaled to the viewport by its wrapper ===== */
+#stage {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: top left;
+  /* slash radials, hand-tuned to match the card and frozen */
+  --sx: -150px;
+  --gx: 80%;
+  --gy: 42%;
+  --gr: 620px;
+  --ge: 65%;
+  --pgx: 50%;
+  --pgy: 50%;
+  --pgr: 650px;
+  --pge: 100%;
+}
+
+/* ===== light theme + diagonal slash, matching the card ===== */
+.shell {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: #16233b;
+  background: linear-gradient(160deg, #f4f8fc 0%, #e8eff7 60%, #dfe9f4 100%);
+}
+.shell::before {
+  content: "";
+  position: absolute;
+  left: var(--sx);
+  top: -360px;
+  width: 720px;
+  height: 1800px;
+  background:
+    var(--slashTex) 0 0/260px 260px repeat,
+    radial-gradient(
+      circle var(--gr) at var(--gx) var(--gy),
+      #4cc4e2 0%,
+      #2aa6cb calc(var(--ge) * 0.32),
+      #1a86ad calc(var(--ge) * 0.57),
+      #10719c calc(var(--ge) * 0.77),
+      #0a5d86 var(--ge),
+      #053f63 calc(var(--ge) * 1.3)
+    );
+  transform: rotate(13deg);
+  transform-origin: top left;
+  z-index: 0;
+}
+.shell::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--sx) + 730px);
+  top: -360px;
+  width: 26px;
+  height: 1800px;
+  background: rgba(255, 255, 255, 0.55);
+  transform: rotate(13deg);
+  transform-origin: top left;
+  z-index: 0;
+}
+
+/* ===== the 3-screen vertical track ===== */
+.track {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  height: 3240px;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.scr {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1080px;
+}
+.scr.s1 {
+  top: 1080px;
+}
+.scr.s2 {
+  top: 2160px;
+}
+/* content fades in as the track arrives on its screen */
+.scr > .fadeWrap {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+.scr > .fadeWrap.on {
+  opacity: 1;
+}
+
+/* ===== chrome shared across screens ===== */
+h3 {
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 4px;
+  color: #0e3348;
+  background: linear-gradient(
+    90deg,
+    #79b6d4 0%,
+    #9cc6dd 45%,
+    rgba(156, 198, 221, 0) 100%
+  );
+}
+.dim {
+  color: #5f7188;
+}
+.win {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid #c3d4e4;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(23, 60, 90, 0.18);
+  backdrop-filter: blur(4px);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.back {
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  z-index: 2;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0e3348;
+  border-radius: 6px;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 0 0 1px #c3d4e4;
+}
+.back:hover {
+  background: #fff;
+}
+/* gold CTA (Generate Card, Copy PNG), white secondary (Download) */
+.cta {
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #fff;
+  border-radius: 7px;
+  padding: 11px 32px;
+  background: linear-gradient(90deg, #ecaf4a, #d37c35);
+  text-shadow: 0 1px 2px rgba(90, 30, 0, 0.55);
+  box-shadow: 0 2px 12px rgba(90, 30, 0, 0.28);
+}
+.cta:hover {
+  filter: brightness(1.07);
+}
+.cta.sec {
+  background: rgba(255, 255, 255, 0.85);
+  color: #0e3348;
+  text-shadow: none;
+  box-shadow: inset 0 0 0 1px #c3d4e4;
+}
+.cta.sec:hover {
+  background: #fff;
+  filter: none;
+}
