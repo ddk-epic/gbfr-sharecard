@@ -1,0 +1,78 @@
+/* The card renders at 62% via wrapper transform only; the card node itself
+   stays 1920x1080 so the PNG export captures it unscaled. */
+
+.cardWrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 52px;
+}
+.cardWin {
+  padding: 14px 16px;
+}
+.cardWin .hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cardWin .hd .meta {
+  font-size: 12.5px;
+  color: #5f7188;
+  margin-left: auto;
+}
+.cardWin .hd .cta {
+  font-size: 13.5px;
+  padding: 7px 16px;
+  border-radius: 6px;
+}
+.frame {
+  position: relative;
+  width: 1190.4px; /* 1920 * .62 */
+  height: 669.6px; /* 1080 * .62 */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(23, 60, 90, 0.25);
+}
+.frame .cardScale {
+  transform: scale(0.62);
+  transform-origin: top left;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.actions .hint {
+  font-size: 12.5px;
+  color: #5f7188;
+}
+.foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 52px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-size: 12.5px;
+  color: #5f7188;
+  border-top: 1px solid rgba(195, 212, 228, 0.8);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(3px);
+}
+.foot .sep {
+  color: #b7cadd;
+}
+.foot a {
+  color: #0e6f9c;
+  text-decoration: none;
+}
+.foot a:hover {
+  text-decoration: underline;
+}
