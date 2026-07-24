@@ -1,0 +1,620 @@
+/* The share card's own style tree. Everything is scoped under .shareCard so
+   the editor and the card can never drift into each other; only leaf
+   primitives that must render pixel-identically are duplicated by hand. */
+
+.shareCard {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  display: flex;
+  color: #16233b;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(160deg, #f4f8fc 0%, #e8eff7 60%, #dfe9f4 100%);
+  /* slash geometry, hand-tuned and frozen */
+  --sx: -150px;
+  --gx: 80%;
+  --gy: 42%;
+  --gr: 620px;
+  --ge: 65%;
+  --pgx: 50%;
+  --pgy: 50%;
+  --pgr: 650px;
+  --pge: 100%;
+}
+.shareCard::before {
+  content: "";
+  position: absolute;
+  left: var(--sx);
+  top: -360px;
+  width: 720px;
+  height: 1800px;
+  background:
+    var(--slashTex) 0 0/260px 260px repeat,
+    radial-gradient(
+      circle var(--gr) at var(--gx) var(--gy),
+      #4cc4e2 0%,
+      #2aa6cb calc(var(--ge) * 0.32),
+      #1a86ad calc(var(--ge) * 0.57),
+      #10719c calc(var(--ge) * 0.77),
+      #0a5d86 var(--ge),
+      #053f63 calc(var(--ge) * 1.3)
+    );
+  transform: rotate(13deg);
+  transform-origin: top left;
+  z-index: 0;
+}
+.shareCard::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--sx) + 730px);
+  top: -360px;
+  width: 26px;
+  height: 1800px;
+  background: rgba(255, 255, 255, 0.55);
+  transform: rotate(13deg);
+  transform-origin: top left;
+  z-index: 0;
+}
+
+/* ---- shared leaf primitives ---- */
+.shareCard .icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex: none;
+  background: linear-gradient(135deg, #c2d3e6, #93aecb);
+  border: 1px solid #a5bcd4;
+}
+.shareCard .icon.sm {
+  width: 13px;
+  height: 13px;
+}
+.shareCard .orb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex: none;
+  background: radial-gradient(circle at 35% 30%, #ffd98a, #c2571b);
+  border: 1px solid #0006;
+}
+.shareCard .diamond {
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, #8a2f35, #3d1114);
+  border: 1.5px solid #c46a4a;
+  border-radius: 3px;
+}
+.shareCard .lvl {
+  color: #b06e12;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.shareCard .dim {
+  color: #5f7188;
+}
+.shareCard h3 {
+  font-size: 16.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #0e3348;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    #79b6d4 0%,
+    #9cc6dd 45%,
+    rgba(156, 198, 221, 0) 100%
+  );
+  margin-bottom: 7px;
+}
+.shareCard .brand {
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  color: #7c8da3;
+  z-index: 5;
+}
+
+/* ---- three-column layout ---- */
+.shareCard .c1 {
+  width: 430px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.shareCard .c2 {
+  width: 460px;
+  padding: 14px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.shareCard .c3 {
+  flex: 1;
+  padding: 14px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.shareCard .c2 > h3,
+.shareCard .c3 > h3 {
+  margin-bottom: -4px; /* heading to body is 7px under the 11px column gap */
+}
+
+/* ---- c1: portrait, chip, name, status + skills ---- */
+.shareCard .p {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 70%;
+  background: top/cover;
+  background-size: auto 115%;
+  mask-image:
+    linear-gradient(#000 92%, transparent 99%),
+    linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(#000 92%, transparent 99%),
+    linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-composite: source-in;
+}
+.shareCard .lvlChip {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  background: rgba(5, 63, 99, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 14.5px;
+  color: #fff;
+}
+.shareCard .lvlChip b {
+  font-size: 18px;
+  color: #e8b34b;
+}
+.shareCard .nb {
+  position: relative;
+  z-index: 2;
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(5, 63, 99, 0.88) 30%,
+    rgba(5, 63, 99, 0.88) 70%,
+    transparent
+  );
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 14px 16px;
+  color: #fff;
+}
+.shareCard .stack {
+  position: relative;
+  z-index: 2;
+  padding: 0 14px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+.shareCard .stack section {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 1px 6px rgba(23, 60, 90, 0.12);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.shareCard .stat2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-auto-flow: column;
+  gap: 6px 10px;
+}
+.shareCard .stat {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 0 0 1px #dbe6f0;
+  border-radius: 5px;
+  padding: 4px 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.shareCard .stat .lbl {
+  font-size: 13.5px;
+  color: #5f7188;
+}
+.shareCard .stat .lvl {
+  font-size: 21px;
+  margin-left: auto;
+  position: relative;
+}
+/* the unit hangs outside the box, so numbers right-align to each other */
+.shareCard .stat .lvl .suf,
+.shareCard .wbase .lvl .suf {
+  font-style: normal;
+  font-size: 70%;
+  position: absolute;
+  left: 100%;
+  bottom: 1px;
+}
+.shareCard .wbase .lvl {
+  position: relative;
+}
+.shareCard .stat .sIcon,
+.shareCard .wbase .sIcon {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  align-self: center;
+  background: linear-gradient(135deg, #5a6f96, #2c3f63);
+  transform: rotate(45deg);
+  border-radius: 2px;
+  margin-right: 2px;
+}
+.shareCard .s-hp .sIcon {
+  background: linear-gradient(135deg, #8fdf63, #2f9c3c);
+}
+.shareCard .s-hp .lvl {
+  color: #3fa32e;
+}
+.shareCard .s-atk .lvl {
+  color: #d9861f;
+}
+.shareCard .s-crit .lvl,
+.shareCard .s-stun .lvl {
+  color: #16233b;
+  margin-right: 9px;
+}
+.shareCard .skillRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16.5px;
+  padding: 6px 0;
+  border-bottom: 1px solid #d7e2ee;
+}
+.shareCard .skillRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* ---- c2: weapon + sigils ---- */
+.shareCard .wpanel {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #c3d4e4;
+  border-radius: 8px;
+  padding: 10px 13px;
+  box-shadow: 0 1px 6px rgba(23, 60, 90, 0.1);
+}
+/* placeholder until per-weapon art exists */
+.shareCard .wimg {
+  height: 140px;
+  margin: 2px 0 4px;
+  border-radius: 10px;
+  background: linear-gradient(
+    115deg,
+    rgba(106, 147, 181, 0.26),
+    rgba(106, 147, 181, 0.05)
+  );
+  transform: rotate(-18deg) scale(1.4);
+}
+.shareCard .wrow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.shareCard .wname {
+  font-size: 19px;
+  font-weight: 700;
+}
+.shareCard .wmeta {
+  font-size: 12px;
+  white-space: nowrap;
+}
+.shareCard .wbase {
+  display: flex;
+  gap: 4px;
+  font-size: 14.5px;
+  margin: 4px 0 6px;
+  align-items: baseline;
+}
+.shareCard .wbase > span {
+  padding: 2px 12px 2px 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+  background: linear-gradient(
+      90deg,
+      rgba(106, 147, 181, 0.3),
+      rgba(106, 147, 181, 0.4) calc(100% - 12px),
+      rgba(106, 147, 181, 0)
+    )
+    bottom/100% 40% no-repeat;
+  clip-path: polygon(17px 0, 100% 0, 100% 100%, 0 100%);
+}
+.shareCard .wbase > span .lvl {
+  margin-left: auto;
+}
+.shareCard .wbase .lvl {
+  font-size: 20px;
+}
+.shareCard .trow {
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  gap: 7px;
+  align-items: center;
+  font-size: 16.5px;
+  padding: 4.5px 0;
+  border-bottom: 1px solid #dbe6f0;
+}
+.shareCard .trow:last-child,
+.shareCard .trow:has(+ .imh) {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.shareCard .swap {
+  color: var(--essence);
+}
+.shareCard .imh {
+  font-size: 13px;
+  color: #5f7188;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 15px 0 2px;
+  display: flex;
+  justify-content: space-between;
+}
+.shareCard .sigilStack {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5px;
+}
+.shareCard .sigil {
+  display: grid;
+  grid-template-columns: 1fr 1fr 30px;
+  gap: 8px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 0 0 1px #dbe6f0;
+  border-radius: 5px;
+  padding: 5.5px 9px;
+  font-size: 16.5px;
+}
+.shareCard .sigil .cell {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.shareCard .sigil .cell span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shareCard .sigil .sec {
+  color: #5f7188;
+}
+.shareCard .sigil .lvl {
+  text-align: right;
+}
+
+/* ---- c3: master traits + bottom row ---- */
+.shareCard .mtH {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(10, 50, 70, 0.5);
+  background: linear-gradient(
+    90deg,
+    #2aa6cb 0%,
+    #10719c 45%,
+    rgba(16, 113, 156, 0) 100%
+  );
+}
+.shareCard .mtH span {
+  font-size: 13.5px;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  color: #3d6478;
+  text-shadow: none;
+}
+.shareCard .mtGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+.shareCard .styleCol {
+  position: relative;
+  border-radius: 8px;
+  padding: 11px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border-top: 3px solid var(--sc);
+  color: #f2fafd;
+  background:
+    var(--slashTex) 0 0/260px 260px repeat,
+    radial-gradient(
+      circle var(--pgr) at var(--pgx) var(--pgy),
+      #1a86ad 0%,
+      #10719c calc(var(--pge) * 0.32),
+      #0a5d86 calc(var(--pge) * 0.57),
+      #053f63 calc(var(--pge) * 0.77),
+      #04304f var(--pge),
+      #02203a calc(var(--pge) * 1.3)
+    );
+  box-shadow:
+    0 1px 8px rgba(5, 63, 99, 0.4),
+    inset 0 0 44px rgba(76, 196, 226, 0.15);
+}
+.shareCard .styleCol > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.shareCard .styleCol h4 {
+  font-size: 19.5px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(10, 50, 70, 0.55);
+}
+.shareCard .styleCol .icon {
+  background: linear-gradient(135deg, #7fd4f8, #2f6ec2);
+  border-color: #5090d8;
+}
+.shareCard .rank {
+  font-size: 14px;
+  color: #d5eef8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 11px;
+  display: flex;
+  justify-content: space-between;
+}
+.shareCard .opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+.shareCard .opt {
+  font-size: 13.5px;
+  line-height: 1.12;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: rgba(11, 46, 61, 0.3);
+  color: #a8d4e4;
+  height: 34px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+/* set by the card on cells whose label overflows the fixed height */
+.shareCard .opt.long {
+  font-size: 11.5px;
+  line-height: 1.06;
+  padding: 2px 5px;
+  gap: 4px;
+}
+.shareCard .opt.on {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18),
+    rgba(26, 134, 173, 0.3)
+  );
+  box-shadow: inset 0 0 0 1px #b8ecf8;
+}
+.shareCard .bottomRow {
+  display: grid;
+  grid-template-columns: 330px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.shareCard .kvline {
+  display: flex;
+  gap: 8px;
+  font-size: 16.5px;
+  padding: 4.5px 0;
+  align-items: baseline;
+  border-bottom: 1px solid #d7e2ee;
+}
+.shareCard .kvline:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.shareCard .kvline .lvl {
+  margin-left: auto;
+}
+.shareCard .sGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+.shareCard .summonCard {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 0 0 1px #dbe6f0;
+  border-radius: 6px;
+  padding: 8px 11px;
+  font-size: 16.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.shareCard .summonCard b {
+  font-size: 17.5px;
+}
+.shareCard .summonCard .r {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  min-width: 0;
+}
+.shareCard .summonCard .r .dim {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shareCard .summonCard .r .lvl {
+  margin-left: auto;
+}
+.shareCard .summonCard > .r:first-child {
+  margin: -8px -11px 3px;
+  padding: 5px 11px;
+  background: linear-gradient(90deg, #ecaf4a 0%, #d37c35 55%, #be5230 100%);
+  border-radius: 6px 6px 0 0;
+  align-items: center;
+}
+.shareCard .summonCard > .r:first-child b {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(90, 30, 0, 0.55);
+}
+.shareCard .summonCard > .r:first-child .icon {
+  border-color: #a5502a;
+  background: linear-gradient(135deg, #ffd9a0, #c96a2c);
+}
+.shareCard .summonCard .halves {
+  display: grid;
+  grid-template-columns: 6fr 5fr;
+  gap: 12px;
+}
+.shareCard .summonCard .halves .r:first-child {
+  padding-right: 10px;
+  border-right: 1px solid #d7e2ee;
+}
+.shareCard .summonCard .halves .r .lvl {
+  margin-left: 4px;
+  color: #5f7188;
+  font-weight: 600;
+}
+.shareCard .summonCard .halves .r:first-child .dim {
+  color: #16233b;
+  font-weight: 400;
+}
+.shareCard .summonCard .halves .r:first-child .lvl {
+  color: #b06e12;
+}
