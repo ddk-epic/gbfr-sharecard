@@ -155,7 +155,9 @@ h3 {
 .back {
   position: absolute;
   left: 40px;
-  top: 40px;
+  /* level with the editor's tab row, the highest thing any screen draws - the
+     old 40px sat in the margin the viewport clips off */
+  top: 76px;
   z-index: 2;
   display: flex;
   align-items: center;
