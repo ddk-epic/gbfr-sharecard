@@ -3,6 +3,9 @@ import { CHARACTERS, portraitUrl } from "../data";
 import { hasBuild } from "../domain/storage";
 import "./CharacterSelect.css";
 
+/** Roster slots kept for characters that have not been added yet. */
+const UNREVEALED_SLOTS = 6;
+
 export function CharacterSelect({
   onCharacterPick,
 }: {
@@ -10,9 +13,12 @@ export function CharacterSelect({
 }) {
   return (
     <div className="selWrap">
+      <div className="brand">
+        <span className="mark">GBFR</span>
+        <span className="what">Build Card Maker</span>
+      </div>
       <div className="win">
         <h3>Character Select</h3>
-        <div className="sub">Pick a character to start building.</div>
         <div className="grid">
           {CHARACTERS.map((character) => (
             <CharacterTile
@@ -20,6 +26,11 @@ export function CharacterSelect({
               character={character}
               onCharacterPick={onCharacterPick}
             />
+          ))}
+          {Array.from({ length: UNREVEALED_SLOTS }, (_, slot) => (
+            <div key={`unrevealed-${slot}`} className="tile off blank">
+              <div className="soon">Soon</div>
+            </div>
           ))}
         </div>
       </div>

@@ -1,25 +1,52 @@
-/* Character select: centered window, 6-column grid of square portrait tiles.
-   Framing frozen at zoom 180% / y 20%, with a per-character y override. */
+/* Character select: centered window, 8-column grid of square portrait tiles.
+   Framing frozen at zoom 180% / y 20%, with a per-character y override.
+
+   Height budget: a browser's viewport is shorter than the 1080px stage, so the
+   whole block (wordmark + window) is kept under ~900px - the slice that stays
+   visible at a typical window height. 8 columns hold the roster in 4 rows. */
 
 .selWrap {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 14px;
+}
+.selWrap .win,
+.selWrap .brand {
+  width: 66%;
 }
 .selWrap .win {
-  width: 58%;
+  background: rgba(255, 255, 255, 0.75);
 }
-.selWrap .sub {
-  font-size: 12.5px;
-  color: #5f7188;
-  margin-top: -6px;
-  padding: 0 2px;
+
+/* wordmark sits centered above the window */
+.selWrap .brand {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+}
+.selWrap .brand .mark {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  color: #0e3348;
+  text-shadow: 0 2px 10px rgba(23, 60, 90, 0.22);
+}
+.selWrap .brand .what {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d37c35;
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   gap: 10px;
 }
 
@@ -39,13 +66,13 @@
   background-repeat: no-repeat;
 }
 /* name text and its fade strip are separate layers - the fade keeps its
-   ~32px height regardless of the name's font size */
+   ~28px height regardless of the name's font size */
 .tile .fade {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 32px;
+  height: 28px;
   background: linear-gradient(transparent, rgba(5, 40, 63, 0.85));
 }
 .tile .nm {
@@ -53,15 +80,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 14px 5px 3px;
-  font-size: 19px;
+  padding: 12px 5px 3px;
+  font-size: 16.5px;
   font-weight: 600;
   text-align: center;
-  color: #fff;
+  color: #f3f9f3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(10, 40, 60, 0.8);
+  /* navy keyline in the header ink, painted under the fill so the glyph
+     weight is unchanged */
+  -webkit-text-stroke: 2px #0e3348;
+  paint-order: stroke fill;
+  text-shadow: 0 1px 2px rgba(10, 40, 60, 0.6);
 }
 .tile.off {
   cursor: default;
@@ -72,6 +103,7 @@
 }
 .tile.off .nm {
   color: #c9d6e2;
+  -webkit-text-stroke-color: #38505f;
 }
 .tile.off .fade {
   background: linear-gradient(transparent, rgba(70, 90, 105, 0.7));
@@ -112,13 +144,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 30px;
+  font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #5f7188;
+  /* the navy the name fade bottoms out at, held well under full opacity so it
+     sits back on the tile */
+  color: #05283f;
   opacity: 0;
   transition: opacity 0.1s;
 }
 .tile.off:hover .soon {
-  opacity: 1;
+  opacity: 0.45;
+}
+
+/* placeholders for characters not in the roster yet - no portrait, no name,
+   and the SOON label stays on rather than waiting for a hover */
+.tile.blank {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: inset 0 0 0 1px #d3e0eb;
+}
+.tile.blank .soon {
+  opacity: 0.55;
 }
