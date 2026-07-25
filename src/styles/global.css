@@ -27,7 +27,7 @@ html,
 body {
   background: #05060c;
   color: var(--ink);
-  font-family: "Segoe UI", system-ui, sans-serif;
+  font-family: "GBFR UI", "Segoe UI", system-ui, sans-serif;
   overflow-x: hidden;
 }
 

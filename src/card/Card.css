@@ -9,7 +9,7 @@
   overflow: hidden;
   display: flex;
   color: #16233b;
-  font-family: "Segoe UI", system-ui, sans-serif;
+  font-family: "GBFR UI", "Segoe UI", system-ui, sans-serif;
   background: linear-gradient(160deg, #f4f8fc 0%, #e8eff7 60%, #dfe9f4 100%);
   /* slash geometry, hand-tuned and frozen */
   --sx: -150px;
