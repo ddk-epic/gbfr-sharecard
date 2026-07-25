@@ -1,5 +1,6 @@
 import { CHARACTER_LEVEL } from "../../domain/build";
 import { characterById, portraitUrl } from "../../data";
+import { LvlBadge } from "../../card/LvlBadge";
 import { NumInput, type PageProps } from "./controls";
 
 const STATUS_FIELDS = [
@@ -21,9 +22,7 @@ export function IdentityCol({ build, onChange }: PageProps) {
           backgroundPosition: `center ${character?.portraitY ?? 20}%`,
         }}
       />
-      <div className="lvlChip">
-        Lvl <b>{CHARACTER_LEVEL}</b>
-      </div>
+      <LvlBadge level={CHARACTER_LEVEL} size={120} inset={6} />
       <div className="nb">
         <span className="orb" style={{ width: 18, height: 18 }} />
         {character?.name ?? build.characterId}

@@ -1,6 +1,12 @@
 /* The shared shell: the 1920x1080 stage, the light slash theme, the 3-screen
    vertical track, and the chrome reused across screens. */
 
+@font-face {
+  font-family: "GBFR UI";
+  src: url("/fonts/gbfr-ui.woff2") format("woff2");
+  font-display: block;
+}
+
 :root {
   --line: #2c3357;
   --ink: #e8ebff;

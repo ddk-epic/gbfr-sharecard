@@ -13,6 +13,7 @@ import {
   weaponById,
   wrightstoneName,
 } from "../data";
+import { LvlBadge } from "./LvlBadge";
 import "./Card.css";
 
 const STYLE_COLOR_VARS: Record<StyleId, string> = {
@@ -65,9 +66,7 @@ export function Card({ build }: { build: Build }) {
             backgroundPosition: `center ${character?.portraitY ?? 20}%`,
           }}
         />
-        <div className="lvlChip">
-          Lvl <b>{CHARACTER_LEVEL}</b>
-        </div>
+        <LvlBadge level={CHARACTER_LEVEL} inset={10} />
         <div className="nb">
           <span className="orb" style={{ width: 20, height: 20 }} />
           {character?.name ?? build.characterId}
