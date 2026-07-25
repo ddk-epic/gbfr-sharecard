@@ -1,3 +1,4 @@
+import { ArrowLeftRight } from "lucide-react";
 import type {
   SigilSlot,
   TraitId,
@@ -131,7 +132,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
                       setWeapon({ ...weapon, rotatedTrait })
                     }
                   />
-                  <span className="swap">⇄</span>
+                  <ArrowLeftRight className="swap" size="1em" />
                 </span>
               ) : (
                 <span>{traitName(row.trait)}</span>

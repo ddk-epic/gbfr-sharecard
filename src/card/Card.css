@@ -361,6 +361,7 @@
 }
 .shareCard .swap {
   color: var(--essence);
+  vertical-align: -0.12em;
 }
 .shareCard .imh {
   font-size: 13px;

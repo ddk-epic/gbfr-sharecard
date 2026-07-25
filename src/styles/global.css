@@ -157,6 +157,9 @@ h3 {
   left: 40px;
   top: 40px;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   border: 0;
   cursor: pointer;
   font-family: inherit;
@@ -173,6 +176,10 @@ h3 {
 }
 /* gold CTA (Generate Card, Copy PNG), white secondary (Download) */
 .cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   border: 0;
   cursor: pointer;
   font-family: inherit;

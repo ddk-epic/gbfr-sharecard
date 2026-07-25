@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Build } from "../../domain/build";
 import { traitLevelTotals } from "../../domain/derive";
 import { traitName } from "../../data";
@@ -9,6 +10,10 @@ import { MasterTraitsPage } from "./MasterTraitsPage";
 import "./Editor.css";
 
 const PAGE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
+
+/** The pager chevrons stand in for a 150px glyph. Half the box is padding,
+    so the drawn chevron is ARROW/2 tall. */
+const ARROW = 150;
 
 /** Clears the stage edge including the checklist popover docked to the right. */
 const FLIP_OFFSET_PX = 1900;
@@ -70,7 +75,8 @@ export function Editor({
   return (
     <div className="editor">
       <button className="back" onClick={onBack}>
-        ‹ Character
+        <ChevronLeft size={16} aria-hidden />
+        Character
       </button>
       <div className="mainWrap">
         <div className="tabs">
@@ -85,8 +91,12 @@ export function Editor({
           ))}
         </div>
         <div className="carouselRow">
-          <button className="arr prev" onClick={() => flipTo(page - 1, -1)}>
-            ‹
+          <button
+            className="arr prev"
+            aria-label="previous page"
+            onClick={() => flipTo(page - 1, -1)}
+          >
+            <ChevronLeft size={ARROW} strokeWidth={1} aria-hidden />
           </button>
           <div
             ref={windowRef}
@@ -112,12 +122,17 @@ export function Editor({
                 </button>
               ))}
           </div>
-          <button className="arr next" onClick={() => flipTo(page + 1, 1)}>
-            ›
+          <button
+            className="arr next"
+            aria-label="next page"
+            onClick={() => flipTo(page + 1, 1)}
+          >
+            <ChevronRight size={ARROW} strokeWidth={1} aria-hidden />
           </button>
         </div>
         <button className="cta gen" onClick={onGenerate}>
-          Generate Card<span className="ar">▼</span>
+          Generate Card
+          <ChevronDown className="ar" size={16} aria-hidden />
         </button>
       </div>
     </div>
@@ -139,8 +154,13 @@ function TraitChecklist({
     <div className="chkPop">
       <h3>
         Trait Checklist
-        <button className="chkClose" title="close" onClick={onClose}>
-          ✕
+        <button
+          className="chkClose"
+          title="close"
+          aria-label="close"
+          onClick={onClose}
+        >
+          <X size={16} aria-hidden />
         </button>
       </h3>
       <div className="imh">

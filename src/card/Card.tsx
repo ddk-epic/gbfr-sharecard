@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { ArrowLeftRight } from "lucide-react";
 import type { Build, StyleId, StyleRank } from "../domain/build";
 import { CHARACTER_LEVEL, RANKS, STYLES, WEAPON_LEVEL } from "../domain/build";
 import { STYLE_RANK_BUDGETS, stylePerkStates } from "../domain/derive";
@@ -150,7 +151,7 @@ export function Card({ build }: { build: Build }) {
                         ) : (
                           <span className="dim">-</span>
                         )}{" "}
-                        <span className="swap">⇄</span>
+                        <ArrowLeftRight className="swap" size="1em" />
                       </>
                     ) : (
                       traitName(row.trait)

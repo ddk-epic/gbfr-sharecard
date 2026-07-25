@@ -483,6 +483,7 @@
 }
 .rotatable .swap {
   color: var(--essence);
+  vertical-align: -0.12em;
 }
 .imh {
   font-size: 12px;
@@ -726,6 +727,5 @@
   padding: 12px 40px;
 }
 .gen .ar {
-  font-size: 14px;
-  margin-left: 6px;
+  margin-left: -2px;
 }

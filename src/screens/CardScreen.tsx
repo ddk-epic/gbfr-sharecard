@@ -1,11 +1,29 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef, useState, type ReactNode } from "react";
+import { Check, ChevronLeft, Copy, Download } from "lucide-react";
 import type { Build } from "../domain/build";
 import { Card } from "../card/Card";
 import { canCopy, copyCard, downloadCard } from "../card/export";
 import "./CardScreen.css";
 
-const COPY_IDLE = "⧉ Copy PNG";
-const DOWNLOAD_IDLE = "⬇ Download";
+const ICON = 16;
+const COPY_IDLE = (
+  <>
+    <Copy size={ICON} aria-hidden />
+    Copy PNG
+  </>
+);
+const DOWNLOAD_IDLE = (
+  <>
+    <Download size={ICON} aria-hidden />
+    Download
+  </>
+);
+const done = (text: string) => (
+  <>
+    <Check size={ICON} aria-hidden />
+    {text}
+  </>
+);
 const FLASH_MS = 900;
 
 const CREDITS = [
@@ -32,18 +50,18 @@ export function CardScreen({
   onBack: () => void;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [copyLabel, setCopyLabel] = useState(COPY_IDLE);
-  const [downloadLabel, setDownloadLabel] = useState(DOWNLOAD_IDLE);
+  const [copyLabel, setCopyLabel] = useState<ReactNode>(COPY_IDLE);
+  const [downloadLabel, setDownloadLabel] = useState<ReactNode>(DOWNLOAD_IDLE);
 
   // Locking the measured width keeps the longer done-state from shifting layout.
   const flashLabel = (
-    setLabel: (s: string) => void,
-    idle: string,
-    done: string,
+    setLabel: (n: ReactNode) => void,
+    idle: ReactNode,
+    flash: ReactNode,
     button: HTMLButtonElement,
   ) => {
     button.style.minWidth = `${button.offsetWidth}px`;
-    setLabel(done);
+    setLabel(flash);
     setTimeout(() => setLabel(idle), FLASH_MS);
   };
 
@@ -56,21 +74,22 @@ export function CardScreen({
     };
     if (!canCopy()) return fallToDownload();
     copyCard(node)
-      .then(() => flashLabel(setCopyLabel, COPY_IDLE, "Copied ✓", button))
+      .then(() => flashLabel(setCopyLabel, COPY_IDLE, done("Copied"), button))
       .catch(fallToDownload);
   };
 
   const onDownload = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.currentTarget;
     void downloadCard(cardRef.current!, build.characterId).then(() =>
-      flashLabel(setDownloadLabel, DOWNLOAD_IDLE, "Saved ✓", button),
+      flashLabel(setDownloadLabel, DOWNLOAD_IDLE, done("Saved"), button),
     );
   };
 
   return (
     <>
       <button className="back" onClick={onBack}>
-        ‹ Editor
+        <ChevronLeft size={ICON} aria-hidden />
+        Editor
       </button>
       <div className="cardWrap">
         <div className="win cardWin">
