@@ -83,12 +83,20 @@ have no such scale, so off-token values there stay arbitrary.
 
 ## Files
 
-| File                    | Holds                                                     |
-| ----------------------- | --------------------------------------------------------- |
-| `src/styles/theme.css`  | `@import "tailwindcss"`, `@theme` tokens, `@font-face`    |
-| `src/styles/art.css`    | shell and shared art, in `@layer components`              |
-| `src/card/card-art.css` | card-only art - not needed yet, the card shares all of it |
-| `src/ui/*`              | shared primitive components                               |
+| File                     | Holds                                                              |
+| ------------------------ | ------------------------------------------------------------------ |
+| `src/styles/globals.css` | the only entry: `@import "tailwindcss"`, the art partial, `@theme` |
+| `src/styles/art.css`     | shell and shared art, in `@layer components`                       |
+| `src/card/card-art.css`  | card-only art - not needed yet, the card shares all of it          |
+| `src/ui/*`               | shared primitive components                                        |
+
+**`globals.css` is the single stylesheet `main.tsx` imports**, and it imports
+`art.css` itself - so the layer order is always declared before anything relies on
+it. Nothing else may be imported as CSS.
+
+`html`/`body` are the one place utilities cannot reach, since React renders into
+`#root`. They carry their classes on the `<body>` tag in `index.html`, which
+Tailwind scans; no authored rule is needed for them.
 
 `prototype/*.html` is historical reference, not a source of truth; it stays plain
 CSS. Verify with `pnpm typecheck`, `pnpm lint`, and eyeballing each screen.

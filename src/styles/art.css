@@ -30,12 +30,12 @@
       var(--slashTex) 0 0/260px 260px repeat,
       radial-gradient(
         circle var(--gr) at var(--gx) var(--gy),
-        #4cc4e2 0%,
-        #2aa6cb calc(var(--ge) * 0.32),
-        #1a86ad calc(var(--ge) * 0.57),
-        #10719c calc(var(--ge) * 0.77),
-        #0a5d86 var(--ge),
-        #053f63 calc(var(--ge) * 1.3)
+        var(--slash-1) 0%,
+        var(--slash-2) calc(var(--ge) * 0.32),
+        var(--slash-3) calc(var(--ge) * 0.57),
+        var(--slash-4) calc(var(--ge) * 0.77),
+        var(--slash-5) var(--ge),
+        var(--slash-6) calc(var(--ge) * 1.3)
       );
     transform: rotate(13deg);
     transform-origin: top left;
@@ -91,10 +91,10 @@
       var(--slashTex) 0 0/260px 260px repeat,
       radial-gradient(
         circle var(--pgr) at var(--pgx) var(--pgy),
-        #1a86ad 0%,
-        #10719c calc(var(--pge) * 0.32),
-        #0a5d86 calc(var(--pge) * 0.57),
-        #053f63 calc(var(--pge) * 0.77),
+        var(--slash-3) 0%,
+        var(--slash-4) calc(var(--pge) * 0.32),
+        var(--slash-5) calc(var(--pge) * 0.57),
+        var(--slash-6) calc(var(--pge) * 0.77),
         #04304f var(--pge),
         #02203a calc(var(--pge) * 1.3)
       );

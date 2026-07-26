@@ -38,7 +38,7 @@ export function CharacterSelect({
           {Array.from({ length: UNREVEALED_SLOTS }, (_, slot) => (
             <div
               key={`unrevealed-${slot}`}
-              className="relative aspect-square cursor-default overflow-hidden rounded-lg bg-white/35 shadow-[inset_0_0_0_1px_var(--color-line-soft)]"
+              className="relative aspect-square cursor-default overflow-hidden rounded-lg bg-white/35 shadow-[inset_0_0_0_1px_var(--line-soft)]"
             >
               <div className={`${SOON} opacity-55`}>Soon</div>
             </div>
@@ -59,9 +59,9 @@ function CharacterTile({
   const on = character.enabled;
   return (
     <div
-      className={`group relative aspect-square overflow-hidden rounded-lg bg-white/85 shadow-[inset_0_0_0_1px_var(--color-line-soft)] ${
+      className={`group relative aspect-square overflow-hidden rounded-lg bg-white/85 shadow-[inset_0_0_0_1px_var(--line-soft)] ${
         on
-          ? "cursor-pointer hover:shadow-[inset_0_0_0_2px_var(--color-gold),0_2px_12px_rgba(23,60,90,0.3)]"
+          ? "cursor-pointer hover:shadow-[inset_0_0_0_2px_var(--gold),0_2px_12px_rgba(23,60,90,0.3)]"
           : "cursor-default"
       }`}
       onClick={on ? () => onCharacterPick(character.id) : undefined}

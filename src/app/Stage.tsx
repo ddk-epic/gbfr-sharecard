@@ -26,18 +26,10 @@ export function Stage({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    // The wrapper fills the viewport and clips; #stage keeps its full size and
-    // carries only the visual transform, centred on the wrapper.
-    <div style={{ position: "relative", height: "100dvh", overflow: "hidden" }}>
+    <div className="relative h-dvh overflow-hidden">
       <div
-        id="stage"
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transformOrigin: "center",
-          transform: `translate(-50%, -50%) scale(${scale})`,
-        }}
+        className="absolute top-1/2 left-1/2 h-[1080px] w-[1920px] origin-center"
+        style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
       >
         {children}
       </div>

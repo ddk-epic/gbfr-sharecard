@@ -96,7 +96,7 @@ export function Editor({
               className={`${TAB} ${
                 i === page
                   ? "from-band via-band-soft text-ink-strong bg-linear-90 from-0% via-60% to-[#b9d7e8] to-100%"
-                  : "text-dim bg-white/55 shadow-[inset_0_0_0_1px_var(--color-line-soft)] hover:bg-white/90"
+                  : "text-dim bg-white/55 shadow-[inset_0_0_0_1px_var(--line-soft)] hover:bg-white/90"
               }`}
               onClick={() => flipTo(i)}
             >

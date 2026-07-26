@@ -32,7 +32,7 @@ export function IdentityCol({ build, onChange }: PageProps) {
         <div className="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-2 gap-y-1.5">
           {STATUS_FIELDS.map(([key, label, tone, numColor]) => (
             <div
-              className="flex min-w-0 items-center gap-1.5 rounded-[5px] bg-white/85 px-2 py-1 shadow-[inset_0_0_0_1px_var(--color-line-soft)]"
+              className="flex min-w-0 items-center gap-1.5 rounded-[5px] bg-white/85 px-2 py-1 shadow-[inset_0_0_0_1px_var(--line-soft)]"
               key={key}
             >
               <StatIcon tone={tone} />

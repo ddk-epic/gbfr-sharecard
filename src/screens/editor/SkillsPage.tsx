@@ -149,7 +149,7 @@ function SummonCard({
   const equipBonus = slot?.equipBonus ?? null;
   const tiers = summonEquipTiers(slot?.summonId, equipBonus?.bonusType);
   return (
-    <div className="flex flex-col gap-1.25 rounded-md bg-white/85 px-2.75 py-2 text-[15px] shadow-[inset_0_0_0_1px_var(--color-line-soft)]">
+    <div className="flex flex-col gap-1.25 rounded-md bg-white/85 px-2.75 py-2 text-[15px] shadow-[inset_0_0_0_1px_var(--line-soft)]">
       <div className="from-gold via-gold-deep to-gold-dark -mx-2.75 -mt-2 mb-0.75 flex min-w-0 items-center gap-1.5 rounded-t-md bg-linear-90 from-0% via-55% to-100% px-2.75 py-1">
         <Icon tone="summon" sm />
         <Select

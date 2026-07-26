@@ -53,7 +53,7 @@ const SECTION =
   "rounded-lg bg-white/78 px-3.5 py-3 shadow-[0_1px_6px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
 
 const PLATE =
-  "rounded-[5px] bg-white/85 shadow-[inset_0_0_0_1px_var(--color-line-soft)]";
+  "rounded-[5px] bg-white/85 shadow-[inset_0_0_0_1px_var(--line-soft)]";
 
 const CELL = "flex min-w-0 items-center gap-1.75";
 

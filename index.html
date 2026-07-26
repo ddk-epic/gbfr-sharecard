@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GBFR Build Card Maker</title>
   </head>
-  <body>
+  <!-- leading-[normal]: tuned against the browser default, not preflight's 1.5.
+       Fill and colour show only behind the stage, mid-resize. -->
+  <body class="overflow-x-hidden bg-[#05060c] leading-[normal] text-[#e8ebff]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

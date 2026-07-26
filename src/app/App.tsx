@@ -28,6 +28,9 @@ import { readBuild, writeBuild } from "../domain/storage";
  */
 const rawSearch = (search: unknown) => search as Record<string, unknown>;
 
+/** One screen per track slot, each a full stage height below the last. */
+const SCREEN_TOP = ["top-0", "top-[1080px]", "top-[2160px]"];
+
 export const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
@@ -98,48 +101,49 @@ export function App() {
       : navigate({ to: "/", search: encodeNav(next), replace: true });
   const depth = depthOf(nav);
 
+  // Index is the track slot, so this order is the scroll order.
+  const screens = [
+    <CharacterSelect
+      onCharacterPick={(character) => go({ screen: "editor", character })}
+    />,
+    scene && (
+      <Editor
+        build={scene.build}
+        onChange={editBuild}
+        onBack={() => goBack(SELECT)}
+        onGenerate={() => go({ screen: "card", character: scene.character })}
+      />
+    ),
+    scene && (
+      <CardScreen
+        build={scene.build}
+        onBack={() => goBack({ screen: "editor", character: scene.character })}
+      />
+    ),
+  ];
+
   return (
     <Stage>
-      <div className="shell">
+      {/* the slash art hangs its pseudo-elements on .shell */}
+      <div className="shell text-ui absolute inset-0 overflow-hidden bg-linear-160 from-[#f4f8fc] from-0% via-[#e8eff7] via-60% to-[#dfe9f4] to-100%">
         <div
-          className="track"
+          className="absolute inset-0 z-1 h-[3240px] transition-transform duration-550"
           style={{ transform: `translateY(${-STAGE_HEIGHT * depth}px)` }}
         >
-          <div className="scr">
-            <div className={`fadeWrap ${depth === 0 ? "on" : ""}`}>
-              <CharacterSelect
-                onCharacterPick={(character) =>
-                  go({ screen: "editor", character })
-                }
-              />
+          {screens.map((screen, i) => (
+            <div
+              key={i}
+              className={`absolute left-0 h-[1080px] w-full ${SCREEN_TOP[i]}`}
+            >
+              <div
+                className={`absolute inset-0 transition-opacity duration-550 ease-[ease] ${
+                  depth === i ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {screen}
+              </div>
             </div>
-          </div>
-          <div className="scr s1">
-            <div className={`fadeWrap ${depth === 1 ? "on" : ""}`}>
-              {scene && (
-                <Editor
-                  build={scene.build}
-                  onChange={editBuild}
-                  onBack={() => goBack(SELECT)}
-                  onGenerate={() =>
-                    go({ screen: "card", character: scene.character })
-                  }
-                />
-              )}
-            </div>
-          </div>
-          <div className="scr s2">
-            <div className={`fadeWrap ${depth === 2 ? "on" : ""}`}>
-              {scene && (
-                <CardScreen
-                  build={scene.build}
-                  onBack={() =>
-                    goBack({ screen: "editor", character: scene.character })
-                  }
-                />
-              )}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </Stage>

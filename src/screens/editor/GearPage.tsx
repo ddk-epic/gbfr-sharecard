@@ -272,7 +272,7 @@ function SigilRow({
   onChange: (next: SigilSlot | null) => void;
 }) {
   return (
-    <div className="grid grid-cols-[1fr_1fr_52px] items-center gap-1.75 rounded-[5px] bg-white/85 px-2 py-1 text-[14.5px] shadow-[inset_0_0_0_1px_var(--color-line-soft)]">
+    <div className="grid grid-cols-[1fr_1fr_52px] items-center gap-1.75 rounded-[5px] bg-white/85 px-2 py-1 text-[14.5px] shadow-[inset_0_0_0_1px_var(--line-soft)]">
       <div className="flex min-w-0 items-center gap-1.5">
         <Icon />
         <TraitSelect

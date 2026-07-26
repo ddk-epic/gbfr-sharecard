@@ -3,9 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { rootRoute } from "./app/root-route";
 import { indexRoute } from "./app/App";
-import "./styles/theme.css";
-import "./styles/art.css";
-import "./styles/global.css";
+import "./styles/globals.css";
 
 // Single route at the Pages base path; the screen rides in the search params.
 const router = createRouter({
