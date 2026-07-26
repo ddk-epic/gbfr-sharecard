@@ -54,6 +54,38 @@
     transform-origin: top left;
     z-index: 0;
   }
+  /* portrait: fades out at the bottom and both sides */
+  .p {
+    mask-image:
+      linear-gradient(#000 92%, transparent 99%),
+      linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-composite: intersect;
+    -webkit-mask-image:
+      linear-gradient(#000 92%, transparent 99%),
+      linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    -webkit-mask-composite: source-in;
+  }
+  /* base-stat plate: underline wash, corner cut off the leading edge */
+  .notch {
+    background: linear-gradient(
+        90deg,
+        rgba(106, 147, 181, 0.3),
+        rgba(106, 147, 181, 0.4) calc(100% - 12px),
+        rgba(106, 147, 181, 0)
+      )
+      bottom/100% 40% no-repeat;
+    clip-path: polygon(17px 0, 100% 0, 100% 100%, 0 100%);
+  }
+  /* name banner: opaque in the middle, feathered at both ends */
+  .nb {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(5, 63, 99, 0.88) 30%,
+      rgba(5, 63, 99, 0.88) 70%,
+      transparent
+    );
+  }
   .styleCol {
     background:
       var(--slashTex) 0 0/260px 260px repeat,

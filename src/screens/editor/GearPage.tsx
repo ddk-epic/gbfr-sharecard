@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ArrowLeftRight } from "lucide-react";
 import type {
   SigilSlot,
@@ -15,8 +16,15 @@ import {
   wrightstoneName,
 } from "../../data";
 import { IdentityCol } from "./IdentityCol";
-import { NumInput, TraitSelect, type PageProps } from "./controls";
-import { Heading, Icon } from "../../ui";
+import {
+  NumInput,
+  Select,
+  TraitRow,
+  TraitSelect,
+  Wpanel,
+  type PageProps,
+} from "./controls";
+import { Heading, Icon, StatIcon } from "../../ui";
 
 // Levels are fixed by the wrightstone, not entered: main / sub1 / sub2.
 const WRIGHTSTONE_LEVEL_SETS = [
@@ -26,6 +34,11 @@ const WRIGHTSTONE_LEVEL_SETS = [
 
 const SIGIL_MAX_LEVEL = 20;
 
+const LVL = "text-value font-semibold tabular-nums";
+const IMH =
+  "text-dim flex items-center justify-between gap-2 text-[12px] tracking-[0.07em] uppercase";
+const VAL = "ml-auto w-15.5 text-right text-[14px] font-semibold tabular-nums";
+
 type WrightstoneRow = Wrightstone["main"];
 
 /** Figure-space pad so single-digit trait levels stay column-aligned. */
@@ -34,23 +47,23 @@ const padLevel = (level: number | string) => String(level).padStart(2, " ");
 /** Placeholder line keeping the panel's shape when a slot is unfilled. */
 function EmptyTraitRow() {
   return (
-    <div className="trow">
+    <TraitRow>
       <Icon sm />
-      <span className="dim">-</span>
-      <span className="dim">T.Lvl {padLevel("-")}</span>
-    </div>
+      <span className="text-dim">-</span>
+      <span className="text-dim">T.Lvl {padLevel("-")}</span>
+    </TraitRow>
   );
 }
 
 export function GearPage({ build, onChange }: PageProps) {
   return (
-    <div className="page pGear">
+    <div className="grid h-full grid-cols-[1fr_1.3fr] gap-3.5 overflow-hidden px-4 py-3.5">
       <IdentityCol build={build} onChange={onChange} />
-      <div className="col">
+      <div className="flex min-w-0 flex-col gap-3.5">
         <Heading>Weapon</Heading>
         <WeaponPanel build={build} onChange={onChange} />
         <Heading>Sigils</Heading>
-        <div className="sigilStack">
+        <div className="flex flex-col gap-0.5">
           {build.sigils.map((slot, i) => (
             <SigilRow
               key={i}
@@ -76,19 +89,18 @@ function WeaponPanel({ build, onChange }: PageProps) {
     onChange({ ...build, weapon: next });
 
   return (
-    <div className="wpanel">
-      <div className="wrow">
-        <select
-          className="sel wname grow"
+    <Wpanel fill>
+      <div className="flex items-baseline gap-2">
+        <Select
+          className="flex-1 text-[17px] font-bold"
           value={weapon?.weaponId ?? ""}
-          onChange={(e) => {
-            const weaponId = e.target.value;
+          onChange={(weaponId) =>
             setWeapon(
               weaponId
                 ? { weaponId, critRate: 0, stun: 0, rotatedTrait: null }
                 : null,
-            );
-          }}
+            )
+          }
         >
           <option value="">- weapon -</option>
           {WEAPONS.map((w) => (
@@ -96,76 +108,90 @@ function WeaponPanel({ build, onChange }: PageProps) {
               {w.name}
             </option>
           ))}
-        </select>
-        <span className="dim wmeta">
+        </Select>
+        <span className="text-dim text-[12px] whitespace-nowrap">
           {weaponDef?.series ?? "-"} · Lv.{WEAPON_LEVEL}
         </span>
       </div>
-      <div className="wimg" />
-      <div className="wbase">
-        <span className="s-hp">
-          <span className="sIcon" />
-          <span className={weaponDef ? "val" : "val dim"}>
+      {/* placeholder until per-weapon art exists */}
+      <div className="pointer-events-none my-1 min-h-15.5 flex-1 rounded-md bg-linear-115 from-[rgba(106,147,181,0.28)] to-[rgba(106,147,181,0.05)]" />
+      <div className="mt-1 mb-1.5 flex items-baseline gap-1 text-[12.5px]">
+        <BaseStat>
+          <span className={`${VAL} ${weaponDef ? "text-value" : "text-dim"}`}>
             {weaponDef?.defaultHp ?? "-"}
           </span>
-        </span>
-        <span className="s-atk">
-          <span className="sIcon" />
-          <span className={weaponDef ? "val" : "val dim"}>
+        </BaseStat>
+        <BaseStat>
+          <span className={`${VAL} ${weaponDef ? "text-value" : "text-dim"}`}>
             {weaponDef?.defaultAtk ?? "-"}
           </span>
-        </span>
-        <span className="s-crit">
-          <span className="sIcon" />
+        </BaseStat>
+        <BaseStat>
           {weapon ? (
             <NumInput
+              width="wbase"
+              className="text-value ml-auto text-[14px] font-semibold"
               value={weapon.critRate}
               max={100}
               onChange={(critRate) => setWeapon({ ...weapon, critRate })}
             />
           ) : (
-            <span className="val dim">-</span>
+            <span className={`${VAL} text-dim`}>-</span>
           )}
-        </span>
-        <span className="s-stun">
-          <span className="sIcon" />
+        </BaseStat>
+        <BaseStat>
           {weapon ? (
             <NumInput
+              width="wbase"
+              className="text-value ml-auto text-[14px] font-semibold"
               value={weapon.stun}
               onChange={(stun) => setWeapon({ ...weapon, stun })}
             />
           ) : (
-            <span className="val dim">-</span>
+            <span className={`${VAL} text-dim`}>-</span>
           )}
-        </span>
+        </BaseStat>
       </div>
       {weaponDef && weapon
         ? weaponDef.rows.map((row, i) => (
-            <div className="trow" key={i}>
+            <TraitRow key={i}>
               <Icon sm />
               {row.options ? (
-                <span className="rotatable">
+                <span className="flex min-w-0 items-center gap-1.5">
                   <TraitSelect
-                    className="grow"
+                    className="min-w-0 flex-1"
                     value={weapon.rotatedTrait}
                     pool={traitPool(row.options)}
                     onChange={(rotatedTrait) =>
                       setWeapon({ ...weapon, rotatedTrait })
                     }
                   />
-                  <ArrowLeftRight className="swap" size="1em" />
+                  <ArrowLeftRight
+                    className="text-essence align-[-0.12em]"
+                    size="1em"
+                  />
                 </span>
               ) : (
                 <span>{traitName(row.trait)}</span>
               )}
-              <span className="lvl">T.Lvl {padLevel(row.level)}</span>
-            </div>
+              <span className={LVL}>T.Lvl {padLevel(row.level)}</span>
+            </TraitRow>
           ))
         : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
             <EmptyTraitRow key={i} />
           ))}
       <WrightstonePanel build={build} onChange={onChange} />
-    </div>
+    </Wpanel>
+  );
+}
+
+/** One base-stat plate: icon, then the caller's value field. */
+function BaseStat({ children }: { children: ReactNode }) {
+  return (
+    <span className="notch inline-flex min-w-0 flex-1 items-center gap-1.75 py-0.5 pr-3 pl-3.25">
+      <StatIcon />
+      {children}
+    </span>
   );
 }
 
@@ -216,16 +242,15 @@ function WrightstonePanel({ build, onChange }: PageProps) {
 
   return (
     <>
-      <div className="imh">
+      <div className={`${IMH} mt-3 mb-0.5`}>
         <span>Imbued Traits</span>
-        <select
-          className="sel"
+        <Select
+          className="ml-auto text-[11.5px] tracking-normal"
           value={levels[0]}
-          onChange={(e) =>
+          onChange={(v) =>
             setLevels(
-              WRIGHTSTONE_LEVEL_SETS.find(
-                (set) => set[0] === Number(e.target.value),
-              ) ?? WRIGHTSTONE_LEVEL_SETS[0],
+              WRIGHTSTONE_LEVEL_SETS.find((set) => set[0] === Number(v)) ??
+                WRIGHTSTONE_LEVEL_SETS[0],
             )
           }
         >
@@ -234,23 +259,23 @@ function WrightstonePanel({ build, onChange }: PageProps) {
               {set.join(" / ")}
             </option>
           ))}
-        </select>
-        <span className="wsname">
+        </Select>
+        <span className="flex items-center gap-1.5 tracking-normal normal-case">
           {wrightstoneName(wrightstone?.main.trait)}
         </span>
       </div>
       {rows.map((row, i) => (
-        <div className="trow" key={i}>
+        <TraitRow key={i}>
           <Icon sm />
           <TraitSelect
             value={row?.trait ?? null}
             pool={TRAITS}
             onChange={(trait) => setWrightstoneRow(i, trait)}
           />
-          <span className="lvl">
+          <span className={LVL}>
             {row ? `T.Lvl ${padLevel(levels[i])}` : ""}
           </span>
-        </div>
+        </TraitRow>
       ))}
     </>
   );
@@ -264,10 +289,11 @@ function SigilRow({
   onChange: (next: SigilSlot | null) => void;
 }) {
   return (
-    <div className="sigil">
-      <div className="cell">
+    <div className="grid grid-cols-[1fr_1fr_52px] items-center gap-1.75 rounded-[5px] bg-white/85 px-2 py-1 text-[14.5px] shadow-[inset_0_0_0_1px_var(--color-line-soft)]">
+      <div className="flex min-w-0 items-center gap-1.5">
         <Icon />
         <TraitSelect
+          className="min-w-0 flex-1 text-[13.5px]"
           value={slot?.primaryTrait ?? null}
           pool={TRAITS}
           onChange={(primaryTrait) =>
@@ -283,20 +309,23 @@ function SigilRow({
           }
         />
       </div>
-      <div className="cell">
+      <div className="flex min-w-0 items-center gap-1.5">
         <Icon sm />
         {slot ? (
           <TraitSelect
+            className="min-w-0 flex-1 text-[13.5px]"
             value={slot.secondaryTrait}
             pool={TRAITS}
             onChange={(secondaryTrait) => onChange({ ...slot, secondaryTrait })}
           />
         ) : (
-          <span className="dim">-</span>
+          <span className="text-dim">-</span>
         )}
       </div>
       {slot ? (
         <NumInput
+          width="full"
+          className="text-[13.5px]"
           value={slot.level}
           max={SIGIL_MAX_LEVEL}
           onChange={(level) => onChange({ ...slot, level })}

@@ -14,7 +14,14 @@ import {
   summonTraits,
 } from "../../data";
 import { IdentityCol } from "./IdentityCol";
-import { NumInput, TierSelect, TraitSelect, type PageProps } from "./controls";
+import {
+  NumInput,
+  Select,
+  TierSelect,
+  TraitSelect,
+  Wpanel,
+  type PageProps,
+} from "./controls";
 import { Diamond, Heading, Icon, Orb } from "../../ui";
 
 // Summon main traits only roll Lv 11-15.
@@ -27,22 +34,25 @@ const setAt = <T,>(slots: (T | null)[], index: number, value: T | null) =>
 export function SkillsPage({ build, onChange }: PageProps) {
   const catalog = characterCatalog(build.characterId);
   return (
-    <div className="page">
+    <div className="grid h-full grid-cols-2 gap-3.5 overflow-hidden px-4 py-3.5">
       <IdentityCol build={build} onChange={onChange} />
-      <div className="col">
+      <div className="flex min-w-0 flex-col gap-3.5">
         <Heading>Skills</Heading>
-        <div className="wpanel">
-          <div className="skillStack">
+        <Wpanel>
+          <div className="flex flex-col gap-1.5">
             {build.skills.map((skill, i) => (
-              <div className="skillRow" key={i}>
+              <div
+                className="flex items-center gap-2 px-2.25 py-1 text-[15px]"
+                key={i}
+              >
                 <Orb />
-                <select
-                  className="sel"
+                <Select
+                  className="flex-1"
                   value={skill ?? ""}
-                  onChange={(e) =>
+                  onChange={(v) =>
                     onChange({
                       ...build,
-                      skills: setAt(build.skills, i, e.target.value || null),
+                      skills: setAt(build.skills, i, v || null),
                     })
                   }
                 >
@@ -52,14 +62,14 @@ export function SkillsPage({ build, onChange }: PageProps) {
                       {s.name}
                     </option>
                   ))}
-                </select>
+                </Select>
                 <Diamond />
               </div>
             ))}
           </div>
-        </div>
+        </Wpanel>
         <Heading>Over Mastery</Heading>
-        <div className="wpanel">
+        <Wpanel>
           {build.overMastery.map((line, i) => (
             <OverMasteryRow
               key={i}
@@ -72,9 +82,9 @@ export function SkillsPage({ build, onChange }: PageProps) {
               }
             />
           ))}
-        </div>
+        </Wpanel>
         <Heading>Summons</Heading>
-        <div className="sStack">
+        <div className="flex flex-col gap-0.75">
           {build.summons.map((slot, i) => (
             <SummonCard
               key={i}
@@ -99,18 +109,17 @@ function OverMasteryRow({
 }) {
   const range = line ? bonusTypeById.get(line.bonusType)?.overMastery : null;
   return (
-    <div className="kvline">
-      <select
-        className="sel grow"
+    <div className="flex items-center gap-2 py-0.75 text-[14px]">
+      <Select
+        className="min-w-0 flex-1"
         value={line?.bonusType ?? ""}
-        onChange={(e) => {
-          const bonusType = e.target.value;
+        onChange={(bonusType) =>
           onChange(
             bonusType
               ? { bonusType, value: fitToRange(line?.value ?? 0, bonusType) }
               : null,
-          );
-        }}
+          )
+        }
       >
         <option value="">-</option>
         {BONUS_TYPES.map((b) => (
@@ -118,7 +127,7 @@ function OverMasteryRow({
             {b.name}
           </option>
         ))}
-      </select>
+      </Select>
       {line && (
         <NumInput
           value={line.value}
@@ -141,51 +150,51 @@ function SummonCard({
   const equipBonus = slot?.equipBonus ?? null;
   const tiers = summonEquipTiers(slot?.summonId, equipBonus?.bonusType);
   return (
-    <div className="summonCard">
-      <div className="r strip">
+    <div className="flex flex-col gap-1.25 rounded-md bg-white/85 px-2.75 py-2 text-[15px] shadow-[inset_0_0_0_1px_var(--color-line-soft)]">
+      <div className="from-gold via-gold-deep to-gold-dark -mx-2.75 -mt-2 mb-0.75 flex min-w-0 items-center gap-1.5 rounded-t-md bg-linear-90 from-0% via-55% to-100% px-2.75 py-1">
         <Icon tone="summon" sm />
-        <select
-          className="sel grow"
+        <Select
+          tone="strip"
+          className="min-w-0 flex-1"
           value={slot?.summonId ?? ""}
-          onChange={(e) => onChange(pickSummon(slot, e.target.value))}
+          onChange={(v) => onChange(pickSummon(slot, v))}
         >
-          <option value="">-</option>
+          <option className="text-ui" value="">
+            -
+          </option>
           {SUMMONS.map((s) => (
-            <option key={s.id} value={s.id}>
+            <option className="text-ui" key={s.id} value={s.id}>
               {s.name}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
       {slot && (
         <>
-          <div className="r">
+          <div className="flex min-w-0 items-center gap-1.5">
             <TraitSelect
-              className="grow"
+              className="min-w-0 flex-1"
               value={slot.trait || null}
               pool={traits}
               onChange={(trait) => onChange({ ...slot, trait: trait ?? "" })}
             />
             <NumInput
-              className="w4"
+              width="sm"
+              className="ml-auto"
               value={slot.traitLevel}
               min={SUMMON_TRAIT_MIN_LEVEL}
               max={SUMMON_TRAIT_MAX_LEVEL}
               onChange={(traitLevel) => onChange({ ...slot, traitLevel })}
             />
           </div>
-          <div className="r">
-            <select
-              className="sel grow"
+          <div className="flex min-w-0 items-center gap-1.5">
+            <Select
+              className="min-w-0 flex-1"
               value={equipBonus?.bonusType ?? ""}
-              onChange={(e) =>
+              onChange={(v) =>
                 onChange({
                   ...slot,
-                  equipBonus: rerollEquipBonus(
-                    slot,
-                    slot.summonId,
-                    e.target.value || null,
-                  ),
+                  equipBonus: rerollEquipBonus(slot, slot.summonId, v || null),
                 })
               }
             >
@@ -195,9 +204,10 @@ function SummonCard({
                   {b.name}
                 </option>
               ))}
-            </select>
+            </Select>
             {equipBonus && (
               <TierSelect
+                className="ml-auto"
                 value={equipBonus.value}
                 tiers={tiers}
                 format={(v) => bonusValueText(equipBonus.bonusType, v)}

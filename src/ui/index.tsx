@@ -1,7 +1,7 @@
 import type { MouseEventHandler, ReactNode } from "react";
 
 /* Leaf primitives the card and the editor both render. They used to be
-   hand-duplicated in Card.css and Editor.css; importing the same component is
+   hand-duplicated per screen; importing the same component is
    what stops them drifting. */
 
 const ICON_TONE = {
@@ -23,13 +23,13 @@ export function Icon({
   return (
     <span
       className={`inline-block flex-none rounded border bg-linear-135 ${
-        sm ? "size-[13px]" : "size-4"
+        sm ? "size-3.25" : "size-4"
       } ${ICON_TONE[tone]}`}
     />
   );
 }
 
-const ORB_SIZE = { 16: "size-4", 18: "size-[18px]", 20: "size-5" };
+const ORB_SIZE = { 16: "size-4", 18: "size-4.5", 20: "size-5" };
 
 /** Skill orb. `size` only ever varies to match a neighbouring glyph. */
 export function Orb({ size = 16 }: { size?: keyof typeof ORB_SIZE }) {
@@ -40,23 +40,51 @@ export function Orb({ size = 16 }: { size?: keyof typeof ORB_SIZE }) {
   );
 }
 
+const STAT_ICON_TONE = {
+  default: "from-[#5a6f96] to-[#2c3f63]",
+  hp: "from-[#8fdf63] to-[#2f9c3c]",
+};
+
+/** Rotated square marking a base stat. */
+export function StatIcon({
+  tone = "default",
+}: {
+  tone?: keyof typeof STAT_ICON_TONE;
+}) {
+  return (
+    <span
+      className={`size-3 flex-none rotate-45 rounded-xs bg-linear-135 ${STAT_ICON_TONE[tone]}`}
+    />
+  );
+}
+
 export function Diamond() {
   return (
     <span className="ml-auto size-5 flex-none rotate-45 rounded-[3px] border-[1.5px] border-[#c46a4a] bg-linear-135 from-[#8a2f35] to-[#3d1114]" />
   );
 }
 
+/* A prop, not a className override: the two bands set the same gradient
+   properties, so they cannot be resolved by class-string order. */
+const HEADING_TONE = {
+  band: "from-band via-band-soft to-[rgba(156,198,221,0)] text-ink-strong",
+  slash:
+    "from-slash-2 via-slash-4 to-slash-4/0 text-white [text-shadow:0_1px_3px_rgba(10,50,70,0.5)]",
+};
+
 /** Section heading. Spacing is the parent's job, so this declares no margin. */
 export function Heading({
   children,
+  tone = "band",
   className = "",
 }: {
   children: ReactNode;
+  tone?: keyof typeof HEADING_TONE;
   className?: string;
 }) {
   return (
     <h3
-      className={`from-band via-band-soft text-ink-strong rounded bg-linear-90 from-0% via-45% to-[rgba(156,198,221,0)] to-100% px-3 py-1 text-[15px] font-bold tracking-[0.1em] uppercase ${className}`}
+      className={`rounded bg-linear-90 from-0% via-45% to-100% px-3 py-1 text-[15px] font-bold tracking-widest uppercase ${HEADING_TONE[tone]} ${className}`}
     >
       {children}
     </h3>
@@ -65,7 +93,7 @@ export function Heading({
 
 /* A prop, not a className override: two competing padding utilities resolve by
    generation order, not by the order they are written in. */
-const PANEL_PAD = { md: "px-[18px] py-4", sm: "px-4 py-[14px]" };
+const PANEL_PAD = { md: "px-4.5 py-4", sm: "px-4 py-3.5", none: "" };
 
 export function Panel({
   children,
@@ -78,7 +106,7 @@ export function Panel({
 }) {
   return (
     <div
-      className={`border-line flex flex-col gap-3 rounded-xl border bg-white/45 shadow-[0_8px_40px_rgba(23,60,90,0.18)] backdrop-blur-[4px] ${PANEL_PAD[pad]} ${className}`}
+      className={`border-line flex flex-col gap-3 rounded-xl border bg-white/45 shadow-[0_8px_40px_rgba(23,60,90,0.18)] backdrop-blur-xs ${PANEL_PAD[pad]} ${className}`}
     >
       {children}
     </div>
@@ -105,10 +133,10 @@ export function Cta({
 }) {
   return (
     <button
-      className={`inline-flex cursor-pointer items-center justify-center gap-2 font-bold tracking-[0.05em] ${
+      className={`inline-flex cursor-pointer items-center justify-center gap-2 font-bold tracking-wider ${
         sm
-          ? "rounded-md px-4 py-[7px] text-[13.5px]"
-          : "rounded-[7px] px-8 py-[11px] text-[15.5px]"
+          ? "rounded-md px-4 py-1.75 text-[13.5px]"
+          : "rounded-[7px] px-8 py-2.75 text-[15.5px]"
       } ${CTA_VARIANT[variant]}`}
       onClick={onClick}
     >
@@ -127,7 +155,7 @@ export function BackButton({
 }) {
   return (
     <button
-      className="text-ink-strong absolute top-[76px] left-10 z-2 flex cursor-pointer items-center gap-[5px] rounded-md bg-white/80 px-[18px] py-2 text-[15px] font-bold shadow-[inset_0_0_0_1px_var(--color-line)] hover:bg-white"
+      className="text-ink-strong absolute top-19 left-10 z-2 flex cursor-pointer items-center gap-1.25 rounded-md bg-white/80 px-4.5 py-2 text-[15px] font-bold shadow-[inset_0_0_0_1px_var(--color-line)] hover:bg-white"
       onClick={onClick}
     >
       {children}

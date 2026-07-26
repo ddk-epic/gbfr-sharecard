@@ -3,12 +3,11 @@ import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Build } from "../../domain/build";
 import { traitLevelTotals } from "../../domain/derive";
 import { traitName } from "../../data";
-import type { PageProps } from "./controls";
+import { TraitRow, type PageProps } from "./controls";
 import { SkillsPage } from "./SkillsPage";
 import { GearPage } from "./GearPage";
 import { MasterTraitsPage } from "./MasterTraitsPage";
-import "./Editor.css";
-import { BackButton, Cta, Heading, Icon } from "../../ui";
+import { BackButton, Cta, Heading, Icon, Panel } from "../../ui";
 
 const PAGE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
 
@@ -19,6 +18,16 @@ const ARROW = 150;
 /** Clears the stage edge including the checklist popover docked to the right. */
 const FLIP_OFFSET_PX = 1900;
 const FLIP_MS = 120;
+
+/* 60% = 3 column units, 40% = 2, 46% = unit + 1.3-unit sigils. The unit width
+   is constant, so only the window resizes between pages. */
+const WINDOW_WIDTH = ["w-[40%]", "w-[46%]", "w-[60%]"];
+
+const TAB =
+  "cursor-pointer rounded-[5px] px-6.5 py-2.25 text-[14.5px] font-bold tracking-[0.09em] uppercase";
+
+const ARR =
+  "text-ink-strong/35 hover:text-ink-strong flex-1 cursor-pointer leading-none";
 
 /**
  * Windowed 3-page carousel. A page flip rolls the whole window off one side
@@ -74,26 +83,31 @@ export function Editor({
 
   const pageProps = { build, onChange };
   return (
-    <div className="editor">
+    <div>
       <BackButton onClick={onBack}>
         <ChevronLeft size={16} aria-hidden />
         Character
       </BackButton>
-      <div className="mainWrap">
-        <div className="tabs">
+      <div className="absolute inset-0 z-1 flex flex-col items-center justify-center gap-3.5">
+        <div className="flex items-center justify-center gap-2">
           {PAGE_LABELS.map((label, i) => (
             <button
               key={label}
-              className={`tab ${i === page ? "on" : ""}`}
+              className={`${TAB} ${
+                i === page
+                  ? "from-band via-band-soft text-ink-strong bg-linear-90 from-0% via-60% to-[#b9d7e8] to-100%"
+                  : "text-dim bg-white/55 shadow-[inset_0_0_0_1px_var(--color-line-soft)] hover:bg-white/90"
+              }`}
               onClick={() => flipTo(i)}
             >
               {label}
             </button>
           ))}
         </div>
-        <div className="carouselRow">
+        <div className="flex h-[76%] w-full items-stretch">
+          {/* flex-1 so the whole area flanking the window is a hit target */}
           <button
-            className="arr prev"
+            className={`${ARR} pl-27.5 text-left hover:bg-linear-90 hover:from-white/40 hover:to-white/0`}
             aria-label="previous page"
             onClick={() => flipTo(page - 1, -1)}
           >
@@ -101,13 +115,13 @@ export function Editor({
           </button>
           <div
             ref={windowRef}
-            className={`winWrap ${page === 0 ? "narrow" : page === 1 ? "gear" : ""}`}
+            className={`relative h-full flex-none ${WINDOW_WIDTH[page]}`}
           >
-            <div className="viewport">
+            <Panel pad="none" className="h-full w-full overflow-hidden">
               {page === 0 && <SkillsPage {...pageProps} />}
               {page === 1 && <GearPage {...pageProps} />}
               {page === 2 && <MasterTraitsPage {...pageProps} />}
-            </div>
+            </Panel>
             {page !== 2 &&
               (checklistOpen ? (
                 <TraitChecklist
@@ -116,7 +130,7 @@ export function Editor({
                 />
               ) : (
                 <button
-                  className="chkTab"
+                  className="from-band to-band-soft text-ink-strong absolute top-2.5 left-full z-3 cursor-pointer rounded-r-lg bg-linear-to-b px-1.75 py-3 text-[14px] font-bold tracking-[0.08em] shadow-[2px_2px_10px_rgba(23,60,90,0.25)] [writing-mode:vertical-rl] hover:from-[#8cc2dd] hover:to-[#b0d2e5]"
                   onClick={() => setChecklistOpen(true)}
                 >
                   Σ Checklist
@@ -124,7 +138,7 @@ export function Editor({
               ))}
           </div>
           <button
-            className="arr next"
+            className={`${ARR} pr-27.5 text-right hover:bg-linear-270 hover:from-white/40 hover:to-white/0`}
             aria-label="next page"
             onClick={() => flipTo(page + 1, 1)}
           >
@@ -133,7 +147,7 @@ export function Editor({
         </div>
         <Cta onClick={onGenerate}>
           Generate Card
-          <ChevronDown className="ar" size={16} aria-hidden />
+          <ChevronDown size={16} aria-hidden />
         </Cta>
       </div>
     </div>
@@ -152,11 +166,11 @@ function TraitChecklist({
     (a, b) => b[1] - a[1],
   );
   return (
-    <div className="chkPop">
-      <Heading>
+    <div className="border-line absolute top-0 left-[calc(100%+14px)] z-3 w-70 rounded-[10px] border bg-white/94 px-3.5 py-3 shadow-[0_10px_34px_rgba(23,60,90,0.3)] backdrop-blur-xs">
+      <Heading className="flex items-center justify-between">
         Trait Checklist
         <button
-          className="chkClose"
+          className="text-dim hover:text-ink-strong cursor-pointer px-0.5"
           title="close"
           aria-label="close"
           onClick={onClose}
@@ -164,21 +178,21 @@ function TraitChecklist({
           <X size={16} aria-hidden />
         </button>
       </Heading>
-      <div className="imh">
+      <div className="text-dim mt-1 mb-0.5 flex items-center justify-between gap-2 text-[12px] tracking-[0.07em] uppercase">
         <span>sigils + wrightstone</span>
       </div>
       {totals.length === 0 && (
-        <div className="trow">
+        <TraitRow compact>
           <Icon sm />
-          <span className="dim">no traits yet</span>
-        </div>
+          <span className="text-dim">no traits yet</span>
+        </TraitRow>
       )}
       {totals.map(([trait, level]) => (
-        <div className="trow" key={trait}>
+        <TraitRow compact key={trait}>
           <Icon sm />
           <span>{traitName(trait)}</span>
-          <span className="lvl">{level}</span>
-        </div>
+          <span className="text-value font-semibold tabular-nums">{level}</span>
+        </TraitRow>
       ))}
     </div>
   );
