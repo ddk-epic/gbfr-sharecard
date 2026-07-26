@@ -1,0 +1,45 @@
+/* Tailwind's theme and utilities layers, plus the project's color tokens.
+   Preflight is deliberately absent - global.css still owns the reset until the
+   migration's preflight step swaps them over. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@font-face {
+  font-family: "GBFR UI";
+  src: url("/fonts/gbfr-ui.woff2") format("woff2");
+  font-display: block;
+}
+
+/* Colors only - sizes get no tokens (see STYLE.md). Names describe the role the
+   hex already plays; the planned color pass can rename from here. */
+@theme {
+  /* light-theme text: ink on panels, deep on chrome and headings */
+  --color-ink: #16233b;
+  --color-deep: #0e3348;
+  --color-dim: #5f7188;
+  --color-line: #c3d4e4;
+  --color-panel: #dbe6f0;
+
+  /* gold CTA gradient, and the bronze it darkens to */
+  --color-gold: #ecaf4a;
+  --color-gold-deep: #d37c35;
+  --color-bronze: #b06e12;
+  --color-accent: #e8b34b;
+
+  /* h3's sky gradient */
+  --color-sky: #79b6d4;
+  --color-sky-soft: #9cc6dd;
+
+  /* the three master-trait styles */
+  --color-insight: #b06cf0;
+  --color-essence: #4bb3e8;
+  --color-crux: #e85f6a;
+
+  /* the diagonal slash's blue ramp, light to dark */
+  --color-slash-1: #4cc4e2;
+  --color-slash-2: #2aa6cb;
+  --color-slash-3: #1a86ad;
+  --color-slash-4: #10719c;
+  --color-slash-5: #0a5d86;
+  --color-slash-6: #053f63;
+}
