@@ -8,6 +8,7 @@ import {
 } from "../../domain/derive";
 import { characterCatalog } from "../../data";
 import type { PageProps } from "./controls";
+import { Heading, Icon } from "../../ui";
 
 const STYLE_COLOR_VARS: Record<StyleId, string> = {
   insight: "var(--insight)",
@@ -58,9 +59,9 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
   return (
     <div className="page">
       <div className="pg3">
-        <h3 className="mtH">
+        <Heading className="mtH">
           Master Traits<span>{perkSummary}</span>
-        </h3>
+        </Heading>
         <div className="mtGrid" ref={gridRef}>
           {STYLES.map((style) => (
             <div
@@ -89,7 +90,7 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
                         title={cell.description}
                         onClick={() => toggleCell(style, rank, cell.id)}
                       >
-                        <span className="icon sm" />
+                        <Icon tone="style" sm />
                         {cell.label}
                       </div>
                     ))}

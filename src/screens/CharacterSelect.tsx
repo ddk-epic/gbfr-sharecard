@@ -3,6 +3,7 @@ import type { Character } from "../domain/catalog";
 import { CHARACTERS, portraitUrl } from "../data";
 import { hasBuild } from "../domain/storage";
 import "./CharacterSelect.css";
+import { Heading, Panel } from "../ui";
 
 /** Roster slots kept for characters that have not been added yet. */
 const UNREVEALED_SLOTS = 6;
@@ -18,8 +19,8 @@ export function CharacterSelect({
         <span className="mark">GBFR</span>
         <span className="what">Build Card Maker</span>
       </div>
-      <div className="win">
-        <h3>Character Select</h3>
+      <Panel className="w-[66%] bg-white/75">
+        <Heading>Character Select</Heading>
         <div className="grid">
           {CHARACTERS.map((character) => (
             <CharacterTile
@@ -34,7 +35,7 @@ export function CharacterSelect({
             </div>
           ))}
         </div>
-      </div>
+      </Panel>
     </div>
   );
 }

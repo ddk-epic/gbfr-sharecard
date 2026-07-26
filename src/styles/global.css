@@ -76,91 +76,9 @@ body {
 
 /* ===== chrome shared across screens ===== */
 /* preflight resets headings to font-weight: inherit, so bold is now explicit */
-h3,
 h4 {
   font-weight: 700;
 }
-h3 {
-  font-size: 15px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 4px;
-  color: #0e3348;
-  background: linear-gradient(
-    90deg,
-    #79b6d4 0%,
-    #9cc6dd 45%,
-    rgba(156, 198, 221, 0) 100%
-  );
-}
 .dim {
   color: #5f7188;
-}
-.win {
-  background: rgba(255, 255, 255, 0.45);
-  border: 1px solid #c3d4e4;
-  border-radius: 12px;
-  box-shadow: 0 8px 40px rgba(23, 60, 90, 0.18);
-  backdrop-filter: blur(4px);
-  padding: 16px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.back {
-  position: absolute;
-  left: 40px;
-  /* level with the editor's tab row, the highest thing any screen draws - the
-     old 40px sat in the margin the viewport clips off */
-  top: 76px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  border: 0;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 700;
-  color: #0e3348;
-  border-radius: 6px;
-  padding: 8px 18px;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: inset 0 0 0 1px #c3d4e4;
-}
-.back:hover {
-  background: #fff;
-}
-/* gold CTA (Generate Card, Copy PNG), white secondary (Download) */
-.cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 0;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 15.5px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #fff;
-  border-radius: 7px;
-  padding: 11px 32px;
-  background: linear-gradient(90deg, #ecaf4a, #d37c35);
-  text-shadow: 0 1px 2px rgba(90, 30, 0, 0.55);
-  box-shadow: 0 2px 12px rgba(90, 30, 0, 0.28);
-}
-.cta:hover {
-  filter: brightness(1.07);
-}
-.cta.sec {
-  background: rgba(255, 255, 255, 0.85);
-  color: #0e3348;
-  text-shadow: none;
-  box-shadow: inset 0 0 0 1px #c3d4e4;
-}
-.cta.sec:hover {
-  background: #fff;
-  filter: none;
 }

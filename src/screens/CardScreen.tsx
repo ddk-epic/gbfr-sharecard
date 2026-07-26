@@ -4,6 +4,7 @@ import type { Build } from "../domain/build";
 import { Card } from "../card/Card";
 import { canCopy, copyCard, downloadCard } from "../card/export";
 import "./CardScreen.css";
+import { BackButton, Cta, Heading, Panel } from "../ui";
 
 const ICON = 16;
 const COPY_IDLE = (
@@ -87,21 +88,21 @@ export function CardScreen({
 
   return (
     <>
-      <button className="back" onClick={onBack}>
+      <BackButton onClick={onBack}>
         <ChevronLeft size={ICON} aria-hidden />
         Editor
-      </button>
+      </BackButton>
       <div className="cardWrap">
-        <div className="win cardWin">
+        <Panel className="cardWin">
           <div className="hd">
-            <h3>Share Card</h3>
+            <Heading>Share Card</Heading>
             <span className="meta">PNG · 1920×1080</span>
-            <button className="cta" onClick={onCopy}>
+            <Cta sm onClick={onCopy}>
               {copyLabel}
-            </button>
-            <button className="cta sec" onClick={onDownload}>
+            </Cta>
+            <Cta sm variant="secondary" onClick={onDownload}>
               {downloadLabel}
-            </button>
+            </Cta>
           </div>
           <div className="frame">
             <div className="cardScale">
@@ -115,7 +116,7 @@ export function CardScreen({
               read-only - jump back up to keep editing
             </span>
           </div>
-        </div>
+        </Panel>
       </div>
       <div className="foot">
         <span>gbfr-sharecard</span>

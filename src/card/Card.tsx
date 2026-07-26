@@ -22,6 +22,7 @@ import {
 } from "../data";
 import { LvlBadge } from "./LvlBadge";
 import "./Card.css";
+import { Diamond, Heading, Icon, Orb } from "../ui";
 
 const STYLE_COLOR_VARS: Record<StyleId, string> = {
   insight: "var(--insight)",
@@ -42,7 +43,7 @@ const padLevel = (level: number | string) => String(level).padStart(2, " ");
 function EmptyTraitRow() {
   return (
     <div className="trow">
-      <span className="icon sm" />
+      <Icon sm />
       <span className="dim">-</span>
       <span className="lvl dim">T.Lvl {padLevel("-")}</span>
     </div>
@@ -85,7 +86,7 @@ export function Card({ build }: { build: Build }) {
         />
         <LvlBadge level={CHARACTER_LEVEL} inset={10} />
         <div className="nb">
-          <span className="orb" style={{ width: 20, height: 20 }} />
+          <Orb size={20} />
           {character?.name ?? build.characterId}
         </div>
         <div className="stack">
@@ -111,12 +112,12 @@ export function Card({ build }: { build: Build }) {
             </div>
           </section>
           <section>
-            <h3>Skills</h3>
+            <Heading>Skills</Heading>
             {build.skills.map((skill, i) => (
               <div className="skillRow" key={i}>
-                <span className="orb" />
+                <Orb />
                 {skill ? skillNames.get(skill) : <span className="dim">-</span>}
-                <span className="diamond" />
+                <Diamond />
               </div>
             ))}
           </section>
@@ -124,7 +125,7 @@ export function Card({ build }: { build: Build }) {
       </div>
 
       <div className="c2">
-        <h3>Weapon</h3>
+        <Heading>Weapon</Heading>
         <div className="wpanel">
           <div className="wrow">
             <span className={weaponDef ? "wname" : "wname dim"}>
@@ -171,7 +172,7 @@ export function Card({ build }: { build: Build }) {
           {weapon && weaponDef
             ? weaponDef.rows.map((row, i) => (
                 <div className="trow" key={i}>
-                  <span className="icon sm" />
+                  <Icon sm />
                   <span>
                     {row.options ? (
                       <>
@@ -203,7 +204,7 @@ export function Card({ build }: { build: Build }) {
           ].map((row, i) =>
             row ? (
               <div className="trow" key={i}>
-                <span className="icon sm" />
+                <Icon sm />
                 <span>{traitName(row.trait)}</span>
                 <span className="lvl">T.Lvl {padLevel(row.level)}</span>
               </div>
@@ -212,18 +213,18 @@ export function Card({ build }: { build: Build }) {
             ),
           )}
         </div>
-        <h3>Sigils</h3>
+        <Heading>Sigils</Heading>
         <div className="sigilStack">
           {build.sigils.map((slot, i) => (
             <div className="sigil" key={i}>
               <div className="cell">
-                <span className="icon" />
+                <Icon />
                 <span className={slot ? "" : "dim"}>
                   {slot ? traitName(slot.primaryTrait) : "-"}
                 </span>
               </div>
               <div className="cell sec">
-                <span className="icon sm" />
+                <Icon sm />
                 <span>
                   {slot?.secondaryTrait ? traitName(slot.secondaryTrait) : ""}
                 </span>
@@ -235,9 +236,9 @@ export function Card({ build }: { build: Build }) {
       </div>
 
       <div className="c3">
-        <h3 className="mtH">
+        <Heading className="mtH">
           Master Traits<span>{perkSummary}</span>
-        </h3>
+        </Heading>
         <div className="mtGrid">
           {STYLES.map((style) => (
             <div
@@ -262,7 +263,7 @@ export function Card({ build }: { build: Build }) {
                             : ""
                         }`}
                       >
-                        <span className="icon sm" />
+                        <Icon tone="style" sm />
                         {cell.label}
                       </div>
                     ))}
@@ -274,7 +275,7 @@ export function Card({ build }: { build: Build }) {
         </div>
         <div className="bottomRow">
           <div>
-            <h3>Over Mastery</h3>
+            <Heading>Over Mastery</Heading>
             <div className="wpanel">
               {build.overMastery.map((line, i) => (
                 <div className="kvline" key={i}>
@@ -293,12 +294,12 @@ export function Card({ build }: { build: Build }) {
             </div>
           </div>
           <div>
-            <h3>Summons</h3>
+            <Heading>Summons</Heading>
             <div className="sGrid">
               {build.summons.map((slot, i) => (
                 <div className="summonCard" key={i}>
                   <div className="r">
-                    <span className="icon sm" />
+                    <Icon tone="summon" sm />
                     <b>{slot ? summonById.get(slot.summonId)?.name : "-"}</b>
                   </div>
                   <div className="halves">

@@ -8,6 +8,7 @@ import { SkillsPage } from "./SkillsPage";
 import { GearPage } from "./GearPage";
 import { MasterTraitsPage } from "./MasterTraitsPage";
 import "./Editor.css";
+import { BackButton, Cta, Heading, Icon } from "../../ui";
 
 const PAGE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
 
@@ -74,10 +75,10 @@ export function Editor({
   const pageProps = { build, onChange };
   return (
     <div className="editor">
-      <button className="back" onClick={onBack}>
+      <BackButton onClick={onBack}>
         <ChevronLeft size={16} aria-hidden />
         Character
-      </button>
+      </BackButton>
       <div className="mainWrap">
         <div className="tabs">
           {PAGE_LABELS.map((label, i) => (
@@ -130,10 +131,10 @@ export function Editor({
             <ChevronRight size={ARROW} strokeWidth={1} aria-hidden />
           </button>
         </div>
-        <button className="cta gen" onClick={onGenerate}>
+        <Cta onClick={onGenerate}>
           Generate Card
           <ChevronDown className="ar" size={16} aria-hidden />
-        </button>
+        </Cta>
       </div>
     </div>
   );
@@ -152,7 +153,7 @@ function TraitChecklist({
   );
   return (
     <div className="chkPop">
-      <h3>
+      <Heading>
         Trait Checklist
         <button
           className="chkClose"
@@ -162,19 +163,19 @@ function TraitChecklist({
         >
           <X size={16} aria-hidden />
         </button>
-      </h3>
+      </Heading>
       <div className="imh">
         <span>sigils + wrightstone</span>
       </div>
       {totals.length === 0 && (
         <div className="trow">
-          <span className="icon sm" />
+          <Icon sm />
           <span className="dim">no traits yet</span>
         </div>
       )}
       {totals.map(([trait, level]) => (
         <div className="trow" key={trait}>
-          <span className="icon sm" />
+          <Icon sm />
           <span>{traitName(trait)}</span>
           <span className="lvl">{level}</span>
         </div>

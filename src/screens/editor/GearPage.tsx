@@ -16,6 +16,7 @@ import {
 } from "../../data";
 import { IdentityCol } from "./IdentityCol";
 import { NumInput, TraitSelect, type PageProps } from "./controls";
+import { Heading, Icon } from "../../ui";
 
 // Levels are fixed by the wrightstone, not entered: main / sub1 / sub2.
 const WRIGHTSTONE_LEVEL_SETS = [
@@ -34,7 +35,7 @@ const padLevel = (level: number | string) => String(level).padStart(2, " ");
 function EmptyTraitRow() {
   return (
     <div className="trow">
-      <span className="icon sm" />
+      <Icon sm />
       <span className="dim">-</span>
       <span className="dim">T.Lvl {padLevel("-")}</span>
     </div>
@@ -46,9 +47,9 @@ export function GearPage({ build, onChange }: PageProps) {
     <div className="page pGear">
       <IdentityCol build={build} onChange={onChange} />
       <div className="col">
-        <h3>Weapon</h3>
+        <Heading>Weapon</Heading>
         <WeaponPanel build={build} onChange={onChange} />
-        <h3>Sigils</h3>
+        <Heading>Sigils</Heading>
         <div className="sigilStack">
           {build.sigils.map((slot, i) => (
             <SigilRow
@@ -141,7 +142,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
       {weaponDef && weapon
         ? weaponDef.rows.map((row, i) => (
             <div className="trow" key={i}>
-              <span className="icon sm" />
+              <Icon sm />
               {row.options ? (
                 <span className="rotatable">
                   <TraitSelect
@@ -240,7 +241,7 @@ function WrightstonePanel({ build, onChange }: PageProps) {
       </div>
       {rows.map((row, i) => (
         <div className="trow" key={i}>
-          <span className="icon sm" />
+          <Icon sm />
           <TraitSelect
             value={row?.trait ?? null}
             pool={TRAITS}
@@ -265,7 +266,7 @@ function SigilRow({
   return (
     <div className="sigil">
       <div className="cell">
-        <span className="icon" />
+        <Icon />
         <TraitSelect
           value={slot?.primaryTrait ?? null}
           pool={TRAITS}
@@ -283,7 +284,7 @@ function SigilRow({
         />
       </div>
       <div className="cell">
-        <span className="icon sm" />
+        <Icon sm />
         {slot ? (
           <TraitSelect
             value={slot.secondaryTrait}

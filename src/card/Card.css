@@ -14,37 +14,6 @@
 }
 
 /* ---- shared leaf primitives ---- */
-.shareCard .icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  flex: none;
-  background: linear-gradient(135deg, #c2d3e6, #93aecb);
-  border: 1px solid #a5bcd4;
-}
-.shareCard .icon.sm {
-  width: 13px;
-  height: 13px;
-}
-.shareCard .orb {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  flex: none;
-  background: radial-gradient(circle at 35% 30%, #ffd98a, #c2571b);
-  border: 1px solid #0006;
-}
-.shareCard .diamond {
-  margin-left: auto;
-  width: 20px;
-  height: 20px;
-  flex: none;
-  transform: rotate(45deg);
-  background: linear-gradient(135deg, #8a2f35, #3d1114);
-  border: 1.5px solid #c46a4a;
-  border-radius: 3px;
-}
 .shareCard .lvl {
   color: #b06e12;
   font-variant-numeric: tabular-nums;
@@ -52,22 +21,6 @@
 }
 .shareCard .dim {
   color: #5f7188;
-}
-.shareCard h3 {
-  font-size: 16.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #0e3348;
-  border: none;
-  padding: 4px 12px;
-  border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    #79b6d4 0%,
-    #9cc6dd 45%,
-    rgba(156, 198, 221, 0) 100%
-  );
-  margin-bottom: 7px;
 }
 .shareCard .brand {
   position: absolute;
@@ -415,10 +368,6 @@
   color: #fff;
   text-shadow: 0 1px 3px rgba(10, 50, 70, 0.55);
 }
-.shareCard .styleCol .icon {
-  background: linear-gradient(135deg, #7fd4f8, #2f6ec2);
-  border-color: #5090d8;
-}
 .shareCard .rank {
   font-size: 14px;
   color: #d5eef8;
@@ -527,10 +476,6 @@
 .shareCard .summonCard > .r:first-child b {
   color: #fff;
   text-shadow: 0 1px 2px rgba(90, 30, 0, 0.55);
-}
-.shareCard .summonCard > .r:first-child .icon {
-  border-color: #a5502a;
-  background: linear-gradient(135deg, #ffd9a0, #c96a2c);
 }
 .shareCard .summonCard .halves {
   display: grid;

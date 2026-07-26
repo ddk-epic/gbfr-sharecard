@@ -2,6 +2,7 @@ import { CHARACTER_LEVEL } from "../../domain/build";
 import { characterById, portraitUrl } from "../../data";
 import { LvlBadge } from "../../card/LvlBadge";
 import { NumInput, type PageProps } from "./controls";
+import { Orb } from "../../ui";
 
 const STATUS_FIELDS = [
   ["hp", "HP", "s-hp"],
@@ -24,7 +25,7 @@ export function IdentityCol({ build, onChange }: PageProps) {
       />
       <LvlBadge level={CHARACTER_LEVEL} size={120} inset={6} />
       <div className="nb">
-        <span className="orb" style={{ width: 18, height: 18 }} />
+        <Orb size={18} />
         {character?.name ?? build.characterId}
       </div>
       <section>

@@ -14,12 +14,8 @@
   justify-content: center;
   gap: 14px;
 }
-.selWrap .win,
 .selWrap .brand {
   width: 66%;
-}
-.selWrap .win {
-  background: rgba(255, 255, 255, 0.75);
 }
 
 /* wordmark sits centered above the window */

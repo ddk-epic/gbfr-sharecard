@@ -15,6 +15,7 @@ import {
 } from "../../data";
 import { IdentityCol } from "./IdentityCol";
 import { NumInput, TierSelect, TraitSelect, type PageProps } from "./controls";
+import { Diamond, Heading, Icon, Orb } from "../../ui";
 
 // Summon main traits only roll Lv 11-15.
 const SUMMON_TRAIT_MIN_LEVEL = 11;
@@ -29,12 +30,12 @@ export function SkillsPage({ build, onChange }: PageProps) {
     <div className="page">
       <IdentityCol build={build} onChange={onChange} />
       <div className="col">
-        <h3>Skills</h3>
+        <Heading>Skills</Heading>
         <div className="wpanel">
           <div className="skillStack">
             {build.skills.map((skill, i) => (
               <div className="skillRow" key={i}>
-                <span className="orb" />
+                <Orb />
                 <select
                   className="sel"
                   value={skill ?? ""}
@@ -52,12 +53,12 @@ export function SkillsPage({ build, onChange }: PageProps) {
                     </option>
                   ))}
                 </select>
-                <span className="diamond" />
+                <Diamond />
               </div>
             ))}
           </div>
         </div>
-        <h3>Over Mastery</h3>
+        <Heading>Over Mastery</Heading>
         <div className="wpanel">
           {build.overMastery.map((line, i) => (
             <OverMasteryRow
@@ -72,7 +73,7 @@ export function SkillsPage({ build, onChange }: PageProps) {
             />
           ))}
         </div>
-        <h3>Summons</h3>
+        <Heading>Summons</Heading>
         <div className="sStack">
           {build.summons.map((slot, i) => (
             <SummonCard
@@ -142,7 +143,7 @@ function SummonCard({
   return (
     <div className="summonCard">
       <div className="r strip">
-        <span className="icon sm" />
+        <Icon tone="summon" sm />
         <select
           className="sel grow"
           value={slot?.summonId ?? ""}
