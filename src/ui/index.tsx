@@ -48,19 +48,133 @@ const STAT_ICON_TONE = {
 /** Rotated square marking a base stat. */
 export function StatIcon({
   tone = "default",
+  className = "",
 }: {
   tone?: keyof typeof STAT_ICON_TONE;
+  className?: string;
 }) {
   return (
     <span
-      className={`size-3 flex-none rotate-45 rounded-xs bg-linear-135 ${STAT_ICON_TONE[tone]}`}
+      className={`size-3 flex-none rotate-45 rounded-xs bg-linear-135 ${STAT_ICON_TONE[tone]} ${className}`}
     />
+  );
+}
+
+/* A prop, not a className override: every context recolours the number, so the
+   colours would compete with each other rather than stack. */
+const LVL_TONE = {
+  value: "text-value",
+  hp: "text-[#3fa32e]",
+  atk: "text-[#d9861f]",
+  ui: "text-ui",
+  dim: "text-dim",
+};
+
+const LVL_SIZE = { base: "", stat: "text-[21px]", wbase: "text-[20px]" };
+
+/**
+ * Any number the build shows. `unit` hangs outside the box so the digits of
+ * neighbouring cells still right-align to each other.
+ */
+export function Lvl({
+  children,
+  tone = "value",
+  size = "base",
+  unit,
+  className = "",
+}: {
+  children: ReactNode;
+  tone?: keyof typeof LVL_TONE;
+  size?: keyof typeof LVL_SIZE;
+  unit?: string;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`font-semibold tabular-nums ${unit ? "relative" : ""} ${LVL_TONE[tone]} ${LVL_SIZE[size]} ${className}`}
+    >
+      {children}
+      {unit && (
+        <i className="absolute bottom-px left-full text-[70%] not-italic">
+          {unit}
+        </i>
+      )}
+    </span>
+  );
+}
+
+/** One base-stat plate: icon, then the caller's value field. */
+export function BaseStat({
+  children,
+  tone = "default",
+}: {
+  children: ReactNode;
+  tone?: keyof typeof STAT_ICON_TONE;
+}) {
+  return (
+    <span className="notch inline-flex min-w-0 flex-1 items-center gap-1.75 py-0.5 pr-3 pl-3.25">
+      <StatIcon tone={tone} className="self-center" />
+      {children}
+    </span>
   );
 }
 
 export function Diamond() {
   return (
     <span className="ml-auto size-5 flex-none rotate-45 rounded-[3px] border-[1.5px] border-[#c46a4a] bg-linear-135 from-[#8a2f35] to-[#3d1114]" />
+  );
+}
+
+const TRAIT_ROW_SIZE = {
+  md: "py-0.75 text-[14.5px]",
+  sm: "py-[2.5px] text-[13.5px]",
+  lg: "py-[4.5px] text-[16.5px]",
+};
+
+/**
+ * Icon / name / level row, ruled off from the next one. `flush` drops the rule
+ * where the next sibling is a section label rather than another row.
+ */
+export function TraitRow({
+  children,
+  size = "md",
+  flush = false,
+}: {
+  children: ReactNode;
+  size?: keyof typeof TRAIT_ROW_SIZE;
+  flush?: boolean;
+}) {
+  return (
+    <div
+      className={`border-line-soft grid grid-cols-[16px_1fr_auto] items-center gap-1.75 ${TRAIT_ROW_SIZE[size]} ${
+        flush ? "pb-0" : "border-b last:border-b-0 last:pb-0"
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** Bordered panel grouping one section's rows. */
+export function Wpanel({
+  children,
+  fill = false,
+  shadow = false,
+  className = "",
+}: {
+  children: ReactNode;
+  fill?: boolean;
+  shadow?: boolean;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`border-line relative rounded-lg border bg-white/80 px-3.25 py-2.5 ${
+        fill ? "flex flex-1 flex-col" : ""
+      } ${shadow ? "shadow-[0_1px_6px_rgba(23,60,90,0.1)]" : ""} ${className}`}
+    >
+      {children}
+    </div>
   );
 }
 

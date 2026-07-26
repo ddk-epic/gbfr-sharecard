@@ -7,6 +7,10 @@
 }
 
 @theme static {
+  /* preflight puts this on html; the card restates it as font-sans because the
+     PNG export captures that node on its own */
+  --font-sans: "GBFR UI", "Segoe UI", system-ui, sans-serif;
+
   /* text, darkest to lightest */
   --color-ui: #16233b; /* base body text */
   --color-ink-strong: #0e3348; /* headings, buttons, active states */

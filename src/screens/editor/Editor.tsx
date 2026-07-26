@@ -3,11 +3,11 @@ import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Build } from "../../domain/build";
 import { traitLevelTotals } from "../../domain/derive";
 import { traitName } from "../../data";
-import { TraitRow, type PageProps } from "./controls";
+import type { PageProps } from "./controls";
 import { SkillsPage } from "./SkillsPage";
 import { GearPage } from "./GearPage";
 import { MasterTraitsPage } from "./MasterTraitsPage";
-import { BackButton, Cta, Heading, Icon, Panel } from "../../ui";
+import { BackButton, Cta, Heading, Icon, Lvl, Panel, TraitRow } from "../../ui";
 
 const PAGE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
 
@@ -182,16 +182,16 @@ function TraitChecklist({
         <span>sigils + wrightstone</span>
       </div>
       {totals.length === 0 && (
-        <TraitRow compact>
+        <TraitRow size="sm">
           <Icon sm />
           <span className="text-dim">no traits yet</span>
         </TraitRow>
       )}
       {totals.map(([trait, level]) => (
-        <TraitRow compact key={trait}>
+        <TraitRow size="sm" key={trait}>
           <Icon sm />
           <span>{traitName(trait)}</span>
-          <span className="text-value font-semibold tabular-nums">{level}</span>
+          <Lvl>{level}</Lvl>
         </TraitRow>
       ))}
     </div>

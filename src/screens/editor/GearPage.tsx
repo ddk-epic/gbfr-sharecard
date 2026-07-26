@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { ArrowLeftRight } from "lucide-react";
 import type {
   SigilSlot,
@@ -16,15 +15,8 @@ import {
   wrightstoneName,
 } from "../../data";
 import { IdentityCol } from "./IdentityCol";
-import {
-  NumInput,
-  Select,
-  TraitRow,
-  TraitSelect,
-  Wpanel,
-  type PageProps,
-} from "./controls";
-import { Heading, Icon, StatIcon } from "../../ui";
+import { NumInput, Select, TraitSelect, type PageProps } from "./controls";
+import { BaseStat, Heading, Icon, Lvl, TraitRow, Wpanel } from "../../ui";
 
 // Levels are fixed by the wrightstone, not entered: main / sub1 / sub2.
 const WRIGHTSTONE_LEVEL_SETS = [
@@ -34,10 +26,9 @@ const WRIGHTSTONE_LEVEL_SETS = [
 
 const SIGIL_MAX_LEVEL = 20;
 
-const LVL = "text-value font-semibold tabular-nums";
 const IMH =
   "text-dim flex items-center justify-between gap-2 text-[12px] tracking-[0.07em] uppercase";
-const VAL = "ml-auto w-15.5 text-right text-[14px] font-semibold tabular-nums";
+const VAL = "ml-auto w-15.5 text-right text-[14px]";
 
 type WrightstoneRow = Wrightstone["main"];
 
@@ -117,14 +108,14 @@ function WeaponPanel({ build, onChange }: PageProps) {
       <div className="pointer-events-none my-1 min-h-15.5 flex-1 rounded-md bg-linear-115 from-[rgba(106,147,181,0.28)] to-[rgba(106,147,181,0.05)]" />
       <div className="mt-1 mb-1.5 flex items-baseline gap-1 text-[12.5px]">
         <BaseStat>
-          <span className={`${VAL} ${weaponDef ? "text-value" : "text-dim"}`}>
+          <Lvl tone={weaponDef ? "value" : "dim"} className={VAL}>
             {weaponDef?.defaultHp ?? "-"}
-          </span>
+          </Lvl>
         </BaseStat>
         <BaseStat>
-          <span className={`${VAL} ${weaponDef ? "text-value" : "text-dim"}`}>
+          <Lvl tone={weaponDef ? "value" : "dim"} className={VAL}>
             {weaponDef?.defaultAtk ?? "-"}
-          </span>
+          </Lvl>
         </BaseStat>
         <BaseStat>
           {weapon ? (
@@ -136,7 +127,9 @@ function WeaponPanel({ build, onChange }: PageProps) {
               onChange={(critRate) => setWeapon({ ...weapon, critRate })}
             />
           ) : (
-            <span className={`${VAL} text-dim`}>-</span>
+            <Lvl tone="dim" className={VAL}>
+              -
+            </Lvl>
           )}
         </BaseStat>
         <BaseStat>
@@ -148,7 +141,9 @@ function WeaponPanel({ build, onChange }: PageProps) {
               onChange={(stun) => setWeapon({ ...weapon, stun })}
             />
           ) : (
-            <span className={`${VAL} text-dim`}>-</span>
+            <Lvl tone="dim" className={VAL}>
+              -
+            </Lvl>
           )}
         </BaseStat>
       </div>
@@ -174,7 +169,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
               ) : (
                 <span>{traitName(row.trait)}</span>
               )}
-              <span className={LVL}>T.Lvl {padLevel(row.level)}</span>
+              <Lvl>T.Lvl {padLevel(row.level)}</Lvl>
             </TraitRow>
           ))
         : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
@@ -182,16 +177,6 @@ function WeaponPanel({ build, onChange }: PageProps) {
           ))}
       <WrightstonePanel build={build} onChange={onChange} />
     </Wpanel>
-  );
-}
-
-/** One base-stat plate: icon, then the caller's value field. */
-function BaseStat({ children }: { children: ReactNode }) {
-  return (
-    <span className="notch inline-flex min-w-0 flex-1 items-center gap-1.75 py-0.5 pr-3 pl-3.25">
-      <StatIcon />
-      {children}
-    </span>
   );
 }
 
@@ -272,9 +257,7 @@ function WrightstonePanel({ build, onChange }: PageProps) {
             pool={TRAITS}
             onChange={(trait) => setWrightstoneRow(i, trait)}
           />
-          <span className={LVL}>
-            {row ? `T.Lvl ${padLevel(levels[i])}` : ""}
-          </span>
+          <Lvl>{row ? `T.Lvl ${padLevel(levels[i])}` : ""}</Lvl>
         </TraitRow>
       ))}
     </>

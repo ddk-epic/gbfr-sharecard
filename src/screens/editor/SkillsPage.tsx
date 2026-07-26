@@ -19,10 +19,9 @@ import {
   Select,
   TierSelect,
   TraitSelect,
-  Wpanel,
   type PageProps,
 } from "./controls";
-import { Diamond, Heading, Icon, Orb } from "../../ui";
+import { Diamond, Heading, Icon, Orb, Wpanel } from "../../ui";
 
 // Summon main traits only roll Lv 11-15.
 const SUMMON_TRAIT_MIN_LEVEL = 11;
