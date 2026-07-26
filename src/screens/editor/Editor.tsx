@@ -12,8 +12,8 @@ import { BackButton, Cta, Heading, Icon, Lvl, Panel, TraitRow } from "../../ui";
 const PAGE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
 
 /** The pager chevrons stand in for a 150px glyph. Half the box is padding,
-    so the drawn chevron is ARROW/2 tall. */
-const ARROW = 150;
+    so the drawn chevron is ARROW_SIZE/2 tall. */
+const ARROW_SIZE = 150;
 
 /** Clears the stage edge including the checklist popover docked to the right. */
 const FLIP_OFFSET_PX = 1900;
@@ -26,7 +26,7 @@ const WINDOW_WIDTH = ["w-[40%]", "w-[46%]", "w-[60%]"];
 const TAB =
   "cursor-pointer rounded-[5px] px-6.5 py-2.25 text-[14.5px] font-bold tracking-[0.09em] uppercase";
 
-const ARR =
+const ARROW_BUTTON =
   "text-ink-strong/35 hover:text-ink-strong flex-1 cursor-pointer leading-none";
 
 /**
@@ -107,11 +107,11 @@ export function Editor({
         <div className="flex h-[76%] w-full items-stretch">
           {/* flex-1 so the whole area flanking the window is a hit target */}
           <button
-            className={`${ARR} pl-27.5 text-left hover:bg-linear-90 hover:from-white/40 hover:to-white/0`}
+            className={`${ARROW_BUTTON} pl-27.5 text-left hover:bg-linear-90 hover:from-white/40 hover:to-white/0`}
             aria-label="previous page"
             onClick={() => flipTo(page - 1, -1)}
           >
-            <ChevronLeft size={ARROW} strokeWidth={1} aria-hidden />
+            <ChevronLeft size={ARROW_SIZE} strokeWidth={1} aria-hidden />
           </button>
           <div
             ref={windowRef}
@@ -138,11 +138,11 @@ export function Editor({
               ))}
           </div>
           <button
-            className={`${ARR} pr-27.5 text-right hover:bg-linear-270 hover:from-white/40 hover:to-white/0`}
+            className={`${ARROW_BUTTON} pr-27.5 text-right hover:bg-linear-270 hover:from-white/40 hover:to-white/0`}
             aria-label="next page"
             onClick={() => flipTo(page + 1, 1)}
           >
-            <ChevronRight size={ARROW} strokeWidth={1} aria-hidden />
+            <ChevronRight size={ARROW_SIZE} strokeWidth={1} aria-hidden />
           </button>
         </div>
         <Cta onClick={onGenerate}>

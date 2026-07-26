@@ -112,14 +112,14 @@ export function Card({ build }: { build: Build }) {
     >
       <div className="relative z-1 flex w-107.5 flex-col justify-end">
         <div
-          className="p absolute inset-x-0 top-0 h-[70%] bg-size-[auto_115%] bg-top"
+          className="portrait absolute inset-x-0 top-0 h-[70%] bg-size-[auto_115%] bg-top"
           style={{
             backgroundImage: `url('${portraitUrl(build.characterId)}')`,
             backgroundPosition: `center ${character?.portraitY ?? 20}%`,
           }}
         />
         <LvlBadge level={CHARACTER_LEVEL} inset={10} />
-        <div className="nb relative z-2 mx-3.5 mb-4 flex items-center justify-center gap-2.5 px-4 py-1.5 text-[28px] font-bold text-white">
+        <div className="nameBanner relative z-2 mx-3.5 mb-4 flex items-center justify-center gap-2.5 px-4 py-1.5 text-[28px] font-bold text-white">
           <Orb size={20} />
           {character?.name ?? build.characterId}
         </div>

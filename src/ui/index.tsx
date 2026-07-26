@@ -70,7 +70,12 @@ const LVL_TONE = {
   dim: "text-dim",
 };
 
-const LVL_SIZE = { base: "", stat: "text-[21px]", wbase: "text-[20px]" };
+const LVL_SIZE = {
+  base: "",
+  stat: "text-[21px]",
+  wbase: "text-[20px]",
+  gear: "text-[14px]",
+};
 
 /**
  * Any number the build shows. `unit` hangs outside the box so the digits of

@@ -26,9 +26,11 @@ const WRIGHTSTONE_LEVEL_SETS = [
 
 const SIGIL_MAX_LEVEL = 20;
 
-const IMH =
+/** The uppercase caption above a gear panel. */
+const META_ROW =
   "text-dim flex items-center justify-between gap-2 text-[12px] tracking-[0.07em] uppercase";
-const VAL = "ml-auto w-15.5 text-right text-[14px]";
+/** Placement of a number in its row; the type size is <Lvl size="gear">. */
+const VALUE_CELL = "ml-auto w-15.5 text-right";
 
 type WrightstoneRow = Wrightstone["main"];
 
@@ -108,12 +110,20 @@ function WeaponPanel({ build, onChange }: PageProps) {
       <div className="pointer-events-none my-1 min-h-15.5 flex-1 rounded-md bg-linear-115 from-[rgba(106,147,181,0.28)] to-[rgba(106,147,181,0.05)]" />
       <div className="mt-1 mb-1.5 flex items-baseline gap-1 text-[12.5px]">
         <BaseStat>
-          <Lvl tone={weaponDef ? "value" : "dim"} className={VAL}>
+          <Lvl
+            tone={weaponDef ? "value" : "dim"}
+            size="gear"
+            className={VALUE_CELL}
+          >
             {weaponDef?.defaultHp ?? "-"}
           </Lvl>
         </BaseStat>
         <BaseStat>
-          <Lvl tone={weaponDef ? "value" : "dim"} className={VAL}>
+          <Lvl
+            tone={weaponDef ? "value" : "dim"}
+            size="gear"
+            className={VALUE_CELL}
+          >
             {weaponDef?.defaultAtk ?? "-"}
           </Lvl>
         </BaseStat>
@@ -127,7 +137,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
               onChange={(critRate) => setWeapon({ ...weapon, critRate })}
             />
           ) : (
-            <Lvl tone="dim" className={VAL}>
+            <Lvl tone="dim" size="gear" className={VALUE_CELL}>
               -
             </Lvl>
           )}
@@ -141,7 +151,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
               onChange={(stun) => setWeapon({ ...weapon, stun })}
             />
           ) : (
-            <Lvl tone="dim" className={VAL}>
+            <Lvl tone="dim" size="gear" className={VALUE_CELL}>
               -
             </Lvl>
           )}
@@ -227,7 +237,7 @@ function WrightstonePanel({ build, onChange }: PageProps) {
 
   return (
     <>
-      <div className={`${IMH} mt-3 mb-0.5`}>
+      <div className={`${META_ROW} mt-3 mb-0.5`}>
         <span>Imbued Traits</span>
         <Select
           className="ml-auto text-[11.5px] tracking-normal"

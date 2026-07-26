@@ -17,14 +17,14 @@ export function IdentityCol({ build, onChange }: PageProps) {
   return (
     <div className="relative flex min-w-0 flex-col justify-end">
       <div
-        className="p absolute inset-x-0 top-0 h-[76%] bg-size-[auto_115%] bg-top"
+        className="portrait absolute inset-x-0 top-0 h-[76%] bg-size-[auto_115%] bg-top"
         style={{
           backgroundImage: `url('${portraitUrl(build.characterId)}')`,
           backgroundPosition: `center ${character?.portraitY ?? 20}%`,
         }}
       />
       <LvlBadge level={CHARACTER_LEVEL} size={120} inset={6} />
-      <div className="nb relative z-2 mx-2 mb-3 flex items-center justify-center gap-2.25 px-3.5 py-1.25 text-[22px] font-bold text-white">
+      <div className="nameBanner relative z-2 mx-2 mb-3 flex items-center justify-center gap-2.25 px-3.5 py-1.25 text-[22px] font-bold text-white">
         <Orb size={18} />
         {character?.name ?? build.characterId}
       </div>
