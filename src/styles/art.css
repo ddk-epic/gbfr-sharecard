@@ -30,12 +30,12 @@
       var(--slashTex) 0 0/260px 260px repeat,
       radial-gradient(
         circle var(--gr) at var(--gx) var(--gy),
-        var(--slash-1) 0%,
-        var(--slash-2) calc(var(--ge) * 0.32),
-        var(--slash-3) calc(var(--ge) * 0.57),
-        var(--slash-4) calc(var(--ge) * 0.77),
-        var(--slash-5) var(--ge),
-        var(--slash-6) calc(var(--ge) * 1.3)
+        var(--deep-1) 0%,
+        var(--deep-2) calc(var(--ge) * 0.32),
+        var(--deep-3) calc(var(--ge) * 0.57),
+        var(--deep-4) calc(var(--ge) * 0.77),
+        var(--deep-5) var(--ge),
+        var(--deep-6) calc(var(--ge) * 1.3)
       );
     transform: rotate(13deg);
     transform-origin: top left;
@@ -91,12 +91,12 @@
       var(--slashTex) 0 0/260px 260px repeat,
       radial-gradient(
         circle var(--pgr) at var(--pgx) var(--pgy),
-        var(--slash-3) 0%,
-        var(--slash-4) calc(var(--pge) * 0.32),
-        var(--slash-5) calc(var(--pge) * 0.57),
-        var(--slash-6) calc(var(--pge) * 0.77),
-        #04304f var(--pge),
-        #02203a calc(var(--pge) * 1.3)
+        var(--deep-3) 0%,
+        var(--deep-4) calc(var(--pge) * 0.32),
+        var(--deep-5) calc(var(--pge) * 0.57),
+        var(--deep-6) calc(var(--pge) * 0.77),
+        var(--deep-7) var(--pge),
+        var(--deep-8) calc(var(--pge) * 1.3)
       );
     box-shadow:
       0 1px 8px rgba(5, 63, 99, 0.4),

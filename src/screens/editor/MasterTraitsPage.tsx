@@ -63,7 +63,7 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
   return (
     <div className="grid h-full grid-cols-2 gap-3.5 overflow-hidden px-4 py-3.5">
       <div className="col-span-full flex min-w-0 flex-col gap-3.5">
-        <Heading tone="slash" className="flex items-baseline justify-between">
+        <Heading tone="deep" className="flex items-baseline justify-between">
           Master Traits
           <span className="text-[13.5px] font-semibold tracking-[0.02em] text-[#d5eef8] normal-case text-shadow-none">
             {perkSummary}

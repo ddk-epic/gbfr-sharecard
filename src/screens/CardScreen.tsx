@@ -133,7 +133,7 @@ export function CardScreen({
               href={credit.href}
               target="_blank"
               rel="noreferrer"
-              className="text-slash-4 no-underline hover:underline"
+              className="text-deep-4 no-underline hover:underline"
             >
               {credit.label}
             </a>
@@ -144,7 +144,7 @@ export function CardScreen({
           href="https://github.com/ddk-epic/gbfr-sharecard"
           target="_blank"
           rel="noreferrer"
-          className="text-slash-4 no-underline hover:underline"
+          className="text-deep-4 no-underline hover:underline"
         >
           GitHub
         </a>

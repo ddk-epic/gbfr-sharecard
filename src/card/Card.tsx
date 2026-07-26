@@ -276,7 +276,7 @@ export function Card({ build }: { build: Build }) {
 
       <div className="relative z-1 flex flex-1 flex-col gap-2.75 p-3.5">
         <Heading
-          tone="slash"
+          tone="deep"
           className={`${COL_HEADING} flex items-baseline justify-between`}
         >
           Master Traits
@@ -306,7 +306,7 @@ export function Card({ build }: { build: Build }) {
                         data-opt
                         className={`${OPT} ${
                           build.masterTraits[style][rank].includes(cell.id)
-                            ? "to-slash-3/30 bg-linear-135 from-white/18 text-white shadow-[inset_0_0_0_1px_#b8ecf8]"
+                            ? "to-deep-3/30 bg-linear-135 from-white/18 text-white shadow-[inset_0_0_0_1px_#b8ecf8]"
                             : "bg-[rgba(11,46,61,0.3)] text-[#a8d4e4]"
                         }`}
                       >

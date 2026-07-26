@@ -29,14 +29,16 @@
   --essence: #4bb3e8;
   --crux: #e85f6a;
 
-  /* the diagonal slash's ramp, light to dark. */
-  /* also the mt heading, mt cell and heading's fade */
-  --slash-1: #4cc4e2;
-  --slash-2: #2aa6cb;
-  --slash-3: #1a86ad;
-  --slash-4: #10719c;
-  --slash-5: #0a5d86;
-  --slash-6: #053f63;
+  /* the dark surface ramp, light to dark: the diagonal slash art, the
+     .styleCol panel and the deep-tone heading bar all paint from it */
+  --deep-1: #4cc4e2;
+  --deep-2: #2aa6cb;
+  --deep-3: #1a86ad;
+  --deep-4: #10719c;
+  --deep-5: #0a5d86;
+  --deep-6: #053f63;
+  --deep-7: #04304f; /* only .styleCol goes this far currently */
+  --deep-8: #02203a;
 }
 
 @theme inline {
@@ -61,10 +63,12 @@
   --color-essence: var(--essence);
   --color-crux: var(--crux);
 
-  --color-slash-1: var(--slash-1);
-  --color-slash-2: var(--slash-2);
-  --color-slash-3: var(--slash-3);
-  --color-slash-4: var(--slash-4);
-  --color-slash-5: var(--slash-5);
-  --color-slash-6: var(--slash-6);
+  --color-deep-1: var(--deep-1);
+  --color-deep-2: var(--deep-2);
+  --color-deep-3: var(--deep-3);
+  --color-deep-4: var(--deep-4);
+  --color-deep-5: var(--deep-5);
+  --color-deep-6: var(--deep-6);
+  --color-deep-7: var(--deep-7);
+  --color-deep-8: var(--deep-8);
 }
