@@ -11,24 +11,27 @@
 }
 
 /* Colors only - sizes get no tokens (see STYLE.md). Names describe the role the
-   hex already plays; the planned color pass can rename from here. */
+   hex plays, and a near-duplicate in the same role collapses onto its token
+   rather than earning one of its own. */
 @theme {
-  /* light-theme text: ink on panels, deep on chrome and headings */
-  --color-ink: #16233b;
-  --color-deep: #0e3348;
-  --color-dim: #5f7188;
-  --color-line: #c3d4e4;
-  --color-panel: #dbe6f0;
+  /* text, darkest to lightest */
+  --color-ui: #16233b; /* base body text */
+  --color-ink-strong: #0e3348; /* headings, buttons, active states */
+  --color-dim: #5f7188; /* muted and secondary text */
+  --color-value: #b06e12; /* numbers, always */
 
-  /* gold CTA gradient, and the bronze it darkens to */
-  --color-gold: #ecaf4a;
+  /* lines: outer container borders, and the softer inner hairline */
+  --color-line: #c3d4e4; /* absorbs #c2d3e6, #c9d6e2 */
+  --color-line-soft: #dbe6f0; /* absorbs #d7e2ee, #d3e0eb */
+
+  /* gold: the CTA pair, plus the third stop the summon strip needs */
+  --color-gold: #ecaf4a; /* absorbs the #e8b34b tile ring */
   --color-gold-deep: #d37c35;
-  --color-bronze: #b06e12;
-  --color-accent: #e8b34b;
+  --color-gold-dark: #be5230;
 
-  /* h3's sky gradient */
-  --color-sky: #79b6d4;
-  --color-sky-soft: #9cc6dd;
+  /* the heading and tab band */
+  --color-band: #79b6d4;
+  --color-band-soft: #9cc6dd;
 
   /* the three master-trait styles */
   --color-insight: #b06cf0;
@@ -39,7 +42,7 @@
   --color-slash-1: #4cc4e2;
   --color-slash-2: #2aa6cb;
   --color-slash-3: #1a86ad;
-  --color-slash-4: #10719c;
+  --color-slash-4: #10719c; /* absorbs #0e6f9c */
   --color-slash-5: #0a5d86;
   --color-slash-6: #053f63;
 }

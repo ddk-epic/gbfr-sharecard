@@ -58,9 +58,15 @@ editor import the same component so they cannot drift; if the card must diverge 
 
 ## Tokens: colors only
 
-`@theme` holds semantic colors (`--color-ink`, `--color-dim`, `--color-line`,
-`--color-accent`, the style colors, the blue slash ramp). Art-driving vars
-(`--slashTex`, `--sx`, `--pg*`) live in the art files with the art they drive.
+`@theme` holds semantic colors, **named for the role the hex plays** - text
+(`--color-ui`, `--color-ink-strong`, `--color-dim`, `--color-value`), lines, gold,
+band, the three styles, the slash ramp. Art-driving vars (`--slashTex`, `--sx`,
+`--pg*`) live in the art files with the art they drive.
+
+**A near-duplicate collapses onto its token** rather than earning one of its own -
+but only within a role. Two hexes a few points apart that do different jobs (a
+background and a hairline) stay separate; merging them couples what should move
+independently.
 
 **Sizes get no tokens.** The 68 distinct px values, 13 of them half-pixels, are
 one-off hand-tunings, not a scale. **No value may be rounded to a scale step:**
