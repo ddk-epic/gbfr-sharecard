@@ -280,7 +280,7 @@ export function Card({ build }: { build: Build }) {
           className={`${COL_HEADING} flex items-baseline justify-between`}
         >
           Master Traits
-          <span className="text-[13.5px] font-semibold tracking-[0.02em] text-[#3d6478] normal-case text-shadow-none">
+          <span className="text-deep-label text-[13.5px] font-semibold tracking-[0.02em] normal-case text-shadow-none">
             {perkSummary}
           </span>
         </Heading>
