@@ -70,9 +70,16 @@ background and a hairline) stay separate; merging them couples what should move
 independently.
 
 **Sizes get no tokens.** The 68 distinct px values, 13 of them half-pixels, are
-one-off hand-tunings, not a scale. **No value may be rounded to a scale step:**
-`5.5px` is `p-[5.5px]`, never `p-1.5`; `14.5px` is not `text-sm`. The default scale
-is usable only when the number already matches exactly.
+one-off hand-tunings, not a scale. **No value may be rounded**, ever - `14.5px` is
+not `text-sm`.
+
+Spacing and sizing utilities multiply `--spacing` (4px) by any **quarter step**, so
+every whole-pixel value has a canonical class: `13px` is `size-3.25`, `62px` is
+`w-15.5`. Prefer that form. Bracket it when the value is not whole pixels - `2.5px`
+is `py-[2.5px]`, because `py-0.625` is off the grid and silently generates nothing -
+or when the number resists reading as a multiple: `w-[1190.4px]` (1920 x .62) says
+where it came from, `w-297.6` does not. Font-size, radius, border-width and blur
+have no such scale, so off-token values there stay arbitrary.
 
 ## Files
 
