@@ -1,5 +1,11 @@
 // The Build - what localStorage stores, one per character.
 
+/**
+ * Branded, unlike the ids below: the only id that arrives from outside the app,
+ * via the URL. Mint with `asCharacterId`.
+ */
+export type CharacterId = string & { readonly brand: unique symbol };
+
 export type SkillId = string;
 export type TraitId = string;
 export type WeaponId = string;
@@ -20,7 +26,7 @@ export const WEAPON_LEVEL = 150;
 
 export type Build = {
   schemaVersion: 1;
-  characterId: string; // slug, e.g. "io"
+  characterId: CharacterId; // slug, e.g. "io"
   status: { hp: number; atk: number; critRate: number; stunPower: number }; // player-entered
   skills: (SkillId | null)[]; // exactly 4
   overMastery: (OverMasteryLine | null)[]; // exactly 4; all random lines
@@ -73,7 +79,7 @@ export function emptyMasterTraits(): MasterTraitSelections {
   return { insight: perStyle(), essence: perStyle(), crux: perStyle() };
 }
 
-export function emptyBuild(characterId: string): Build {
+export function emptyBuild(characterId: CharacterId): Build {
   return {
     schemaVersion: 1,
     characterId,

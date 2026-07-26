@@ -1,22 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import {
-  createRootRoute,
-  createRoute,
-  createRouter,
-  Outlet,
-  RouterProvider,
-} from "@tanstack/react-router";
-import { App } from "./app/App";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { rootRoute } from "./app/root-route";
+import { indexRoute } from "./app/App";
 import "./styles/global.css";
 
-// Single route at the Pages base path; screens are state, not URLs.
-const rootRoute = createRootRoute({ component: Outlet });
-const indexRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/",
-  component: App,
-});
+// Single route at the Pages base path; the screen rides in the search params.
 const router = createRouter({
   routeTree: rootRoute.addChildren([indexRoute]),
   basepath: import.meta.env.BASE_URL,

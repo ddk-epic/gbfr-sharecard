@@ -1,3 +1,4 @@
+import type { CharacterId } from "../domain/build";
 import type { Character } from "../domain/catalog";
 import { CHARACTERS, portraitUrl } from "../data";
 import { hasBuild } from "../domain/storage";
@@ -9,7 +10,7 @@ const UNREVEALED_SLOTS = 6;
 export function CharacterSelect({
   onCharacterPick,
 }: {
-  onCharacterPick: (characterId: string) => void;
+  onCharacterPick: (characterId: CharacterId) => void;
 }) {
   return (
     <div className="selWrap">
@@ -43,7 +44,7 @@ function CharacterTile({
   onCharacterPick,
 }: {
   character: Character;
-  onCharacterPick: (characterId: string) => void;
+  onCharacterPick: (characterId: CharacterId) => void;
 }) {
   return (
     <div

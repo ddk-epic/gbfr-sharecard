@@ -10,7 +10,12 @@ import type {
   WeaponDef,
   WrightstonePrefixMap,
 } from "../domain/catalog";
-import type { BonusTypeId, SummonId, TraitId } from "../domain/build";
+import type {
+  BonusTypeId,
+  CharacterId,
+  SummonId,
+  TraitId,
+} from "../domain/build";
 import charactersJson from "./characters.json";
 import traitsJson from "./traits.json";
 import bonusTypesJson from "./bonus-types.json";
@@ -47,7 +52,13 @@ export const wrightstoneName = (mainTrait: TraitId | null | undefined) => {
 export const bonusValueText = (bonusType: BonusTypeId, value: number) =>
   bonusTypeById.get(bonusType)?.unit === "percent" ? `+${value}%` : `+${value}`;
 
-export const portraitUrl = (characterId: string) =>
+/** The only way to mint a CharacterId; not-yet-added characters are rejected too. */
+export const asCharacterId = (value: unknown): CharacterId | null =>
+  typeof value === "string" && characterById.get(value as CharacterId)?.enabled
+    ? (value as CharacterId)
+    : null;
+
+export const portraitUrl = (characterId: CharacterId) =>
   `${import.meta.env.BASE_URL}${characterById.get(characterId)?.portrait ?? ""}`;
 
 /** The traits a summon can roll, in catalog order. */
@@ -69,7 +80,7 @@ export const summonEquipTiers = (
 const io = ioJson as CharacterCatalog;
 
 /** Only Io has a catalog so far; the lookup shape is ready for the roster. */
-export function characterCatalog(id: string): CharacterCatalog {
+export function characterCatalog(id: CharacterId): CharacterCatalog {
   if (id !== "io") throw new Error(`no catalog for character: ${id}`);
   return io;
 }

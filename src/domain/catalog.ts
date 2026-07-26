@@ -4,6 +4,7 @@
 import type {
   BonusTypeId,
   CellId,
+  CharacterId,
   SkillId,
   StyleId,
   StyleRank,
@@ -13,7 +14,7 @@ import type {
 } from "./build";
 
 export type Character = {
-  id: string; // slug, e.g. "io"
+  id: CharacterId; // slug, e.g. "io"
   name: string;
   artId: string; // cdn.gbf.wiki Cmn_imgchr id
   portrait: string; // path under the Vite base
@@ -63,7 +64,7 @@ export type WeaponDef = {
   id: WeaponId;
   name: string;
   series: string;
-  characterId: string;
+  characterId: CharacterId;
   defaultAtk: number;
   defaultHp: number;
   rows: WeaponRow[]; // 5 rows, levels fixed by the weapon

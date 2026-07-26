@@ -1,4 +1,5 @@
 import { domToBlob } from "modern-screenshot";
+import type { CharacterId } from "../domain/build";
 
 const CARD_WIDTH = 1920;
 const CARD_HEIGHT = 1080;
@@ -29,7 +30,7 @@ export function copyCard(node: HTMLElement): Promise<void> {
 
 export async function downloadCard(
   node: HTMLElement,
-  characterId: string,
+  characterId: CharacterId,
 ): Promise<void> {
   const blob = await cardToBlob(node);
   const url = URL.createObjectURL(blob);
