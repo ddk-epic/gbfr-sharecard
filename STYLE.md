@@ -20,8 +20,9 @@ and is invisible to grep.
   rings are _decoration_, not art - `.stat`, `.sigil`, `.summonCard`, `.viewport`,
   `.tab.on` are utilities.
 - **Tailwind can't say it cleanly**: a `mask-*`/`clip-path`, a gradient with
-  **more than two** color stops, a `calc()` on a custom property, or a paired
-  `-webkit-` duplicate.
+  **four or more** color stops, a `calc()` on a custom property, or a paired
+  `-webkit-` duplicate. Three stops stay utilities - `from-*`/`via-*`/`to-*` says
+  them natively, positions included.
 
 ## Cascade, and the corollary that keeps the boundary
 
