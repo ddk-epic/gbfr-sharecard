@@ -5,8 +5,8 @@ import { NumInput, type PageProps } from "./controls";
 import { Orb, StatIcon } from "../../ui";
 
 const STATUS_FIELDS = [
-  ["hp", "HP", "hp", "text-[#3fa32e]"],
-  ["atk", "ATK", "default", "text-[#d9861f]"],
+  ["hp", "HP", "hp", "text-hp"],
+  ["atk", "ATK", "default", "text-atk"],
   ["critRate", "Crit. Hit Rate", "default", "text-value"],
   ["stunPower", "Stun Power", "default", "text-value"],
 ] as const;

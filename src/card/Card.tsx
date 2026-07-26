@@ -386,7 +386,7 @@ export function Card({ build }: { build: Build }) {
           </div>
         </div>
       </div>
-      <div className="absolute right-4 bottom-2 z-5 text-[11.5px] tracking-wider text-[#7c8da3]">
+      <div className="text-dim absolute right-4 bottom-2 z-5 text-[11.5px] tracking-wider">
         gbfr-sharecard · ddk-epic.github.io/gbfr-sharecard
       </div>
     </div>

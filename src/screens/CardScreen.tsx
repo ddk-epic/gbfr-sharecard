@@ -122,13 +122,13 @@ export function CardScreen({
       </div>
       <div className="border-line/80 text-dim absolute right-0 bottom-0 left-0 z-2 flex h-13 items-center justify-center gap-2.25 border-t bg-white/40 text-[12.5px] backdrop-blur-[3px]">
         <span>gbfr-sharecard</span>
-        <span className="text-[#b7cadd]">·</span>
+        <span className="text-line">·</span>
         <span>fan project - Granblue Fantasy: Relink © Cygames</span>
-        <span className="text-[#b7cadd]">·</span>
+        <span className="text-line">·</span>
         <span>data:</span>
         {CREDITS.map((credit, i) => (
           <Fragment key={credit.href}>
-            {i > 0 && <span className="text-[#b7cadd]">·</span>}
+            {i > 0 && <span className="text-line">·</span>}
             <a
               href={credit.href}
               target="_blank"
@@ -139,7 +139,7 @@ export function CardScreen({
             </a>
           </Fragment>
         ))}
-        <span className="text-[#b7cadd]">·</span>
+        <span className="text-line">·</span>
         <a
           href="https://github.com/ddk-epic/gbfr-sharecard"
           target="_blank"

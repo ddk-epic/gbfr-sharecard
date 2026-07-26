@@ -64,8 +64,8 @@ export function StatIcon({
    colours would compete with each other rather than stack. */
 const LVL_TONE = {
   value: "text-value",
-  hp: "text-[#3fa32e]",
-  atk: "text-[#d9861f]",
+  hp: "text-hp",
+  atk: "text-atk",
   ui: "text-ui",
   dim: "text-dim",
 };

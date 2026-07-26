@@ -16,7 +16,7 @@ const SELECT_ARROW =
 /* A prop, not a className override: the strip restates the base fill and
    border, which utilities resolve by generation order rather than string order. */
 const SELECT_TONE = {
-  default: "border-[#b7cadd] bg-white/92",
+  default: "border-line bg-white/92",
   strip: "border-white/45 bg-white/18 font-bold text-white",
 };
 
@@ -31,7 +31,7 @@ const NUM_WIDTH = {
 };
 
 const NUM =
-  "rounded-[4px] border border-[#b7cadd] bg-white/92 py-px px-1.5 text-right tabular-nums [&::-webkit-inner-spin-button]:opacity-100";
+  "rounded-[4px] border border-line bg-white/92 py-px px-1.5 text-right tabular-nums [&::-webkit-inner-spin-button]:opacity-100";
 
 /** Clamped numeric input - the editor's stepper affordance. */
 export function NumInput({

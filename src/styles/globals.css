@@ -29,6 +29,9 @@
   --essence: #4bb3e8;
   --crux: #e85f6a;
 
+  --hp: #3fa32e; /* HP numbers, editor and card */
+  --atk: #d9861f; /* ATK numbers, editor and card */
+
   /* the dark surface ramp, light to dark: the diagonal slash art, the
      .styleCol panel and the deep-tone heading bar all paint from it */
   --deep-1: #4cc4e2;
@@ -70,6 +73,9 @@
   --color-insight: var(--insight);
   --color-essence: var(--essence);
   --color-crux: var(--crux);
+
+  --color-hp: var(--hp);
+  --color-atk: var(--atk);
 
   --color-deep-1: var(--deep-1);
   --color-deep-2: var(--deep-2);

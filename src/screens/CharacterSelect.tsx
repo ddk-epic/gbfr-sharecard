@@ -93,7 +93,7 @@ function CharacterTile({
       <div
         className={`absolute bottom-0 left-0 w-full overflow-hidden px-1.25 pt-3 pb-0.75 text-center text-[16.5px] font-semibold text-ellipsis whitespace-nowrap [paint-order:stroke_fill] ${
           on
-            ? "text-[#f3f9f3] [-webkit-text-stroke:2px_#0e3348] [text-shadow:0_1px_2px_rgba(90,30,0,0.55)]"
+            ? "text-[#f3f9f3] [-webkit-text-stroke:2px_var(--ink-strong)] [text-shadow:0_1px_2px_rgba(90,30,0,0.55)]"
             : "text-line [-webkit-text-stroke:2px_#38505f] [text-shadow:0_1px_2px_rgba(10,40,60,0.6)]"
         }`}
       >
