@@ -11,7 +11,7 @@ export type PageProps = {
 /* Spaces are percent-encoded so the URI survives Tailwind's arbitrary-value
    parsing, which reads a bare space as the end of the class. */
 const SELECT_ARROW =
-  "bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%228%22%20height=%226%22%3E%3Cpath%20d=%22M0%200h8L4%206z%22%20fill=%22%235f7188%22/%3E%3C/svg%3E')] bg-[position:right_5px_center] bg-no-repeat";
+  "bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%228%22%20height=%226%22%3E%3Cpath%20d=%22M0%200h8L4%206z%22%20fill=%22%235f7188%22/%3E%3C/svg%3E')] bg-position-[right_5px_center] bg-no-repeat";
 
 /* A prop, not a className override: the strip restates the base fill and
    border, which utilities resolve by generation order rather than string order. */

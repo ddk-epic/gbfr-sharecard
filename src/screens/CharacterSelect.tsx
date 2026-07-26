@@ -16,7 +16,7 @@ export function CharacterSelect({
 }) {
   // Viewport is shorter than the 1080px stage; this block stays under ~900px.
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-[14px]">
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3.5">
       <div className="flex w-[66%] items-baseline justify-center gap-3">
         <span className="text-ink-strong text-[40px] leading-none font-extrabold tracking-[0.06em] [text-shadow:0_2px_10px_rgba(23,60,90,0.22)]">
           GBFR
@@ -68,7 +68,7 @@ function CharacterTile({
     >
       {/* framing frozen at 180% zoom, y per character */}
       <div
-        className={`absolute inset-0 bg-[length:auto_180%] bg-no-repeat ${
+        className={`absolute inset-0 bg-size-[auto_180%] bg-no-repeat ${
           on ? "" : "opacity-40 brightness-[1.06] grayscale"
         }`}
         style={{
@@ -80,18 +80,18 @@ function CharacterTile({
       <div
         className={`absolute bottom-0 left-0 h-7 w-full bg-linear-to-b from-transparent ${
           on
-            ? "via-[rgba(236,175,74,0.55)] via-35% to-[rgba(211,124,53,0.92)]"
+            ? "via-gold/55 to-gold-deep/92 via-35%"
             : "to-[rgba(70,90,105,0.7)]"
         }`}
       />
       {on && hasBuild(character.id) && (
-        <span className="from-gold to-gold-deep absolute top-1 right-1 rounded bg-linear-90 px-[7px] py-px text-[11px] font-bold tracking-[0.04em] text-white shadow-[0_1px_4px_rgba(90,30,0,0.3)] [text-shadow:0_1px_2px_rgba(90,30,0,0.55)]">
+        <span className="from-gold to-gold-deep absolute top-1 right-1 rounded bg-linear-90 px-1.75 py-px text-[11px] font-bold tracking-[0.04em] text-white shadow-[0_1px_4px_rgba(90,30,0,0.3)] [text-shadow:0_1px_2px_rgba(90,30,0,0.55)]">
           Saved
         </span>
       )}
       {/* stroke under fill, so the glyph weight is unchanged */}
       <div
-        className={`absolute bottom-0 left-0 w-full overflow-hidden px-[5px] pt-3 pb-[3px] text-center text-[16.5px] font-semibold text-ellipsis whitespace-nowrap [paint-order:stroke_fill] ${
+        className={`absolute bottom-0 left-0 w-full overflow-hidden px-1.25 pt-3 pb-0.75 text-center text-[16.5px] font-semibold text-ellipsis whitespace-nowrap [paint-order:stroke_fill] ${
           on
             ? "text-[#f3f9f3] [-webkit-text-stroke:2px_#0e3348] [text-shadow:0_1px_2px_rgba(90,30,0,0.55)]"
             : "text-line [-webkit-text-stroke:2px_#38505f] [text-shadow:0_1px_2px_rgba(10,40,60,0.6)]"

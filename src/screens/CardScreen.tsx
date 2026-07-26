@@ -91,7 +91,7 @@ export function CardScreen({
         <ChevronLeft size={ICON} aria-hidden />
         Editor
       </BackButton>
-      <div className="absolute inset-0 flex flex-col items-center justify-center pb-[52px]">
+      <div className="absolute inset-0 flex flex-col items-center justify-center pb-13">
         <Panel pad="sm">
           <div className="flex items-center gap-2.5">
             <Heading>Share Card</Heading>
@@ -120,7 +120,7 @@ export function CardScreen({
           </div>
         </Panel>
       </div>
-      <div className="border-line/80 text-dim absolute right-0 bottom-0 left-0 z-2 flex h-[52px] items-center justify-center gap-[9px] border-t bg-white/40 text-[12.5px] backdrop-blur-[3px]">
+      <div className="border-line/80 text-dim absolute right-0 bottom-0 left-0 z-2 flex h-13 items-center justify-center gap-2.25 border-t bg-white/40 text-[12.5px] backdrop-blur-[3px]">
         <span>gbfr-sharecard</span>
         <span className="text-[#b7cadd]">·</span>
         <span>fan project - Granblue Fantasy: Relink © Cygames</span>
