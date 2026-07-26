@@ -1,0 +1,73 @@
+/* The diagonal slash and the style column's panel gradient: the two pieces
+   utilities cannot express. The shell and the card declared each of these
+   identically, so they share one rule. */
+
+:root {
+  /* faint crest tile: circles + four-pointed stars */
+  --slashTex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.06'%3E%3Ccircle cx='130' cy='130' r='95'/%3E%3Ccircle cx='130' cy='130' r='58'/%3E%3Cpath d='M130 12 L156 104 L248 130 L156 156 L130 248 L104 156 L12 130 L104 104 Z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23003a5c' stroke-opacity='.09'%3E%3Cpath d='M130 34 L151 109 L226 130 L151 151 L130 226 L109 151 L34 130 L109 109 Z'/%3E%3C/g%3E%3C/svg%3E");
+  /* slash and panel geometry, hand-tuned and frozen */
+  --sx: -150px;
+  --gx: 80%;
+  --gy: 42%;
+  --gr: 620px;
+  --ge: 65%;
+  --pgx: 50%;
+  --pgy: 50%;
+  --pgr: 650px;
+  --pge: 100%;
+}
+
+@layer components {
+  .shell::before,
+  .shareCard::before {
+    content: "";
+    position: absolute;
+    left: var(--sx);
+    top: -360px;
+    width: 720px;
+    height: 1800px;
+    background:
+      var(--slashTex) 0 0/260px 260px repeat,
+      radial-gradient(
+        circle var(--gr) at var(--gx) var(--gy),
+        #4cc4e2 0%,
+        #2aa6cb calc(var(--ge) * 0.32),
+        #1a86ad calc(var(--ge) * 0.57),
+        #10719c calc(var(--ge) * 0.77),
+        #0a5d86 var(--ge),
+        #053f63 calc(var(--ge) * 1.3)
+      );
+    transform: rotate(13deg);
+    transform-origin: top left;
+    z-index: 0;
+  }
+  .shell::after,
+  .shareCard::after {
+    content: "";
+    position: absolute;
+    left: calc(var(--sx) + 730px);
+    top: -360px;
+    width: 26px;
+    height: 1800px;
+    background: rgba(255, 255, 255, 0.55);
+    transform: rotate(13deg);
+    transform-origin: top left;
+    z-index: 0;
+  }
+  .styleCol {
+    background:
+      var(--slashTex) 0 0/260px 260px repeat,
+      radial-gradient(
+        circle var(--pgr) at var(--pgx) var(--pgy),
+        #1a86ad 0%,
+        #10719c calc(var(--pge) * 0.32),
+        #0a5d86 calc(var(--pge) * 0.57),
+        #053f63 calc(var(--pge) * 0.77),
+        #04304f var(--pge),
+        #02203a calc(var(--pge) * 1.3)
+      );
+    box-shadow:
+      0 1px 8px rgba(5, 63, 99, 0.4),
+      inset 0 0 44px rgba(76, 196, 226, 0.15);
+  }
+}

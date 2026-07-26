@@ -589,20 +589,6 @@
   gap: 7px;
   border-top: 3px solid var(--sc);
   color: #f2fafd;
-  background:
-    var(--slashTex) 0 0/260px 260px repeat,
-    radial-gradient(
-      circle var(--pgr) at var(--pgx) var(--pgy),
-      #1a86ad 0%,
-      #10719c calc(var(--pge) * 0.32),
-      #0a5d86 calc(var(--pge) * 0.57),
-      #053f63 calc(var(--pge) * 0.77),
-      #04304f var(--pge),
-      #02203a calc(var(--pge) * 1.3)
-    );
-  box-shadow:
-    0 1px 8px rgba(5, 63, 99, 0.4),
-    inset 0 0 44px rgba(76, 196, 226, 0.15);
 }
 .styleCol > div {
   display: flex;

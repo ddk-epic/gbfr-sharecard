@@ -76,12 +76,12 @@ is usable only when the number already matches exactly.
 
 ## Files
 
-| File                    | Holds                                                  |
-| ----------------------- | ------------------------------------------------------ |
-| `src/styles/theme.css`  | `@import "tailwindcss"`, `@theme` tokens, `@font-face` |
-| `src/styles/art.css`    | shell and shared art, in `@layer components`           |
-| `src/card/card-art.css` | card-only art, imported by `Card.tsx`                  |
-| `src/ui/*`              | shared primitive components                            |
+| File                    | Holds                                                     |
+| ----------------------- | --------------------------------------------------------- |
+| `src/styles/theme.css`  | `@import "tailwindcss"`, `@theme` tokens, `@font-face`    |
+| `src/styles/art.css`    | shell and shared art, in `@layer components`              |
+| `src/card/card-art.css` | card-only art - not needed yet, the card shares all of it |
+| `src/ui/*`              | shared primitive components                               |
 
 `prototype/*.html` is historical reference, not a source of truth; it stays plain
 CSS. Verify with `pnpm typecheck`, `pnpm lint`, and eyeballing each screen.
