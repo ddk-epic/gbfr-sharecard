@@ -1,8 +1,4 @@
-/* Tailwind's theme and utilities layers, plus the project's color tokens.
-   Preflight is deliberately absent - global.css still owns the reset until the
-   migration's preflight step swaps them over. */
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
+@import "tailwindcss";
 
 @font-face {
   font-family: "GBFR UI";
@@ -10,10 +6,7 @@
   font-display: block;
 }
 
-/* Colors only - sizes get no tokens (see STYLE.md). Names describe the role the
-   hex plays, and a near-duplicate in the same role collapses onto its token
-   rather than earning one of its own. */
-@theme {
+@theme static {
   /* text, darkest to lightest */
   --color-ui: #16233b; /* base body text */
   --color-ink-strong: #0e3348; /* headings, buttons, active states */

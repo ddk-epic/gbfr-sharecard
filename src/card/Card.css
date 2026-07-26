@@ -558,6 +558,8 @@
 }
 .shareCard .summonCard b {
   font-size: 17.5px;
+  /* preflight makes b `bolder`, which is relative to the parent - pin it */
+  font-weight: 700;
 }
 .shareCard .summonCard .r {
   display: flex;

@@ -18,16 +18,13 @@
   /* faint crest tile: circles + four-pointed stars */
   --slashTex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.06'%3E%3Ccircle cx='130' cy='130' r='95'/%3E%3Ccircle cx='130' cy='130' r='58'/%3E%3Cpath d='M130 12 L156 104 L248 130 L156 156 L130 248 L104 156 L12 130 L104 104 Z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23003a5c' stroke-opacity='.09'%3E%3Cpath d='M130 34 L151 109 L226 130 L151 151 L130 226 L109 151 L34 130 L109 109 Z'/%3E%3C/g%3E%3C/svg%3E");
 }
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 html,
 body {
   background: #05060c;
   color: var(--ink);
   font-family: "GBFR UI", "Segoe UI", system-ui, sans-serif;
+  /* preflight would impose 1.5; the layout is tuned against the browser default */
+  line-height: normal;
   overflow-x: hidden;
 }
 
@@ -124,6 +121,11 @@ body {
 }
 
 /* ===== chrome shared across screens ===== */
+/* preflight resets headings to font-weight: inherit, so bold is now explicit */
+h3,
+h4 {
+  font-weight: 700;
+}
 h3 {
   font-size: 15px;
   letter-spacing: 0.1em;
