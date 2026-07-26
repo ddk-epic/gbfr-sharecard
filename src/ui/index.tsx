@@ -63,16 +63,22 @@ export function Heading({
   );
 }
 
+/* A prop, not a className override: two competing padding utilities resolve by
+   generation order, not by the order they are written in. */
+const PANEL_PAD = { md: "px-[18px] py-4", sm: "px-4 py-[14px]" };
+
 export function Panel({
   children,
+  pad = "md",
   className = "",
 }: {
   children: ReactNode;
+  pad?: keyof typeof PANEL_PAD;
   className?: string;
 }) {
   return (
     <div
-      className={`border-line flex flex-col gap-3 rounded-xl border bg-white/45 px-[18px] py-4 shadow-[0_8px_40px_rgba(23,60,90,0.18)] backdrop-blur-[4px] ${className}`}
+      className={`border-line flex flex-col gap-3 rounded-xl border bg-white/45 shadow-[0_8px_40px_rgba(23,60,90,0.18)] backdrop-blur-[4px] ${PANEL_PAD[pad]} ${className}`}
     >
       {children}
     </div>

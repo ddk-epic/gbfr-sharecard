@@ -3,7 +3,6 @@ import { Check, ChevronLeft, Copy, Download } from "lucide-react";
 import type { Build } from "../domain/build";
 import { Card } from "../card/Card";
 import { canCopy, copyCard, downloadCard } from "../card/export";
-import "./CardScreen.css";
 import { BackButton, Cta, Heading, Panel } from "../ui";
 
 const ICON = 16;
@@ -92,11 +91,13 @@ export function CardScreen({
         <ChevronLeft size={ICON} aria-hidden />
         Editor
       </BackButton>
-      <div className="cardWrap">
-        <Panel className="cardWin">
-          <div className="hd">
+      <div className="absolute inset-0 flex flex-col items-center justify-center pb-[52px]">
+        <Panel pad="sm">
+          <div className="flex items-center gap-2.5">
             <Heading>Share Card</Heading>
-            <span className="meta">PNG · 1920×1080</span>
+            <span className="text-dim ml-auto text-[12.5px]">
+              PNG · 1920×1080
+            </span>
             <Cta sm onClick={onCopy}>
               {copyLabel}
             </Cta>
@@ -104,39 +105,46 @@ export function CardScreen({
               {downloadLabel}
             </Cta>
           </div>
-          <div className="frame">
-            <div className="cardScale">
+          {/* 1190.4 x 669.6 = 1920 x 1080 at .62; the card node stays full size */}
+          <div className="relative h-[669.6px] w-[1190.4px] overflow-hidden rounded-lg shadow-[0_4px_24px_rgba(23,60,90,0.25)]">
+            <div className="origin-top-left scale-[0.62]">
               <div ref={cardRef}>
                 <Card build={build} />
               </div>
             </div>
           </div>
-          <div className="actions">
-            <span className="hint">
+          <div className="flex items-center justify-center">
+            <span className="text-dim text-[12.5px]">
               read-only - jump back up to keep editing
             </span>
           </div>
         </Panel>
       </div>
-      <div className="foot">
+      <div className="border-line/80 text-dim absolute right-0 bottom-0 left-0 z-2 flex h-[52px] items-center justify-center gap-[9px] border-t bg-white/40 text-[12.5px] backdrop-blur-[3px]">
         <span>gbfr-sharecard</span>
-        <span className="sep">·</span>
+        <span className="text-[#b7cadd]">·</span>
         <span>fan project - Granblue Fantasy: Relink © Cygames</span>
-        <span className="sep">·</span>
+        <span className="text-[#b7cadd]">·</span>
         <span>data:</span>
         {CREDITS.map((credit, i) => (
           <Fragment key={credit.href}>
-            {i > 0 && <span className="sep">·</span>}
-            <a href={credit.href} target="_blank" rel="noreferrer">
+            {i > 0 && <span className="text-[#b7cadd]">·</span>}
+            <a
+              href={credit.href}
+              target="_blank"
+              rel="noreferrer"
+              className="text-slash-4 no-underline hover:underline"
+            >
               {credit.label}
             </a>
           </Fragment>
         ))}
-        <span className="sep">·</span>
+        <span className="text-[#b7cadd]">·</span>
         <a
           href="https://github.com/ddk-epic/gbfr-sharecard"
           target="_blank"
           rel="noreferrer"
+          className="text-slash-4 no-underline hover:underline"
         >
           GitHub
         </a>
