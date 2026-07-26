@@ -291,9 +291,16 @@
   padding: 10px 13px;
   box-shadow: 0 1px 6px rgba(23, 60, 90, 0.1);
 }
+/* Mirrors the editor: the art box takes the column's leftover height */
+.shareCard .c2 > .wpanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 /* placeholder until per-weapon art exists */
 .shareCard .wimg {
-  height: 140px;
+  flex: 1;
+  min-height: 140px;
   margin: 2px 0 4px;
   border-radius: 10px;
   background: linear-gradient(
@@ -301,7 +308,6 @@
     rgba(106, 147, 181, 0.26),
     rgba(106, 147, 181, 0.05)
   );
-  transform: rotate(-18deg) scale(1.4);
 }
 .shareCard .wrow {
   display: flex;

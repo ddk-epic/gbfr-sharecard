@@ -438,6 +438,9 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+.wbase .val.dim {
+  color: #5f7188;
+}
 .wbase .sIcon {
   width: 12px;
   height: 12px;
@@ -446,13 +449,17 @@
   transform: rotate(45deg);
   border-radius: 2px;
 }
+/* The art box gets the Column's leftover height */
+.pGear .col > .wpanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 /* placeholder until per-weapon art exists */
 .wimg {
-  position: absolute;
-  top: 2px;
-  right: 8px;
-  width: 180px;
-  height: 62px;
+  flex: 1;
+  min-height: 62px;
+  margin: 4px 0;
   pointer-events: none;
   border-radius: 6px;
   background: linear-gradient(
@@ -460,7 +467,6 @@
     rgba(106, 147, 181, 0.28),
     rgba(106, 147, 181, 0.05)
   );
-  transform: rotate(-14deg);
 }
 .trow {
   display: grid;

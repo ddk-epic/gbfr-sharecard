@@ -24,6 +24,9 @@ export const RANKS: StyleRank[] = ["r1", "r2", "r3", "ex"];
 export const CHARACTER_LEVEL = 100;
 export const WEAPON_LEVEL = 150;
 
+/** Every weapon rolls this many trait rows, so an empty slot can stand in. */
+export const WEAPON_TRAIT_ROWS = 5;
+
 export type Build = {
   schemaVersion: 1;
   characterId: CharacterId; // slug, e.g. "io"

@@ -1,7 +1,13 @@
 import { useEffect, useRef } from "react";
 import { ArrowLeftRight } from "lucide-react";
 import type { Build, StyleId, StyleRank } from "../domain/build";
-import { CHARACTER_LEVEL, RANKS, STYLES, WEAPON_LEVEL } from "../domain/build";
+import {
+  CHARACTER_LEVEL,
+  RANKS,
+  STYLES,
+  WEAPON_LEVEL,
+  WEAPON_TRAIT_ROWS,
+} from "../domain/build";
 import { STYLE_RANK_BUDGETS, stylePerkStates } from "../domain/derive";
 import {
   bonusTypeById,
@@ -31,7 +37,17 @@ const STYLE_RANK_LABELS: Record<StyleRank, string> = {
 };
 
 /** Figure-space pad so single-digit trait levels stay column-aligned. */
-const padLevel = (level: number) => String(level).padStart(2, " ");
+const padLevel = (level: number | string) => String(level).padStart(2, " ");
+
+function EmptyTraitRow() {
+  return (
+    <div className="trow">
+      <span className="icon sm" />
+      <span className="dim">-</span>
+      <span className="lvl dim">T.Lvl {padLevel("-")}</span>
+    </div>
+  );
+}
 
 /**
  * Read-only, exactly 1920x1080, never scaled itself - on-screen fitting is the
@@ -110,37 +126,50 @@ export function Card({ build }: { build: Build }) {
       <div className="c2">
         <h3>Weapon</h3>
         <div className="wpanel">
-          {weapon && weaponDef ? (
-            <>
-              <div className="wrow">
-                <span className="wname">{weaponDef.name}</span>
-                <span className="dim wmeta">
-                  {weaponDef.series} · Lv. {WEAPON_LEVEL}
-                </span>
-              </div>
-              <div className="wimg" />
-              <div className="wbase">
-                <span className="s-hp">
-                  <span className="sIcon" />
-                  <span className="lvl">{weaponDef.defaultHp}</span>
-                </span>
-                <span className="s-atk">
-                  <span className="sIcon" />
-                  <span className="lvl">{weaponDef.defaultAtk}</span>
-                </span>
-                <span className="s-crit">
-                  <span className="sIcon" />
-                  <span className="lvl">
+          <div className="wrow">
+            <span className={weaponDef ? "wname" : "wname dim"}>
+              {weaponDef?.name ?? "No Weapon"}
+            </span>
+            <span className="dim wmeta">
+              {weaponDef?.series ?? "-"} · Lv. {WEAPON_LEVEL}
+            </span>
+          </div>
+          <div className="wimg" />
+          <div className="wbase">
+            <span className="s-hp">
+              <span className="sIcon" />
+              <span className={weaponDef ? "lvl" : "lvl dim"}>
+                {weaponDef?.defaultHp ?? "-"}
+              </span>
+            </span>
+            <span className="s-atk">
+              <span className="sIcon" />
+              <span className={weaponDef ? "lvl" : "lvl dim"}>
+                {weaponDef?.defaultAtk ?? "-"}
+              </span>
+            </span>
+            <span className="s-crit">
+              <span className="sIcon" />
+              <span className={weapon ? "lvl" : "lvl dim"}>
+                {weapon ? (
+                  <>
                     {weapon.critRate}
                     <i className="suf">%</i>
-                  </span>
-                </span>
-                <span className="s-stun">
-                  <span className="sIcon" />
-                  <span className="lvl">{weapon.stun}</span>
-                </span>
-              </div>
-              {weaponDef.rows.map((row, i) => (
+                  </>
+                ) : (
+                  "-"
+                )}
+              </span>
+            </span>
+            <span className="s-stun">
+              <span className="sIcon" />
+              <span className={weapon ? "lvl" : "lvl dim"}>
+                {weapon?.stun ?? "-"}
+              </span>
+            </span>
+          </div>
+          {weapon && weaponDef
+            ? weaponDef.rows.map((row, i) => (
                 <div className="trow" key={i}>
                   <span className="icon sm" />
                   <span>
@@ -159,34 +188,28 @@ export function Card({ build }: { build: Build }) {
                   </span>
                   <span className="lvl">T.Lvl {padLevel(row.level)}</span>
                 </div>
+              ))
+            : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
+                <EmptyTraitRow key={i} />
               ))}
-            </>
-          ) : (
-            <div className="dim">no weapon</div>
-          )}
           <div className="imh">
             <span>Imbued Traits</span>
             <span>{wrightstoneName(build.wrightstone?.main.trait)}</span>
           </div>
-          {build.wrightstone ? (
-            [
-              build.wrightstone.main,
-              build.wrightstone.sub1,
-              build.wrightstone.sub2,
-            ]
-              .filter((row) => row !== null)
-              .map((row, i) => (
-                <div className="trow" key={i}>
-                  <span className="icon sm" />
-                  <span>{traitName(row.trait)}</span>
-                  <span className="lvl">T.Lvl {padLevel(row.level)}</span>
-                </div>
-              ))
-          ) : (
-            <div className="trow">
-              <span className="icon sm" />
-              <span className="dim">-</span>
-            </div>
+          {[
+            build.wrightstone?.main ?? null,
+            build.wrightstone?.sub1 ?? null,
+            build.wrightstone?.sub2 ?? null,
+          ].map((row, i) =>
+            row ? (
+              <div className="trow" key={i}>
+                <span className="icon sm" />
+                <span>{traitName(row.trait)}</span>
+                <span className="lvl">T.Lvl {padLevel(row.level)}</span>
+              </div>
+            ) : (
+              <EmptyTraitRow key={i} />
+            ),
           )}
         </div>
         <h3>Sigils</h3>

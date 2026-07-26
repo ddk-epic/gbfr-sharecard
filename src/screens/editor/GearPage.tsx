@@ -5,7 +5,7 @@ import type {
   Weapon,
   Wrightstone,
 } from "../../domain/build";
-import { WEAPON_LEVEL } from "../../domain/build";
+import { WEAPON_LEVEL, WEAPON_TRAIT_ROWS } from "../../domain/build";
 import {
   TRAITS,
   traitById,
@@ -28,7 +28,18 @@ const SIGIL_MAX_LEVEL = 20;
 type WrightstoneRow = Wrightstone["main"];
 
 /** Figure-space pad so single-digit trait levels stay column-aligned. */
-const padLevel = (level: number) => String(level).padStart(2, " ");
+const padLevel = (level: number | string) => String(level).padStart(2, " ");
+
+/** Placeholder line keeping the panel's shape when a slot is unfilled. */
+function EmptyTraitRow() {
+  return (
+    <div className="trow">
+      <span className="icon sm" />
+      <span className="dim">-</span>
+      <span className="dim">T.Lvl {padLevel("-")}</span>
+    </div>
+  );
+}
 
 export function GearPage({ build, onChange }: PageProps) {
   return (
@@ -85,41 +96,50 @@ function WeaponPanel({ build, onChange }: PageProps) {
             </option>
           ))}
         </select>
-        {weaponDef && (
-          <span className="dim wmeta">
-            {weaponDef.series} · Lv.{WEAPON_LEVEL}
-          </span>
-        )}
+        <span className="dim wmeta">
+          {weaponDef?.series ?? "-"} · Lv.{WEAPON_LEVEL}
+        </span>
       </div>
-      {weaponDef && weapon && (
-        <>
-          <div className="wimg" />
-          <div className="wbase">
-            <span className="s-hp">
-              <span className="sIcon" />
-              <span className="val">{weaponDef.defaultHp}</span>
-            </span>
-            <span className="s-atk">
-              <span className="sIcon" />
-              <span className="val">{weaponDef.defaultAtk}</span>
-            </span>
-            <span className="s-crit">
-              <span className="sIcon" />
-              <NumInput
-                value={weapon.critRate}
-                max={100}
-                onChange={(critRate) => setWeapon({ ...weapon, critRate })}
-              />
-            </span>
-            <span className="s-stun">
-              <span className="sIcon" />
-              <NumInput
-                value={weapon.stun}
-                onChange={(stun) => setWeapon({ ...weapon, stun })}
-              />
-            </span>
-          </div>
-          {weaponDef.rows.map((row, i) => (
+      <div className="wimg" />
+      <div className="wbase">
+        <span className="s-hp">
+          <span className="sIcon" />
+          <span className={weaponDef ? "val" : "val dim"}>
+            {weaponDef?.defaultHp ?? "-"}
+          </span>
+        </span>
+        <span className="s-atk">
+          <span className="sIcon" />
+          <span className={weaponDef ? "val" : "val dim"}>
+            {weaponDef?.defaultAtk ?? "-"}
+          </span>
+        </span>
+        <span className="s-crit">
+          <span className="sIcon" />
+          {weapon ? (
+            <NumInput
+              value={weapon.critRate}
+              max={100}
+              onChange={(critRate) => setWeapon({ ...weapon, critRate })}
+            />
+          ) : (
+            <span className="val dim">-</span>
+          )}
+        </span>
+        <span className="s-stun">
+          <span className="sIcon" />
+          {weapon ? (
+            <NumInput
+              value={weapon.stun}
+              onChange={(stun) => setWeapon({ ...weapon, stun })}
+            />
+          ) : (
+            <span className="val dim">-</span>
+          )}
+        </span>
+      </div>
+      {weaponDef && weapon
+        ? weaponDef.rows.map((row, i) => (
             <div className="trow" key={i}>
               <span className="icon sm" />
               {row.options ? (
@@ -139,9 +159,10 @@ function WeaponPanel({ build, onChange }: PageProps) {
               )}
               <span className="lvl">T.Lvl {padLevel(row.level)}</span>
             </div>
+          ))
+        : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
+            <EmptyTraitRow key={i} />
           ))}
-        </>
-      )}
       <WrightstonePanel build={build} onChange={onChange} />
     </div>
   );
