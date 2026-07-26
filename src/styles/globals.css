@@ -39,6 +39,14 @@
   --deep-6: #053f63;
   --deep-7: #04304f; /* only .styleCol goes this far currently */
   --deep-8: #02203a;
+
+  /* what sits on any surface painted from that ramp - the .styleCol panel and
+     the deep-tone heading bar */
+  --deep-ink: #f2fafd; /* body text */
+  --deep-label: #d5eef8; /* uppercase labels and the perk summary */
+  --deep-mute: #a8d4e4; /* unpicked trait cell text */
+  --deep-ring: #b8ecf8; /* picked trait cell inset ring */
+  --deep-cell: rgba(11, 46, 61, 0.3); /* unpicked trait cell fill */
 }
 
 @theme inline {
@@ -71,4 +79,10 @@
   --color-deep-6: var(--deep-6);
   --color-deep-7: var(--deep-7);
   --color-deep-8: var(--deep-8);
+
+  --color-deep-ink: var(--deep-ink);
+  --color-deep-label: var(--deep-label);
+  --color-deep-mute: var(--deep-mute);
+  --color-deep-ring: var(--deep-ring);
+  --color-deep-cell: var(--deep-cell);
 }

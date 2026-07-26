@@ -287,7 +287,7 @@ export function Card({ build }: { build: Build }) {
         <div className="grid grid-cols-3 gap-2.5">
           {STYLES.map((style) => (
             <div
-              className={`styleCol relative flex flex-col gap-1.75 rounded-lg border-t-[3px] px-3 py-2.75 text-[#f2fafd] ${STYLE_BORDER[style]}`}
+              className={`styleCol text-deep-ink relative flex flex-col gap-1.75 rounded-lg border-t-[3px] px-3 py-2.75 ${STYLE_BORDER[style]}`}
               key={style}
             >
               <h4 className="text-[19.5px] font-bold text-white [text-shadow:0_1px_3px_rgba(10,50,70,0.55)]">
@@ -295,7 +295,7 @@ export function Card({ build }: { build: Build }) {
               </h4>
               {RANKS.map((rank) => (
                 <div key={rank} className="flex flex-col gap-1.75">
-                  <div className="mt-2.75 flex justify-between text-[14px] tracking-[0.08em] text-[#d5eef8] uppercase">
+                  <div className="text-deep-label mt-2.75 flex justify-between text-[14px] tracking-[0.08em] uppercase">
                     <span>{STYLE_RANK_LABELS[rank]}</span>
                     <span>{STYLE_RANK_BUDGETS[rank]} pts</span>
                   </div>
@@ -306,8 +306,8 @@ export function Card({ build }: { build: Build }) {
                         data-opt
                         className={`${OPT} ${
                           build.masterTraits[style][rank].includes(cell.id)
-                            ? "to-deep-3/30 bg-linear-135 from-white/18 text-white shadow-[inset_0_0_0_1px_#b8ecf8]"
-                            : "bg-[rgba(11,46,61,0.3)] text-[#a8d4e4]"
+                            ? "to-deep-3/30 bg-linear-135 from-white/18 text-white shadow-[inset_0_0_0_1px_var(--deep-ring)]"
+                            : "bg-deep-cell text-deep-mute"
                         }`}
                       >
                         <Icon tone="style" sm />

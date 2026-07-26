@@ -65,7 +65,7 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
       <div className="col-span-full flex min-w-0 flex-col gap-3.5">
         <Heading tone="deep" className="flex items-baseline justify-between">
           Master Traits
-          <span className="text-[13.5px] font-semibold tracking-[0.02em] text-[#d5eef8] normal-case text-shadow-none">
+          <span className="text-deep-label text-[13.5px] font-semibold tracking-[0.02em] normal-case text-shadow-none">
             {perkSummary}
           </span>
         </Heading>
@@ -75,7 +75,7 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
         >
           {STYLES.map((style) => (
             <div
-              className={`styleCol flex flex-col gap-1.75 rounded-lg border-t-[3px] px-3 py-3.5 text-[#f2fafd] ${STYLE_BORDER[style]}`}
+              className={`styleCol text-deep-ink flex flex-col gap-1.75 rounded-lg border-t-[3px] px-3 py-3.5 ${STYLE_BORDER[style]}`}
               key={style}
             >
               <h4 className="text-[17.5px] text-white [text-shadow:0_1px_3px_rgba(10,50,70,0.55)]">
@@ -83,7 +83,7 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
               </h4>
               {RANKS.map((rank) => (
                 <div key={rank} className="flex flex-col gap-1.75">
-                  <div className="mt-4.25 flex justify-between text-[12px] tracking-[0.08em] text-[#d5eef8] uppercase">
+                  <div className="text-deep-label mt-4.25 flex justify-between text-[12px] tracking-[0.08em] uppercase">
                     <span>{STYLE_RANK_LABELS[rank]}</span>
                     <span>
                       {rankSpent[rank]}/{STYLE_RANK_BUDGETS[rank]} pts
@@ -96,8 +96,8 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
                         data-opt
                         className={`${OPT} ${
                           build.masterTraits[style][rank].includes(cell.id)
-                            ? "bg-linear-135 from-white/18 to-[rgba(26,134,173,0.3)] text-white shadow-[inset_0_0_0_1px_#b8ecf8]"
-                            : "bg-[rgba(11,46,61,0.3)] text-[#a8d4e4] hover:shadow-[inset_0_0_0_1px_#7fd4f8]"
+                            ? "to-deep-3/30 bg-linear-135 from-white/18 text-white shadow-[inset_0_0_0_1px_var(--deep-ring)]"
+                            : "bg-deep-cell text-deep-mute hover:shadow-[inset_0_0_0_1px_#7fd4f8]"
                         }`}
                         title={cell.description}
                         onClick={() => toggleCell(style, rank, cell.id)}
