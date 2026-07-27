@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>MT Card — master-traits screenshot merger</title>
+    <style>
+      :root {
+        --bg: #0d1020;
+        --panel: #171b30;
+        --panel2: #1e2340;
+        --line: #2c3357;
+        --ink: #e8ebff;
+        --dim: #8b93bd;
+        --accent: #e8b34b;
+        --bad: #e85f6a;
+        --ok: #4bd39a;
+        --crop: #4bd39a;
+        --seam: #e8b34b;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      /* The class rules below out-specify the UA's [hidden]{display:none}, so the
+     overlays would never actually hide. */
+      [hidden] {
+        display: none !important;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          13px/1.45 "Segoe UI",
+          system-ui,
+          sans-serif;
+        padding: 16px 18px 40px;
+      }
+      h1 {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+      .dim {
+        color: var(--dim);
+      }
+      button {
+        font: inherit;
+        color: var(--ink);
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      button:hover:not(:disabled) {
+        border-color: var(--accent);
+      }
+      button:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      select,
+      input[type="number"] {
+        font: inherit;
+        color: var(--ink);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 4px 6px;
+      }
+      input[type="number"] {
+        width: 66px;
+      }
+
+      /* ---- top bar ---------------------------------------------------------- */
+      .bar {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .bar .spacer {
+        flex: 1;
+      }
+      .bad {
+        color: var(--bad);
+      }
+      /* Up from load until a character is picked - it gates every merge. */
+      select.missing {
+        border-color: var(--bad);
+      }
+
+      /* ---- calibration panel ------------------------------------------------ */
+      .calib {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 9px 12px;
+        margin-bottom: 16px;
+      }
+      .calib label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--dim);
+      }
+      .calib .spacer {
+        flex: 1;
+      }
+      .calib .sep {
+        width: 1px;
+        align-self: stretch;
+        background: var(--line);
+      }
+
+      /* ---- grid ------------------------------------------------------------- */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        align-items: start;
+      }
+      .col {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 10px;
+      }
+      .col > h2 {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .slot {
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        overflow: hidden;
+        background: #0a0c16;
+      }
+      .slot.armed {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent);
+      }
+      .slot-head {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 6px;
+        background: var(--panel2);
+        font-size: 11px;
+      }
+      .slot-head .spacer {
+        flex: 1;
+      }
+      .slot-head button {
+        padding: 0 5px;
+        font-size: 12px;
+        line-height: 1.4;
+        background: transparent;
+        border-color: transparent;
+        color: var(--dim);
+      }
+      /* The thumb keeps the frame's 16:9 whether or not a shot is in it, so the
+     crop lines sit in the same place on empty slots as on filled ones. */
+      .thumb {
+        position: relative;
+        aspect-ratio: 16/9;
+        cursor: pointer;
+      }
+      .thumb img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .thumb .empty {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: var(--dim);
+        font-size: 11px;
+      }
+      .thumb .err {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 8px;
+        color: var(--bad);
+        font-size: 11px;
+        background: #2a0f16cc;
+      }
+
+      /* Crop lines are dragged directly on the thumb - coarse work, thumb scale is
+     enough. The hit area is padded well beyond the 1px rule. */
+      .cline {
+        position: absolute;
+        background: var(--crop);
+        opacity: 0.85;
+      }
+      /* Locked lines still show where the cuts are - they just cannot be grabbed. */
+      body.locked .cline {
+        pointer-events: none;
+        opacity: 0.5;
+      }
+      .cline.v {
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        margin-left: -0.5px;
+        cursor: ew-resize;
+      }
+      .cline.h {
+        left: 0;
+        right: 0;
+        height: 1px;
+        margin-top: -0.5px;
+        cursor: ns-resize;
+      }
+      .cline::after {
+        content: "";
+        position: absolute;
+      }
+      .cline.v::after {
+        top: 0;
+        bottom: 0;
+        left: -5px;
+        right: -5px;
+      }
+      .cline.h::after {
+        left: 0;
+        right: 0;
+        top: -5px;
+        bottom: -5px;
+      }
+
+      /* Follows the cursor while a crop line is held: the thumb is far too small to
+     place a cut on, so the loupe shows the real pixels under the line. */
+      .loupe {
+        position: fixed;
+        z-index: 10;
+        pointer-events: none;
+        background: #000;
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        box-shadow: 0 6px 22px #000a;
+        padding: 4px;
+      }
+      .loupe canvas {
+        display: block;
+        border-radius: 3px;
+      }
+      .loupe .read {
+        text-align: center;
+        font-size: 11px;
+        color: var(--accent);
+        padding-top: 3px;
+      }
+
+      .junction {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 0;
+      }
+      .junction button {
+        flex: 1;
+        font-size: 11px;
+        padding: 3px 8px;
+      }
+      .junction .shift {
+        color: var(--dim);
+        font-size: 11px;
+        min-width: 58px;
+        text-align: right;
+      }
+
+      .merge {
+        width: 100%;
+        margin-top: 8px;
+        padding: 7px;
+      }
+      .why {
+        margin-top: 5px;
+        font-size: 11px;
+        color: var(--dim);
+        min-height: 15px;
+      }
+
+      /* ---- dialogs ---------------------------------------------------------- */
+      /* margin:auto is what centres a modal dialog - the reset above wipes the UA's. */
+      dialog {
+        background: var(--panel);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+        max-width: 96vw;
+        max-height: 94vh;
+        margin: auto;
+      }
+      dialog::backdrop {
+        background: #000a;
+      }
+      .dlg-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .dlg-head .spacer {
+        flex: 1;
+      }
+      .viewport {
+        overflow: auto;
+        max-width: 92vw;
+        max-height: 72vh;
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        background: #000;
+      }
+      #seamCanvas {
+        display: block;
+        cursor: ns-resize;
+      }
+      .hint {
+        margin-top: 8px;
+        font-size: 11px;
+        color: var(--dim);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bar">
+      <h1>MT Card</h1>
+      <label class="dim"
+        >Character
+        <select id="slug"></select>
+      </label>
+      <span class="bad" id="slugErr" hidden>pick a character first</span>
+      <label class="dim"
+        >Paste order
+        <select id="order">
+          <option value="column">↓ a style at a time</option>
+          <option value="row">→ a rank at a time</option>
+        </select>
+      </label>
+      <div class="spacer"></div>
+      <button id="copyCalib">Copy calibration</button>
+      <button id="clearSlots">Clear slots</button>
+    </div>
+
+    <div class="calib">
+      <label>left <input type="number" id="c-left" /></label>
+      <label>right <input type="number" id="c-right" /></label>
+      <div class="sep"></div>
+      <label>top r2 <input type="number" id="c-topR2" /></label>
+      <label>top r3 <input type="number" id="c-topR3" /></label>
+      <label>top ex <input type="number" id="c-topEx" /></label>
+      <div class="sep"></div>
+      <label>bottom <input type="number" id="c-bottom" /></label>
+      <div class="sep"></div>
+      <span class="dim"
+        >green lines: drag on a thumbnail, shift-drag for 1px, wheel for ±1
+        (shift ±10)</span
+      >
+      <div class="spacer"></div>
+      <button id="lock" title="Calibration is dialled in; unlock only to change it">
+        🔒 Calibration locked
+      </button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <dialog id="seamDlg">
+      <div class="dlg-head">
+        <strong id="seamTitle"></strong>
+        <label class="dim"
+          ><input type="checkbox" id="blend" checked /> blend 50%</label
+        >
+        <label class="dim">shift <input type="number" id="shiftNum" /></label>
+        <div class="spacer"></div>
+        <button id="seamCancel">Cancel</button>
+        <button id="seamApply">Apply</button>
+      </div>
+      <div class="viewport"><canvas id="seamCanvas"></canvas></div>
+      <div class="hint">
+        1:1 pixels. Drag the overlay, or ↑/↓ to nudge 1px (shift for 10). Blend
+        shows misalignment as doubled text; untick to see the real output.
+      </div>
+    </dialog>
+
+    <dialog id="confirmDlg">
+      <div class="dlg-head"><strong id="confirmText"></strong></div>
+      <div class="dlg-head">
+        <div class="spacer"></div>
+        <button id="confirmNo">Cancel</button>
+        <button id="confirmYes">Clear</button>
+      </div>
+    </dialog>
+
+    <script>
+      "use strict";
+
+      /* ===== COPY-CALIBRATION BLOCK START =======================================
+   Paste a replacement for this block to make a calibration session permanent.
+   The file is the single truth: a page reload discards anything nudged since. */
+      const CALIBRATION = {
+        left: 321,
+        right: 1855,
+        top: { r2: 149, r3: 149, ex: 298 },
+        bottom: 977,
+        shift: [
+          [312, 563, 414],
+          [312, 563, 414],
+          [312, 563, 414],
+        ],
+      };
+      /* ===== COPY-CALIBRATION BLOCK END ======================================== */
+
+      /* Every shot is a full-screen Alt+PrtSc capture. Anything else is rejected -
+   the crop numbers are meaningless outside this coordinate space. */
+      const FRAME_W = 1920,
+        FRAME_H = 1080;
+
+      const STYLES = [
+        { id: "insight", name: "Insight" },
+        { id: "essence", name: "Essence" },
+        { id: "crux", name: "Crux" },
+      ];
+      /* Row 0 is drawn raw - it carries the screen title, so it has no top cut.
+   Rows 1-3 are clipped at their own top so the repeated header does not land
+   in the middle of the composite. */
+      const ROWS = [
+        { label: "Style Rank 1", topKey: null },
+        { label: "Style Rank 2", topKey: "r2" },
+        { label: "Style Rank 3", topKey: "r3" },
+        { label: "Style Rank EX", topKey: "ex" },
+      ];
+
+      /* In-game roster order, from the official character page. Hardcoded because a
+   file:// page cannot fetch src/data/characters.json. */
+      const ROSTER = [
+        "Gran",
+        "Djeeta",
+        "Katalina",
+        "Rackam",
+        "Io",
+        "Eugen",
+        "Rosetta",
+        "Lancelot",
+        "Vane",
+        "Percival",
+        "Siegfried",
+        "Charlotta",
+        "Yodarha",
+        "Narmaya",
+        "Zeta",
+        "Vaseraga",
+        "Ferry",
+        "Ghandagoza",
+        "Cagliostro",
+        "Seofon",
+        "Tweyen",
+        "Sandalphon",
+        "Beatrix",
+        "Eustace",
+        "Fraux",
+        "Fediel",
+        "Id",
+        "Gallanza",
+        "Maglielle",
+      ];
+
+      const C = structuredClone(CALIBRATION);
+      const shots = new Array(12).fill(null); // { img } per slot, column-major
+      const errors = new Array(12).fill(null);
+      let armed = 0;
+
+      const slotIndex = (col, row) => col * 4 + row;
+
+      /**
+       * Where the arming ring goes after a paste. Which order depends on how the
+       * shots were taken: one style all the way down, or one rank across all
+       * three styles. Returns null at the last slot.
+       */
+      function nextSlot(i) {
+        const col = Math.floor(i / 4), row = i % 4;
+        if (orderSel.value === "row") {
+          return col < 2 ? slotIndex(col + 1, row)
+            : row < 3 ? slotIndex(0, row + 1)
+            : null;
+        }
+        return i < 11 ? i + 1 : null;
+      }
+      const topOf = (row) => (ROWS[row].topKey ? C.top[ROWS[row].topKey] : 0);
+      const cropW = () => C.right - C.left;
+
+      /** Composite y of each shot's *frame* origin; shifts are cumulative. */
+      function places(col) {
+        const p = [0];
+        for (let i = 1; i < 4; i++) p[i] = p[i - 1] + C.shift[col][i - 1];
+        return p;
+      }
+
+      const columnFilled = (col) =>
+        [0, 1, 2, 3].every((row) => shots[slotIndex(col, row)]);
+
+      /* ---- DOM build --------------------------------------------------------- */
+
+      const el = (tag, cls, text) => {
+        const n = document.createElement(tag);
+        if (cls) n.className = cls;
+        if (text != null) n.textContent = text;
+        return n;
+      };
+
+      const slugSel = document.getElementById("slug");
+      const slugErr = document.getElementById("slugErr");
+      const orderSel = document.getElementById("order");
+      const lockBtn = document.getElementById("lock");
+      /* The numbers are dialled in, and the crop lines sit right where the
+         pasting happens - locked by default so a stray drag during a normal
+         merge run cannot silently move a cut. */
+      let locked = true;
+      slugSel.append(el("option", null, ""));
+      for (const name of ROSTER) {
+        const o = el("option", null, name);
+        o.value = name.toLowerCase();
+        slugSel.append(o);
+      }
+
+      const grid = document.getElementById("grid");
+      const slotNodes = [];
+      const junctionNodes = [];
+      const mergeNodes = [];
+
+      STYLES.forEach((style, col) => {
+        const colNode = el("div", "col");
+        colNode.append(el("h2", null, style.name));
+
+        ROWS.forEach((row, r) => {
+          const i = slotIndex(col, r);
+          const slot = el("div", "slot");
+
+          const head = el("div", "slot-head");
+          head.append(el("span", null, row.label), el("div", "spacer"));
+          const clear = el("button", null, "×");
+          clear.title = "Clear this slot";
+          clear.onclick = (e) => {
+            e.stopPropagation();
+            setShot(i, null);
+          };
+          head.append(clear);
+
+          const thumb = el("div", "thumb");
+          const img = el("img");
+          img.hidden = true;
+          const empty = el("div", "empty", "click to arm, then Ctrl+V");
+          const err = el("div", "err");
+          err.hidden = true;
+          thumb.append(img, empty, err);
+          thumb.onclick = () => {
+            armed = i;
+            render();
+          };
+
+          // Crop lines: left/right on every thumb, top on rows 1-3, bottom on EX.
+          thumb.append(cropLine("v", "left", i), cropLine("v", "right", i));
+          if (row.topKey) thumb.append(cropLine("h", "top." + row.topKey, i));
+          if (r === 3) thumb.append(cropLine("h", "bottom", i));
+
+          slot.append(head, thumb);
+          colNode.append(slot);
+          slotNodes.push({ slot, img, empty, err });
+
+          if (r < 3) {
+            const j = el("div", "junction");
+            const btn = el(
+              "button",
+              null,
+              "Calibrate seam " + (r + 1) + "–" + (r + 2),
+            );
+            btn.onclick = () => openSeam(col, r + 1);
+            const shift = el("span", "shift");
+            j.append(btn, shift);
+            colNode.append(j);
+            junctionNodes.push({ btn, shift, col, over: r + 1 });
+          }
+        });
+
+        const merge = el("button", "merge", "Merge → download");
+        merge.onclick = () => mergeColumn(col);
+        const why = el("div", "why");
+        colNode.append(merge, why);
+        mergeNodes.push({ merge, why, col });
+
+        grid.append(colNode);
+      });
+
+      /* ---- crop line dragging ------------------------------------------------- */
+
+      function readPath(path) {
+        return path === "bottom"
+          ? C.bottom
+          : path === "left"
+            ? C.left
+            : path === "right"
+              ? C.right
+              : C.top[path.slice(4)];
+      }
+      function writePath(path, v) {
+        if (path === "bottom") C.bottom = v;
+        else if (path === "left") C.left = v;
+        else if (path === "right") C.right = v;
+        else C.top[path.slice(4)] = v;
+      }
+
+      /* ---- loupe -------------------------------------------------------------- */
+
+      const LOUPE_ZOOM = 8; // source pixels are drawn 8x, big enough to count
+      const LOUPE_SPAN = 41; // odd, so the held line lands on the middle pixel
+
+      const loupe = el("div", "loupe");
+      const loupeCanvas = el("canvas");
+      const loupeRead = el("div", "read");
+      loupeCanvas.width = loupeCanvas.height = LOUPE_SPAN * LOUPE_ZOOM;
+      loupe.append(loupeCanvas, loupeRead);
+      loupe.hidden = true;
+      document.body.append(loupe);
+      const loupeCtx = loupeCanvas.getContext("2d");
+      loupeCtx.imageSmoothingEnabled = false; // nearest-neighbour, or there is no grid
+
+      /** `x`/`y` are the source pixel under the line; the window centres on it. */
+      function drawLoupe(shot, axis, x, y, value, clientX, clientY, fine) {
+        const size = LOUPE_SPAN * LOUPE_ZOOM;
+        const half = (LOUPE_SPAN - 1) / 2;
+        loupeCtx.fillStyle = "#000";
+        loupeCtx.fillRect(0, 0, size, size);
+        if (shot) {
+          loupeCtx.drawImage(
+            shot.img,
+            x - half,
+            y - half,
+            LOUPE_SPAN,
+            LOUPE_SPAN,
+            0,
+            0,
+            size,
+            size,
+          );
+        }
+
+        loupeCtx.globalAlpha = 0.25;
+        loupeCtx.fillStyle = "#fff";
+        for (let i = 1; i < LOUPE_SPAN; i++) {
+          loupeCtx.fillRect(i * LOUPE_ZOOM, 0, 1, size);
+          loupeCtx.fillRect(0, i * LOUPE_ZOOM, size, 1);
+        }
+        loupeCtx.globalAlpha = 1;
+
+        // The cut runs down the centre pixel - the whole point of the loupe is
+        // seeing which side of the edge it falls on.
+        loupeCtx.fillStyle = "#4bd39a";
+        const at = half * LOUPE_ZOOM;
+        if (axis === "v") loupeCtx.fillRect(at, 0, LOUPE_ZOOM, size);
+        else loupeCtx.fillRect(0, at, size, LOUPE_ZOOM);
+        loupeCtx.globalAlpha = 1;
+
+        loupeRead.textContent =
+          (axis === "v" ? "x " : "y ") + value + (fine ? "  · fine" : "");
+
+        // Offset from the cursor, flipped when it would run off screen.
+        const pad = 20,
+          w = loupe.offsetWidth || size + 10,
+          h = loupe.offsetHeight || size + 26;
+        const left =
+          clientX + pad + w > innerWidth ? clientX - pad - w : clientX + pad;
+        const top =
+          clientY + pad + h > innerHeight ? clientY - pad - h : clientY + pad;
+        loupe.style.left = Math.max(4, left) + "px";
+        loupe.style.top = Math.max(4, top) + "px";
+        loupe.hidden = false;
+      }
+
+      function cropLine(axis, path, slotIdx) {
+        const line = el("div", "cline " + axis);
+        line.dataset.path = path;
+        line.onclick = (e) => e.stopPropagation(); // a drag must not re-arm the slot
+        let dragMove = null; // set while a drag is in flight
+
+        /** Loupe on the line's current value, with the other axis under the cursor. */
+        const show = (ev, fine) => {
+          const box = line.parentElement.getBoundingClientRect();
+          const value = readPath(path);
+          const px = Math.round(
+            ((ev.clientX - box.left) / box.width) * FRAME_W,
+          );
+          const py = Math.round(
+            ((ev.clientY - box.top) / box.height) * FRAME_H,
+          );
+          drawLoupe(
+            shots[slotIdx],
+            axis,
+            axis === "v" ? value : Math.max(0, Math.min(FRAME_W, px)),
+            axis === "h" ? value : Math.max(0, Math.min(FRAME_H, py)),
+            value,
+            ev.clientX,
+            ev.clientY,
+            fine,
+          );
+        };
+
+        // Hovering is enough to bring the loupe up, so the wheel has something to aim
+        // with without having to grab the line first.
+        line.onpointerenter = (e) => {
+          if (!dragMove) show(e, e.shiftKey);
+        };
+        line.onpointerleave = () => {
+          if (!dragMove) loupe.hidden = true;
+        };
+        line.onpointermove = (e) =>
+          dragMove ? dragMove(e) : show(e, e.shiftKey);
+
+        /* The wheel is an increment, not a scroll: the line's own axis decides the
+     direction, so rolling over a vertical line moves it left/right. */
+        line.onwheel = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const dir = Math.sign(e.deltaY || e.deltaX);
+          if (!dir) return;
+          const max = axis === "v" ? FRAME_W : FRAME_H;
+          writePath(
+            path,
+            Math.max(
+              0,
+              Math.min(max, readPath(path) + dir * (e.shiftKey ? 10 : 1)),
+            ),
+          );
+          render();
+          show(e, e.shiftKey);
+        };
+
+        line.onpointerdown = (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          line.setPointerCapture(e.pointerId);
+          const box = line.parentElement.getBoundingClientRect();
+          const max = axis === "v" ? FRAME_W : FRAME_H;
+          /* Relative, not absolute: one thumb pixel is ~3 source pixels, so mapping
+       the cursor position straight onto the frame can only ever land on every
+       third one. Movement accumulates as a float instead - holding shift drops
+       the rate to 1 source pixel per screen pixel, and the fraction carries so
+       slow drags are not rounded away to nothing. */
+          const coarse =
+            axis === "v" ? FRAME_W / box.width : FRAME_H / box.height;
+          let acc = readPath(path);
+          let last = axis === "v" ? e.clientX : e.clientY;
+
+          const move = (ev) => {
+            const cur = axis === "v" ? ev.clientX : ev.clientY;
+            acc = Math.max(
+              0,
+              Math.min(max, acc + (cur - last) * (ev.shiftKey ? 1 : coarse)),
+            );
+            last = cur;
+            const value = Math.round(acc);
+            writePath(path, value);
+            render();
+            // The other axis follows the cursor, so the loupe shows the content the
+            // cut is actually being placed against.
+            const px = Math.round(
+              ((ev.clientX - box.left) / box.width) * FRAME_W,
+            );
+            const py = Math.round(
+              ((ev.clientY - box.top) / box.height) * FRAME_H,
+            );
+            drawLoupe(
+              shots[slotIdx],
+              axis,
+              axis === "v" ? value : Math.max(0, Math.min(FRAME_W, px)),
+              axis === "h" ? value : Math.max(0, Math.min(FRAME_H, py)),
+              value,
+              ev.clientX,
+              ev.clientY,
+              ev.shiftKey,
+            );
+          };
+          dragMove = move;
+          move(e); // shows the loupe without moving the line
+          const end = () => {
+            dragMove = null;
+            loupe.hidden = true;
+          };
+          line.onpointerup = end;
+          line.onpointercancel = end;
+        };
+        return line;
+      }
+
+      /* ---- calibration inputs ------------------------------------------------- */
+
+      const numInputs = [
+        ["c-left", "left"],
+        ["c-right", "right"],
+        ["c-topR2", "top.r2"],
+        ["c-topR3", "top.r3"],
+        ["c-topEx", "top.ex"],
+        ["c-bottom", "bottom"],
+      ];
+      lockBtn.onclick = () => {
+        locked = !locked;
+        lockBtn.textContent = locked
+          ? "🔒 Calibration locked"
+          : "🔓 Calibration unlocked";
+        render();
+      };
+
+      for (const [id, path] of numInputs) {
+        const input = document.getElementById(id);
+        input.oninput = () => {
+          const v = parseInt(input.value, 10);
+          if (Number.isFinite(v)) {
+            writePath(path, v);
+            render();
+          }
+        };
+      }
+
+      /* ---- paste -------------------------------------------------------------- */
+
+      document.addEventListener("paste", (e) => {
+        if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT")
+          return;
+        const item = [...(e.clipboardData?.items ?? [])].find((it) =>
+          it.type.startsWith("image/"),
+        );
+        if (!item) return;
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (file) loadInto(armed, file);
+      });
+
+      function loadInto(i, file) {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          if (img.naturalWidth !== FRAME_W || img.naturalHeight !== FRAME_H) {
+            URL.revokeObjectURL(url);
+            errors[i] =
+              `expected ${FRAME_W}×${FRAME_H}, got ` +
+              `${img.naturalWidth}×${img.naturalHeight}`;
+            shots[i] = null;
+            render();
+            return;
+          }
+          setShot(i, { img, url });
+          if (armed === i) armed = nextSlot(i) ?? i; // twelve pastes in a row
+          render();
+        };
+        img.src = url;
+      }
+
+      function setShot(i, shot) {
+        if (shots[i]) URL.revokeObjectURL(shots[i].url);
+        shots[i] = shot;
+        errors[i] = null;
+        render();
+      }
+
+      /* ---- seam calibration --------------------------------------------------- */
+
+      const seamDlg = document.getElementById("seamDlg");
+      const seamCanvas = document.getElementById("seamCanvas");
+      const seamCtx = seamCanvas.getContext("2d");
+      const blendBox = document.getElementById("blend");
+      const shiftNum = document.getElementById("shiftNum");
+      const VIEW_H = 420; // tall enough to show a couple of cells either side
+      const SEAM_Y = 170; // where the seam sits in the viewport when opened
+
+      let seam = null; // { col, over, original, anchor }
+
+      function openSeam(col, over) {
+        if (locked) return;
+        const before = shots[slotIndex(col, over - 1)];
+        const after = shots[slotIndex(col, over)];
+        if (!before || !after || cropW() <= 0) return;
+        const original = C.shift[col][over - 1];
+        // Anchored on the shift the modal opened with, so dragging moves the overlay
+        // through the viewport instead of dragging the viewport along with it.
+        seam = { col, over, original, anchor: original + topOf(over) - SEAM_Y };
+        document.getElementById("seamTitle").textContent =
+          `${STYLES[col].name} — ${ROWS[over - 1].label} → ${ROWS[over].label}`;
+        seamCanvas.width = cropW();
+        seamCanvas.height = VIEW_H;
+        drawSeam();
+        seamDlg.showModal();
+      }
+
+      function drawSeam() {
+        if (!seam) return;
+        const { col, over, anchor } = seam;
+        const shift = C.shift[col][over - 1];
+        const before = shots[slotIndex(col, over - 1)].img;
+        const after = shots[slotIndex(col, over)].img;
+        const w = cropW(),
+          t = topOf(over);
+
+        shiftNum.value = shift;
+        seamCtx.clearRect(0, 0, w, VIEW_H);
+        // Base: the earlier shot's frame sits at composite 0.
+        seamCtx.globalAlpha = 1;
+        seamCtx.drawImage(
+          before,
+          C.left,
+          0,
+          w,
+          FRAME_H,
+          0,
+          -anchor,
+          w,
+          FRAME_H,
+        );
+        // Overlay: the later shot, clipped at its top, pushed down by the shift.
+        seamCtx.globalAlpha = blendBox.checked ? 0.5 : 1;
+        seamCtx.drawImage(
+          after,
+          C.left,
+          t,
+          w,
+          FRAME_H - t,
+          0,
+          shift + t - anchor,
+          w,
+          FRAME_H - t,
+        );
+        seamCtx.globalAlpha = 1;
+        // The seam itself, so a 1px error has something to be measured against.
+        seamCtx.fillStyle = "#e8b34b";
+        seamCtx.globalAlpha = 0.5;
+        seamCtx.fillRect(0, shift + t - anchor, w, 1);
+        seamCtx.globalAlpha = 1;
+      }
+
+      function nudge(dy) {
+        if (!seam) return;
+        C.shift[seam.col][seam.over - 1] += dy;
+        drawSeam();
+        render();
+      }
+
+      seamCanvas.onpointerdown = (e) => {
+        seamCanvas.setPointerCapture(e.pointerId);
+        let last = e.clientY;
+        seamCanvas.onpointermove = (ev) => {
+          const dy = Math.round(ev.clientY - last);
+          if (dy) {
+            last = ev.clientY;
+            nudge(dy);
+          }
+        };
+        seamCanvas.onpointerup = () => {
+          seamCanvas.onpointermove = null;
+        };
+      };
+      blendBox.onchange = drawSeam;
+      shiftNum.oninput = () => {
+        const v = parseInt(shiftNum.value, 10);
+        if (Number.isFinite(v) && seam) {
+          C.shift[seam.col][seam.over - 1] = v;
+          drawSeam();
+          render();
+        }
+      };
+      seamDlg.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+        if (e.target.tagName === "INPUT") return;
+        e.preventDefault();
+        nudge((e.key === "ArrowDown" ? 1 : -1) * (e.shiftKey ? 10 : 1));
+      });
+      document.getElementById("seamApply").onclick = () => {
+        seam = null;
+        seamDlg.close();
+      };
+      document.getElementById("seamCancel").onclick = () => {
+        C.shift[seam.col][seam.over - 1] = seam.original;
+        seam = null;
+        seamDlg.close();
+        render();
+      };
+
+      /* ---- merge -------------------------------------------------------------- */
+
+      function mergeColumn(col) {
+        const slug = slugSel.value;
+        if (!slug || !columnFilled(col) || cropW() <= 0) return;
+        const w = cropW(),
+          p = places(col);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = p[3] + C.bottom;
+        const ctx = canvas.getContext("2d");
+
+        // Each shot overwrites the tail of the one before it, so only the last needs
+        // a bottom cut.
+        ctx.drawImage(
+          shots[slotIndex(col, 0)].img,
+          C.left,
+          0,
+          w,
+          FRAME_H,
+          0,
+          0,
+          w,
+          FRAME_H,
+        );
+        for (let r = 1; r < 4; r++) {
+          const t = topOf(r);
+          const h = (r === 3 ? C.bottom : FRAME_H) - t;
+          ctx.drawImage(
+            shots[slotIndex(col, r)].img,
+            C.left,
+            t,
+            w,
+            h,
+            0,
+            p[r] + t,
+            w,
+            h,
+          );
+        }
+
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${slug}-${STYLES[col].id}.png`;
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(url));
+        }, "image/png");
+      }
+
+      /* ---- clear / copy ------------------------------------------------------- */
+
+      const confirmDlg = document.getElementById("confirmDlg");
+      document.getElementById("clearSlots").onclick = () => {
+        document.getElementById("confirmText").textContent =
+          "Clear all 12 slots? Calibration is untouched.";
+        confirmDlg.showModal();
+      };
+      document.getElementById("confirmNo").onclick = () => confirmDlg.close();
+      document.getElementById("confirmYes").onclick = () => {
+        for (let i = 0; i < 12; i++) setShot(i, null);
+        armed = 0;
+        confirmDlg.close();
+        render();
+      };
+
+      document.getElementById("copyCalib").onclick = (e) => {
+        const rows = C.shift.map((s) => `    [${s.join(", ")}],`).join("\n");
+        const text = `const CALIBRATION = {
+  left: ${C.left},
+  right: ${C.right},
+  top: { r2: ${C.top.r2}, r3: ${C.top.r3}, ex: ${C.top.ex} },
+  bottom: ${C.bottom},
+  shift: [
+${rows}
+  ],
+};`;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = e.currentTarget;
+          btn.textContent = "Copied — paste into the block";
+          setTimeout(() => (btn.textContent = "Copy calibration"), 1600);
+        });
+      };
+
+      /* ---- render ------------------------------------------------------------- */
+
+      function render() {
+        document.body.classList.toggle("locked", locked);
+        for (const [id, path] of numInputs) {
+          const input = document.getElementById(id);
+          if (document.activeElement !== input) input.value = readPath(path);
+          input.disabled = locked;
+        }
+
+        slotNodes.forEach((node, i) => {
+          node.slot.classList.toggle("armed", armed === i);
+          const shot = shots[i];
+          node.img.hidden = !shot;
+          if (shot && node.img.src !== shot.url) node.img.src = shot.url;
+          node.empty.hidden = !!shot || !!errors[i];
+          node.err.hidden = !errors[i];
+          node.err.textContent = errors[i] ?? "";
+          for (const line of node.slot.querySelectorAll(".cline")) {
+            const v = readPath(line.dataset.path);
+            if (line.classList.contains("v"))
+              line.style.left = (v / FRAME_W) * 100 + "%";
+            else line.style.top = (v / FRAME_H) * 100 + "%";
+          }
+        });
+
+        for (const j of junctionNodes) {
+          const ready =
+            shots[slotIndex(j.col, j.over - 1)] &&
+            shots[slotIndex(j.col, j.over)];
+          j.btn.disabled = !ready || locked;
+          j.shift.textContent = "shift " + C.shift[j.col][j.over - 1];
+        }
+
+        const named = !!slugSel.value;
+        for (const m of mergeNodes) {
+          const filled = columnFilled(m.col);
+          m.merge.disabled = !filled || !named;
+          m.why.textContent =
+            filled && named
+              ? ""
+              : !filled
+                ? "needs all 4 shots"
+                : "pick a character";
+        }
+
+        // Flagged from load, not once a column fills: picking the character is
+        // the first step, and a merge blocked at the bottom of a scrolled page
+        // is no place to first learn that.
+        slugSel.classList.toggle("missing", !named);
+        slugErr.hidden = named;
+      }
+
+      slugSel.onchange = render;
+      render();
+    </script>
+  </body>
+</html>
