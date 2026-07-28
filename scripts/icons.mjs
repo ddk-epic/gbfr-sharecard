@@ -47,6 +47,9 @@ const SKILL_CHARACTERS = { "0000": "gran", "0100": "djeeta" };
 // id rather than name - re-extract if the Summons section wants them), status
 // buff icons (common_icon_status) and mastery icons (common_icon_lb/lb02).
 // research/icons.md records where they live.
+//
+// The skill diamond frames (cmn_icablt_frame0*) are gameplay UI, not menu UI -
+// the card is a menu surface, so they do not belong on it.
 
 /**
  * `ability.Element` / `summon_info.Element`, indexed. Proven, not assumed: the
@@ -61,16 +64,22 @@ const ELEMENTS = ["fire", "water", "earth", "wind", "light", "dark", "plain"];
 // off on its own at symbol35.
 const SYMBOL_BY_ELEMENT = [21, 22, 23, 24, 25, 26, 35];
 
-// The diamond sets (hud_cmnd_ablt_icon*, cmn_icablt_frame0*_*) are ordered
-// plain-first, so their suffix is offset by one from the Element value.
-const SPRITE_BY_ELEMENT = [1, 2, 3, 4, 5, 6, 0];
-
-// Fixed sprites the card needs by name rather than by table lookup. Both stat
-// candidates for stun ship - which reads as the stun glyph is a visual call.
+// Fixed sprites the card needs by name rather than by table lookup.
 const FIXED = {
-  stats: ["atk01", "hp01", "crt01", "brk01", "pwr01"].map((n) => ({
-    id: n.replace(/0?1$/, ""),
-    file: `${atlas("common_icon_main")}/cmn_main_${n}.png`,
+  // Named in the card's language, not the atlas's abbreviations - the sprite is
+  // `cmn_main_brk01` but the stat is Stun Power, and nothing about "brk" says
+  // so. `power` is the odd one: an ornate crest at twice the resolution, the
+  // menus' overall Power rating badge rather than a stat glyph, so it has no
+  // Status row to sit in.
+  stats: [
+    ["hp", "hp01"],
+    ["atk", "atk01"],
+    ["crit", "crt01"],
+    ["stun", "brk01"],
+    ["power", "pwr01"],
+  ].map(([id, sprite]) => ({
+    id,
+    file: `${atlas("common_icon_main")}/cmn_main_${sprite}.png`,
   })),
   // Round element badges - the shape the pause skill list uses. The game's
   // ui/data/image/elementicon points at common_icon_main, as distinct from
@@ -80,15 +89,6 @@ const FIXED = {
     id: name,
     file: `${atlas("common_icon_main")}/cmn_main_symbol${SYMBOL_BY_ELEMENT[element]}.png`,
   })),
-  // The skill diamond is composed, not a single image: a flat element-tinted
-  // diamond (frame01), an ornate border (frame02) and a thin border (frame03),
-  // layered with the skill artwork.
-  "skill-frames": [1, 2, 3].flatMap((layer) =>
-    ELEMENTS.map((name, element) => ({
-      id: `frame0${layer}_${name}`,
-      file: `${atlas("common_icon_ability")}/cmn_icablt_frame0${layer}_0${SPRITE_BY_ELEMENT[element]}.png`,
-    })),
-  ),
 };
 
 const missing = [];
