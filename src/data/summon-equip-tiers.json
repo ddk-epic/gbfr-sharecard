@@ -10,7 +10,7 @@
     "skill-damage-cap-up": [45, 50, 60, 80, 100],
     "skybound-art-damage-cap-up": [45, 50, 60, 80, 100],
     "health-up": [1800, 2000, 2500, 3000, 5000],
-    "healing-cap-up": [45, 50, 55, 60, 75]
+    "skill-healing-cap-up": [45, 50, 55, 60, 75]
   },
   "mid": {
     "attack-power-up": [1400, 1600, 1800, 2000],
@@ -23,7 +23,7 @@
     "skill-damage-cap-up": [35, 40, 45, 50],
     "skybound-art-damage-cap-up": [35, 40, 45, 50],
     "health-up": [1400, 1600, 1800, 2000],
-    "healing-cap-up": [35, 40, 45, 50]
+    "skill-healing-cap-up": [35, 40, 45, 50]
   },
   "low": {
     "attack-power-up": [800, 1000, 1200],
@@ -36,6 +36,6 @@
     "skill-damage-cap-up": [20, 25, 30],
     "skybound-art-damage-cap-up": [20, 25, 30],
     "health-up": [800, 1000, 1200],
-    "healing-cap-up": [20, 25, 30]
+    "skill-healing-cap-up": [20, 25, 30]
   }
 }

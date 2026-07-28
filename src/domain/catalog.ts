@@ -33,13 +33,13 @@ export type TraitDef = {
   maxLevel: number;
 };
 
-export type ValueRange = { min: number; max: number };
-
 export type BonusTypeDef = {
   id: BonusTypeId;
   name: string;
   unit: "flat" | "percent";
-  overMastery: ValueRange | null; // null = not rollable as over mastery
+  /** The values an over-mastery roll can land on, ascending. Three levels in
+   *  the game, deduplicated - see docs/overmasteries.md. */
+  overMastery: number[];
 };
 
 /** Summons roll equip bonuses from one of three value tables. */

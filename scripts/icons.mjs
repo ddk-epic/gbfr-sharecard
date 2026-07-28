@@ -2,7 +2,7 @@
 // under public/icons/ (weapon art under public/weapons/) and writes the
 // game-id -> icon-file index to src/data/icon-index.json. Results are committed;
 // re-run only when the game updates. Existing files are left alone.
-// Art and game data © Cygames. Source and access notes: research/icons.md.
+// Art and game data © Cygames. Archive access: docs/archive.md.
 //
 //   node scripts/icons.mjs [extract-dir]
 //
@@ -123,6 +123,8 @@ const english = (key) => String(text.get(key) ?? "").split("\n")[0].trim();
 // Accents and apostrophes both go before the dash pass, or the dash pass eats
 // them as separators: "Königsschild" would slug to "k-nigsschild" and the
 // game's possessive character sigils to "mage-s-warpath".
+// Duplicated verbatim in scripts/extract.mjs - the icon index and the catalog
+// are keyed by this, and they only join because the two agree. Change both.
 const slug = (s) =>
   s
     .normalize("NFD")

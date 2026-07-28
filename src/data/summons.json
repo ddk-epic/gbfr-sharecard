@@ -2,12 +2,7 @@
   {
     "id": "ahriman",
     "name": "Ahriman",
-    "traits": [
-      "quick-charge",
-      "dodge-payback",
-      "provoke",
-      "defense-down-resistance"
-    ],
+    "traits": ["quick-charge", "dodge-payback", "provoke", "def-resistance"],
     "equipTier": "low"
   },
   {
@@ -284,14 +279,14 @@
       "life-on-the-line",
       "hp",
       "charged-attack-dmg",
-      "defense-down-resistance"
+      "def-resistance"
     ],
     "equipTier": "low"
   },
   {
     "id": "goblin-soldier",
     "name": "Goblin Soldier",
-    "traits": ["linked-together", "atk", "enmity", "defense-down-resistance"],
+    "traits": ["linked-together", "atk", "enmity", "def-resistance"],
     "equipTier": "low"
   },
   {

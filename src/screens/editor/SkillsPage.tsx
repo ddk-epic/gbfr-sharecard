@@ -106,7 +106,7 @@ function OverMasteryRow({
   line: OverMasteryLine | null;
   onChange: (next: OverMasteryLine | null) => void;
 }) {
-  const range = line ? bonusTypeById.get(line.bonusType)?.overMastery : null;
+  const values = line ? bonusTypeById.get(line.bonusType)?.overMastery : null;
   return (
     <div className="flex items-center gap-2 py-0.75 text-[14px]">
       <Select
@@ -130,7 +130,7 @@ function OverMasteryRow({
       {line && (
         <NumInput
           value={line.value}
-          max={range?.max ?? 9999}
+          max={values?.at(-1) ?? 9999}
           onChange={(value) => onChange({ ...line, value })}
         />
       )}
@@ -267,6 +267,6 @@ function rerollEquipBonus(
 }
 
 function fitToRange(value: number, bonusType: BonusTypeId) {
-  const range = bonusTypeById.get(bonusType)?.overMastery;
-  return range ? Math.min(value, range.max) : value;
+  const top = bonusTypeById.get(bonusType)?.overMastery.at(-1);
+  return top === undefined ? value : Math.min(value, top);
 }

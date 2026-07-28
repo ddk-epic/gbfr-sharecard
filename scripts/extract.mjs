@@ -1,99 +1,60 @@
-// One-off catalog extraction: pulls every machine-readable source and writes
-// the committed JSON under src/data/. Re-run only when game data changes.
-// Source and access notes: research/game-data.md.
+// One-off catalog extraction: reads the game archive and writes the committed
+// JSON under src/data/. Re-run only when the game updates.
 //
-//   node scripts/extract.mjs
+//   node scripts/extract.mjs [extract-dir]
 //
-// Master traits are NOT generated here - they are hand-authored from in-game
-// screenshots in src/data/characters/*.json.
+// The extract dir is produced by GBFRDataTools and is not committed; see
+// docs/archive.md for the two commands and for why the archive is the authority
+// over the calculator sheet, the wiki and the PE patch tool, all of which this
+// script used to fetch.
 //
-// Sources: GBFR-PE-Patch-Tool (trait names, max levels, wrightstone items) ·
-// Nenkai relink-modding datamine (summon traits, equip bonus tiers) ·
-// community calculator sheet (sigil/wrightstone pools, weapon constants) ·
-// relink.gbf.wiki CC BY-NC-SA (weapon names, elements) · game facts © Cygames.
+// The one remaining external source is Nenkai's relink-modding datamine page,
+// which carries summon traits and equip bonus tiers. Those are not in the
+// archive's tables in any form that has been verified, and the datamined page
+// is trusted.
+//
+// NOT generated here:
+//   weapons.json              - rebuilt from the archive on series; see docs/weapons.md
+//   wrightstone-prefixes.json - four hand-authored prefix pairs, no source
+//   characters.json           - hand-authored; elements are already committed
+//   master traits             - hand-authored per character in src/data/characters/
+//
+// Game data © Cygames.
 
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, readdir, writeFile } from "node:fs/promises";
+import { DatabaseSync } from "node:sqlite";
+import { readTextTables } from "./msgpack.mjs";
 
 const OUT_DIR = new URL("../src/data/", import.meta.url);
-const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
-const CALCULATOR_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/1RnNLfdqFCW7zWvfHnQsNRJoi7EtIjdOUg-uYB0xsZHQ/gviz/tq?tqx=out:csv&sheet=";
-const WIKI_API_URL = "https://relink.gbf.wiki/api.php";
-const PE_TOOL_RAW_URL =
-  "https://raw.githubusercontent.com/BitterG/GBFR-PE-Patch-Tool/master/data/";
+const EXTRACT_DIR = process.argv[2] ?? "../gbfr-extract";
 const SUMMON_DOC_URL =
   "https://raw.githubusercontent.com/Nenkai/relink-modding/main/docs/resources/summon_trait_chances.md";
 
 // equip tier tables, ordered by descending Attack Power Up ceiling
 const EQUIP_TIER_GROUPS = ["legendary", "mid", "low"];
 
-// The calculator sheet is hand-maintained and abbreviates some trait names;
-// the PE tool carries the datamined ones. Map calculator -> PE.
-const PE_NAME_ALIASES = {
-  "Attack Power": "ATK",
-  "Damage Cap": "DMG Cap",
-  "Charged Attack": "Charged Attack DMG",
-  "Combo Finisher": "Combo Finisher DMG",
-  "Critical Damage": "Critical Hit DMG",
-  "Supplementary Damage": "Supplementary DMG",
-  Throw: "Throw DMG",
-  "DEF↓ Resistance": "Defense Down Resistance",
-};
-
-// Absent from both sources.
-const MANUAL_MAX_LEVELS = { Divergence: 15 };
-
+// Must stay identical to `slug` in scripts/icons.mjs - the icon index is keyed
+// by it, and the two only join because they agree. Accents and apostrophes both
+// go before the dash pass, or the dash pass eats them as separators:
+// "Konigsschild" would slug to "k-nigsschild" and "Mage's" to "mage-s".
 const slug = (s) =>
   s
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
     .toLowerCase()
+    .replace(/['’]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
+
 const fetchText = async (url) => {
-  const res = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`${res.status} ${url}`);
   return res.text();
 };
-const fetchJson = async (url) => JSON.parse(await fetchText(url));
-const readJson = async (name) =>
-  JSON.parse(await readFile(new URL(name, OUT_DIR)));
 const writeJson = async (name, data) => {
   await writeFile(new URL(name, OUT_DIR), JSON.stringify(data, null, 2) + "\n");
   console.log(`wrote src/data/${name}`);
 };
-
-/** Minimal CSV parser (quoted fields, embedded commas/quotes). */
-function parseCsv(text) {
-  const rows = [];
-  let row = [],
-    field = "",
-    inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    if (inQuotes) {
-      if (char === '"' && text[i + 1] === '"') {
-        field += '"';
-        i++;
-      } else if (char === '"') inQuotes = false;
-      else field += char;
-    } else if (char === '"') inQuotes = true;
-    else if (char === ",") {
-      row.push(field);
-      field = "";
-    } else if (char === "\n" || char === "\r") {
-      if (char === "\r" && text[i + 1] === "\n") i++;
-      row.push(field);
-      field = "";
-      rows.push(row);
-      row = [];
-    } else field += char;
-  }
-  if (field || row.length) {
-    row.push(field);
-    rows.push(row);
-  }
-  return rows;
-}
 
 /**
  * The datamine page lists each summon as a `### Name` heading followed by a
@@ -160,118 +121,109 @@ function collapseToTopTier(entries) {
   return [...byBase.values()];
 }
 
-// ---------------------------------------------------------------- fetch all
-// The wiki sits behind Cloudflare and intermittently refuses API traffic;
-// committed values stand in so a blocked run still produces complete output.
-const wikiQuery = (params, fallback) =>
-  fetchJson(`${WIKI_API_URL}?${params}&format=json`)
-    .then((j) => j.cargoquery.map((r) => r.title))
-    .catch(() => fallback);
-
-const [constantsCsv, weaponsCsv] = await Promise.all(
-  ["Constants", "WeaponConstants"].map((tab) =>
-    fetchText(CALCULATOR_CSV_URL + tab).then(parseCsv),
-  ),
-);
-const [wikiIoWeapons, wikiCharacters, peWrightstones, peTraits, summonDoc] =
-  await Promise.all([
-    wikiQuery(
-      "action=cargoquery&tables=weapons&fields=name,series,charaID&where=charaID=%224%22&limit=50",
-      null,
-    ),
-    wikiQuery(
-      "action=cargoquery&tables=characters&fields=name,element&limit=50",
-      null,
-    ),
-    fetchJson(PE_TOOL_RAW_URL + "wrightstones.json"),
-    fetchJson(PE_TOOL_RAW_URL + "traits.json"),
-    fetchText(SUMMON_DOC_URL),
-  ]);
-if (!wikiIoWeapons) console.warn("wiki unavailable - keeping committed weapon names");
-if (!wikiCharacters) console.warn("wiki unavailable - keeping committed elements");
-
-// ------------------------------------------- trait names (PE tool authority)
-// PE is datamined and carries a max level for every trait it knows; the
-// calculator only fills the few it lacks. Canonicalising early keeps weapon
-// and summon rows referencing the same ids as the trait catalog.
-const peTraitList = peTraits.traits ?? peTraits;
-const peTraitBySlug = new Map(peTraitList.map((t) => [slug(t.displayName), t]));
-const peTraitOf = (name) =>
-  peTraitBySlug.get(slug(PE_NAME_ALIASES[name] ?? name));
-const canonical = (name) => peTraitOf(name)?.displayName ?? name;
-const traitId = (name) => slug(canonical(name));
-
-// --------------------- sigil / wrightstone pools + max levels (calculator)
-// Constants layout: parallel dropdown columns after the header row -
-// col1 sigil trait pool, col2 wrightstone trait pool, col3 + col7 max levels.
-const headerIndex = constantsCsv.findIndex(
-  (r) => r[1] === "Main Sigil Dropdown",
-);
-const sigilPool = new Set(),
-  wrightstonePool = new Set(),
-  calculatorMaxLevels = new Map();
-for (const r of constantsCsv.slice(headerIndex + 1)) {
-  if (r[1] && r[1] !== "None") sigilPool.add(canonical(r[1]));
-  if (r[2] && r[2] !== "None") wrightstonePool.add(canonical(r[2]));
-  if (r[3] && r[3] !== "None" && r[7] && !isNaN(+r[7]))
-    calculatorMaxLevels.set(canonical(r[3]), +r[7]);
-}
-
-// --------------------------------------- weapons.json (calculator + wiki)
-// WeaponConstants: one row per series; comma-lists are player-choice pools.
-// Io display names come from the wiki's cargo `weapons` table (charaID 4).
-const committedWeapons = await readJson("weapons.json").catch(() => []);
-const ioWeaponNameBySeries = wikiIoWeapons
-  ? Object.fromEntries(
-      wikiIoWeapons.map((w) => [w.series.replace(" Weapon", ""), w.name]),
-    )
-  : Object.fromEntries(committedWeapons.map((w) => [w.series, w.name]));
-
-const weaponRows = weaponsCsv
-  .slice(1)
-  .filter(
-    (r) => r[0] && r[0] !== "Current Weapon" && !r[0].includes("(Base Game)"),
-  )
-  .filter((r) => isNaN(+r[0]));
-const weaponTraitNames = new Set();
-const weapons = weaponRows.map((r) => {
-  const rows = [];
-  for (let t = 0; t < 5; t++) {
-    const cell = r[3 + t],
-      level = +r[8 + t] || 0;
-    if (!cell) continue;
-    if (cell.includes(",")) {
-      const options = cell.split(",").map((s) => s.trim());
-      options.forEach((o) => weaponTraitNames.add(canonical(o)));
-      rows.push({ options: options.map(traitId), level });
-    } else {
-      weaponTraitNames.add(canonical(cell));
-      rows.push({ trait: traitId(cell), level });
-    }
-  }
-  const series = r[0];
-  // Terminus: the choice pool is the rotatable SECOND trait slot
-  if (series === "Terminus") {
-    const poolIndex = rows.findIndex((row) => row.options);
-    if (poolIndex > 1) rows.splice(1, 0, ...rows.splice(poolIndex, 1));
-  }
-  const name = ioWeaponNameBySeries[series] ?? series;
-  return {
-    id: slug(name),
-    name,
-    series,
-    characterId: "io",
-    defaultAtk: +r[1] || 0, // max-level (Endless Ragnarok era) values
-    defaultHp: +r[2] || 0,
-    rows,
-  };
+// ------------------------------------------------------------------ archive
+const text = await readTextTables(`${EXTRACT_DIR}/system/table/text/en`, {
+  readFile,
+  readdir,
 });
+const database = new DatabaseSync(`${EXTRACT_DIR}/tables.sqlite`);
+const english = (key) => text.get(key) ?? null;
+
+// --------------------------------------------------------------- traits.json
+// A trait is a `skill` row that carries a glyph and resolves to a name - the
+// same selection scripts/icons.mjs makes, so the ids match icon-index.json.
+// Rows without a glyph are internal (combat states, phantom placeholders).
+const maxLevelByKey = new Map(
+  database
+    .prepare("select Key, max(Level) as maxLevel from skill_status group by Key")
+    .all()
+    .map((row) => [row.Key, row.maxLevel]),
+);
+
+const missingMaxLevel = [];
+const traits = database
+  .prepare("select Key, Name from skill where IconId1 != ''")
+  .all()
+  .map((row) => ({ key: row.Key, name: english(row.Name) }))
+  .filter((row) => row.name)
+  .map(({ key, name }) => {
+    const maxLevel = maxLevelByKey.get(key);
+    if (maxLevel == null) missingMaxLevel.push(`${name} (${key})`);
+    return { id: slug(name), name, maxLevel: maxLevel ?? null };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+if (missingMaxLevel.length)
+  throw new Error(`no skill_status rows for: ${missingMaxLevel.join(", ")}`);
+
+// Summon traits arrive as display names from a third-party page; the archive
+// decides what they resolve to. Normalising past punctuation is enough - the
+// page copies the game's wording.
+const normalize = (name) => name.toLowerCase().replace(/[^a-z0-9]/g, "");
+const traitIdByName = new Map(traits.map((t) => [normalize(t.name), t.id]));
+const unresolvedTraits = new Set();
+const traitId = (name) => {
+  const id = traitIdByName.get(normalize(name));
+  if (!id) unresolvedTraits.add(name);
+  return id ?? slug(name);
+};
+
+// ----------------------------------------------------------- bonus-types.json
+// Over-mastery is "meditation" in the archive. Only the largest of the three
+// tiers ships, and it offers every stat once - so its category rows are the
+// whole roster, with no weighting to carry over. See docs/overmasteries.md.
+const MEDITATION_TIER = 2;
+// Whether a stat is flat or a percentage is in its own format string -
+// "Attack +{0}" against "Critical Hit Rate +{0}%". Do not infer it from the
+// stat-type index: Stun Power is type 3 like the percentage stats but formats
+// without a `%`, so it is flat.
+const isPercent = (format) => /%(?!\w)/.test(format);
+
+// `limit_bonus_meditation_weight` is ten rows by three columns: one row per
+// level, one column per tier, each column summing to 10000 basis points. Levels
+// 1 and 2 carry zero weight in every tier, so only 8 of the 10 can be rolled -
+// take the levels this tier actually reaches rather than assuming a range.
+const rollableLevels = database
+  .prepare("select rowid, * from limit_bonus_meditation_weight")
+  .all()
+  .filter((row) => row[`WeightLv${MEDITATION_TIER + 1}`] > 0)
+  .map((row) => row.rowid);
+
+const paramOf = database.prepare(
+  "select * from limit_bonus_param where Key = ?",
+);
+const bonusTypes = database
+  .prepare(
+    "select Key from limit_bonus_meditation_category where MeditationWeightId = ?",
+  )
+  .all(MEDITATION_TIER)
+  .map((row) => {
+    const param = paramOf.get(row.Key);
+    if (!param) throw new Error(`no limit_bonus_param row for ${row.Key}`);
+    const name = english(param.FullName) ?? param.FullName;
+    const format = english(param.NameFormat);
+    if (!format) throw new Error(`no format string for ${row.Key}`);
+    // Stun Power is stored fractionally in the archive - 0.1 where the other
+    // stats hold 1 - and carries `Unk19` = 10 where everything else holds 1.
+    // Normalising by it puts every stat on whole numbers, and lands Stun Power
+    // on the same 2-20 ladder the percentage stats use. The catalog stores the
+    // whole numbers; nothing downstream has to know a fraction was involved.
+    const values = [...new Set(rollableLevels.map((n) => param[`Lv${n}Value`]))]
+      .map((value) => Math.round(value * param.Unk19))
+      .sort((a, b) => a - b);
+    return {
+      id: slug(name),
+      name,
+      unit: isPercent(format) ? "percent" : "flat",
+      overMastery: values,
+    };
+  });
+if (bonusTypes.length !== 11)
+  throw new Error(`expected 11 over-mastery stats, got ${bonusTypes.length}`);
 
 // ------------------- summons.json + summon-equip-tiers.json (Nenkai datamine)
-const topTierSummons = collapseToTopTier(parseSummonDoc(summonDoc));
-const summonTraitNames = new Set();
-for (const summon of topTierSummons)
-  summon.traits.forEach((t) => summonTraitNames.add(canonical(t)));
+const topTierSummons = collapseToTopTier(
+  parseSummonDoc(await fetchText(SUMMON_DOC_URL)),
+);
 
 const equipSignature = (summon) =>
   Object.entries(summon.equip)
@@ -294,13 +246,25 @@ if (rankedSignatures.length !== EQUIP_TIER_GROUPS.length)
     `expected ${EQUIP_TIER_GROUPS.length} equip tier tables, found ${rankedSignatures.length}`,
   );
 
+// Equip bonuses are the same stats as over-masteries, so they key by bonus type
+// id. The datamine page predates the game's wording for one of them.
+const EQUIP_BONUS_ALIASES = { "Healing Cap Up": "Skill Healing Cap Up" };
+const bonusTypeIdByName = new Map(bonusTypes.map((b) => [normalize(b.name), b.id]));
+const bonusTypeId = (name) => {
+  const id = bonusTypeIdByName.get(
+    normalize(EQUIP_BONUS_ALIASES[name] ?? name),
+  );
+  if (!id) throw new Error(`equip bonus not in limit_bonus_param: ${name}`);
+  return id;
+};
+
 const summonEquipTiers = {};
 const equipTierBySummon = new Map();
 rankedSignatures.forEach(([, group], index) => {
   const tierName = EQUIP_TIER_GROUPS[index];
   const table = {};
   for (const [bonus, values] of Object.entries(group[0].equip))
-    table[slug(bonus)] = [...new Set(values)].sort((a, b) => a - b);
+    table[bonusTypeId(bonus)] = [...new Set(values)].sort((a, b) => a - b);
   summonEquipTiers[tierName] = table;
   for (const summon of group) equipTierBySummon.set(summon.base, tierName);
 });
@@ -314,87 +278,17 @@ const summons = topTierSummons
   }))
   .sort((a, b) => a.name.localeCompare(b.name));
 
-// ------------------------------------------------------------- traits.json
-// A flat roster: every trait any catalog references, with its max level.
-// Which pool a trait belongs to (sigil / wrightstone / character) is not
-// gated - no source classifies them reliably enough to filter on.
-const allTraitNames = new Set([
-  ...peTraitList.map((t) => t.displayName),
-  ...sigilPool,
-  ...wrightstonePool,
-  ...weaponTraitNames,
-  ...summonTraitNames,
-]);
-const missingMaxLevel = [];
-const traits = [...allTraitNames].sort().map((name) => {
-  const maxLevel =
-    peTraitOf(name)?.maxLevel ??
-    calculatorMaxLevels.get(name) ??
-    MANUAL_MAX_LEVELS[name] ??
-    null;
-  if (maxLevel == null) missingMaxLevel.push(name);
-  return { id: slug(name), name, maxLevel };
-});
-if (missingMaxLevel.length)
-  throw new Error(`no max level for: ${missingMaxLevel.join(", ")}`);
-
-// ------------------------------------------------------- bonus-types.json
-// Over-mastery rolls are a separate system from summon equip bonuses and are
-// not datamined on the summon page; ATK/HP are flat, everything else is %.
-const OVER_MASTERY_RANGES = {
-  "Attack Power Up": { min: 200, max: 1000 },
-  "Health Up": { min: 400, max: 2000 },
-  "Stun Power Up": { min: 2, max: 20 },
-};
-const BONUS_TYPE_NAMES = [
-  "Attack Power Up",
-  "Health Up",
-  "Critical Hit Rate Up",
-  "Stun Power Up",
-  "Skill Damage Up",
-  "Skybound Art Damage Up",
-  "Chain Burst Damage Up",
-  "Normal Attack Damage Cap Up",
-  "Skill Damage Cap Up",
-  "Skybound Art Damage Cap Up",
-  "Healing Cap Up",
-];
-const FLAT_BONUS_TYPES = new Set(["Attack Power Up", "Health Up"]);
-const bonusTypes = BONUS_TYPE_NAMES.map((name) => ({
-  id: slug(name),
-  name,
-  unit: FLAT_BONUS_TYPES.has(name) ? "flat" : "percent",
-  overMastery: OVER_MASTERY_RANGES[name] ?? { min: 2, max: 20 },
-}));
-
-// ------------------------------------ wrightstone-prefixes.json (PE tool)
-const peTraitNameById = new Map(
-  peTraitList.map((t) => [t.internalId, t.displayName]),
-);
-const wrightstonePrefixes = {};
-for (const w of peWrightstones.wrightstones ?? []) {
-  const name = peTraitNameById.get(w.defaultTraitId);
-  if (name)
-    wrightstonePrefixes[slug(name)] = w.displayName.replace(" Wrightstone", "");
-}
-
-// ------------------------------------- characters.json element patch (wiki)
-const characters = await readJson("characters.json");
-if (wikiCharacters) {
-  const elementByName = new Map(wikiCharacters.map((c) => [c.name, c.element]));
-  for (const c of characters)
-    c.element = elementByName.get(c.name) ?? c.element ?? "";
-}
-
 // ---------------------------------------------------------------- write all
 await writeJson("traits.json", traits);
 await writeJson("bonus-types.json", bonusTypes);
 await writeJson("summons.json", summons);
 await writeJson("summon-equip-tiers.json", summonEquipTiers);
-await writeJson("weapons.json", weapons);
-await writeJson("wrightstone-prefixes.json", wrightstonePrefixes);
-await writeJson("characters.json", characters);
 
+if (unresolvedTraits.size)
+  console.warn(
+    `\n${unresolvedTraits.size} summon trait names not in the archive, kept as slugs:\n  ` +
+      [...unresolvedTraits].join(", "),
+  );
 console.log(
-  `\ntraits ${traits.length} · summons ${summons.length} · weapons ${weapons.length}`,
+  `\ntraits ${traits.length} · over-mastery stats ${bonusTypes.length} · summons ${summons.length}`,
 );

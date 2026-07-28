@@ -3,7 +3,7 @@
 // system/table/text/<lang>/*.msg are MessagePack documents shaped
 // { rows_: [ { column_: { id_hash_, subid_hash_, text_ } } ] } - the English
 // strings behind every TXT_* key the .tbl databases reference. Decoding them
-// is what lets the game be its own name source; see research/icons.md.
+// is what lets the game be its own name source; see docs/archive.md.
 //
 // Only the types those files actually use are handled. Anything else throws
 // rather than silently returning a wrong value.
