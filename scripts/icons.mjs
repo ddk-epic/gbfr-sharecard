@@ -31,19 +31,17 @@ const WEAPONS_DIR = new URL("../public/weapons/", import.meta.url);
 const DATA_DIR = new URL("../src/data/", import.meta.url);
 const WEBP_QUALITY = 88;
 const WEAPON_ART_WIDTH = 512; // native is 1280px square; the card's box is far smaller
+// Native is 320px square. The card draws a skill at 20px (`Diamond`, size-5) and
+// exports at pixelRatio 1, and the editor shows no icon at all - 128 leaves the
+// diamond a lot of room to grow before it softens.
+const SKILL_ICON_WIDTH = 128;
 
 const atlas = (name) => `${EXTRACT_DIR}/ui/atlas/${name}`;
 const equip = `${EXTRACT_DIR}/ui/layouts/common/image_equip/noatlastextures`;
 
-// Each class names its sprites differently, so a class says how to turn the id
-// held in the game's table into a source file, and what to call the result.
-const CLASSES = [
-  {
-    name: "skills",
-    query: "select Key, IconFileName from ability where IconFileName != ''",
-    source: (icon) => `${atlas("common_icon_ability")}/cmn_icablt_pl${icon}.png`,
-  },
-];
+// The game calls Gran and Djeeta both "The Captain" - it does not name them
+// apart at all - so the one distinction it declines to make is made here.
+const SKILL_CHARACTERS = { "0000": "gran", "0100": "djeeta" };
 
 // Deliberately not extracted: summon icons (common_icon_summon, keyed by game
 // id rather than name - re-extract if the Summons section wants them), status
@@ -122,10 +120,13 @@ const text = await readTextTables(`${EXTRACT_DIR}/system/table/text/en`, {
 });
 /** The game's English name for a TXT_* key, first line only. */
 const english = (key) => String(text.get(key) ?? "").split("\n")[0].trim();
-// Apostrophes go before the dash pass, so the game's possessive character
-// sigils read "mages-warpath" rather than "mage-s-warpath".
+// Accents and apostrophes both go before the dash pass, or the dash pass eats
+// them as separators: "Königsschild" would slug to "k-nigsschild" and the
+// game's possessive character sigils to "mage-s-warpath".
 const slug = (s) =>
   s
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
     .toLowerCase()
     .replace(/['’]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
@@ -240,18 +241,55 @@ console.log(
   `traits: ${Object.keys(traits).length} traits -> ${new Set(Object.values(traits)).size} glyphs`,
 );
 
-for (const { name, query, source } of CLASSES) {
-  const directory = new URL(`${name}/`, ICONS_DIR);
-  await mkdir(directory, { recursive: true });
-  const map = {};
-  for (const row of database.prepare(query).all()) {
-    const [key, icon] = Object.values(row);
-    if (await convert(source(icon), new URL(`${icon}.webp`, directory), null))
-      map[key] = icon;
-  }
-  index[name] = map;
-  console.log(`${name}: ${Object.keys(map).length} keys -> ${new Set(Object.values(map)).size} icons`);
+// ------------------------------------------------------------------ skills
+// public/icons/skills/<character>/<skill>.webp. Both halves come from the game
+// and the card already holds both - the character, and `skill.id` out of
+// src/data/characters/<character>.json, which is the name slug - so it builds
+// the path itself and skills need no index at all.
+//
+// The character in the path is what settles Gran and Djeeta: they have their
+// own art for 7 of the captain's 16 skills and share the other 9. Djeeta's
+// folder gets all 16, nine of them copies of Gran's file, and nothing
+// downstream has to know which is which. The copies cost ~55K.
+//
+// `ReqCharaId1` is the owner, not the icon's prefix - Djeeta's Phalanx row
+// points at Gran's `0000_03` art, so keying the folder off the filename would
+// file her shared skills under him.
+const skillsDirectory = new URL("skills/", ICONS_DIR);
+const characterName = new Map();
+for (const row of database.prepare("select * from chara").all()) {
+  const id = Object.values(row).find((v) => typeof v === "string" && /^PL\d{4}$/.test(v));
+  const name = english(row.CharaName);
+  if (id && name) characterName.set(id.slice(2), SKILL_CHARACTERS[id.slice(2)] ?? slug(name));
 }
+
+let skillCount = 0;
+for (const row of database
+  .prepare(
+    // PL2000 is excluded: `chara` gives it CharaName "Id" with an empty
+    // IconFileName and Id's own Skybound Art, so it is his second form rather
+    // than a character. 2400-2900 stay - DLC characters the game already names
+    // (Gallanza, Maglielle, Beatrix, Eustace, Fraux, Fediel).
+    `select IconFileName, ReqCharaId1, Unk5 from ability
+     where IconFileName != '' and IconFileName not like '2000%'`,
+  )
+  .all()) {
+  // Unnamed rows are the NPC copies (AB_NP*), which carry art but no skill.
+  const name = english(row.Unk5);
+  const character = characterName.get(row.ReqCharaId1.slice(2));
+  if (!name || !character) continue;
+  const directory = new URL(`${character}/`, skillsDirectory);
+  await mkdir(directory, { recursive: true });
+  if (
+    await convert(
+      `${atlas("common_icon_ability")}/cmn_icablt_pl${row.IconFileName}.png`,
+      new URL(`${slug(name)}.webp`, directory),
+      SKILL_ICON_WIDTH,
+    )
+  )
+    skillCount++;
+}
+console.log(`skills: ${skillCount} rows -> ${(await readdir(skillsDirectory)).length} character folders`);
 
 // ---------------------------------------------------------- character art
 // Variant _0 is the most complete crop (full body, legs included); the others
