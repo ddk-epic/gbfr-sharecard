@@ -292,26 +292,26 @@ for (const row of database
 console.log(`skills: ${skillCount} rows -> ${(await readdir(skillsDirectory)).length} character folders`);
 
 // ---------------------------------------------------------- character art
-// Variant _0 is the most complete crop (full body, legs included); the others
-// are derivable from it. Two sizes ship because the grid loads all 23 at once:
-// the card wants ~869px (70% of 1080, background-sized to 115%), the grid tile
-// ~270px, doubled for HiDPI.
+// Variant _0 is the whole illustration - the wiki's _2 is this same art cropped
+// mid-shin onto a wider canvas - so every other framing derives from it and
+// only this one ships. A grid or portrait crop is regenerated from the archive
+// when its size is settled, not stored alongside.
 //
-// NOTE: this writes public/art/, NOT public/portraits/. The committed
-// portraits are the wiki's variant _2 wide art, and every character's
-// portraitY is tuned to that framing - swapping the source re-frames the card,
-// editor and grid, so the switch is a roster/visual decision, not this
-// script's to make.
+// 900px against a 3608x3660 native: the card's box draws it at 869 (70% of
+// 1080, background-sized to 115%), so this is the tallest anything needs today.
+//
+// NOTE: this writes public/art/, NOT public/portraits/. The committed portraits
+// are the wiki's _2, and every character's portraitY is hand-tuned to that
+// framing - swapping the source re-frames the card, editor and grid, so the
+// switch is a visual decision, not this script's to make.
 const ART_DIR = new URL("../public/art/", import.meta.url);
 const CARD_ART_HEIGHT = 900;
-const GRID_ART_HEIGHT = 540;
 const charaRoot = `${EXTRACT_DIR}/ui/layouts/common/image_chara/noatlastextures`;
 
 const characters = JSON.parse(
   await readFile(new URL("characters.json", DATA_DIR)),
 );
 await mkdir(ART_DIR, { recursive: true });
-await mkdir(new URL("grid/", ART_DIR), { recursive: true });
 let artCount = 0;
 for (const character of characters) {
   const stem = `cmn_imgchr_${character.artId}`;
@@ -320,23 +320,18 @@ for (const character of characters) {
     missing.push(`${stem}_0.png`);
     continue;
   }
-  for (const [directory, height] of [
-    [ART_DIR, CARD_ART_HEIGHT],
-    [new URL("grid/", ART_DIR), GRID_ART_HEIGHT],
-  ]) {
-    const destination = new URL(`${character.id}.webp`, directory);
-    if (existsSync(destination)) continue;
+  const destination = new URL(`${character.id}.webp`, ART_DIR);
+  if (!existsSync(destination))
     await writeFile(
       destination,
       await sharp(source)
-        .resize({ height })
+        .resize({ height: CARD_ART_HEIGHT })
         .webp({ quality: WEBP_QUALITY })
         .toBuffer(),
     );
-  }
   artCount++;
 }
-console.log(`art: ${artCount} characters (card + grid)`);
+console.log(`art: ${artCount} characters`);
 
 // ------------------------------------------------------------- weapon art
 // public/weapons/<character>/<weapon>.webp - the same derived path as skills,
