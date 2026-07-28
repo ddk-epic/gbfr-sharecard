@@ -3,7 +3,7 @@
 How a GBFR weapon grows: what unlocks at each step, and every trait it can
 carry. Everything here is read out of the game archive (version 2.0.2) - the
 tables are named so any claim can be re-checked. See
-[research/icons.md](../research/icons.md) for how the archive is extracted.
+[archive.md](archive.md) for how the archive is extracted.
 
 ## The two stages
 
@@ -55,8 +55,14 @@ Read as unlocks:
 Awakened series ladder differently in the lower slots. Ascension and Terminus
 start slot 3 at **5** rather than 0, so it is live from T0, and their slot 4 is
 flat - Sigil Booster at 1 the whole way, reaching 2 at T6 for Ascension and
-staying at 1 for Terminus. Terminus slot 5 tops out at **1**, not 15, because
-_Unbound Master_ is counted differently from the other Unbound traits.
+staying at 1 for Terminus.
+
+Terminus slot 5 tops out at **1**, not 15, because _Unbound Master_ does not
+take its level from the weapon. The game describes it as _"Boosts damage cap
+based on master level"_, and it is the only trait with a 55-step ladder - the
+same 55 as the master level cap. The slot is a switch that turns the trait on;
+the board sets how strong it is. See
+[master-traits.md](master-traits.md#what-levels-51-55-buy).
 
 The post-launch Defender is the only series with a non-standard slot 1:
 `25, 26, 26, 27, 27, 28, 30` - it gains a level every _other_ step and caps five
@@ -244,17 +250,17 @@ it to almost nothing:
 
 So neither stat belongs on the weapon.
 
-## Scope
-
-**v1 ships only the maxed transcendent weapon of each series** - T6, and for
-Ascension and Terminus that means awakening 10 as well.
-
 ## Art
 
 Awakening changes a weapon's art in only three cases across the whole game -
 Gran's and Djeeta's _Sword of Eos_, and Lancelot's _Ethereal Lasher_, whose
 awakened forms use the `_01`-suffixed texture. Every other weapon keeps one
 image through the entire chain.
+
+**The `_06` tier has no art.** 44 weapon rows reference textures
+(`cmn_imgequ_wp0006`, `wp0206`, … - one per character) that are absent from the
+archive, not merely unnamed. Nothing can be extracted for them because nothing
+is there.
 
 ## Reading it back
 
@@ -268,3 +274,9 @@ node tmp/weapon-analysis.mjs <extract-dir>
 It reports **33 distinct slot sets** across 162 transcendable weapons. That is
 not 33 series: it is the six above, multiplied by the per-character signature
 trait and the post-launch pool widths.
+
+## What this project uses
+
+Only the **maxed transcendent** weapon of each series - T6, and for Ascension
+and Terminus that means awakening 10 as well. Since ATK is a series constant and
+HP is `series.hp + character.hpOffset`, neither stat is stored on the weapon.

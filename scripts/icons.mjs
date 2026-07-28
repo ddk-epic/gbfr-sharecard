@@ -46,7 +46,8 @@ const SKILL_CHARACTERS = { "0000": "gran", "0100": "djeeta" };
 // Deliberately not extracted: summon icons (common_icon_summon, keyed by game
 // id rather than name - re-extract if the Summons section wants them), status
 // buff icons (common_icon_status) and mastery icons (common_icon_lb/lb02).
-// research/icons.md records where they live.
+// docs/archive.md records where they live and the hash workaround summon icons
+// need.
 //
 // The skill diamond frames (cmn_icablt_frame0*) are gameplay UI, not menu UI -
 // the card is a menu surface, so they do not belong on it.

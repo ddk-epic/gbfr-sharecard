@@ -41,9 +41,12 @@ questions without extracting anything, and they carry per-version column orders
 in `set_min_version` / `set_max_version` blocks - which matters, because columns
 moved between 1.3.2 and 2.0.0.
 
-Header column names are not always right. `limit_bonus_param` labels a
-stat-type index `DisplayNumberMultiplier` and leaves the real multiplier as
-`Unk19`.
+Header column names are not always right, and a wrong one will send you down a
+dead end. `limit_bonus_param` labels a stat-type index `DisplayNumberMultiplier`
+and leaves the column that actually marks fractional storage as `Unk19`;
+`limit_bonus_meditation_weight` names its columns `WeightLv1/2/3` when they are
+per-tier rather than per-level. Check a column's shape against its data before
+trusting its name.
 
 ## Text
 
@@ -73,7 +76,65 @@ tables but only one of three rows in `skill` - see
 | `chara`                      | the roster: `CharId`, `CharaName`, `Element`          |
 
 Per-class analysis: [weapons.md](weapons.md), [sigils.md](sigils.md),
-[overmasteries.md](overmasteries.md).
+[overmasteries.md](overmasteries.md), [summons.md](summons.md),
+[master-traits.md](master-traits.md).
+
+## Icon classes not extracted
+
+Icons come out of `ui/atlas/` rather than the tables. These classes were located
+but deliberately left, and this is where they live if one is wanted later.
+
+| Class                        | Atlas                                              | Keyed by                  |
+| ---------------------------- | -------------------------------------------------- | ------------------------- |
+| Summon icons                 | `common_icon_summon`                               | `summon_info.IconIdMaybe` |
+| Status / buff icons          | `common_icon_status`                               | -                         |
+| Mastery + over-mastery icons | `common_icon_lb`, `common_icon_lb02` (264 sprites) | `limit_bonus.IconId`      |
+| Skill diamond frames         | `cmn_icablt_frame0*`                               | -                         |
+
+Icons are cropped with `b-convert`, one call per `.tex.texb`. The atlases worth
+knowing: `common_icon_skill`, `common_icon_lb`, `common_icon_lb02`,
+`common_icon_summon`, `common_icon_ability`, `common_icon_main`,
+`common_icon_equip`, `common_icon_status`, `hud_guide_command`.
+
+**`sprite_names.txt` is a known-names table, not a manifest.** It resolves
+19,367 names, and a sprite whose name it does not know still extracts - just
+hash-named. So a class missing from it is a naming gap, never an absence.
+
+**Summon icons are the class that hits this.** `common_icon_summon` resolves
+**zero** sprite names, so a plain `b-convert` yields hash-named PNGs. The names
+are in the data instead: `summon_info.IconIdMaybe` is a raw string holding the
+sprite name, and running those through the tool's `XXHash32Custom` matches them
+to the hashes it prints per sprite.
+
+**Two references resolve to nothing at all**, as opposed to being unnamed: 44
+weapon rows at the `_06` tier (`cmn_imgequ_wp0006`, `wp0206`, … - one per
+character) whose art is absent from the archive, and `cmn_icablt_pl2400_09`, a
+DLC character skill icon. See [weapons.md](weapons.md) for the weapon side.
+
+**The mastery atlas names itself by type**, per the `limit_bonus` header:
+
+```
+0 = general stats                  cmn_iclb_cmn_{0:03}_{1:02}
+1 = unique character upgrades      cmn_iclb_uni_pl{0}_{1:02}
+2 = ability upgrades               cmn_iclb_cmn_{0:03}_{1:02}
+3 = ability unlocks                cmn_iclb_99_01
+4 = unique character functionality cmn_iclb_act_{0:03}_{1:02}
+```
+
+One atlas therefore covers both the mastery board and over-masteries.
+
+**One glyph was never located.** The skill-slot `Orb` has no sprite name that
+obviously matches; the best candidates are in `hud_guide_command`
+(`hud_cmnd_ablt_icon00`-`06`, `hud_cmnd_ability_frame01`-`05`). It is the one
+class that has to be settled by looking at extracted images rather than by name.
+
+Atlases ship at two resolutions: `ui/atlas/` is the 4K set and `ui/fhd/atlas/`
+the same sheets at 1080p.
+
+## Licence
+
+- **GBFRDataTools** is MIT, Copyright (c) 2024 Nenkai.
+- The assets are **© Cygames**
 
 ## What this project uses
 
