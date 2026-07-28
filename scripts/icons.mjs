@@ -339,30 +339,56 @@ for (const character of characters) {
 console.log(`art: ${artCount} characters (card + grid)`);
 
 // ------------------------------------------------------------- weapon art
-await mkdir(WEAPONS_DIR, { recursive: true });
-const weapons = {};
-// `Key` is the row identity (410 distinct, one per weapon incl. awakening
-// steps). `WeaponId`/`WeaponId2` are cross-references into the awakening chain
-// and are sparse - keying on those resolves only 75 of 410 rows.
+// public/weapons/<character>/<weapon>.webp - the same derived path as skills,
+// so the card reaches art from the character plus the weapon id, which is the
+// name slug. No index entry for the same reason.
+//
+// Only transcendable rows ship. `WeaponSkillLevelRebuildId1` is present solely
+// on a weapon's final form, which is what a maxed build holds: for Ascension
+// and Terminus that is the awakened row, so the file is named
+// "gambanteinn-staff-of-hope" rather than "gambanteinn". The intermediate
+// awakening rows and the un-awakened base carry the same art anyway - only
+// three weapons in the game re-art on awakening. See
+// docs/weapons.md.
+// GBFRDataTools cannot always reverse a string hash, so a few rows carry
+// `Name` as "DA853EF8" where their siblings carry "TXT_WEP_NAME_PL2900_04".
+// The text table does hold the entry, under the readable key - deriving it from
+// the row's own Key is what brings Fediel's Defender ("Hedera") back.
+const weaponName = (row) =>
+  english(/^[0-9A-F]{8}$/.test(row.Name) ? `TXT_WEP_NAME_${row.Key.slice(4)}` : row.Name);
+
+const seenWeapon = new Map();
 for (const row of database
   .prepare(
-    "select Key, CharaId, IconFileNameId from weapon where IconFileNameId != ''",
+    `select Key, Name, CharaId, IconFileNameId from weapon
+     where IconFileNameId != '' and WeaponSkillLevelRebuildId1 != ''`,
   )
   .all()) {
-  const spriteName = `cmn_imgequ_wp${row.IconFileNameId}`;
-  if (
-    !(await convert(
-      `${equip}/${spriteName}/${spriteName}.png`,
-      new URL(`${row.IconFileNameId}.webp`, WEAPONS_DIR),
-      WEAPON_ART_WIDTH,
-    ))
-  )
+  const name = weaponName(row);
+  const character = characterName.get(row.CharaId.slice(2));
+  if (!name || !character) continue;
+  const id = `${character}/${slug(name)}`;
+  // `_A0`/`_A1` rows repeat a weapon verbatim - same name, same art - so they
+  // collapse. Two rows sharing a name but not art would be a real clash.
+  if (seenWeapon.has(id)) {
+    if (seenWeapon.get(id) !== row.IconFileNameId)
+      console.warn(`  weapon clash: ${id} is both ${seenWeapon.get(id)} and ${row.IconFileNameId}`);
     continue;
-  weapons[row.Key] = { art: row.IconFileNameId, character: row.CharaId };
+  }
+  const directory = new URL(`${character}/`, WEAPONS_DIR);
+  await mkdir(directory, { recursive: true });
+  const sprite = `cmn_imgequ_wp${row.IconFileNameId}`;
+  if (
+    await convert(
+      `${equip}/${sprite}/${sprite}.png`,
+      new URL(`${slug(name)}.webp`, directory),
+      WEAPON_ART_WIDTH,
+    )
+  )
+    seenWeapon.set(id, row.IconFileNameId);
 }
-index.weapons = weapons;
 console.log(
-  `weapons: ${Object.keys(weapons).length} keys -> ${new Set(Object.values(weapons).map((w) => w.art)).size} art files`,
+  `weapons: ${seenWeapon.size} weapons across ${(await readdir(WEAPONS_DIR)).length} characters`,
 );
 
 // ------------------------------------------------------- fixed-name sprites
