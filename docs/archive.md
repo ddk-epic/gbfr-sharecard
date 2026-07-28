@@ -71,7 +71,9 @@ tables but only one of three rows in `skill` - see
 | `gem`                        | every sigil, 1034 rows                                |
 | `gem_rare`                   | sigil level range per rarity                          |
 | `weapon`, `weapon_status`    | weapons and their per-level ATK/HP                    |
-| `weapon_skill_level_rebuild` | transcension trait slots and ladders                  |
+| `weapon_status_awake`        | ATK/HP added per awakening level                      |
+| `weapon_status_rebuild`      | ATK/HP added per transcendence step                   |
+| `weapon_skill_level_rebuild` | transcendence trait slots and ladders                 |
 | `limit_bonus*`               | masteries and over-masteries                          |
 | `chara`                      | the roster: `CharId`, `CharaName`, `Element`          |
 

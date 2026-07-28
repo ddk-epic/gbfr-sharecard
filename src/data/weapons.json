@@ -48,7 +48,7 @@
     "series": "Executioner",
     "characterId": "io",
     "defaultAtk": 20518,
-    "defaultHp": 3097,
+    "defaultHp": 3084,
     "rows": [
       {
         "trait": "exploiter",
@@ -92,7 +92,7 @@
     "series": "Stinger",
     "characterId": "io",
     "defaultAtk": 19497,
-    "defaultHp": 3269,
+    "defaultHp": 3256,
     "rows": [
       {
         "trait": "critical-hit-rate",
@@ -137,7 +137,7 @@
     "series": "Stunner",
     "characterId": "io",
     "defaultAtk": 19858,
-    "defaultHp": 3786,
+    "defaultHp": 3773,
     "rows": [
       {
         "trait": "stun-power",
@@ -180,7 +180,7 @@
     "series": "Ascension",
     "characterId": "io",
     "defaultAtk": 19711,
-    "defaultHp": 4478,
+    "defaultHp": 4465,
     "rows": [
       {
         "trait": "atk",
