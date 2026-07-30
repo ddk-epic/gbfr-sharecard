@@ -467,6 +467,3 @@ Only the **maxed transcendent** weapon of each series - T7 at level 150 and plus
 99, and for Ascension and Terminus that means awakening 10 as well. Since every
 stage above the level ladder is a series constant, the only per-character number
 in a weapon's stats is the HP offset.
-
-The catalog stores `defaultAtk` and `defaultHp` per weapon. Those are the maxed
-totals, not the level-150 base figures listed per series above.

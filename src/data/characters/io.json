@@ -1,19 +1,63 @@
 {
   "id": "io",
   "skills": [
-    { "id": "stargaze", "name": "Stargaze" },
-    { "id": "freeze", "name": "Freeze" },
-    { "id": "fire", "name": "Fire" },
-    { "id": "flowery-seven", "name": "Flowery Seven" },
-    { "id": "gravity-well", "name": "Gravity Well" },
-    { "id": "concentration", "name": "Concentration" },
-    { "id": "healing-winds", "name": "Healing Winds" },
-    { "id": "mystic-vortex", "name": "Mystic Vortex" },
-    { "id": "magic-chain", "name": "Magic Chain" },
-    { "id": "lightning", "name": "Lightning" }
+    {
+      "id": "freeze",
+      "name": "Freeze"
+    },
+    {
+      "id": "fire",
+      "name": "Fire"
+    },
+    {
+      "id": "flowery-seven",
+      "name": "Flowery Seven"
+    },
+    {
+      "id": "gravity-well",
+      "name": "Gravity Well"
+    },
+    {
+      "id": "concentration",
+      "name": "Concentration"
+    },
+    {
+      "id": "healing-winds",
+      "name": "Healing Winds"
+    },
+    {
+      "id": "mystic-vortex",
+      "name": "Mystic Vortex"
+    },
+    {
+      "id": "lightning",
+      "name": "Lightning"
+    }
   ],
-  "styleNames": { "insight": "Insight", "essence": "Essence", "crux": "Crux" },
-  "perkThresholds": [3, 6, 6],
+  "weapons": {
+    "defender": {
+      "name": "Little Witch Scepter"
+    },
+    "stunner": {
+      "name": "Zhezl"
+    },
+    "stinger": {
+      "name": "Colossus Cane Omega"
+    },
+    "executioner": {
+      "name": "Tupsimati"
+    },
+    "ascension": {
+      "name": "Gambanteinn",
+      "awakened": "Gambanteinn, Staff of Hope"
+    },
+    "terminus": {
+      "name": "Caduceus",
+      "awakened": "Caduceus, Immortal Coil"
+    }
+  },
+  "weaponHpOffset": -13,
+  "weaponSignatureTrait": "charged-attack-dmg",
   "masterTraits": {
     "insight": {
       "r1": [
@@ -192,7 +236,11 @@
           "label": "DMG Cap +20%",
           "description": "DMG Cap +20%"
         },
-        { "id": "essence.r1.4", "label": "DEF +5%", "description": "DEF +5%" }
+        {
+          "id": "essence.r1.4",
+          "label": "DEF +5%",
+          "description": "DEF +5%"
+        }
       ],
       "r2": [
         {

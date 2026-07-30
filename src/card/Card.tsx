@@ -17,7 +17,7 @@ import {
   portraitUrl,
   summonById,
   traitName,
-  weaponById,
+  resolveWeapon,
   wrightstoneName,
 } from "../data";
 import { LvlBadge } from "./LvlBadge";
@@ -152,7 +152,7 @@ export function Card({
   const character = characterById.get(build.characterId);
   const catalog = characterCatalog(build.characterId);
   const weapon = build.weapon;
-  const weaponDef = weapon ? weaponById.get(weapon.weaponId) : undefined;
+  const resolved = weapon ? resolveWeapon(build.characterId, weapon) : null;
   const perks = stylePerkStates(build.masterTraits, catalog.perkThresholds);
   const perkSummary = STYLES.map(
     (style) =>
@@ -328,12 +328,12 @@ export function Card({
           <Wpanel shadow className="flex-none">
             <div className="flex items-baseline gap-2">
               <span
-                className={`text-[19px] font-bold ${weaponDef ? "" : "text-dim"}`}
+                className={`text-[19px] font-bold ${resolved ? "" : "text-dim"}`}
               >
-                {weaponDef?.name ?? "No Weapon"}
+                {resolved?.name ?? "No Weapon"}
               </span>
               <span className="text-dim text-[12px] whitespace-nowrap">
-                {weaponDef?.series ?? "-"} · Lv. {WEAPON_LEVEL}
+                {resolved?.seriesName ?? "-"} · Lv. {WEAPON_LEVEL}
               </span>
             </div>
             {/* Sized, not stretched - placeholder until per-weapon art exists. */}
@@ -344,13 +344,13 @@ export function Card({
             />
             <div className="mt-1 mb-1.5 flex items-baseline gap-1 text-[14.5px]">
               <BaseStat tone="hp">
-                <WeaponStat tone="hp" filled={!!weaponDef}>
-                  {weaponDef?.defaultHp ?? "-"}
+                <WeaponStat tone="hp" filled={!!resolved}>
+                  {resolved?.hp ?? "-"}
                 </WeaponStat>
               </BaseStat>
               <BaseStat>
-                <WeaponStat tone="atk" filled={!!weaponDef}>
-                  {weaponDef?.defaultAtk ?? "-"}
+                <WeaponStat tone="atk" filled={!!resolved}>
+                  {resolved?.atk ?? "-"}
                 </WeaponStat>
               </BaseStat>
               <BaseStat>
@@ -368,19 +368,19 @@ export function Card({
                 </WeaponStat>
               </BaseStat>
             </div>
-            {weapon && weaponDef
-              ? weaponDef.rows.map((row, i) => (
+            {resolved
+              ? resolved.slots.map((slot, i) => (
                   <TraitRow
                     size="lg"
-                    flush={i === weaponDef.rows.length - 1}
+                    flush={i === resolved.slots.length - 1}
                     key={i}
                   >
                     <Icon sm />
                     <span>
-                      {row.options ? (
+                      {slot.kind === "pool" ? (
                         <>
-                          {weapon.rotatedTrait ? (
-                            traitName(weapon.rotatedTrait)
+                          {slot.trait ? (
+                            traitName(slot.trait)
                           ) : (
                             <span className="text-dim">-</span>
                           )}{" "}
@@ -390,10 +390,10 @@ export function Card({
                           />
                         </>
                       ) : (
-                        traitName(row.trait)
+                        traitName(slot.trait)
                       )}
                     </span>
-                    <Lvl>T.Lvl {padLevel(row.level)}</Lvl>
+                    <Lvl>T.Lvl {padLevel(slot.level)}</Lvl>
                   </TraitRow>
                 ))
               : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (

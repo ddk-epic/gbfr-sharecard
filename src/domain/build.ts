@@ -8,7 +8,6 @@ export type CharacterId = string & { readonly brand: unique symbol };
 
 export type SkillId = string;
 export type TraitId = string;
-export type WeaponId = string;
 export type SummonId = string;
 export type BonusTypeId = string;
 export type StyleId = "insight" | "essence" | "crux";
@@ -42,12 +41,12 @@ export type Build = {
 
 export type OverMasteryLine = { bonusType: BonusTypeId; value: number };
 
-/** ATK and HP come from the catalog; crit and stun have no catalog source. */
+/** series is the (character x series) cell id. ATK/HP and slots come from the catalog; crit/stun don't. */
 export type Weapon = {
-  weaponId: WeaponId;
+  series: string;
   critRate: number;
   stun: number;
-  rotatedTrait: TraitId | null; // Terminus slot-2 choice
+  rotations: (TraitId | null)[]; // one per slot; null = default/fixed
 };
 
 /** Trait-based (the sigil item is never named); one level credits both traits. */

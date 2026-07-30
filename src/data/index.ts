@@ -4,10 +4,12 @@ import type {
   BonusTypeDef,
   Character,
   CharacterCatalog,
+  ResolvedWeapon,
   SummonDef,
   SummonEquipTiers,
   TraitDef,
-  WeaponDef,
+  WeaponLevels,
+  WeaponSeries,
   WrightstonePrefixMap,
 } from "../domain/catalog";
 import type {
@@ -15,21 +17,29 @@ import type {
   CharacterId,
   SummonId,
   TraitId,
+  Weapon,
 } from "../domain/build";
 import charactersJson from "./characters.json";
 import traitsJson from "./traits.json";
 import bonusTypesJson from "./bonus-types.json";
 import summonsJson from "./summons.json";
 import summonEquipTiersJson from "./summon-equip-tiers.json";
-import weaponsJson from "./weapons.json";
+import weaponSeriesJson from "./weapon-series.json";
+import weaponLevelsJson from "./weapon-levels.json";
 import wrightstonePrefixesJson from "./wrightstone-prefixes.json";
 import ioJson from "./characters/io.json";
+
+/** T7 index into a slot's level sequence. */
+const MAX_RUNG = 7;
+/** Terminus HP does not take the character offset - it is flat for everyone. */
+const HP_FLAT_SERIES = "terminus";
 
 export const CHARACTERS = charactersJson as Character[];
 export const TRAITS = traitsJson as TraitDef[];
 export const BONUS_TYPES = bonusTypesJson as BonusTypeDef[];
 export const SUMMONS = summonsJson as SummonDef[];
-export const WEAPONS = weaponsJson as WeaponDef[];
+export const WEAPON_SERIES = weaponSeriesJson as WeaponSeries[];
+export const WEAPON_LEVELS = weaponLevelsJson as WeaponLevels;
 export const WRIGHTSTONE_PREFIXES =
   wrightstonePrefixesJson as WrightstonePrefixMap;
 export const SUMMON_EQUIP_TIERS = summonEquipTiersJson as SummonEquipTiers;
@@ -38,7 +48,7 @@ export const characterById = new Map(CHARACTERS.map((c) => [c.id, c]));
 export const traitById = new Map(TRAITS.map((t) => [t.id, t]));
 export const bonusTypeById = new Map(BONUS_TYPES.map((b) => [b.id, b]));
 export const summonById = new Map(SUMMONS.map((s) => [s.id, s]));
-export const weaponById = new Map(WEAPONS.map((w) => [w.id, w]));
+export const weaponSeriesById = new Map(WEAPON_SERIES.map((s) => [s.id, s]));
 
 export const traitName = (id: TraitId | null | undefined) =>
   id ? (traitById.get(id)?.name ?? id) : "";
@@ -77,10 +87,60 @@ export const summonEquipTiers = (
   return SUMMON_EQUIP_TIERS[summon.equipTier][bonusType] ?? [];
 };
 
-const io = ioJson as CharacterCatalog;
+// io.json lacks styleNames/perkThresholds; cast through unknown.
+const io = ioJson as unknown as CharacterCatalog;
 
 /** Only Io has a catalog so far; the lookup shape is ready for the roster. */
 export function characterCatalog(id: CharacterId): CharacterCatalog {
   if (id !== "io") throw new Error(`no catalog for character: ${id}`);
   return io;
+}
+
+/** The weapons a character owns, in canonical series order, for the selector. */
+export function characterWeaponOptions(
+  id: CharacterId,
+): { series: string; name: string }[] {
+  const { weapons } = characterCatalog(id);
+  return WEAPON_SERIES.filter((s) => weapons[s.id]).map((s) => {
+    const entry = weapons[s.id];
+    return { series: s.id, name: entry.awakened ?? entry.name };
+  });
+}
+
+/** HP is series.hp + weaponHpOffset, except Terminus, which is flat. Null if unowned. */
+export function resolveWeapon(
+  id: CharacterId,
+  weapon: Weapon,
+): ResolvedWeapon | null {
+  const cat = characterCatalog(id);
+  const series = weaponSeriesById.get(weapon.series);
+  const entry = cat.weapons[weapon.series];
+  if (!series || !entry) return null;
+
+  const slots = series.slots.map((slot, i) => {
+    const level = WEAPON_LEVELS[slot.levels]?.[MAX_RUNG] ?? 0;
+    if (slot.trait) {
+      return { kind: "fixed" as const, trait: slot.trait, pool: [], level };
+    }
+    const pool = (slot.pool ?? [])
+      .map((t) => (t === "@signature" ? cat.weaponSignatureTrait : t))
+      .filter((t): t is TraitId => t !== undefined);
+    return {
+      kind: "pool" as const,
+      trait: weapon.rotations[i] ?? null,
+      pool,
+      level,
+    };
+  });
+
+  return {
+    name: entry.awakened ?? entry.name,
+    seriesName: series.name,
+    atk: series.atk,
+    hp:
+      weapon.series === HP_FLAT_SERIES
+        ? series.hp
+        : series.hp + cat.weaponHpOffset,
+    slots,
+  };
 }

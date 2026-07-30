@@ -1,0 +1,267 @@
+[
+  {
+    "id": "defender",
+    "name": "Defender",
+    "atk": 9201,
+    "hp": 4302,
+    "slots": [
+      {
+        "levels": "slot1",
+        "trait": "hp"
+      },
+      {
+        "levels": "slot2",
+        "pool": [
+          "garrison",
+          "regen",
+          "greater-aegis",
+          "stronghold",
+          "improved-guard",
+          "burn-resistance",
+          "poison-resistance",
+          "dizzy-resistance",
+          "blight-resistance"
+        ]
+      },
+      {
+        "levels": "slot3",
+        "trait": "dmg-cap-ecru"
+      },
+      {
+        "levels": "slot4",
+        "pool": [
+          "regen",
+          "garrison",
+          "greater-aegis",
+          "stronghold",
+          "improved-guard",
+          "burn-resistance",
+          "poison-resistance",
+          "dizzy-resistance",
+          "blight-resistance"
+        ]
+      },
+      {
+        "levels": "slot5",
+        "trait": "unbound-exertion"
+      }
+    ]
+  },
+  {
+    "id": "stunner",
+    "name": "Stunner",
+    "atk": 19858,
+    "hp": 3786,
+    "slots": [
+      {
+        "levels": "slot1",
+        "trait": "stun-power"
+      },
+      {
+        "levels": "slot2",
+        "pool": [
+          "linked-together",
+          "stamina",
+          "aegis",
+          "guard-payback",
+          "sandtomb-resistance",
+          "paralysis-resistance",
+          "sba-sealed-resistance",
+          "held-under-resistance"
+        ]
+      },
+      {
+        "levels": "slot3",
+        "trait": "dmg-cap-sage"
+      },
+      {
+        "levels": "slot4",
+        "pool": [
+          "potion-hoarder",
+          "linked-together",
+          "stamina",
+          "aegis",
+          "guard-payback",
+          "sandtomb-resistance",
+          "paralysis-resistance",
+          "sba-sealed-resistance",
+          "held-under-resistance"
+        ]
+      },
+      {
+        "levels": "slot5",
+        "trait": "unbound-exertion"
+      }
+    ]
+  },
+  {
+    "id": "stinger",
+    "name": "Stinger",
+    "atk": 19497,
+    "hp": 3269,
+    "slots": [
+      {
+        "levels": "slot1",
+        "trait": "critical-hit-rate"
+      },
+      {
+        "levels": "slot2",
+        "pool": [
+          "critical-hit-dmg",
+          "life-on-the-line",
+          "dodge-payback",
+          "overdrive-assassin",
+          "firm-stance",
+          "slow-resistance",
+          "skill-sealed-resistance",
+          "darkflame-resistance"
+        ]
+      },
+      {
+        "levels": "slot3",
+        "trait": "dmg-cap-cobalt"
+      },
+      {
+        "levels": "slot4",
+        "pool": [
+          "guts",
+          "critical-hit-dmg",
+          "life-on-the-line",
+          "dodge-payback",
+          "overdrive-assassin",
+          "firm-stance",
+          "slow-resistance",
+          "skill-sealed-resistance",
+          "darkflame-resistance"
+        ]
+      },
+      {
+        "levels": "slot5",
+        "trait": "unbound-technique"
+      }
+    ]
+  },
+  {
+    "id": "executioner",
+    "name": "Executioner",
+    "atk": 20518,
+    "hp": 3097,
+    "slots": [
+      {
+        "levels": "slot1",
+        "trait": "weak-point-dmg"
+      },
+      {
+        "levels": "slot2",
+        "pool": [
+          "break-assassin",
+          "quick-cooldown",
+          "nimble-onslaught",
+          "uplift",
+          "glaciate-resistance",
+          "atk-resistance",
+          "def-resistance"
+        ]
+      },
+      {
+        "levels": "slot3",
+        "trait": "dmg-cap-cardinal"
+      },
+      {
+        "levels": "slot4",
+        "pool": [
+          "autorevive",
+          "break-assassin",
+          "quick-cooldown",
+          "nimble-onslaught",
+          "uplift",
+          "cascade",
+          "glaciate-resistance",
+          "atk-resistance",
+          "def-resistance"
+        ]
+      },
+      {
+        "levels": "slot5",
+        "trait": "unbound-technique"
+      }
+    ]
+  },
+  {
+    "id": "ascension",
+    "name": "Ascension",
+    "atk": 19711,
+    "hp": 4478,
+    "slots": [
+      {
+        "levels": "slot1",
+        "trait": "atk"
+      },
+      {
+        "levels": "slot2",
+        "pool": [
+          "hp",
+          "critical-hit-rate",
+          "stun-power",
+          "linked-together",
+          "drain",
+          "precise-wrath",
+          "precise-resilience",
+          "supplementary-dmg",
+          "@signature"
+        ]
+      },
+      {
+        "levels": "slot3-ascension",
+        "pool": ["supernova", "dmg-cap"]
+      },
+      {
+        "levels": "slot4-ascension",
+        "trait": "sigil-booster"
+      },
+      {
+        "levels": "slot5",
+        "trait": "unbound-strike"
+      }
+    ]
+  },
+  {
+    "id": "terminus",
+    "name": "Terminus",
+    "atk": 20583,
+    "hp": 1159,
+    "slots": [
+      {
+        "levels": "slot1",
+        "trait": "catastrophe-nova"
+      },
+      {
+        "levels": "slot2",
+        "pool": [
+          "regen",
+          "stamina",
+          "enmity",
+          "tyranny",
+          "nimble-defense",
+          "guard-payback",
+          "drain",
+          "glass-cannon",
+          "overdrive-assassin",
+          "@signature"
+        ]
+      },
+      {
+        "levels": "slot3-ascension",
+        "trait": "dmg-cap"
+      },
+      {
+        "levels": "slot4-terminus",
+        "trait": "sigil-booster"
+      },
+      {
+        "levels": "slot5-terminus",
+        "trait": "unbound-master"
+      }
+    ]
+  }
+]

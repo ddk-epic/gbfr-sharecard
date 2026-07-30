@@ -10,8 +10,8 @@ import {
   TRAITS,
   traitById,
   traitName,
-  WEAPONS,
-  weaponById,
+  characterWeaponOptions,
+  resolveWeapon,
   wrightstoneName,
 } from "../../data";
 import { IdentityCol } from "./IdentityCol";
@@ -77,33 +77,46 @@ export function GearPage({ build, onChange }: PageProps) {
 
 function WeaponPanel({ build, onChange }: PageProps) {
   const weapon = build.weapon;
-  const weaponDef = weapon ? weaponById.get(weapon.weaponId) : undefined;
+  const resolved = weapon
+    ? resolveWeapon(build.characterId, weapon)
+    : undefined;
   const setWeapon = (next: Weapon | null) =>
     onChange({ ...build, weapon: next });
+  const setRotation = (i: number, trait: TraitId | null) =>
+    weapon &&
+    setWeapon({
+      ...weapon,
+      rotations: weapon.rotations.map((r, j) => (j === i ? trait : r)),
+    });
 
   return (
     <Wpanel fill>
       <div className="flex items-baseline gap-2">
         <Select
           className="flex-1 text-[17px] font-bold"
-          value={weapon?.weaponId ?? ""}
-          onChange={(weaponId) =>
+          value={weapon?.series ?? ""}
+          onChange={(series) =>
             setWeapon(
-              weaponId
-                ? { weaponId, critRate: 0, stun: 0, rotatedTrait: null }
+              series
+                ? {
+                    series,
+                    critRate: 0,
+                    stun: 0,
+                    rotations: Array(WEAPON_TRAIT_ROWS).fill(null),
+                  }
                 : null,
             )
           }
         >
           <option value="">- weapon -</option>
-          {WEAPONS.map((w) => (
-            <option key={w.id} value={w.id}>
+          {characterWeaponOptions(build.characterId).map((w) => (
+            <option key={w.series} value={w.series}>
               {w.name}
             </option>
           ))}
         </Select>
         <span className="text-dim text-[12px] whitespace-nowrap">
-          {weaponDef?.series ?? "-"} · Lv.{WEAPON_LEVEL}
+          {resolved?.seriesName ?? "-"} · Lv.{WEAPON_LEVEL}
         </span>
       </div>
       {/* placeholder until per-weapon art exists */}
@@ -111,20 +124,20 @@ function WeaponPanel({ build, onChange }: PageProps) {
       <div className="mt-1 mb-1.5 flex items-baseline gap-1 text-[12.5px]">
         <BaseStat>
           <Lvl
-            tone={weaponDef ? "value" : "dim"}
+            tone={resolved ? "value" : "dim"}
             size="gear"
             className={VALUE_CELL}
           >
-            {weaponDef?.defaultHp ?? "-"}
+            {resolved?.hp ?? "-"}
           </Lvl>
         </BaseStat>
         <BaseStat>
           <Lvl
-            tone={weaponDef ? "value" : "dim"}
+            tone={resolved ? "value" : "dim"}
             size="gear"
             className={VALUE_CELL}
           >
-            {weaponDef?.defaultAtk ?? "-"}
+            {resolved?.atk ?? "-"}
           </Lvl>
         </BaseStat>
         <BaseStat>
@@ -157,19 +170,17 @@ function WeaponPanel({ build, onChange }: PageProps) {
           )}
         </BaseStat>
       </div>
-      {weaponDef && weapon
-        ? weaponDef.rows.map((row, i) => (
+      {resolved
+        ? resolved.slots.map((slot, i) => (
             <TraitRow key={i}>
               <Icon sm />
-              {row.options ? (
+              {slot.kind === "pool" ? (
                 <span className="flex min-w-0 items-center gap-1.5">
                   <TraitSelect
                     className="min-w-0 flex-1"
-                    value={weapon.rotatedTrait}
-                    pool={traitPool(row.options)}
-                    onChange={(rotatedTrait) =>
-                      setWeapon({ ...weapon, rotatedTrait })
-                    }
+                    value={slot.trait}
+                    pool={traitPool(slot.pool)}
+                    onChange={(trait) => setRotation(i, trait)}
                   />
                   <ArrowLeftRight
                     className="text-essence align-[-0.12em]"
@@ -177,9 +188,9 @@ function WeaponPanel({ build, onChange }: PageProps) {
                   />
                 </span>
               ) : (
-                <span>{traitName(row.trait)}</span>
+                <span>{traitName(slot.trait)}</span>
               )}
-              <Lvl>T.Lvl {padLevel(row.level)}</Lvl>
+              <Lvl>T.Lvl {padLevel(slot.level)}</Lvl>
             </TraitRow>
           ))
         : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
