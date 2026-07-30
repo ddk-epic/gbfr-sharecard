@@ -1,7 +1,9 @@
-import { Fragment, useRef, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useRef, useState, type ReactNode } from "react";
 import { Check, ChevronLeft, Copy, Download } from "lucide-react";
 import type { Build } from "../domain/build";
-import { Card } from "../card/Card";
+import { Card, type Strain } from "../card/Card";
+import { CARD_LAYOUT, type CardLayout } from "../card/layout";
+import { Tuner } from "../card/Tuner";
 import { canCopy, copyCard, downloadCard } from "../card/export";
 import { BackButton, Cta, Heading, Panel } from "../ui";
 
@@ -52,6 +54,18 @@ export function CardScreen({
   const cardRef = useRef<HTMLDivElement>(null);
   const [copyLabel, setCopyLabel] = useState<ReactNode>(COPY_IDLE);
   const [downloadLabel, setDownloadLabel] = useState<ReactNode>(DOWNLOAD_IDLE);
+
+  // Dev-only layout tuning. The card renders from `layout` either way, so there
+  // is no second code path for the tuned card to drift from.
+  const [layout, setLayout] = useState<CardLayout>(CARD_LAYOUT);
+  const [strain, setStrain] = useState(false);
+  const [counts, setCounts] = useState<Strain>({
+    clipped: 0,
+    shrunk: 0,
+    overflow: 0,
+    artPx: 0,
+  });
+  const onStrain = useCallback((next: Strain) => setCounts(next), []);
 
   // Locking the measured width keeps the longer done-state from shifting layout.
   const flashLabel = (
@@ -109,7 +123,12 @@ export function CardScreen({
           <div className="relative h-[669.6px] w-[1190.4px] overflow-hidden rounded-lg shadow-[0_4px_24px_rgba(23,60,90,0.25)]">
             <div className="origin-top-left scale-[0.62]">
               <div ref={cardRef}>
-                <Card build={build} />
+                <Card
+                  build={build}
+                  layout={layout}
+                  strain={strain}
+                  onStrain={onStrain}
+                />
               </div>
             </div>
           </div>
@@ -149,6 +168,15 @@ export function CardScreen({
           GitHub
         </a>
       </div>
+      {import.meta.env.DEV && (
+        <Tuner
+          layout={layout}
+          onChange={setLayout}
+          strain={strain}
+          onStrainToggle={setStrain}
+          counts={counts}
+        />
+      )}
     </>
   );
 }
