@@ -24,7 +24,7 @@
     "portrait": "portraits/katalina.webp",
     "portraitY": 20,
     "element": "Water",
-    "enabled": false
+    "enabled": true
   },
   {
     "id": "rackam",
@@ -33,7 +33,7 @@
     "portrait": "portraits/rackam.webp",
     "portraitY": 20,
     "element": "Fire",
-    "enabled": false
+    "enabled": true
   },
   {
     "id": "io",
@@ -114,7 +114,7 @@
     "portrait": "portraits/charlotta.webp",
     "portraitY": 20,
     "element": "Light",
-    "enabled": false
+    "enabled": true
   },
   {
     "id": "yodarha",
@@ -132,7 +132,7 @@
     "portrait": "portraits/narmaya.webp",
     "portraitY": 20,
     "element": "Dark",
-    "enabled": false
+    "enabled": true
   },
   {
     "id": "ghandagoza",
@@ -168,7 +168,7 @@
     "portrait": "portraits/cagliostro.webp",
     "portraitY": 20,
     "element": "Earth",
-    "enabled": false
+    "enabled": true
   },
   {
     "id": "id",

@@ -97,16 +97,19 @@ export type MasterTraitCell = {
   description: string;
 };
 
+/** `title` is the character-specific half of the style's in-game heading
+ *  ("Insight: Pure Concentration"). */
 export type MasterTraitSections = Record<
   StyleId,
-  Record<StyleRank, MasterTraitCell[]>
+  { title: string } & Record<StyleRank, MasterTraitCell[]>
 >;
+
+/** Selection counts activating style perks 1..3 */
+export const PERK_THRESHOLDS: number[] = [3, 6, 6];
 
 export type CharacterCatalog = {
   id: string;
   skills: { id: SkillId; name: string }[];
-  styleNames: Record<StyleId, string>; // display names, e.g. "Insight"
-  perkThresholds: number[]; // per-style selection counts activating perks 1..3
   masterTraits: MasterTraitSections;
   weapons: Record<string, WeaponEntry>; // keyed by series-row id, the character's owned series
   weaponHpOffset: number; // added to series.hp; one integer per character (Terminus exempt)

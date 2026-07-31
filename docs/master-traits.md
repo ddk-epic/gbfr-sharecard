@@ -207,6 +207,18 @@ Cell icons come from the `common_icon_lb` / `common_icon_lb02` atlases, keyed by
 Both are moot while mastery icons are not shipped, but they decide whether a
 full icon set is even reachable if a visual ticket wants one.
 
+## Each style has a per-character title
+
+The in-game header above a style's grid reads "`<word>: <title>`" - e.g. Io's
+Insight page is headed "Insight: Pure Concentration". The leading word
+(Insight/Essence/Crux) is universal, the same for every character; it is
+read off the screenshot's header, the same way the cells themselves are
+transcribed.
+
+The catalog stores only the title half, on the style object itself
+(`masterTraits.<style>.title`) - the word is never repeated in data since
+it's already the object's key. Rendering composes the two.
+
 ## What this project uses
 
 **Master-trait data is hand-authored and stays that way.** It is transcribed

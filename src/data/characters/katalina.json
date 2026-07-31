@@ -1,7 +1,28 @@
 {
   "id": "katalina",
+  "skills": [
+    { "id": "enchanted-lands", "name": "Enchanted Lands" },
+    { "id": "winters-rain", "name": "Winter's Rain" },
+    { "id": "heal", "name": "Heal" },
+    { "id": "sacred-winds", "name": "Sacred Winds" },
+    { "id": "azure-sword", "name": "Azure Sword" },
+    { "id": "light-wall", "name": "Light Wall" },
+    { "id": "frozen-blade", "name": "Frozen Blade" },
+    { "id": "emerald-shield", "name": "Emerald Shield" }
+  ],
+  "weapons": {
+    "defender": { "name": "Rukalsa" },
+    "stunner": { "name": "Flame Rapier" },
+    "stinger": { "name": "Luminiera Sword Omega" },
+    "executioner": { "name": "Ephemeron" },
+    "ascension": { "name": "Murgleis", "awakened": "Murgleis, the Azure Oath" },
+    "terminus": { "name": "Blutgang", "awakened": "Blutgang, Blade of Refuge" }
+  },
+  "weaponHpOffset": -56,
+  "weaponSignatureTrait": "combo-booster",
   "masterTraits": {
     "insight": {
+      "title": "Forever Ares",
       "r1": [
         { "id": "insight.r1.1", "label": "Ares summoned: ATK +10%", "description": "While Ares is summoned: ATK +10%" },
         { "id": "insight.r1.2", "label": "Blades of Frost ATK +20%", "description": "Blades of Frost: ATK +20%" },
@@ -42,6 +63,7 @@
       ]
     },
     "essence": {
+      "title": "Army of Two",
       "r1": [
         { "id": "essence.r1.1", "label": "Ares summoned: ATK +10%", "description": "While Ares is summoned: ATK +10%" },
         { "id": "essence.r1.2", "label": "Ares summons: DEF +10% max", "description": "Boosts DEF by a max of +10% based on the number of times Ares has been summoned during the quest" },
@@ -82,6 +104,7 @@
       ]
     },
     "crux": {
+      "title": "Blade Blue",
       "r1": [
         { "id": "crux.r1.1", "label": "Ares summoned: DMG Cap +25%", "description": "While Ares is summoned: DMG Cap +25%" },
         { "id": "crux.r1.2", "label": "Blades of Frost ATK +20%", "description": "Blades of Frost: ATK +20%" },

@@ -1,7 +1,28 @@
 {
   "id": "cagliostro",
+  "skills": [
+    { "id": "mimic-doll", "name": "Mimic Doll" },
+    { "id": "mehen", "name": "Mehen" },
+    { "id": "phantasmagoria", "name": "Phantasmagoria" },
+    { "id": "reinforce", "name": "Reinforce" },
+    { "id": "disruption", "name": "Disruption" },
+    { "id": "rhizomata", "name": "Rhizomata" },
+    { "id": "alexandria", "name": "Alexandria" },
+    { "id": "pain-train", "name": "Pain Train" }
+  ],
+  "weapons": {
+    "defender": { "name": "Magnum Opus" },
+    "stunner": { "name": "Dream Atlas" },
+    "stinger": { "name": "Sacred Codex" },
+    "executioner": { "name": "Arshivelle" },
+    "ascension": { "name": "Transmigration Tome", "awakened": "Transmigration Tome, Infinity" },
+    "terminus": { "name": "Zosimos", "awakened": "Zosimos, the Unabridged Truth" }
+  },
+  "weaponHpOffset": -34,
+  "weaponSignatureTrait": "combo-finisher-dmg",
   "masterTraits": {
     "insight": {
+      "title": "Crippling Combos",
       "r1": [
         { "id": "insight.r1.1", "label": "Charge Time -5%", "description": "Charged Attacks: Charge Time -5%" },
         { "id": "insight.r1.2", "label": "Combo Finishers ATK +10%", "description": "Combo Finishers: ATK +10%" },
@@ -42,6 +63,7 @@
       ]
     },
     "essence": {
+      "title": "Super Collapse",
       "r1": [
         { "id": "essence.r1.1", "label": "Charged ATK +10%", "description": "Charged Attacks: ATK +10%" },
         { "id": "essence.r1.2", "label": "Charged DMG Cap +35%", "description": "Charged Attacks: DMG Cap +35%" },
@@ -82,6 +104,7 @@
       ]
     },
     "crux": {
+      "title": "Alchemedic",
       "r1": [
         { "id": "crux.r1.1", "label": "Skill CD -2%", "description": "Skill Cooldown -2%" },
         { "id": "crux.r1.2", "label": "(I) Shield Str +3k", "description": "Crux Rank I: Shield Strength +3000" },

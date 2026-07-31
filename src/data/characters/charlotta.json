@@ -1,7 +1,28 @@
 {
   "id": "charlotta",
+  "skills": [
+    { "id": "konigsschild", "name": "Königsschild" },
+    { "id": "shining-onslaught", "name": "Shining Onslaught" },
+    { "id": "rising-cut", "name": "Rising Cut" },
+    { "id": "valiant-stance", "name": "Valiant Stance" },
+    { "id": "sacred-charge", "name": "Sacred Charge" },
+    { "id": "invincible", "name": "Invincible" },
+    { "id": "sword-of-lumiel", "name": "Sword of Lumiel" },
+    { "id": "holy-ladder", "name": "Holy Ladder" }
+  ],
+  "weapons": {
+    "defender": { "name": "Claíomh Solais" },
+    "stunner": { "name": "Arondight" },
+    "stinger": { "name": "Ushumgal" },
+    "executioner": { "name": "Sahrivar" },
+    "ascension": { "name": "Claidheamh Soluis", "awakened": "Claidheamh Soluis, the Radiant" },
+    "terminus": { "name": "Galatine", "awakened": "Galatine, Trinity's Wrath" }
+  },
+  "weaponHpOffset": -6,
+  "weaponSignatureTrait": "combo-booster",
   "masterTraits": {
     "insight": {
+      "title": "Noblest Stance",
       "r1": [
         { "id": "insight.r1.1", "label": "Attacks ATK +10%", "description": "Attacks: ATK +10%" },
         { "id": "insight.r1.2", "label": "Skill CD -2%", "description": "All of Charlotta's skills gain Skill Cooldown -2%." },
@@ -42,6 +63,7 @@
       ]
     },
     "essence": {
+      "title": "Charge!",
       "r1": [
         { "id": "essence.r1.1", "label": "Charged block: Combo Finisher ATK +10%", "description": "Upon blocking with a Charged attack: Combo Finisher ATK +10%" },
         { "id": "essence.r1.2", "label": "Charged block: Shield 1k", "description": "Upon blocking with a Charged attack: Gain Shield (1000)" },
@@ -82,6 +104,7 @@
       ]
     },
     "crux": {
+      "title": "I Am Invincible",
       "r1": [
         { "id": "crux.r1.1", "label": "Skill CD -3%", "description": "All of Charlotta's skills gain Skill Cooldown -3%." },
         { "id": "crux.r1.2", "label": "Invincibility: ATK +10%", "description": "While buffed by Invincibility: ATK +10%" },

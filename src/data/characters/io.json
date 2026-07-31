@@ -1,14 +1,14 @@
 {
   "id": "io",
   "skills": [
-    { "id": "freeze", "name": "Freeze" },
-    { "id": "fire", "name": "Fire" },
-    { "id": "flowery-seven", "name": "Flowery Seven" },
-    { "id": "gravity-well", "name": "Gravity Well" },
-    { "id": "concentration", "name": "Concentration" },
     { "id": "healing-winds", "name": "Healing Winds" },
-    { "id": "mystic-vortex", "name": "Mystic Vortex" },
-    { "id": "lightning", "name": "Lightning" }
+    { "id": "freeze", "name": "Freeze" },
+    { "id": "lightning", "name": "Lightning" },
+    { "id": "gravity-well", "name": "Gravity Well" },
+    { "id": "fire", "name": "Fire" },
+    { "id": "concentration", "name": "Concentration" },
+    { "id": "flowery-seven", "name": "Flowery Seven" },
+    { "id": "mystic-vortex", "name": "Mystic Vortex" }
   ],
   "weapons": {
     "defender": { "name": "Little Witch Scepter" },
@@ -22,6 +22,7 @@
   "weaponSignatureTrait": "charged-attack-dmg",
   "masterTraits": {
     "insight": {
+      "title": "Pure Concentration",
       "r1": [
         { "id": "insight.r1.1", "label": "Charge Time -5%", "description": "Charged Attacks: Charge Time -5%" },
         { "id": "insight.r1.2", "label": "Charged DMG Cap +35%", "description": "Charged Attacks: DMG Cap +35%" },
@@ -62,6 +63,7 @@
       ]
     },
     "essence": {
+      "title": "Magic Chain",
       "r1": [
         { "id": "essence.r1.1", "label": "Skill CD -2%", "description": "Skill Cooldown -2%" },
         { "id": "essence.r1.2", "label": "Charged DMG Cap +35%", "description": "Charged Attacks: DMG Cap +35%" },
@@ -102,6 +104,7 @@
       ]
     },
     "crux": {
+      "title": "Flowery Seven Overload",
       "r1": [
         { "id": "crux.r1.1", "label": "Charge Time -5%", "description": "Charged Attacks: Charge Time -5%" },
         { "id": "crux.r1.2", "label": "Charged ATK +10%", "description": "Charged Attacks: ATK +10%" },

@@ -6,6 +6,7 @@ import {
   stylePerkStates,
   styleRankBudgetSpent,
 } from "../../domain/derive";
+import { PERK_THRESHOLDS } from "../../domain/catalog";
 import { characterCatalog } from "../../data";
 import type { PageProps } from "./controls";
 import { Heading, Icon } from "../../ui";
@@ -14,6 +15,12 @@ const STYLE_BORDER: Record<StyleId, string> = {
   insight: "border-t-insight",
   essence: "border-t-essence",
   crux: "border-t-crux",
+};
+
+const STYLE_LABEL: Record<StyleId, string> = {
+  insight: "Insight",
+  essence: "Essence",
+  crux: "Crux",
 };
 
 const STYLE_RANK_LABELS: Record<StyleRank, string> = {
@@ -29,10 +36,10 @@ const OPT =
 export function MasterTraitsPage({ build, onChange }: PageProps) {
   const catalog = characterCatalog(build.characterId);
   const rankSpent = styleRankBudgetSpent(build.masterTraits);
-  const perks = stylePerkStates(build.masterTraits, catalog.perkThresholds);
+  const perks = stylePerkStates(build.masterTraits, PERK_THRESHOLDS);
   const perkSummary = STYLES.map((style) => {
     const highest = perks[style].lastIndexOf(true) + 1;
-    return `${catalog.styleNames[style]} Perk ${highest}`;
+    return `${STYLE_LABEL[style]}: ${catalog.masterTraits[style].title} Perk ${highest}`;
   }).join(" · ");
 
   const toggleCell = (style: StyleId, rank: StyleRank, id: CellId) => {
@@ -79,7 +86,7 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
               key={style}
             >
               <h4 className="text-[17.5px] text-white [text-shadow:0_1px_3px_rgba(10,50,70,0.55)]">
-                {catalog.styleNames[style]}
+                {STYLE_LABEL[style]}: {catalog.masterTraits[style].title}
               </h4>
               {RANKS.map((rank) => (
                 <div key={rank} className="flex flex-col gap-1.75">

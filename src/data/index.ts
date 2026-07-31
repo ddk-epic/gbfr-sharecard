@@ -28,6 +28,11 @@ import weaponSeriesJson from "./weapon-series.json";
 import weaponLevelsJson from "./weapon-levels.json";
 import wrightstonePrefixesJson from "./wrightstone-prefixes.json";
 import ioJson from "./characters/io.json";
+import katalinaJson from "./characters/katalina.json";
+import narmayaJson from "./characters/narmaya.json";
+import cagliostroJson from "./characters/cagliostro.json";
+import rackamJson from "./characters/rackam.json";
+import charlottaJson from "./characters/charlotta.json";
 
 /** T7 index into a slot's level sequence. */
 const MAX_RUNG = 7;
@@ -87,13 +92,19 @@ export const summonEquipTiers = (
   return SUMMON_EQUIP_TIERS[summon.equipTier][bonusType] ?? [];
 };
 
-// io.json lacks styleNames/perkThresholds; cast through unknown.
-const io = ioJson as unknown as CharacterCatalog;
+const CATALOGS = {
+  io: ioJson,
+  katalina: katalinaJson,
+  narmaya: narmayaJson,
+  cagliostro: cagliostroJson,
+  rackam: rackamJson,
+  charlotta: charlottaJson,
+} as unknown as Record<string, CharacterCatalog>;
 
-/** Only Io has a catalog so far; the lookup shape is ready for the roster. */
 export function characterCatalog(id: CharacterId): CharacterCatalog {
-  if (id !== "io") throw new Error(`no catalog for character: ${id}`);
-  return io;
+  const catalog = CATALOGS[id];
+  if (!catalog) throw new Error(`no catalog for character: ${id}`);
+  return catalog;
 }
 
 /** The weapons a character owns, in canonical series order, for the selector. */

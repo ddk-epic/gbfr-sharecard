@@ -1,7 +1,28 @@
 {
   "id": "narmaya",
+  "skills": [
+    { "id": "kyokasuigetsu", "name": "Kyokasuigetsu" },
+    { "id": "setsuna", "name": "Setsuna" },
+    { "id": "apex-of-nothingness", "name": "Apex of Nothingness" },
+    { "id": "crescent-moon", "name": "Crescent Moon" },
+    { "id": "transient", "name": "Transient" },
+    { "id": "dance-of-pink-petals", "name": "Dance of Pink Petals" },
+    { "id": "dance-of-blue-petals", "name": "Dance of Blue Petals" },
+    { "id": "utter-devotion", "name": "Utter Devotion" }
+  ],
+  "weapons": {
+    "defender": { "name": "Nakamaki Nodachi" },
+    "stunner": { "name": "Kotetsu" },
+    "stinger": { "name": "Fluorithium Blade" },
+    "executioner": { "name": "Blade of Purification" },
+    "ascension": { "name": "Venustas", "awakened": "Venustas, the Sacred Gift" },
+    "terminus": { "name": "Ameno Habakiri", "awakened": "Ameno Habakiri, the Beheader" }
+  },
+  "weaponHpOffset": -18,
+  "weaponSignatureTrait": "skilled-assault",
   "masterTraits": {
     "insight": {
+      "title": "Paradigm Shift",
       "r1": [
         { "id": "insight.r1.1", "label": "Dawnfly: ATK +10%", "description": "While in Dawnfly stance: ATK +10%" },
         { "id": "insight.r1.2", "label": "Freeflutter: ATK +10%", "description": "While in Freeflutter stance: ATK +10%" },
@@ -42,6 +63,7 @@
       ]
     },
     "essence": {
+      "title": "One Cut, One Kill",
       "r1": [
         { "id": "essence.r1.1", "label": "Skill CD -1%", "description": "Skill Cooldown -1%" },
         { "id": "essence.r1.2", "label": "Butterfly 6: attacks drain HP", "description": "While at butterfly count 6: Narmaya's attacks drain HP" },
@@ -82,6 +104,7 @@
       ]
     },
     "crux": {
+      "title": "Devoted to Devotion",
       "r1": [
         { "id": "crux.r1.1", "label": "Hostility: ATK +10%", "description": "While buffed by Hostility: ATK +10%" },
         { "id": "crux.r1.2", "label": "Skill DMG Cap +35%", "description": "Skill DMG Cap +35%" },

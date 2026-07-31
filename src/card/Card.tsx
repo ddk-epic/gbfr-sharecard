@@ -9,6 +9,7 @@ import {
   WEAPON_TRAIT_ROWS,
 } from "../domain/build";
 import { STYLE_RANK_BUDGETS, stylePerkStates } from "../domain/derive";
+import { PERK_THRESHOLDS } from "../domain/catalog";
 import {
   bonusTypeById,
   bonusValueText,
@@ -48,6 +49,13 @@ const STYLE_BORDER: Record<StyleId, string> = {
   insight: "border-t-insight",
   essence: "border-t-essence",
   crux: "border-t-crux",
+};
+
+// Universal style word; masterTraits[style].title holds the per-character half.
+const STYLE_LABEL: Record<StyleId, string> = {
+  insight: "Insight",
+  essence: "Essence",
+  crux: "Crux",
 };
 
 const STYLE_RANK_LABELS: Record<StyleRank, string> = {
@@ -153,10 +161,10 @@ export function Card({
   const catalog = characterCatalog(build.characterId);
   const weapon = build.weapon;
   const resolved = weapon ? resolveWeapon(build.characterId, weapon) : null;
-  const perks = stylePerkStates(build.masterTraits, catalog.perkThresholds);
+  const perks = stylePerkStates(build.masterTraits, PERK_THRESHOLDS);
   const perkSummary = STYLES.map(
     (style) =>
-      `${catalog.styleNames[style]} Perk ${perks[style].lastIndexOf(true) + 1}`,
+      `${STYLE_LABEL[style]}: ${catalog.masterTraits[style].title} Perk ${perks[style].lastIndexOf(true) + 1}`,
   ).join(" · ");
   const skillNames = new Map(catalog.skills.map((s) => [s.id, s.name]));
   const wrightstoneRows = [
@@ -472,7 +480,7 @@ export function Card({
                   key={style}
                 >
                   <h4 className="flex-none text-[19.5px] font-bold text-white [text-shadow:0_1px_3px_rgba(10,50,70,0.55)]">
-                    {catalog.styleNames[style]}
+                    {STYLE_LABEL[style]}: {catalog.masterTraits[style].title}
                   </h4>
                   {RANKS.map((rank) => (
                     <Fragment key={rank}>

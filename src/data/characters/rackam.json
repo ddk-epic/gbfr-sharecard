@@ -1,7 +1,28 @@
 {
   "id": "rackam",
+  "skills": [
+    { "id": "spitfire", "name": "Spitfire" },
+    { "id": "bullet-hail", "name": "Bullet Hail" },
+    { "id": "double-tap", "name": "Double Tap" },
+    { "id": "duration", "name": "Duration" },
+    { "id": "coffinmaker", "name": "Coffinmaker" },
+    { "id": "wild-gunsmoke", "name": "Wild Gunsmoke" },
+    { "id": "slag-shot", "name": "Slag Shot" },
+    { "id": "collateral-damage", "name": "Collateral Damage" }
+  ],
+  "weapons": {
+    "defender": { "name": "Flintspike" },
+    "stunner": { "name": "Wheellock Axe" },
+    "stinger": { "name": "Tiamat Bolt Omega" },
+    "executioner": { "name": "Stormcloud" },
+    "ascension": { "name": "Benedia", "awakened": "Benedia, Azure Ammunition" },
+    "terminus": { "name": "Freikugel", "awakened": "Freikugel, the Purifier" }
+  },
+  "weaponHpOffset": -77,
+  "weaponSignatureTrait": "concentrated-fire",
   "masterTraits": {
     "insight": {
+      "title": "Precision Blasting",
       "r1": [
         { "id": "insight.r1.1", "label": "Heat Gauge Gain +10%", "description": "Heat Gauge Gain +10%" },
         { "id": "insight.r1.2", "label": "Bull's Eye Blast ATK +10%", "description": "Bull's Eye Blast: ATK +10%" },
@@ -42,6 +63,7 @@
       ]
     },
     "essence": {
+      "title": "Expert Coffinmaker",
       "r1": [
         { "id": "essence.r1.1", "label": "Attacks DMG Cap +20%", "description": "Attacks: DMG Cap +20%" },
         { "id": "essence.r1.2", "label": "Attacks Range increased", "description": "Attacks: Range increased. Penalty from firing beyond effective range decreased" },
@@ -82,6 +104,7 @@
       ]
     },
     "crux": {
+      "title": "Collateral Risk",
       "r1": [
         { "id": "crux.r1.1", "label": "Skill DMG Cap +35%", "description": "Skill DMG Cap +35%" },
         { "id": "crux.r1.2", "label": "Skill CD -2%", "description": "Skill Cooldown -2%" },

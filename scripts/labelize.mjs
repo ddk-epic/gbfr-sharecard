@@ -310,7 +310,8 @@ if (entryPoint && import.meta.url === pathToFileURL(entryPoint).href) {
       overridden = 0;
     const long = [];
     for (const ranks of Object.values(character.masterTraits))
-      for (const cells of Object.values(ranks))
+      for (const [key, cells] of Object.entries(ranks)) {
+        if (key === "title") continue;
         for (const cell of cells) {
           if (overrides[cell.id]) {
             cell.label = overrides[cell.id];
@@ -322,6 +323,7 @@ if (entryPoint && import.meta.url === pathToFileURL(entryPoint).href) {
           }
           if (cell.label.length > SOFT) long.push(cell.label);
         }
+      }
     if (!dry) await writeFile(path, serialize(character));
     console.log(
       `${file}: ${derived} derived, ${kept} kept, ${overridden} overridden${dry ? " (dry run)" : ""}`,
