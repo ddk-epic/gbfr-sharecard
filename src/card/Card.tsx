@@ -37,11 +37,13 @@ import {
 } from "./layout";
 import {
   BaseStat,
+  EmptyTraitIcon,
   Heading,
   Icon,
   Lvl,
   Orb,
   StatIcon,
+  TraitIcon,
   TraitRow,
   Wpanel,
 } from "../ui";
@@ -123,7 +125,7 @@ function Soft({ h, part }: { h: number; part: SoftPart }) {
 function EmptyTraitRow() {
   return (
     <TraitRow size="lg">
-      <Icon sm />
+      <EmptyTraitIcon />
       <span className="text-dim">-</span>
       <Lvl tone="dim">T.Lvl {padLevel("-")}</Lvl>
     </TraitRow>
@@ -400,7 +402,11 @@ export function Card({
                     flush={i === resolved.slots.length - 1}
                     key={i}
                   >
-                    <Icon sm />
+                    {slot.trait ? (
+                      <TraitIcon trait={slot.trait} />
+                    ) : (
+                      <EmptyTraitIcon />
+                    )}
                     <span>
                       {slot.kind === "pool" ? (
                         <>
@@ -431,7 +437,7 @@ export function Card({
             {wrightstoneRows.map((row, i) =>
               row ? (
                 <TraitRow size="lg" key={i}>
-                  <Icon sm />
+                  <TraitIcon trait={row.trait} />
                   <span>{traitName(row.trait)}</span>
                   <Lvl>T.Lvl {padLevel(row.level)}</Lvl>
                 </TraitRow>
@@ -448,7 +454,11 @@ export function Card({
                 key={i}
               >
                 <div className={CELL}>
-                  <Icon />
+                  {slot?.primaryTrait ? (
+                    <TraitIcon trait={slot.primaryTrait} />
+                  ) : (
+                    <EmptyTraitIcon />
+                  )}
                   <span
                     data-clip
                     className={`${CLIP} ${slot ? "" : "text-dim"}`}
@@ -457,9 +467,15 @@ export function Card({
                   </span>
                 </div>
                 <div className={`${CELL} text-dim`}>
-                  <Icon sm />
+                  {slot?.secondaryTrait ? (
+                    <TraitIcon trait={slot.secondaryTrait} />
+                  ) : (
+                    <EmptyTraitIcon />
+                  )}
                   <span data-clip className={CLIP}>
-                    {slot?.secondaryTrait ? traitName(slot.secondaryTrait) : ""}
+                    {slot?.secondaryTrait
+                      ? traitName(slot.secondaryTrait)
+                      : "-"}
                   </span>
                 </div>
                 <Lvl className="text-right">{slot ? slot.level : ""}</Lvl>

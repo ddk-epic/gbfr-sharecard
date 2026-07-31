@@ -16,7 +16,15 @@ import {
 } from "../../data";
 import { IdentityCol } from "./IdentityCol";
 import { NumInput, Select, TraitSelect, type PageProps } from "./controls";
-import { BaseStat, Heading, Icon, Lvl, TraitRow, Wpanel } from "../../ui";
+import {
+  BaseStat,
+  EmptyTraitIcon,
+  Heading,
+  Lvl,
+  TraitIcon,
+  TraitRow,
+  Wpanel,
+} from "../../ui";
 
 // Levels are fixed by the wrightstone, not entered: main / sub1 / sub2.
 const WRIGHTSTONE_LEVEL_SETS = [
@@ -41,7 +49,7 @@ const padLevel = (level: number | string) => String(level).padStart(2, " ");
 function EmptyTraitRow() {
   return (
     <TraitRow>
-      <Icon sm />
+      <EmptyTraitIcon />
       <span className="text-dim">-</span>
       <span className="text-dim">T.Lvl {padLevel("-")}</span>
     </TraitRow>
@@ -173,7 +181,11 @@ function WeaponPanel({ build, onChange }: PageProps) {
       {resolved
         ? resolved.slots.map((slot, i) => (
             <TraitRow key={i}>
-              <Icon sm />
+              {slot.trait ? (
+                <TraitIcon trait={slot.trait} />
+              ) : (
+                <EmptyTraitIcon />
+              )}
               {slot.kind === "pool" ? (
                 <span className="flex min-w-0 items-center gap-1.5">
                   <TraitSelect
@@ -272,7 +284,7 @@ function WrightstonePanel({ build, onChange }: PageProps) {
       </div>
       {rows.map((row, i) => (
         <TraitRow key={i}>
-          <Icon sm />
+          {row?.trait ? <TraitIcon trait={row.trait} /> : <EmptyTraitIcon />}
           <TraitSelect
             value={row?.trait ?? null}
             pool={TRAITS}
@@ -295,7 +307,11 @@ function SigilRow({
   return (
     <div className="grid grid-cols-[1fr_1fr_52px] items-center gap-1.75 rounded-[5px] bg-white/85 px-2 py-1 text-[14.5px] shadow-[inset_0_0_0_1px_var(--line-soft)]">
       <div className="flex min-w-0 items-center gap-1.5">
-        <Icon />
+        {slot?.primaryTrait ? (
+          <TraitIcon trait={slot.primaryTrait} />
+        ) : (
+          <EmptyTraitIcon />
+        )}
         <TraitSelect
           className="min-w-0 flex-1 text-[13.5px]"
           value={slot?.primaryTrait ?? null}
@@ -314,7 +330,11 @@ function SigilRow({
         />
       </div>
       <div className="flex min-w-0 items-center gap-1.5">
-        <Icon sm />
+        {slot?.secondaryTrait ? (
+          <TraitIcon trait={slot.secondaryTrait} />
+        ) : (
+          <EmptyTraitIcon />
+        )}
         {slot ? (
           <TraitSelect
             className="min-w-0 flex-1 text-[13.5px]"

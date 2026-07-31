@@ -1,4 +1,6 @@
 import type { MouseEventHandler, ReactNode } from "react";
+import type { TraitId } from "../domain/build";
+import { traitIconUrl } from "../data";
 
 /* Leaf primitives the card and the editor both render. They used to be
    hand-duplicated per screen; importing the same component is
@@ -26,6 +28,26 @@ export function Icon({
         sm ? "size-3.25" : "size-4"
       } ${ICON_TONE[tone]}`}
     />
+  );
+}
+
+/**
+ * A trait's glyph. `trait` is non-nullable on purpose: an empty cell is a
+ * different component (`EmptyTraitIcon`), so a stray `null` is a compile error,
+ * not a silent blank. If the glyph fails to resolve - unreachable for the
+ * shipped roster, every trait has one - it renders nothing.
+ */
+export function TraitIcon({ trait }: { trait: TraitId }) {
+  const url = traitIconUrl(trait);
+  return url ? <img src={url} className="size-4 flex-none" /> : null;
+}
+
+/** The `-` a trait cell shows when there is no trait; sized to TraitIcon's box. */
+export function EmptyTraitIcon() {
+  return (
+    <span className="text-dim inline-flex size-4 flex-none items-center justify-center">
+      -
+    </span>
   );
 }
 

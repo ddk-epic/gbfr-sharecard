@@ -28,6 +28,7 @@ import summonEquipTiersJson from "./summon-equip-tiers.json";
 import weaponSeriesJson from "./weapon-series.json";
 import weaponLevelsJson from "./weapon-levels.json";
 import wrightstonePrefixesJson from "./wrightstone-prefixes.json";
+import iconIndexJson from "./icon-index.json";
 import ioJson from "./characters/io.json";
 import katalinaJson from "./characters/katalina.json";
 import narmayaJson from "./characters/narmaya.json";
@@ -82,6 +83,16 @@ export const elementIconUrl = (element: ElementId) =>
 
 export const skillIconUrl = (characterId: CharacterId, skillId: string) =>
   `${import.meta.env.BASE_URL}icons/skills/${characterId}/${skillId}.webp`;
+
+/** A trait carries its own glyph; a sigil shows its primary trait's. Null only
+    when the glyph is absent from the index - unreachable for the shipped roster. */
+const TRAIT_GLYPHS = iconIndexJson.traits as Record<string, string>;
+export const traitIconUrl = (trait: TraitId): string | null => {
+  const glyph = TRAIT_GLYPHS[trait];
+  return glyph
+    ? `${import.meta.env.BASE_URL}icons/traits/${glyph}.webp`
+    : null;
+};
 
 /** The traits a summon can roll, in catalog order. */
 export const summonTraits = (summonId: SummonId | null | undefined) =>
