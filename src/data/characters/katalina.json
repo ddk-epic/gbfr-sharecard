@@ -1,14 +1,14 @@
 {
   "id": "katalina",
   "skills": [
-    { "id": "enchanted-lands", "name": "Enchanted Lands" },
-    { "id": "winters-rain", "name": "Winter's Rain" },
-    { "id": "heal", "name": "Heal" },
-    { "id": "sacred-winds", "name": "Sacred Winds" },
-    { "id": "azure-sword", "name": "Azure Sword" },
-    { "id": "light-wall", "name": "Light Wall" },
-    { "id": "frozen-blade", "name": "Frozen Blade" },
-    { "id": "emerald-shield", "name": "Emerald Shield" }
+    { "id": "enchanted-lands", "name": "Enchanted Lands", "element": "water" },
+    { "id": "winters-rain", "name": "Winter's Rain", "element": "water" },
+    { "id": "heal", "name": "Heal", "element": "plain" },
+    { "id": "sacred-winds", "name": "Sacred Winds", "element": "water" },
+    { "id": "azure-sword", "name": "Azure Sword", "element": "water" },
+    { "id": "light-wall", "name": "Light Wall", "element": "plain" },
+    { "id": "frozen-blade", "name": "Frozen Blade", "element": "water" },
+    { "id": "emerald-shield", "name": "Emerald Shield", "element": "plain" }
   ],
   "weapons": {
     "defender": { "name": "Rukalsa" },

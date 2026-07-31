@@ -1,14 +1,14 @@
 {
   "id": "io",
   "skills": [
-    { "id": "healing-winds", "name": "Healing Winds" },
-    { "id": "freeze", "name": "Freeze" },
-    { "id": "lightning", "name": "Lightning" },
-    { "id": "gravity-well", "name": "Gravity Well" },
-    { "id": "fire", "name": "Fire" },
-    { "id": "concentration", "name": "Concentration" },
-    { "id": "flowery-seven", "name": "Flowery Seven" },
-    { "id": "mystic-vortex", "name": "Mystic Vortex" }
+    { "id": "healing-winds", "name": "Healing Winds", "element": "plain" },
+    { "id": "freeze", "name": "Freeze", "element": "water" },
+    { "id": "lightning", "name": "Lightning", "element": "light" },
+    { "id": "gravity-well", "name": "Gravity Well", "element": "dark" },
+    { "id": "fire", "name": "Fire", "element": "fire" },
+    { "id": "concentration", "name": "Concentration", "element": "plain" },
+    { "id": "flowery-seven", "name": "Flowery Seven", "element": "light" },
+    { "id": "mystic-vortex", "name": "Mystic Vortex", "element": "plain" }
   ],
   "weapons": {
     "defender": { "name": "Little Witch Scepter" },

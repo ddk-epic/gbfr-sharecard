@@ -32,6 +32,10 @@ const slug = (s) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+// Duplicated verbatim from icons.mjs - `ability.Element` indexes into this,
+// and it's the same order icons.mjs extracted public/icons/elements/ in.
+const ELEMENTS = ["fire", "water", "earth", "wind", "light", "dark", "plain"];
+
 // --- character slug by CharaId (PL0400 -> artId 0400 -> characters.json) ---------------
 const characters = JSON.parse(await readFile(new URL("characters.json", DATA)));
 const slugByArtId = new Map(characters.map((c) => [c.artId, c.id]));
@@ -39,10 +43,10 @@ const charaSlug = (charaId) => slugByArtId.get(charaId.replace(/^PL/, "")) ?? nu
 
 // --- same `ability` query icons.mjs uses to extract skill icons -----------------------
 // IconFileName like '2000%' is Id's second form, not a character - see icons.mjs.
-const skillsByChar = new Map(); // character slug -> [{id, name}]
+const skillsByChar = new Map(); // character slug -> [{id, name, element}]
 for (const row of db
   .prepare(
-    `select ReqCharaId1, Unk5 from ability
+    `select ReqCharaId1, Unk5, Element from ability
      where IconFileName != '' and IconFileName not like '2000%'`,
   )
   .all()) {
@@ -51,7 +55,8 @@ for (const row of db
   if (!name || !character) continue;
   const list = skillsByChar.get(character) ?? [];
   const id = slug(name);
-  if (!list.some((s) => s.id === id)) list.push({ id, name });
+  const element = ELEMENTS[row.Element];
+  if (!list.some((s) => s.id === id)) list.push({ id, name, element });
   skillsByChar.set(character, list);
 }
 

@@ -4,6 +4,7 @@ import type {
   BonusTypeDef,
   Character,
   CharacterCatalog,
+  ElementId,
   ResolvedWeapon,
   SummonDef,
   SummonEquipTiers,
@@ -75,6 +76,12 @@ export const asCharacterId = (value: unknown): CharacterId | null =>
 
 export const portraitUrl = (characterId: CharacterId) =>
   `${import.meta.env.BASE_URL}${characterById.get(characterId)?.portrait ?? ""}`;
+
+export const elementIconUrl = (element: ElementId) =>
+  `${import.meta.env.BASE_URL}icons/elements/${element}.webp`;
+
+export const skillIconUrl = (characterId: CharacterId, skillId: string) =>
+  `${import.meta.env.BASE_URL}icons/skills/${characterId}/${skillId}.webp`;
 
 /** The traits a summon can roll, in catalog order. */
 export const summonTraits = (summonId: SummonId | null | undefined) =>

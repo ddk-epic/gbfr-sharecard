@@ -15,7 +15,9 @@ import {
   bonusValueText,
   characterById,
   characterCatalog,
+  elementIconUrl,
   portraitUrl,
+  skillIconUrl,
   summonById,
   traitName,
   resolveWeapon,
@@ -35,7 +37,6 @@ import {
 } from "./layout";
 import {
   BaseStat,
-  Diamond,
   Heading,
   Icon,
   Lvl,
@@ -166,7 +167,7 @@ export function Card({
     (style) =>
       `${STYLE_LABEL[style]}: ${catalog.masterTraits[style].title} Perk ${perks[style].lastIndexOf(true) + 1}`,
   ).join(" · ");
-  const skillNames = new Map(catalog.skills.map((s) => [s.id, s.name]));
+  const skillById = new Map(catalog.skills.map((s) => [s.id, s]));
   const wrightstoneRows = [
     build.wrightstone?.main ?? null,
     build.wrightstone?.sub1 ?? null,
@@ -306,20 +307,36 @@ export function Card({
             className={`${SECTION} flex flex-1 flex-col overflow-hidden`}
           >
             <Heading>Skills</Heading>
-            {build.skills.map((skill, i) => (
-              <div
-                className="border-line-soft flex min-h-0 flex-1 items-center gap-2 border-b py-1.5 text-[16.5px] last:border-b-0 last:pb-0"
-                key={i}
-              >
-                <Orb />
-                {skill ? (
-                  skillNames.get(skill)
-                ) : (
-                  <span className="text-dim">-</span>
-                )}
-                <Diamond />
-              </div>
-            ))}
+            {build.skills.map((skill, i) => {
+              const def = skill ? skillById.get(skill) : undefined;
+              return (
+                <div
+                  className="border-line-soft flex min-h-0 flex-1 items-center gap-2 border-b py-1.5 text-[16.5px] last:border-b-0 last:pb-0"
+                  key={i}
+                >
+                  {def ? (
+                    <>
+                      <img
+                        src={elementIconUrl(def.element)}
+                        className="size-4 flex-none"
+                      />
+                      <span className="text-dim flex-none text-[13px] capitalize">
+                        {def.element}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate">
+                        {def.name}
+                      </span>
+                      <img
+                        src={skillIconUrl(build.characterId, def.id)}
+                        className="ml-auto size-8 flex-none"
+                      />
+                    </>
+                  ) : (
+                    <span className="text-dim">-</span>
+                  )}
+                </div>
+              );
+            })}
           </section>
         </div>
 

@@ -1,14 +1,14 @@
 {
   "id": "rackam",
   "skills": [
-    { "id": "spitfire", "name": "Spitfire" },
-    { "id": "bullet-hail", "name": "Bullet Hail" },
-    { "id": "double-tap", "name": "Double Tap" },
-    { "id": "duration", "name": "Duration" },
-    { "id": "coffinmaker", "name": "Coffinmaker" },
-    { "id": "wild-gunsmoke", "name": "Wild Gunsmoke" },
-    { "id": "slag-shot", "name": "Slag Shot" },
-    { "id": "collateral-damage", "name": "Collateral Damage" }
+    { "id": "spitfire", "name": "Spitfire", "element": "fire" },
+    { "id": "bullet-hail", "name": "Bullet Hail", "element": "fire" },
+    { "id": "double-tap", "name": "Double Tap", "element": "plain" },
+    { "id": "duration", "name": "Duration", "element": "plain" },
+    { "id": "coffinmaker", "name": "Coffinmaker", "element": "fire" },
+    { "id": "wild-gunsmoke", "name": "Wild Gunsmoke", "element": "plain" },
+    { "id": "slag-shot", "name": "Slag Shot", "element": "wind" },
+    { "id": "collateral-damage", "name": "Collateral Damage", "element": "fire" }
   ],
   "weapons": {
     "defender": { "name": "Flintspike" },

@@ -1,14 +1,14 @@
 {
   "id": "narmaya",
   "skills": [
-    { "id": "kyokasuigetsu", "name": "Kyokasuigetsu" },
-    { "id": "setsuna", "name": "Setsuna" },
-    { "id": "apex-of-nothingness", "name": "Apex of Nothingness" },
-    { "id": "crescent-moon", "name": "Crescent Moon" },
-    { "id": "transient", "name": "Transient" },
-    { "id": "dance-of-pink-petals", "name": "Dance of Pink Petals" },
-    { "id": "dance-of-blue-petals", "name": "Dance of Blue Petals" },
-    { "id": "utter-devotion", "name": "Utter Devotion" }
+    { "id": "kyokasuigetsu", "name": "Kyokasuigetsu", "element": "dark" },
+    { "id": "setsuna", "name": "Setsuna", "element": "dark" },
+    { "id": "apex-of-nothingness", "name": "Apex of Nothingness", "element": "dark" },
+    { "id": "crescent-moon", "name": "Crescent Moon", "element": "dark" },
+    { "id": "transient", "name": "Transient", "element": "dark" },
+    { "id": "dance-of-pink-petals", "name": "Dance of Pink Petals", "element": "plain" },
+    { "id": "dance-of-blue-petals", "name": "Dance of Blue Petals", "element": "plain" },
+    { "id": "utter-devotion", "name": "Utter Devotion", "element": "plain" }
   ],
   "weapons": {
     "defender": { "name": "Nakamaki Nodachi" },

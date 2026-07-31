@@ -1,14 +1,14 @@
 {
   "id": "charlotta",
   "skills": [
-    { "id": "konigsschild", "name": "Königsschild" },
-    { "id": "shining-onslaught", "name": "Shining Onslaught" },
-    { "id": "rising-cut", "name": "Rising Cut" },
-    { "id": "valiant-stance", "name": "Valiant Stance" },
-    { "id": "sacred-charge", "name": "Sacred Charge" },
-    { "id": "invincible", "name": "Invincible" },
-    { "id": "sword-of-lumiel", "name": "Sword of Lumiel" },
-    { "id": "holy-ladder", "name": "Holy Ladder" }
+    { "id": "konigsschild", "name": "Königsschild", "element": "plain" },
+    { "id": "shining-onslaught", "name": "Shining Onslaught", "element": "light" },
+    { "id": "rising-cut", "name": "Rising Cut", "element": "light" },
+    { "id": "valiant-stance", "name": "Valiant Stance", "element": "plain" },
+    { "id": "sacred-charge", "name": "Sacred Charge", "element": "plain" },
+    { "id": "invincible", "name": "Invincible", "element": "plain" },
+    { "id": "sword-of-lumiel", "name": "Sword of Lumiel", "element": "light" },
+    { "id": "holy-ladder", "name": "Holy Ladder", "element": "light" }
   ],
   "weapons": {
     "defender": { "name": "Claíomh Solais" },

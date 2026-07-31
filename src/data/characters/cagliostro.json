@@ -1,14 +1,14 @@
 {
   "id": "cagliostro",
   "skills": [
-    { "id": "mimic-doll", "name": "Mimic Doll" },
-    { "id": "mehen", "name": "Mehen" },
-    { "id": "phantasmagoria", "name": "Phantasmagoria" },
-    { "id": "reinforce", "name": "Reinforce" },
-    { "id": "disruption", "name": "Disruption" },
-    { "id": "rhizomata", "name": "Rhizomata" },
-    { "id": "alexandria", "name": "Alexandria" },
-    { "id": "pain-train", "name": "Pain Train" }
+    { "id": "mimic-doll", "name": "Mimic Doll", "element": "earth" },
+    { "id": "mehen", "name": "Mehen", "element": "dark" },
+    { "id": "phantasmagoria", "name": "Phantasmagoria", "element": "plain" },
+    { "id": "reinforce", "name": "Reinforce", "element": "plain" },
+    { "id": "disruption", "name": "Disruption", "element": "earth" },
+    { "id": "rhizomata", "name": "Rhizomata", "element": "plain" },
+    { "id": "alexandria", "name": "Alexandria", "element": "earth" },
+    { "id": "pain-train", "name": "Pain Train", "element": "earth" }
   ],
   "weapons": {
     "defender": { "name": "Magnum Opus" },

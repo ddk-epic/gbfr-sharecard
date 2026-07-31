@@ -12,20 +12,20 @@ import type {
   TraitId,
 } from "./build";
 
+/** `ability.Element` / `summon_info.Element`'s enum, as icons.mjs extracted it. */
+export type ElementId =
+  "fire" | "water" | "earth" | "wind" | "light" | "dark" | "plain";
+
 export type Character = {
   id: CharacterId; // slug, e.g. "io"
   name: string;
-  artId: string; // cdn.gbf.wiki Cmn_imgchr id
-  portrait: string; // path under the Vite base
+  artId: string;
+  portrait: string; // path
   portraitY: number; // framing y-offset (%; default 20)
   element: string;
-  enabled: boolean; // v1: only Io
+  enabled: boolean;
 };
 
-/**
- * Flat roster. Which pool a trait belongs to (sigil / wrightstone /
- * character) is not modelled - no source classifies them reliably.
- */
 export type TraitDef = {
   id: TraitId;
   name: string;
@@ -109,7 +109,7 @@ export const PERK_THRESHOLDS: number[] = [3, 6, 6];
 
 export type CharacterCatalog = {
   id: string;
-  skills: { id: SkillId; name: string }[];
+  skills: { id: SkillId; name: string; element: ElementId }[];
   masterTraits: MasterTraitSections;
   weapons: Record<string, WeaponEntry>; // keyed by series-row id, the character's owned series
   weaponHpOffset: number; // added to series.hp; one integer per character (Terminus exempt)
