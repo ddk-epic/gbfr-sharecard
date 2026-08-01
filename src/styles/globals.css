@@ -5,7 +5,13 @@
 
 @font-face {
   font-family: "GBFR UI";
-  src: url("/fonts/gbfr-ui.woff2") format("woff2");
+  src: url("/fonts/gbfr-ui.woff") format("woff");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "GBFR UI Medium";
+  src: url("/fonts/gbfr-ui-med.woff") format("woff");
   font-display: block;
 }
 
@@ -54,6 +60,7 @@
 
 @theme inline {
   --font-sans: "GBFR UI", "Segoe UI", system-ui, sans-serif;
+  --font-med: "GBFR UI Medium", "Segoe UI", system-ui, sans-serif;
 
   --color-ui: var(--ui);
   --color-ink-strong: var(--ink-strong);

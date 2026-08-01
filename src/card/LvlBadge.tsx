@@ -298,7 +298,10 @@ function useLvlLabel(): LabelMetrics | null {
       for (let i = 0; i < 4; i++) {
         ctx.font = `${size}px ${FAMILY}`;
         const measured = ctx.measureText("L").actualBoundingBoxAscent;
-        if (!measured) return;
+        if (!measured) {
+          console.warn(`${FAMILY} measured no ink; Lvl label omitted`);
+          return;
+        }
         size *= cap / measured;
       }
 
@@ -324,11 +327,15 @@ function useLvlLabel(): LabelMetrics | null {
       setMetrics({ size, xs: boxes.map((b) => b.x + shift) });
     };
 
-    // measureText never triggers a load; fonts.load does.
+    // measureText never triggers a load; fonts.load does. Catching matters:
+    // a rejection here is how an undecodable face silently emptied the label.
     void document.fonts
       .load(`16px ${FAMILY}`, LABEL)
       .then(() => document.fonts.ready)
-      .then(measure);
+      .then(measure)
+      .catch((err: unknown) => {
+        console.warn(`${FAMILY} failed to load; Lvl label omitted`, err);
+      });
 
     return () => {
       live = false;
