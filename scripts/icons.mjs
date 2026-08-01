@@ -101,14 +101,41 @@ const index = {};
 // about to change.
 const SETTLED = new Set(["traits"]);
 
+// The atlas exports each trait glyph as a 128x128 opaque tile centred in a
+// larger, mostly-transparent canvas - 137 for the generic glyphs, 160 for the
+// character sigils' 05_pl* tiles. Cropping back to the opaque tile ships every
+// glyph at one size; the only pixels dropped are the antialiased feather that
+// bleeds outside it.
+async function solidGlyphBox(sourcePath) {
+  const { data, info } = await sharp(sourcePath)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width, height, channels } = info;
+  let minX = width,
+    minY = height,
+    maxX = -1,
+    maxY = -1;
+  for (let y = 0; y < height; y++)
+    for (let x = 0; x < width; x++)
+      if (data[(y * width + x) * channels + 3] >= 128) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+  return { left: minX, top: minY, width: maxX - minX + 1, height: maxY - minY + 1 };
+}
+
 /** Convert one PNG to WebP, skipping work already committed. */
-async function convert(sourcePath, destinationUrl, resizeWidth) {
+async function convert(sourcePath, destinationUrl, resizeWidth, cropToGlyph = false) {
   if (!existsSync(sourcePath)) {
     missing.push(sourcePath.split("/").pop());
     return false;
   }
   if (existsSync(destinationUrl)) return true;
   let pipeline = sharp(sourcePath);
+  if (cropToGlyph) pipeline = pipeline.extract(await solidGlyphBox(sourcePath));
   if (resizeWidth) pipeline = pipeline.resize({ width: resizeWidth });
   await writeFile(destinationUrl, await pipeline.webp({ quality: WEBP_QUALITY }).toBuffer());
   return true;
@@ -227,6 +254,7 @@ for (const [icon, names] of glyphs) {
       `${atlas("common_icon_skill")}/cmn_icskill_${icon}.png`,
       new URL(`${file}.webp`, traitsDirectory),
       null,
+      true,
     ))
   )
     continue;
