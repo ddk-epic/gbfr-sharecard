@@ -12,7 +12,6 @@ import type {
   TraitId,
 } from "./build";
 
-/** `ability.Element` / `summon_info.Element`'s enum, as icons.mjs extracted it. */
 export type ElementId =
   "fire" | "water" | "earth" | "wind" | "light" | "dark" | "plain";
 
@@ -29,6 +28,8 @@ export type Character = {
 export type TraitDef = {
   id: TraitId;
   name: string;
+  /** Abbreviated display name override. */
+  short?: string;
   maxLevel: number;
 };
 
@@ -36,8 +37,6 @@ export type BonusTypeDef = {
   id: BonusTypeId;
   name: string;
   unit: "flat" | "percent";
-  /** The values an over-mastery roll can land on, ascending. Three levels in
-   *  the game, deduplicated - see docs/overmasteries.md. */
   overMastery: number[];
 };
 
@@ -75,7 +74,7 @@ export type WeaponEntry = { name: string; awakened?: string }; // awakened: name
 
 export type ResolvedWeaponSlot = {
   kind: "fixed" | "pool";
-  trait: TraitId | null; // fixed: the trait; pool: the picked trait, or null
+  trait: TraitId | null;
   pool: TraitId[]; // pool: options with @signature resolved; fixed: []
   level: number;
 };

@@ -22,6 +22,7 @@
   {
     "id": "atk-resistance",
     "name": "ATK↓ Resistance",
+    "short": "ATK↓ Res.",
     "maxLevel": 30
   },
   {
@@ -67,6 +68,7 @@
   {
     "id": "blight-resistance",
     "name": "Blight Resistance",
+    "short": "Blight Res.",
     "maxLevel": 30
   },
   {
@@ -77,6 +79,7 @@
   {
     "id": "burn-resistance",
     "name": "Burn Resistance",
+    "short": "Burn Res.",
     "maxLevel": 30
   },
   {
@@ -202,26 +205,31 @@
   {
     "id": "dark-huntresss-surge",
     "name": "Dark Huntress's Surge",
+    "short": "D. Huntress's Surge",
     "maxLevel": 15
   },
   {
     "id": "dark-huntresss-volley",
     "name": "Dark Huntress's Volley",
+    "short": "D. Huntress's Volley",
     "maxLevel": 15
   },
   {
     "id": "dark-huntresss-warpath",
     "name": "Dark Huntress's Warpath",
+    "short": "D. Huntress's Warpath",
     "maxLevel": 15
   },
   {
     "id": "darkflame-resistance",
     "name": "Darkflame Resistance",
+    "short": "Darkflame Res.",
     "maxLevel": 30
   },
   {
     "id": "def-resistance",
     "name": "DEF↓ Resistance",
+    "short": "DEF↓ Res.",
     "maxLevel": 30
   },
   {
@@ -232,6 +240,7 @@
   {
     "id": "dizzy-resistance",
     "name": "Dizzy Resistance",
+    "short": "Dizzy Res.",
     "maxLevel": 30
   },
   {
@@ -267,6 +276,7 @@
   {
     "id": "dragonslayers-dominance",
     "name": "Dragonslayer's Dominance",
+    "short": "Dragonslayer's Dom.",
     "maxLevel": 15
   },
   {
@@ -322,16 +332,19 @@
   {
     "id": "eternal-rages-ethos",
     "name": "Eternal Rage's Ethos",
+    "short": "E. Rage's Ethos",
     "maxLevel": 15
   },
   {
     "id": "eternal-rages-mettle",
     "name": "Eternal Rage's Mettle",
+    "short": "E. Rage's Mettle",
     "maxLevel": 15
   },
   {
     "id": "eternal-rages-warpath",
     "name": "Eternal Rage's Warpath",
+    "short": "E. Rage's Warpath",
     "maxLevel": 15
   },
   {
@@ -397,6 +410,7 @@
   {
     "id": "glaciate-resistance",
     "name": "Glaciate Resistance",
+    "short": "Glaciate Res.",
     "maxLevel": 30
   },
   {
@@ -457,6 +471,7 @@
   {
     "id": "held-under-resistance",
     "name": "Held Under Resistance",
+    "short": "Held Under Res.",
     "maxLevel": 30
   },
   {
@@ -492,16 +507,19 @@
   {
     "id": "holy-knights-grandeur",
     "name": "Holy Knight's Grandeur",
+    "short": "H. Knight's Grandeur",
     "maxLevel": 15
   },
   {
     "id": "holy-knights-luster",
     "name": "Holy Knight's Luster",
+    "short": "H. Knight's Luster",
     "maxLevel": 15
   },
   {
     "id": "holy-knights-warpath",
     "name": "Holy Knight's Warpath",
+    "short": "H. Knight's Warpath",
     "maxLevel": 15
   },
   {
@@ -617,6 +635,7 @@
   {
     "id": "paralysis-resistance",
     "name": "Paralysis Resistance",
+    "short": "Paralysis Res.",
     "maxLevel": 30
   },
   {
@@ -642,6 +661,7 @@
   {
     "id": "poison-resistance",
     "name": "Poison Resistance",
+    "short": "Poison Res.",
     "maxLevel": 30
   },
   {
@@ -717,11 +737,13 @@
   {
     "id": "sandtomb-resistance",
     "name": "Sandtomb Resistance",
+    "short": "Sandtomb Res.",
     "maxLevel": 30
   },
   {
     "id": "sba-sealed-resistance",
     "name": "SBA Sealed Resistance",
+    "short": "SBA Sealed Res.",
     "maxLevel": 30
   },
   {
@@ -742,6 +764,7 @@
   {
     "id": "skill-sealed-resistance",
     "name": "Skill Sealed Resistance",
+    "short": "Skill Sealed Res.",
     "maxLevel": 30
   },
   {
@@ -752,6 +775,7 @@
   {
     "id": "slow-resistance",
     "name": "Slow Resistance",
+    "short": "Slow Res.",
     "maxLevel": 30
   },
   {
@@ -762,16 +786,19 @@
   {
     "id": "spirit-edges-fury",
     "name": "Spirit Edge's Fury",
+    "short": "S. Edge's Fury",
     "maxLevel": 15
   },
   {
     "id": "spirit-edges-rally",
     "name": "Spirit Edge's Rally",
+    "short": "S. Edge's Rally",
     "maxLevel": 15
   },
   {
     "id": "spirit-edges-warpath",
     "name": "Spirit Edge's Warpath",
+    "short": "S. Edge's Warpath",
     "maxLevel": 15
   },
   {
@@ -812,6 +839,7 @@
   {
     "id": "super-ultimate-perfect-dodge",
     "name": "Super Ultimate Perfect Dodge",
+    "short": "S. Ult. Perfect Dodge",
     "maxLevel": 15
   },
   {
@@ -827,16 +855,19 @@
   {
     "id": "supreme-primarchs-awe",
     "name": "Supreme Primarch's Awe",
+    "short": "S. Primarch's Awe",
     "maxLevel": 15
   },
   {
     "id": "supreme-primarchs-nimbus",
     "name": "Supreme Primarch's Nimbus",
+    "short": "S. Primarch's Nimbus",
     "maxLevel": 15
   },
   {
     "id": "supreme-primarchs-warpath",
     "name": "Supreme Primarch's Warpath",
+    "short": "S. Primarch's Warpath",
     "maxLevel": 15
   },
   {
@@ -987,16 +1018,19 @@
   {
     "id": "white-dragons-glory",
     "name": "White Dragon's Glory",
+    "short": "W. Dragon's Glory",
     "maxLevel": 15
   },
   {
     "id": "white-dragons-oath",
     "name": "White Dragon's Oath",
+    "short": "W. Dragon's Oath",
     "maxLevel": 15
   },
   {
     "id": "white-dragons-warpath",
     "name": "White Dragon's Warpath",
+    "short": "W. Dragon's Warpath",
     "maxLevel": 15
   }
 ]

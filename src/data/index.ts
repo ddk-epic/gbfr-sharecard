@@ -57,8 +57,12 @@ export const bonusTypeById = new Map(BONUS_TYPES.map((b) => [b.id, b]));
 export const summonById = new Map(SUMMONS.map((s) => [s.id, s]));
 export const weaponSeriesById = new Map(WEAPON_SERIES.map((s) => [s.id, s]));
 
-export const traitName = (id: TraitId | null | undefined) =>
-  id ? (traitById.get(id)?.name ?? id) : "";
+/** Display name */
+export const traitName = (id: TraitId | null | undefined) => {
+  if (!id) return "";
+  const trait = traitById.get(id);
+  return trait ? (trait.short ?? trait.name) : id;
+};
 
 /** Prefix follows the main trait, so the name is derived, never stored. */
 export const wrightstoneName = (mainTrait: TraitId | null | undefined) => {
