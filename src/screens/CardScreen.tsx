@@ -1,8 +1,9 @@
 import { Fragment, useCallback, useRef, useState, type ReactNode } from "react";
-import { Check, ChevronLeft, Copy, Download } from "lucide-react";
+import { Check, ChevronLeft, Copy, Download, Maximize2 } from "lucide-react";
 import type { Build } from "../domain/build";
 import { Card, type Strain } from "../card/Card";
-import { CARD_LAYOUT, type CardLayout } from "../card/layout";
+import { CARD_H, CARD_LAYOUT, CARD_W, type CardLayout } from "../card/layout";
+import { CardModal } from "../card/CardModal";
 import { Tuner } from "../card/Tuner";
 import { canCopy, copyCard, downloadCard } from "../card/export";
 import { BackButton, Cta, Heading, Panel } from "../ui";
@@ -27,6 +28,10 @@ const done = (text: string) => (
   </>
 );
 const FLASH_MS = 900;
+
+/** Fixed preview-box width; the card's aspect sets the height and the scale. */
+const PREVIEW_W = 1190.4;
+const PREVIEW_SCALE = PREVIEW_W / CARD_W;
 
 const CREDITS = [
   {
@@ -66,6 +71,8 @@ export function CardScreen({
     artPx: 0,
   });
   const onStrain = useCallback((next: Strain) => setCounts(next), []);
+
+  const [zoomed, setZoomed] = useState(false);
 
   // Locking the measured width keeps the longer done-state from shifting layout.
   const flashLabel = (
@@ -110,7 +117,7 @@ export function CardScreen({
           <div className="flex items-center gap-2.5">
             <Heading>Share Card</Heading>
             <span className="text-dim ml-auto text-[12.5px]">
-              PNG · 1920×1080
+              PNG · {CARD_W}×{CARD_H}
             </span>
             <Cta sm onClick={onCopy}>
               {copyLabel}
@@ -119,9 +126,17 @@ export function CardScreen({
               {downloadLabel}
             </Cta>
           </div>
-          {/* 1190.4 x 669.6 = 1920 x 1080 at .62; the card node stays full size */}
-          <div className="relative h-[669.6px] w-[1190.4px] overflow-hidden rounded-lg shadow-[0_4px_24px_rgba(23,60,90,0.25)]">
-            <div className="origin-top-left scale-[0.62]">
+          {/* Preview scales the full-size node down; click opens the 1:1 inspector. */}
+          <div
+            className="group relative cursor-zoom-in overflow-hidden rounded-lg shadow-[0_4px_24px_rgba(23,60,90,0.25)]"
+            style={{ width: PREVIEW_W, height: PREVIEW_W * (CARD_H / CARD_W) }}
+            onClick={() => setZoomed(true)}
+            title="View at full resolution"
+          >
+            <div
+              className="origin-top-left"
+              style={{ transform: `scale(${PREVIEW_SCALE})` }}
+            >
               <div ref={cardRef}>
                 <Card
                   build={build}
@@ -131,6 +146,10 @@ export function CardScreen({
                 />
               </div>
             </div>
+            <span className="pointer-events-none absolute top-2.5 right-2.5 flex items-center gap-1.5 rounded-md bg-black/45 px-2 py-1 text-[11px] font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+              <Maximize2 size={13} aria-hidden />
+              Full resolution
+            </span>
           </div>
           <div className="flex items-center justify-center">
             <span className="text-dim text-[12.5px]">
@@ -168,6 +187,13 @@ export function CardScreen({
           GitHub
         </a>
       </div>
+      {zoomed && (
+        <CardModal
+          build={build}
+          layout={layout}
+          onClose={() => setZoomed(false)}
+        />
+      )}
       {import.meta.env.DEV && (
         <Tuner
           layout={layout}
