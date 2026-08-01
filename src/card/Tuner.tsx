@@ -139,8 +139,8 @@ export function Tuner({
           <Row
             label="upper"
             value={layout.upper}
-            min={400}
-            max={940}
+            min={600}
+            max={1300}
             note={`${bottom - layout.upper - layout.rowGap}px below`}
             onChange={(v) => set("upper", v)}
           />
@@ -180,8 +180,8 @@ export function Tuner({
           <Row
             label="mt cell"
             value={layout.cellH}
-            min={20}
-            max={40}
+            min={28}
+            max={64}
             onChange={(v) => set("cellH", v)}
           />
 

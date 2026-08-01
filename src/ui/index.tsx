@@ -25,33 +25,52 @@ export function Icon({
   return (
     <span
       className={`inline-block flex-none rounded border bg-linear-135 ${
-        sm ? "size-3.25" : "size-4"
+        sm ? "size-4.5" : "size-5.5"
       } ${ICON_TONE[tone]}`}
     />
   );
 }
 
+const TRAIT_ICON_SIZE = { 16: "size-5.5", 18: "size-6", 22: "size-7" };
+
+export type TraitIconSize = keyof typeof TRAIT_ICON_SIZE;
+
+/** The glyph's box alone, for a caller holding the indent without drawing. */
+export const traitIconBox = (size: TraitIconSize = 16) => TRAIT_ICON_SIZE[size];
+
 /**
- * A trait's glyph. `trait` is non-nullable on purpose: an empty cell is a
- * different component (`EmptyTraitIcon`), so a stray `null` is a compile error,
- * not a silent blank. If the glyph fails to resolve - unreachable for the
- * shipped roster, every trait has one - it renders nothing.
+ * A trait's glyph. `trait` is non-nullable; an empty cell is a
+ * different component (`EmptyTraitIcon`).
  */
-export function TraitIcon({ trait }: { trait: TraitId }) {
+export function TraitIcon({
+  trait,
+  size = 16,
+}: {
+  trait: TraitId;
+  size?: keyof typeof TRAIT_ICON_SIZE;
+}) {
   const url = traitIconUrl(trait);
-  return url ? <img src={url} className="size-4 flex-none" /> : null;
+  return url ? (
+    <img src={url} className={`flex-none ${TRAIT_ICON_SIZE[size]}`} />
+  ) : null;
 }
 
 /** The `-` a trait cell shows when there is no trait; sized to TraitIcon's box. */
-export function EmptyTraitIcon() {
+export function EmptyTraitIcon({
+  size = 16,
+}: {
+  size?: keyof typeof TRAIT_ICON_SIZE;
+}) {
   return (
-    <span className="text-dim inline-flex size-4 flex-none items-center justify-center">
+    <span
+      className={`text-dim inline-flex flex-none items-center justify-center ${TRAIT_ICON_SIZE[size]}`}
+    >
       -
     </span>
   );
 }
 
-const ORB_SIZE = { 16: "size-4", 18: "size-4.5", 20: "size-5" };
+const ORB_SIZE = { 16: "size-5.5", 18: "size-6", 20: "size-6.75" };
 
 /** Skill orb. `size` only ever varies to match a neighbouring glyph. */
 export function Orb({ size = 16 }: { size?: keyof typeof ORB_SIZE }) {
@@ -77,7 +96,7 @@ export function StatIcon({
 }) {
   return (
     <span
-      className={`size-3 flex-none rotate-45 rounded-xs bg-linear-135 ${STAT_ICON_TONE[tone]} ${className}`}
+      className={`size-4 flex-none rotate-45 rounded-xs bg-linear-135 ${STAT_ICON_TONE[tone]} ${className}`}
     />
   );
 }
@@ -94,15 +113,11 @@ const LVL_TONE = {
 
 const LVL_SIZE = {
   base: "",
-  stat: "text-[21px]",
-  wbase: "text-[20px]",
-  gear: "text-[14px]",
+  stat: "text-3xl",
+  wbase: "text-2xl",
+  gear: "text-lg",
 };
 
-/**
- * Any number the build shows. `unit` hangs outside the box so the digits of
- * neighbouring cells still right-align to each other.
- */
 export function Lvl({
   children,
   tone = "value",
@@ -139,7 +154,7 @@ export function BaseStat({
   tone?: keyof typeof STAT_ICON_TONE;
 }) {
   return (
-    <span className="notch inline-flex min-w-0 flex-1 items-center gap-1.75 py-0.5 pr-3 pl-3.25">
+    <span className="notch inline-flex min-w-0 flex-1 items-center gap-2.25 py-0.75 pr-4 pl-4.5">
       <StatIcon tone={tone} className="self-center" />
       {children}
     </span>
@@ -148,20 +163,16 @@ export function BaseStat({
 
 export function Diamond() {
   return (
-    <span className="ml-auto size-5 flex-none rotate-45 rounded-[3px] border-[1.5px] border-[#c46a4a] bg-linear-135 from-[#8a2f35] to-[#3d1114]" />
+    <span className="ml-auto size-6.75 flex-none rotate-45 rounded-sm border-2 border-[#c46a4a] bg-linear-135 from-[#8a2f35] to-[#3d1114]" />
   );
 }
 
 const TRAIT_ROW_SIZE = {
-  md: "py-0.75 text-[14.5px]",
-  sm: "py-[2.5px] text-[13.5px]",
-  lg: "py-[4.5px] text-[16.5px]",
+  md: "py-1 text-xl",
+  sm: "py-[3.5px] text-lg",
+  lg: "py-[6px] text-2xl",
 };
 
-/**
- * Icon / name / level row, ruled off from the next one. `flush` drops the rule
- * where the next sibling is a section label rather than another row.
- */
 export function TraitRow({
   children,
   size = "md",
@@ -173,7 +184,7 @@ export function TraitRow({
 }) {
   return (
     <div
-      className={`border-line-soft grid grid-cols-[16px_1fr_auto] items-center gap-1.75 ${TRAIT_ROW_SIZE[size]} ${
+      className={`border-line-soft grid grid-cols-[22px_1fr_auto] items-center gap-2.25 ${TRAIT_ROW_SIZE[size]} ${
         flush ? "pb-0" : "border-b last:border-b-0 last:pb-0"
       }`}
     >
@@ -196,9 +207,9 @@ export function Wpanel({
 }) {
   return (
     <div
-      className={`border-line relative rounded-lg border bg-white/80 px-3.25 py-2.5 ${
+      className={`border-line relative rounded-lg border bg-white/80 px-4.5 py-3.5 ${
         fill ? "flex flex-1 flex-col" : ""
-      } ${shadow ? "shadow-[0_1px_6px_rgba(23,60,90,0.1)]" : ""} ${className}`}
+      } ${shadow ? "shadow-[0_1px_8px_rgba(23,60,90,0.1)]" : ""} ${className}`}
     >
       {children}
     </div>
@@ -209,22 +220,31 @@ export function Wpanel({
    properties, so they cannot be resolved by class-string order. */
 const HEADING_TONE = {
   band: "from-band via-band-soft to-[rgba(156,198,221,0)] text-ink-strong",
-  deep: "from-deep-2 via-deep-4 to-deep-4/0 text-white [text-shadow:0_1px_3px_rgba(10,50,70,0.5)]",
+  deep: "from-deep-2 via-deep-4 to-deep-4/0 text-white [text-shadow:0_1px_4px_rgba(10,50,70,0.5)]",
+};
+
+/* Size and padding as one step: the padding must track the text or the band
+   stops reading as a band. The card sets its own, exporting at a fixed px size. */
+const HEADING_SIZE = {
+  md: "px-3 py-1 text-[15px]",
+  lg: "px-4 py-1.25 text-[20px]",
 };
 
 /** Section heading. Spacing is the parent's job, so this declares no margin. */
 export function Heading({
   children,
   tone = "band",
+  size = "md",
   className = "",
 }: {
   children: ReactNode;
   tone?: keyof typeof HEADING_TONE;
+  size?: keyof typeof HEADING_SIZE;
   className?: string;
 }) {
   return (
     <h3
-      className={`rounded bg-linear-90 from-0% via-45% to-100% px-3 py-1 text-[15px] font-bold tracking-widest uppercase ${HEADING_TONE[tone]} ${className}`}
+      className={`rounded bg-linear-90 from-0% via-45% to-100% font-bold tracking-widest uppercase ${HEADING_SIZE[size]} ${HEADING_TONE[tone]} ${className}`}
     >
       {children}
     </h3>

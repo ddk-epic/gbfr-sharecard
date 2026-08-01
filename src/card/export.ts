@@ -1,14 +1,12 @@
 import { domToBlob } from "modern-screenshot";
 import type { CharacterId } from "../domain/build";
-
-const CARD_WIDTH = 1920;
-const CARD_HEIGHT = 1080;
+import { CARD_H, CARD_W } from "./layout";
 
 const cardToBlob = async (node: HTMLElement): Promise<Blob> => {
   await document.fonts.ready; // fonts must resolve before capture
   return domToBlob(node, {
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
+    width: CARD_W,
+    height: CARD_H,
     scale: 1, // pixel ratio pinned; the node is already full size
   });
 };

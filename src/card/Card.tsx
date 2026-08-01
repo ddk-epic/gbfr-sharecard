@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import { ArrowLeftRight } from "lucide-react";
-import type { Build, StyleId, StyleRank } from "../domain/build";
+import type { Build, SigilSlot, StyleId, StyleRank } from "../domain/build";
 import {
   CHARACTER_LEVEL,
   RANKS,
@@ -23,7 +23,7 @@ import {
   resolveWeapon,
   wrightstoneName,
 } from "../data";
-import { LvlBadge } from "./LvlBadge";
+import { LvlBadge, LvlWordmark } from "./LvlBadge";
 import {
   CARD_H,
   CARD_LAYOUT,
@@ -44,6 +44,7 @@ import {
   Orb,
   StatIcon,
   TraitIcon,
+  traitIconBox,
   TraitRow,
   Wpanel,
 } from "../ui";
@@ -69,24 +70,24 @@ const STYLE_RANK_LABELS: Record<StyleRank, string> = {
 };
 
 /** Heading to body is 7px under the 11px column gap. */
-const COL_HEADING = "-mb-1";
+const COL_HEADING = "-mb-1.25";
 
 /** The portrait's share of the card height; it bleeds past the inset. */
 const PORTRAIT_H = "70%";
 
 const SECTION =
-  "rounded-lg bg-white/78 px-3.5 py-3 shadow-[0_1px_6px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
+  "rounded-lg bg-white/78 px-4.75 py-4 shadow-[0_1px_8px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
 
 const PLATE =
-  "rounded-[5px] bg-white/85 shadow-[inset_0_0_0_1px_var(--line-soft)]";
+  "rounded-[7px] bg-white/85 shadow-[inset_0_0_0_1px_var(--line-soft)]";
 
-const CELL = "flex min-w-0 items-center gap-1.75";
+const CELL = "flex min-w-0 items-center gap-1.25";
 
 const CLIP = "overflow-hidden text-ellipsis whitespace-nowrap";
 
 /** Height comes from layout.cellH; the rest is the cell's own hand-tuning. */
 const OPT =
-  "flex items-center gap-1.5 overflow-hidden rounded-sm px-1.75 py-0.75 text-[13.5px] leading-[1.12] data-long:gap-1 data-long:px-1.25 data-long:py-0.5 data-long:text-[11.5px] data-long:leading-[1.06]";
+  "flex items-center gap-2 overflow-hidden rounded-sm px-2.25 py-1 text-lg leading-[1.12] data-long:gap-1.25 data-long:px-1.75 data-long:py-0.75 data-long:text-base data-long:leading-[1.06]";
 
 /** Figure-space pad so single-digit trait levels stay column-aligned. */
 const padLevel = (level: number | string) => String(level).padStart(2, " ");
@@ -132,19 +133,87 @@ function EmptyTraitRow() {
   );
 }
 
+/* A sigil row: glyph, name, "Lvl <n>", separated by hairline rules, not plates.
+   One row carries both of a slot's traits as two glyph+name columns sharing the
+   level; names are set at the glyph's size so each reads as one line. */
+
+/* Sized within the name's line box so the glyph doesn't drive row height. */
+const SIGIL_ICON = 22;
+
+/** Matches the glyph box, so name and icon carry the same weight in the row. */
+const SIGIL_TEXT = "text-2xl font-med text-ui";
+
+/** Cap height in px, not the ink box (~1.21x this). Free of row height to ~26. */
+const SIGIL_LVL_CAP = 22;
+
 /**
- * Read-only, exactly 1920x1080, never scaled itself - on-screen fitting is the
+ * Letter-spacing by name length, tightest for the longest. Steps are em so they
+ * scale with the row; names below the last threshold keep the face's spacing.
+ */
+const NAME_TRACKING = [
+  { from: 20, em: -0.048 },
+  { from: 16, em: -0.036 },
+  { from: 12, em: -0.024 },
+  { from: 8, em: -0.012 },
+];
+
+const nameTracking = (name: string) => {
+  const step = NAME_TRACKING.find((t) => name.length >= t.from);
+  return step ? `${step.em}em` : undefined;
+};
+
+/** Primary and secondary render identically; the column is what tells them apart. */
+function SigilCell({ trait }: { trait: SigilSlot["primaryTrait"] | null }) {
+  const name = trait ? traitName(trait) : "-";
+  return (
+    <div className={CELL}>
+      {trait ? (
+        <TraitIcon trait={trait} size={SIGIL_ICON} />
+      ) : (
+        /* Spacer, not a dash: holds the glyph's width so the dash indents like a name. */
+        <span aria-hidden className={`flex-none ${traitIconBox(SIGIL_ICON)}`} />
+      )}
+      {/* Not clipped: short names and tracking do the fitting, so an overflow shows rather than trims. */}
+      <span
+        className={`whitespace-nowrap ${trait ? "" : "text-dim"}`}
+        style={{ letterSpacing: nameTracking(name) }}
+      >
+        {name}
+      </span>
+    </div>
+  );
+}
+
+function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
+  return (
+    <div className="flex flex-none flex-col">
+      {sigils.map((slot, i) => (
+        <div
+          className={`border-line grid grid-cols-[1fr_1fr_auto] items-center border-b-2 px-2.5 py-1 ${SIGIL_TEXT}`}
+          key={i}
+        >
+          <SigilCell trait={slot?.primaryTrait ?? null} />
+          <SigilCell trait={slot?.secondaryTrait ?? null} />
+          {/* No slot, no level; the box stays unpainted so name columns keep their x. */}
+          <LvlWordmark cap={SIGIL_LVL_CAP} level={slot ? slot.level : null} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Read-only, exactly 2880x1440, never scaled itself - on-screen fitting is the
  * wrapper's job and the PNG export captures this node.
  *
  * Laid out as five grid tracks (three columns, a seam between each pair) over
  * two rows divided by two horizontal lines.
  *
  * The **upper line** ends row 1: Status' bottom edge and the master-traits box's
- * bottom edge both land on it, which is what makes the two columns read as one
- * layout rather than two. The **bottom line** ends row 2, liftable off the card's
- * padded edge. Between them sit Skills and Over Mastery + Summons, stretching to
- * fill whatever the two lines leave, separated from the row above by one shared
- * gap - shared so the two seams read as a single line across the card.
+ * bottom edge both land on it. The **bottom line** ends row 2, liftable off the
+ * card's padded edge. Between them sit Skills and Over Mastery + Summons,
+ * stretching to fill whatever the two lines leave, separated from the row above
+ * by one gap - shared so the two seams read as a single line across the card.
  *
  * Column 2 ignores both lines and spans the pair, top-anchored, reaching as far
  * down as its art box takes it and never past the bottom line.
@@ -253,7 +322,7 @@ export function Card({
             backgroundPosition: `center ${character?.portraitY ?? 20}%`,
           }}
         />
-        <LvlBadge level={CHARACTER_LEVEL} inset={10} />
+        <LvlBadge level={CHARACTER_LEVEL} size={189} inset={14} />
       </div>
 
       <div
@@ -273,15 +342,15 @@ export function Card({
         {/* Column 1 above the upper line: Status bottoms on it, the banner rides
             above. Neither resizes - raising the line just lifts them. */}
         <div
-          className="relative z-2 flex flex-col justify-end gap-4.25"
+          className="relative z-2 flex flex-col justify-end gap-5.75"
           style={{ gridColumn: 1, gridRow: 1 }}
         >
-          <div className="nameBanner z-2 flex items-center justify-center gap-2.5 px-4 py-1.5 text-[28px] font-bold text-white">
+          <div className="nameBanner z-2 flex items-center justify-center gap-3.5 px-5.5 py-2 text-4xl font-bold text-white">
             <Orb size={20} />
             {character?.name ?? build.characterId}
           </div>
           <section className={SECTION}>
-            <div className="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-2.5 gap-y-1.5">
+            <div className="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-3.5 gap-y-2">
               <StatCell tone="hp" label="HP" value={build.status.hp} />
               <StatCell tone="atk" label="ATK" value={build.status.atk} />
               <StatCell
@@ -308,21 +377,21 @@ export function Card({
           <section
             className={`${SECTION} flex flex-1 flex-col overflow-hidden`}
           >
-            <Heading>Skills</Heading>
+            <Heading size="lg">Skills</Heading>
             {build.skills.map((skill, i) => {
               const def = skill ? skillById.get(skill) : undefined;
               return (
                 <div
-                  className="border-line-soft flex min-h-0 flex-1 items-center gap-2 border-b py-1.5 text-[16.5px] last:border-b-0 last:pb-0"
+                  className="border-line-soft flex min-h-0 flex-1 items-center gap-2.75 border-b py-2 text-2xl last:border-b-0 last:pb-0"
                   key={i}
                 >
                   {def ? (
                     <>
                       <img
                         src={elementIconUrl(def.element)}
-                        className="size-4 flex-none"
+                        className="size-5.5 flex-none"
                       />
-                      <span className="text-dim flex-none text-[13px] capitalize">
+                      <span className="text-dim flex-none text-lg capitalize">
                         {def.element}
                       </span>
                       <span className="min-w-0 flex-1 truncate">
@@ -330,7 +399,7 @@ export function Card({
                       </span>
                       <img
                         src={skillIconUrl(build.characterId, def.id)}
-                        className="ml-auto size-8 flex-none"
+                        className="ml-auto size-10.75 flex-none"
                       />
                     </>
                   ) : (
@@ -348,28 +417,30 @@ export function Card({
             Every child is flex-none - left shrinkable, flexbox claws back exactly
             what the art box grows by and the slider does nothing. */}
         <div
-          className="relative z-1 flex flex-col gap-2.75 overflow-hidden"
+          className="relative z-1 flex flex-col gap-3.75 overflow-hidden"
           style={{ gridColumn: 3, gridRow: "1 / 3" }}
         >
-          <Heading className={`${COL_HEADING} flex-none`}>Weapon</Heading>
+          <Heading size="lg" className={`${COL_HEADING} flex-none`}>
+            Weapon
+          </Heading>
           <Wpanel shadow className="flex-none">
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline gap-2.75">
               <span
-                className={`text-[19px] font-bold ${resolved ? "" : "text-dim"}`}
+                className={`text-2xl font-bold ${resolved ? "" : "text-dim"}`}
               >
                 {resolved?.name ?? "No Weapon"}
               </span>
-              <span className="text-dim text-[12px] whitespace-nowrap">
+              <span className="text-dim text-base whitespace-nowrap">
                 {resolved?.seriesName ?? "-"} · Lv. {WEAPON_LEVEL}
               </span>
             </div>
             {/* Sized, not stretched - placeholder until per-weapon art exists. */}
             <div
               data-art
-              className="mt-0.5 mb-1 rounded-[10px] bg-linear-115 from-[rgba(106,147,181,0.26)] to-[rgba(106,147,181,0.05)]"
+              className="mt-0.75 mb-1.25 rounded-[13.5px] bg-linear-115 from-[rgba(106,147,181,0.26)] to-[rgba(106,147,181,0.05)]"
               style={{ height: layout.artH }}
             />
-            <div className="mt-1 mb-1.5 flex items-baseline gap-1 text-[14.5px]">
+            <div className="mt-1.25 mb-2 flex items-baseline gap-1.25 text-xl">
               <BaseStat tone="hp">
                 <WeaponStat tone="hp" filled={!!resolved}>
                   {resolved?.hp ?? "-"}
@@ -409,17 +480,17 @@ export function Card({
                     )}
                     <span>
                       {slot.kind === "pool" ? (
-                        <>
+                        <div className="flex">
                           {slot.trait ? (
                             traitName(slot.trait)
                           ) : (
                             <span className="text-dim">-</span>
-                          )}{" "}
+                          )}
                           <ArrowLeftRight
-                            className="text-essence align-[-0.12em]"
+                            className="text-essence ml-2 align-[-0.12em]"
                             size="1em"
                           />
-                        </>
+                        </div>
                       ) : (
                         traitName(slot.trait)
                       )}
@@ -430,7 +501,7 @@ export function Card({
               : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
                   <EmptyTraitRow key={i} />
                 ))}
-            <div className="text-dim mt-3.75 mb-0.5 flex justify-between text-[13px] tracking-[0.07em] uppercase">
+            <div className="text-dim mt-5 mb-0.75 flex justify-between text-lg tracking-[0.07em] uppercase">
               <span>Imbued Traits</span>
               <span>{wrightstoneName(build.wrightstone?.main.trait)}</span>
             </div>
@@ -446,42 +517,10 @@ export function Card({
               ),
             )}
           </Wpanel>
-          <Heading className={`${COL_HEADING} flex-none`}>Sigils</Heading>
-          <div className="flex flex-none flex-col gap-[3.5px]">
-            {build.sigils.map((slot, i) => (
-              <div
-                className={`${PLATE} grid grid-cols-[1fr_1fr_30px] items-center gap-2 px-2.25 py-[5.5px] text-[16.5px]`}
-                key={i}
-              >
-                <div className={CELL}>
-                  {slot?.primaryTrait ? (
-                    <TraitIcon trait={slot.primaryTrait} />
-                  ) : (
-                    <EmptyTraitIcon />
-                  )}
-                  <span
-                    data-clip
-                    className={`${CLIP} ${slot ? "" : "text-dim"}`}
-                  >
-                    {slot ? traitName(slot.primaryTrait) : "-"}
-                  </span>
-                </div>
-                <div className={`${CELL} text-dim`}>
-                  {slot?.secondaryTrait ? (
-                    <TraitIcon trait={slot.secondaryTrait} />
-                  ) : (
-                    <EmptyTraitIcon />
-                  )}
-                  <span data-clip className={CLIP}>
-                    {slot?.secondaryTrait
-                      ? traitName(slot.secondaryTrait)
-                      : "-"}
-                  </span>
-                </div>
-                <Lvl className="text-right">{slot ? slot.level : ""}</Lvl>
-              </div>
-            ))}
-          </div>
+          <Heading size="lg" className={`${COL_HEADING} flex-none`}>
+            Sigils
+          </Heading>
+          <SigilsSection sigils={build.sigils} />
         </div>
 
         {/* Column 3, above the upper line. Fills row 1 exactly: lowering the line
@@ -491,17 +530,18 @@ export function Card({
           className="relative z-1 flex flex-col overflow-hidden"
           style={{ gridColumn: 5, gridRow: 1 }}
         >
-          <div className="flex h-full min-h-0 flex-col gap-2.75">
+          <div className="flex h-full min-h-0 flex-col gap-3.75">
             <Heading
               tone="deep"
+              size="lg"
               className={`${COL_HEADING} flex flex-none items-baseline justify-between`}
             >
               Master Traits
-              <span className="text-deep-label text-[13.5px] font-semibold tracking-[0.02em] normal-case text-shadow-none">
+              <span className="text-deep-label text-lg font-semibold tracking-[0.02em] normal-case text-shadow-none">
                 {perkSummary}
               </span>
             </Heading>
-            <div className="grid min-h-0 flex-1 grid-cols-3 gap-1">
+            <div className="grid min-h-0 flex-1 grid-cols-3 gap-1.25">
               {STYLES.map((style) => (
                 /* Flattened deliberately: every spacer is a sibling of every
                    other, so flexbox can talk them all down together when the
@@ -509,23 +549,23 @@ export function Card({
                    inside a rigid child and nothing would squish. */
                 <div
                   data-fit
-                  className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-[3px] p-3 ${STYLE_BORDER[style]}`}
+                  className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
                   key={style}
                 >
-                  <h4 className="flex-none text-[19.5px] font-bold text-white [text-shadow:0_1px_3px_rgba(10,50,70,0.55)]">
+                  <h4 className="flex-none text-2xl font-bold text-white [text-shadow:0_1px_4px_rgba(10,50,70,0.55)]">
                     {STYLE_LABEL[style]}: {catalog.masterTraits[style].title}
                   </h4>
                   {RANKS.map((rank) => (
                     <Fragment key={rank}>
                       <Soft h={colGap} part="colGap" />
                       <Soft h={rankMt} part="rankMt" />
-                      <div className="text-deep-label flex flex-none justify-between text-[14px] tracking-[0.08em] uppercase">
+                      <div className="text-deep-label flex flex-none justify-between text-lg tracking-[0.08em] uppercase">
                         <span>{STYLE_RANK_LABELS[rank]}</span>
                         <span>{STYLE_RANK_BUDGETS[rank]} pts</span>
                       </div>
                       <Soft h={rankGap} part="rankGap" />
                       {/* Locked: cell height and this row gap never squish. */}
-                      <div className="grid flex-none grid-cols-2 gap-1.25">
+                      <div className="grid flex-none grid-cols-2 gap-1.75">
                         {catalog.masterTraits[style][rank].map((cell) => (
                           <div
                             key={cell.id}
@@ -554,15 +594,15 @@ export function Card({
             columns above, so Over Mastery sits under the first and Summons the
             other two, and both stretch down to the bottom line. */}
         <div
-          className="relative z-1 grid grid-cols-3 gap-1"
+          className="relative z-1 grid grid-cols-3 gap-1.25"
           style={{ gridColumn: 5, gridRow: 2 }}
         >
           <div className="flex flex-col">
-            <Heading>Over Mastery</Heading>
+            <Heading size="lg">Over Mastery</Heading>
             <Wpanel shadow className="flex flex-1 flex-col overflow-hidden">
               {build.overMastery.map((line, i) => (
                 <div
-                  className="border-line-soft flex min-h-0 flex-1 items-center gap-2 border-b py-[4.5px] text-[16.5px] last:border-b-0 last:pb-0"
+                  className="border-line-soft flex min-h-0 flex-1 items-center gap-2.75 border-b py-1.5 text-2xl last:border-b-0 last:pb-0"
                   key={i}
                 >
                   {line ? (
@@ -580,36 +620,36 @@ export function Card({
             </Wpanel>
           </div>
           <div className="col-span-2 flex flex-col">
-            <Heading>Summons</Heading>
+            <Heading size="lg">Summons</Heading>
             {/* Matches the style columns' gap, so each card edge lands on one. */}
-            <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-1">
+            <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-1.25">
               {build.summons.map((slot, i) => (
                 <div
-                  className={`${PLATE} flex min-h-0 flex-col gap-0.75 overflow-hidden px-2.75 py-2 text-[16.5px]`}
+                  className={`${PLATE} flex min-h-0 flex-col gap-1 overflow-hidden px-3.75 py-2.75 text-2xl`}
                   key={i}
                 >
-                  <div className="from-gold via-gold-deep to-gold-dark -mx-2.75 -mt-2 mb-0.75 flex min-w-0 flex-none items-center gap-1.5 rounded-t-md bg-linear-90 from-0% via-55% to-100% px-2.75 py-1.25">
+                  <div className="from-gold via-gold-deep to-gold-dark -mx-3.75 -mt-2.75 mb-1 flex min-w-0 flex-none items-center gap-2 rounded-t-md bg-linear-90 from-0% via-55% to-100% px-3.75 py-1.75">
                     <Icon tone="summon" sm />
-                    <b className="text-[17.5px] font-bold text-white [text-shadow:0_1px_2px_rgba(90,30,0,0.55)]">
+                    <b className="text-2xl font-bold text-white [text-shadow:0_1px_2.5px_rgba(90,30,0,0.55)]">
                       {slot ? summonById.get(slot.summonId)?.name : "-"}
                     </b>
                   </div>
                   {/* The card's give: stretch lands here, not between the rows. */}
-                  <div className="grid flex-1 grid-cols-[6fr_5fr] items-center gap-3">
-                    <div className="border-line-soft flex min-w-0 items-baseline gap-1.5 border-r pr-2.5">
+                  <div className="grid flex-1 grid-cols-[6fr_5fr] items-center gap-4">
+                    <div className="border-line-soft flex min-w-0 items-baseline gap-2 border-r pr-3.5">
                       <span data-clip className={`${CLIP} text-ui`}>
                         {slot?.trait ? traitName(slot.trait) : "-"}
                       </span>
-                      {slot && <Lvl className="ml-1">{slot.traitLevel}</Lvl>}
+                      {slot && <Lvl className="ml-1.25">{slot.traitLevel}</Lvl>}
                     </div>
-                    <div className="flex min-w-0 items-baseline gap-1.5">
+                    <div className="flex min-w-0 items-baseline gap-2">
                       <span data-clip className={`${CLIP} text-dim`}>
                         {slot?.equipBonus
                           ? bonusTypeById.get(slot.equipBonus.bonusType)?.name
                           : "-"}
                       </span>
                       {slot?.equipBonus && (
-                        <Lvl tone="dim" className="ml-1">
+                        <Lvl tone="dim" className="ml-1.25">
                           {bonusValueText(
                             slot.equipBonus.bonusType,
                             slot.equipBonus.value,
@@ -624,7 +664,7 @@ export function Card({
           </div>
         </div>
       </div>
-      <div className="text-dim absolute right-4 bottom-2 z-5 text-[11.5px] tracking-wider">
+      <div className="text-dim absolute right-4 bottom-2 z-5 text-base tracking-wider">
         gbfr-sharecard · ddk-epic.github.io/gbfr-sharecard
       </div>
     </div>
@@ -644,17 +684,17 @@ function StatCell({
   unit?: string;
 }) {
   return (
-    <div className={`${PLATE} flex items-baseline gap-2 px-2.5 py-1`}>
+    <div className={`${PLATE} flex items-baseline gap-2.75 px-3.5 py-1.25`}>
       <StatIcon
         tone={tone === "hp" ? "hp" : "default"}
-        className="mr-0.5 self-center"
+        className="mr-0.75 self-center"
       />
-      <span className="text-dim text-[13.5px]">{label}</span>
+      <span className="text-dim text-lg">{label}</span>
       <Lvl
         size="stat"
         tone={tone}
         unit={unit}
-        className={`ml-auto ${tone === "ui" ? "mr-2.25" : ""}`}
+        className={`ml-auto ${tone === "ui" ? "mr-3" : ""}`}
       >
         {value}
       </Lvl>
@@ -679,7 +719,7 @@ function WeaponStat({
       size="wbase"
       tone={filled ? tone : "dim"}
       unit={unit}
-      className={`ml-auto ${tone === "ui" ? "mr-2.25" : ""}`}
+      className={`ml-auto ${tone === "ui" ? "mr-3" : ""}`}
     >
       {children}
     </Lvl>

@@ -15,8 +15,8 @@
  * column gets. Setting it deliberately is a different act, and it moves the band.
  */
 
-export const CARD_W = 1920;
-export const CARD_H = 1080;
+export const CARD_W = 2880;
+export const CARD_H = 1440;
 
 export type CardLayout = {
   /** Uniform padding on all four card edges. The portrait art alone bleeds past it. */
@@ -49,16 +49,16 @@ export type CardLayout = {
 };
 
 export const CARD_LAYOUT: CardLayout = {
-  inset: 18,
-  gap1: 20,
-  gap2: 20,
-  cols: [22, 24, 54],
-  upper: 832,
-  rowGap: 18,
-  floor: 8,
+  inset: 16,
+  gap1: 27,
+  gap2: 27,
+  cols: [20, 27, 53],
+  upper: 1102,
+  rowGap: 24,
+  floor: 2,
   slack: 1,
-  artH: 120,
-  cellH: 34,
+  artH: 51,
+  cellH: 46,
 };
 
 /**
@@ -66,7 +66,8 @@ export const CARD_LAYOUT: CardLayout = {
  * what remains, so the five tracks always sum to exactly CARD_W and no slider
  * can overflow the card.
  */
-export function columnWidths({ inset, gap1, gap2, cols }: CardLayout) {
+export function columnWidths(layout: CardLayout) {
+  const { inset, gap1, gap2, cols } = layout;
   const free = CARD_W - 2 * inset - gap1 - gap2;
   const shares = cols[0] + cols[1] + cols[2];
   return cols.map((share) => (free * share) / shares) as [
@@ -93,11 +94,11 @@ export const gridColumns = (layout: CardLayout) => {
  */
 const SOFT = {
   /** Between the style name and each rank section. */
-  colGap: { base: 7, floor: 3 },
+  colGap: { base: 9, floor: 4 },
   /** Between a rank's label and its cell grid. */
-  rankGap: { base: 7, floor: 3 },
+  rankGap: { base: 9, floor: 4 },
   /** Above each rank label. */
-  rankMt: { base: 11, floor: 0 },
+  rankMt: { base: 15, floor: 0 },
 } as const;
 
 export type SoftPart = keyof typeof SOFT;

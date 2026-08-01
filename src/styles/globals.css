@@ -16,7 +16,7 @@
 }
 
 :root {
-  --ui: #16233b; /* body text */
+  --ui: #325f7d; /* body text */
   --ink-strong: #0e3348; /* headings, buttons, pager arrows */
   --dim: #5f7188; /* muted and secondary text */
   --value: #b06e12; /* numbers, always */
