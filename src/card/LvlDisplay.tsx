@@ -203,6 +203,9 @@ export function LvlDisplay({
 }) {
   const uid = useId();
   const id: SvgId = (name) => `${uid}-${name}`;
+  // A second ink, spanning the words' cap, so they read as light as the number
+  // rather than only its darker foot.
+  const wordId: SvgId = (name) => id(`w-${name}`);
   const figure = { ...FIGURE, ...set };
   const run = useLvlRun(
     traitPrefix,
@@ -241,6 +244,11 @@ export function LvlDisplay({
           >
             <defs>
               <LabelDefs id={id} tone={tone} />
+              <LabelDefs
+                id={wordId}
+                tone={tone}
+                cap={LVL.wordRatio * lvl.cap}
+              />
               {shadow && (
                 // Room for the blur, which the default region would clip.
                 <filter
@@ -267,24 +275,28 @@ export function LvlDisplay({
             {/* Filtered as one group: part by part, each would cast onto the
                 next and double up where they overlap. */}
             <g filter={shadow ? `url(#${id("lblshadow")})` : undefined}>
-              {run.parts.map((part, i) => (
-                <text
-                  key={i}
-                  x={part.xs.join(" ")}
-                  y={lvl.baseline}
-                  textAnchor="start"
-                  fontFamily={FAMILY}
-                  fontSize={part.size}
-                  fill={`url(#${id("lblink")})`}
-                  stroke={`url(#${id("lblkey")})`}
-                  strokeWidth={figure.outline * part.outline}
-                  strokeLinejoin="round"
-                  paintOrder="stroke"
-                  xmlSpace="preserve"
-                >
-                  {part.text}
-                </text>
-              ))}
+              {run.parts.map((part, i) => {
+                // The number takes the full-cap ink; the words take their own.
+                const g = part.text === `${level}` ? id : wordId;
+                return (
+                  <text
+                    key={i}
+                    x={part.xs.join(" ")}
+                    y={lvl.baseline}
+                    textAnchor="start"
+                    fontFamily={FAMILY}
+                    fontSize={part.size}
+                    fill={`url(#${g("lblink")})`}
+                    stroke={`url(#${g("lblkey")})`}
+                    strokeWidth={figure.outline * part.outline}
+                    strokeLinejoin="round"
+                    paintOrder="stroke"
+                    xmlSpace="preserve"
+                  >
+                    {part.text}
+                  </text>
+                );
+              })}
             </g>
           </svg>
         </>
