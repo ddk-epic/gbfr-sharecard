@@ -20,6 +20,7 @@ import { Editor } from "../screens/editor/Editor";
 import { CardScreen } from "../screens/CardScreen";
 import { emptyBuild, type Build, type CharacterId } from "../domain/build";
 import { readBuild, writeBuild } from "../domain/storage";
+import { ParchmentBackdrop } from "../ui";
 
 /**
  * No `validateSearch` on the route: on read the router merges its result over
@@ -79,8 +80,7 @@ function useScene(nav: Nav) {
 
 /**
  * One route, three screens on a single vertical track (select, editor, card).
- * Every transition is the same scroll-down motion: the arriving screen fades
- * in and the slash background stays fixed. The URL says which screen that is.
+ * Every transition is the same scroll-down motion: the arriving screen fades in.
  */
 export function App() {
   const nav = decodeNav(rawSearch(indexRoute.useSearch()));
@@ -124,8 +124,8 @@ export function App() {
 
   return (
     <Stage>
-      {/* the slash art hangs its pseudo-elements on .shell */}
       <div className="shell text-ui absolute inset-0 overflow-hidden bg-linear-160 from-[#f4f8fc] from-0% via-[#e8eff7] via-60% to-[#dfe9f4] to-100%">
+        <ParchmentBackdrop />
         <div
           className="absolute inset-0 z-1 h-[3240px] transition-transform duration-550"
           style={{ transform: `translateY(${-STAGE_HEIGHT * depth}px)` }}

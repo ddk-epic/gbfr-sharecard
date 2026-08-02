@@ -1,5 +1,10 @@
 import type { CSSProperties, MouseEventHandler, ReactNode } from "react";
 import type { TraitId } from "../domain/build";
+
+export {
+  ParchmentBackdrop,
+  type ParchmentBackdropProps,
+} from "./ParchmentBackdrop";
 import {
   STAT_ICON_ART,
   statIconUrl,

@@ -51,6 +51,7 @@ import {
   Icon,
   Lvl,
   Orb,
+  ParchmentBackdrop,
   StatIcon,
   TraitIcon,
   traitIconBox,
@@ -381,6 +382,8 @@ export function Card({
       style={{ width: CARD_W, height: CARD_H, padding: layout.inset }}
       ref={cardRef}
     >
+      <ParchmentBackdrop />
+
       {/* The one declared bleed: art reaches the card's real edge, not the inset. */}
       <div
         className="absolute top-0 left-0 z-1"
