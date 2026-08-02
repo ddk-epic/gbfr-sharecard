@@ -1,10 +1,8 @@
-import type { MouseEventHandler, ReactNode } from "react";
+import type { CSSProperties, MouseEventHandler, ReactNode } from "react";
 import type { TraitId } from "../domain/build";
 import { traitIconUrl } from "../data";
 
-/* Leaf primitives the card and the editor both render. They used to be
-   hand-duplicated per screen; importing the same component is
-   what stops them drifting. */
+/* Leaf primitives the card and the editor both render. */
 
 const ICON_TONE = {
   /* the plain slate chip */
@@ -141,6 +139,18 @@ export function Lvl({
           {unit}
         </i>
       )}
+    </span>
+  );
+}
+
+export function SlantedBar({ share }: { share?: string }) {
+  return (
+    <span
+      aria-hidden
+      className="slantedBar"
+      style={share ? ({ "--bar-share": share } as CSSProperties) : undefined}
+    >
+      <span className="slantedBarInk" />
     </span>
   );
 }

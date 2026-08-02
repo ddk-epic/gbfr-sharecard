@@ -60,10 +60,22 @@
       linear-gradient(#000 92%, transparent 99%),
       linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
     mask-composite: intersect;
-    -webkit-mask-image:
-      linear-gradient(#000 92%, transparent 99%),
-      linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
     -webkit-mask-composite: source-in;
+  }
+  .slantedBar {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: var(--bar-share, 50%);
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, #000 82%, transparent);
+    pointer-events: none;
+  }
+  .slantedBarInk {
+    position: absolute;
+    inset: 0 -100% 0 0;
+    background: rgba(72, 114, 149, 0.26);
+    transform: skewX(-26deg);
+    transform-origin: bottom;
   }
   /* base-stat plate: underline wash, corner cut off the leading edge */
   .notch {

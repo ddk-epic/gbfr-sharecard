@@ -9,6 +9,7 @@ import {
   type LabelTone,
 } from "./lvl-badge";
 import { DIGIT_GLYPHS } from "./digits.generated";
+import { fitSize, layoutRun, LVL_WORD } from "./lvl-run";
 
 /**
  * Paints nothing outside the diamond; the portrait shows through around it.
@@ -136,7 +137,7 @@ function Defs({ id }: { id: SvgId }) {
 }
 
 /**
- * Split out so the wordmark can paint on its own, outside the diamond.
+ * Split out so a level display can paint the same ink, outside the diamond.
  * `tone` is the palette; the ramp across it is the badge's either way.
  */
 export function LabelDefs({
@@ -274,26 +275,12 @@ function LvlDigits({ level, id }: { level: number; id: SvgId }) {
   );
 }
 
-const LABEL = "Lvl";
 const FAMILY = "'GBFR UI'";
 
-// Ascent/descent come from the full glyph set, not the run in hand, so every
-// row's ink box is one height; per-run measuring would drift the baseline.
-const PROBE = `${LABEL} 0123456789`;
+type LabelMetrics = { size: number; xs: number[] };
 
-/** Reserved digits; sigil levels between 11-15. */
-const LEVEL_DIGITS = 2;
-
-type LabelMetrics = {
-  size: number;
-  xs: number[];
-  /** Ink half-width from the centre the xs are set against. */
-  half: number;
-  ascent: number;
-  descent: number;
-};
-
-function useLvlLabel(text: string = LABEL): LabelMetrics | null {
+/** The badge's own "Lvl", centred on its ink over the diamond. */
+function useLvlLabel(): LabelMetrics | null {
   const [metrics, setMetrics] = useState<LabelMetrics | null>(null);
 
   useEffect(() => {
@@ -306,73 +293,21 @@ function useLvlLabel(text: string = LABEL): LabelMetrics | null {
         return;
       }
 
-      const { cap, kern1, kern2 } = BADGE.lvl;
-      let size = cap / 0.71;
-      for (let i = 0; i < 4; i++) {
-        ctx.font = `${size}px ${FAMILY}`;
-        const measured = ctx.measureText("L").actualBoundingBoxAscent;
-        if (!measured) {
-          console.warn(`${FAMILY} measured no ink; Lvl label omitted`);
-          return;
-        }
-        size *= cap / measured;
+      const size = fitSize(ctx, FAMILY, BADGE.lvl.cap);
+      if (!size) {
+        console.warn(`${FAMILY} measured no ink; Lvl label omitted`);
+        return;
       }
 
-      ctx.font = `${size}px ${FAMILY}`;
-      // Faux tabular figures: every digit steps by the widest digit's advance,
-      // centred in its slot, so a level is one width whatever its digits.
-      const figure = Math.max(
-        ...[..."0123456789"].map((d) => ctx.measureText(d).width),
-      );
-      const run = (s: string) => {
-        const kerns = s.startsWith(LABEL) ? [0, kern1, kern2] : [];
-        const boxes = [];
-        let pen = 0;
-        for (let i = 0; i < s.length; i++) {
-          const m = ctx.measureText(s[i]);
-          const digit = s[i] >= "0" && s[i] <= "9";
-          const slack = digit ? (figure - m.width) / 2 : 0;
-          pen += kerns[i] ?? 0;
-          boxes.push({
-            x: pen + slack,
-            left: m.actualBoundingBoxLeft,
-            right: m.actualBoundingBoxRight,
-          });
-          pen += digit ? figure : m.width;
-        }
-        if (!boxes.length) return { xs: [], lo: 0, hi: 0 };
-        // Centre on ink, not advances; a level is the exception - its trailing
-        // edge follows the advance so rows line up whatever the digits.
-        const lo = Math.min(...boxes.map((b) => b.x - b.left));
-        const inked = Math.max(...boxes.map((b) => b.x + b.right));
-        return {
-          xs: boxes.map((b) => b.x),
-          lo,
-          hi: s === LABEL ? inked : Math.max(inked, pen),
-        };
-      };
-
-      const own = run(text);
-      const shift = -(own.lo + own.hi) / 2;
-      // Reserve the widest run's box so every row is one width and neighbouring
-      // columns share an x; a run wider than the reference grows it, not clips.
-      const ref = run(`${LABEL} ${"0".repeat(LEVEL_DIGITS)}`);
-      const half = Math.max((own.hi - own.lo) / 2, (ref.hi - ref.lo) / 2);
-
-      const probe = ctx.measureText(PROBE);
-      setMetrics({
-        size,
-        xs: own.xs.map((x) => x + shift),
-        half,
-        ascent: probe.actualBoundingBoxAscent,
-        descent: probe.actualBoundingBoxDescent,
-      });
+      const run = layoutRun(ctx, FAMILY, size, [{ text: LVL_WORD, scale: 1 }]);
+      const shift = -(run.lo + run.hi) / 2;
+      setMetrics({ size, xs: run.parts[0].xs.map((x) => x + shift) });
     };
 
     // measureText never triggers a load; fonts.load does. Catching matters:
     // a rejection here is how an undecodable face silently emptied the label.
     void document.fonts
-      .load(`16px ${FAMILY}`, text || PROBE)
+      .load(`16px ${FAMILY}`, LVL_WORD)
       .then(() => document.fonts.ready)
       .then(measure)
       .catch((err: unknown) => {
@@ -382,7 +317,7 @@ function useLvlLabel(text: string = LABEL): LabelMetrics | null {
     return () => {
       live = false;
     };
-  }, [text]);
+  }, []);
 
   return metrics;
 }
@@ -390,7 +325,7 @@ function useLvlLabel(text: string = LABEL): LabelMetrics | null {
 function LvlLabel({
   id,
   metrics,
-  text = LABEL,
+  text = LVL_WORD,
 }: {
   id: SvgId;
   metrics: LabelMetrics;
@@ -413,47 +348,5 @@ function LvlLabel({
     >
       {text}
     </text>
-  );
-}
-
-export function LvlWordmark({
-  cap,
-  level,
-  className,
-}: {
-  cap: number;
-  level: number | null;
-  className?: string;
-}) {
-  const uid = useId();
-  const id: SvgId = (name) => `${uid}-${name}`;
-  const text = level === null ? "" : `${LABEL} ${level}`;
-  const metrics = useLvlLabel(text);
-  if (!metrics) return null;
-
-  const { lvl } = BADGE;
-  const pad = lvl.outline / 2;
-  const w = (metrics.half + pad) * 2;
-  // Bound by the ink, not cap: the l and round digits paint outside a cap-high
-  // box. Scale still divides by lvl.cap, so `cap` keeps meaning cap height.
-  const h = metrics.ascent + metrics.descent + pad * 2;
-  return (
-    <svg
-      viewBox={`${lvl.centre - w / 2} ${lvl.baseline - metrics.ascent - pad} ${w} ${h}`}
-      width={(cap * w) / lvl.cap}
-      height={(cap * h) / lvl.cap}
-      role={level === null ? "presentation" : "img"}
-      aria-label={level === null ? undefined : `Level ${level}`}
-      className={className}
-    >
-      {level !== null && (
-        <>
-          <defs>
-            <LabelDefs id={id} />
-          </defs>
-          <LvlLabel id={id} metrics={metrics} text={text} />
-        </>
-      )}
-    </svg>
   );
 }

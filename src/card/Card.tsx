@@ -23,7 +23,8 @@ import {
   resolveWeapon,
   wrightstoneName,
 } from "../data";
-import { LvlBadge, LvlWordmark } from "./LvlBadge";
+import { LvlBadge } from "./LvlBadge";
+import { LvlDisplay } from "./LvlDisplay";
 import {
   CARD_H,
   CARD_LAYOUT,
@@ -195,7 +196,11 @@ function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
           <SigilCell trait={slot?.primaryTrait ?? null} />
           <SigilCell trait={slot?.secondaryTrait ?? null} />
           {/* No slot, no level; the box stays unpainted so name columns keep their x. */}
-          <LvlWordmark cap={SIGIL_LVL_CAP} level={slot ? slot.level : null} />
+          <LvlDisplay
+            cap={SIGIL_LVL_CAP}
+            level={slot ? slot.level : null}
+            tone="gold"
+          />
         </div>
       ))}
     </div>
@@ -205,18 +210,6 @@ function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
 /**
  * Read-only, exactly 2880x1440, never scaled itself - on-screen fitting is the
  * wrapper's job and the PNG export captures this node.
- *
- * Laid out as five grid tracks (three columns, a seam between each pair) over
- * two rows divided by two horizontal lines.
- *
- * The **upper line** ends row 1: Status' bottom edge and the master-traits box's
- * bottom edge both land on it. The **bottom line** ends row 2, liftable off the
- * card's padded edge. Between them sit Skills and Over Mastery + Summons,
- * stretching to fill whatever the two lines leave, separated from the row above
- * by one gap - shared so the two seams read as a single line across the card.
- *
- * Column 2 ignores both lines and spans the pair, top-anchored, reaching as far
- * down as its art box takes it and never past the bottom line.
  */
 export function Card({
   build,
