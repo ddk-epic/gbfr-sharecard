@@ -505,6 +505,12 @@ export function Card({
               <span className={resolved ? "" : "text-dim"}>
                 {resolved?.name ?? "No Weapon"}
               </span>
+              {/* Hardcoded max bonus for now. */}
+              {resolved && (
+                <span className="pl-1.5 font-normal text-[#ffff5f] [-webkit-text-stroke:4px_var(--ui)] [paint-order:stroke]">
+                  +99
+                </span>
+              )}
             </div>
             <div
               data-art
