@@ -153,6 +153,7 @@ function useLvlRun(
         parts: own.parts,
         lo: Math.min(own.lo, ref.lo),
         hi: Math.max(own.hi, ref.hi),
+        end: own.end,
       });
     };
 

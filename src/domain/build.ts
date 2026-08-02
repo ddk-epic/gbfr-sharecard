@@ -21,7 +21,7 @@ export const RANKS: StyleRank[] = ["r1", "r2", "r3", "ex"];
 // Builds are shown at cap: no half-levelled characters or weapons, and
 // weapons are assumed fully transcended.
 export const CHARACTER_LEVEL = 100;
-export const WEAPON_LEVEL = 150;
+export const WEAPON_LEVEL_MAX = 150;
 
 /** Every weapon rolls this many trait rows, so an empty slot can stand in. */
 export const WEAPON_TRAIT_ROWS = 5;

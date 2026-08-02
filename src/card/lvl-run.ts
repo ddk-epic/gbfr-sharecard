@@ -38,8 +38,11 @@ export type LaidPart = {
   outline: number;
 };
 
-/** A laid-out run; `lo`/`hi` bound its ink, which is what a box is drawn from. */
-export type Run = { parts: LaidPart[]; lo: number; hi: number };
+/**
+ * A laid-out run; `lo`/`hi` bound its ink, which is what a box is drawn from.
+ * `end` is the pen after the last advance - where a following part would lead off.
+ */
+export type Run = { parts: LaidPart[]; lo: number; hi: number; end: number };
 
 /** Fits a size whose cap height is `cap` badge units; null if the face has no ink. */
 export function fitSize(
@@ -116,5 +119,5 @@ export function layoutRun(
   // Ink both ends, never the advance: padding off the advance carries the last
   // digit's side bearing on the right only, and reads lopsided. Reserving a
   // fixed width is the caller's job - it lays a reference run and merges.
-  return { parts: laid, lo, hi };
+  return { parts: laid, lo, hi, end: pen };
 }

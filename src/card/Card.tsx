@@ -11,7 +11,7 @@ import {
   CHARACTER_LEVEL,
   RANKS,
   STYLES,
-  WEAPON_LEVEL,
+  WEAPON_LEVEL_MAX,
   WEAPON_TRAIT_ROWS,
 } from "../domain/build";
 import { STYLE_RANK_BUDGETS, stylePerkStates } from "../domain/derive";
@@ -33,6 +33,7 @@ import {
 } from "../data";
 import { LvlBadge } from "./LvlBadge";
 import { LvlDisplay } from "./LvlDisplay";
+import { LvlWeapon } from "./LvlWeapon";
 import {
   CARD_H,
   CARD_LAYOUT,
@@ -139,6 +140,9 @@ const ROW_ICON = 22;
  * edge. Held open on every trait row, marked or not, so the glyphs share an x.
  */
 const ROW_MARKER = 32;
+
+/** Left indent shared by the stat bar and the art box: marker gutter + edge pad. */
+const BAR_INDENT = `calc(var(--spacing) * 2.5 + ${ROW_MARKER}px)`;
 
 /** Matches the glyph box, so name and icon carry the same weight in the row. */
 const ROW_TEXT = "text-2xl font-med text-ui";
@@ -497,20 +501,17 @@ export function Card({
             Weapon
           </Heading>
           <div className="flex-none pb-3">
-            <div className="flex items-baseline justify-center gap-2.75 px-2.5">
-              <span
-                className={`text-2xl font-bold ${resolved ? "" : "text-dim"}`}
-              >
+            <div className="flex items-baseline justify-center px-2.5 text-2xl font-bold">
+              <span className={resolved ? "" : "text-dim"}>
                 {resolved?.name ?? "No Weapon"}
-              </span>
-              <span className="text-dim text-base whitespace-nowrap">
-                {resolved?.seriesName ?? "-"} · Lv. {WEAPON_LEVEL}
               </span>
             </div>
             <div
               data-art
-              className="mt-0.75 mb-1.25 flex items-center justify-center overflow-hidden"
-              style={{ height: layout.artH }}
+              // No clip: the art is object-contained anyway, and the level's
+              // descenders need to show past the bottom edge.
+              className="relative mt-0.75 mb-1.25 flex items-center justify-center px-2.5"
+              style={{ height: layout.artH, paddingLeft: BAR_INDENT }}
             >
               {resolved && (
                 <img
@@ -519,12 +520,23 @@ export function Card({
                   className="max-h-full max-w-full object-contain"
                 />
               )}
+              {resolved && (
+                // Overlaid on the art: level bottom-left at the bar indent,
+                // series bottom-right; the fraction is dropped.
+                <div
+                  className="absolute inset-x-0 bottom-1 flex items-end justify-between px-2.5"
+                  style={{ paddingLeft: BAR_INDENT }}
+                >
+                  <LvlWeapon cap={42} level={WEAPON_LEVEL_MAX} />
+                  <span className="text-dim text-base whitespace-nowrap">
+                    {resolved.seriesName}
+                  </span>
+                </div>
+              )}
             </div>
             <div
               className="mt-1.25 mb-2 flex items-baseline gap-5 px-2.5 text-xl"
-              style={{
-                paddingLeft: `calc(var(--spacing) * 2.5 + ${ROW_MARKER}px)`,
-              }}
+              style={{ paddingLeft: BAR_INDENT }}
             >
               {/* Each plate carries its own slot and indent. */}
               <BaseStat {...statPlate("hp")}>

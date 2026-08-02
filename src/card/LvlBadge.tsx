@@ -6,6 +6,8 @@ import {
   digitPositions,
   LABEL_INK,
   mix,
+  type DigitGlyph,
+  type DigitPlacement,
   type LabelTone,
 } from "./lvl-badge";
 import { DIGIT_GLYPHS } from "./digits.generated";
@@ -58,7 +60,7 @@ export function LvlBadge({
 export type SvgId = (name: string) => string;
 
 function Defs({ id }: { id: SvgId }) {
-  const { diamond, glow, digits, color } = BADGE;
+  const { diamond, glow, color } = BADGE;
   return (
     <>
       <radialGradient
@@ -84,6 +86,18 @@ function Defs({ id }: { id: SvgId }) {
         <feGaussianBlur stdDeviation="1.6" />
       </filter>
 
+      <DigitInkDefs id={id} />
+      <LabelDefs id={id} />
+    </>
+  );
+}
+
+/** The digit ink, keyline and texture ramp, in glyph units. Shared by any run
+    that paints the baked number glyphs, badge or not. */
+export function DigitInkDefs({ id }: { id: SvgId }) {
+  const { digits, color } = BADGE;
+  return (
+    <>
       {/* Glyph units over the shared span, so every digit gets the same ramp. */}
       <linearGradient
         id={id("ink")}
@@ -130,8 +144,6 @@ function Defs({ id }: { id: SvgId }) {
           fill={`url(#${id("texramp")})`}
         />
       </mask>
-
-      <LabelDefs id={id} />
     </>
   );
 }
@@ -143,13 +155,17 @@ function Defs({ id }: { id: SvgId }) {
 export function LabelDefs({
   id,
   tone = "plain",
+  cap = BADGE.lvl.cap,
 }: {
   id: SvgId;
   tone?: LabelTone;
+  /** The ramp's span above the baseline; pass the word's own cap so a smaller
+      word still takes the full ink ramp rather than only its darker foot. */
+  cap?: number;
 }) {
   const { lvl } = BADGE;
   const ink = LABEL_INK[tone];
-  const labelTop = lvl.baseline - lvl.cap;
+  const labelTop = lvl.baseline - cap;
   return (
     <>
       {/* No texture, so the ramp alone shades it: starts tinted, runs past bottom. */}
@@ -231,17 +247,42 @@ function LvlDigits({ level, id }: { level: number; id: SvgId }) {
   const { digits } = BADGE;
   const placements = digitPositions(level, DIGIT_GLYPHS);
   const top = digits.baseline - CELL.baseline * digits.scale;
+  return (
+    <TexturedDigits
+      id={id}
+      placements={placements}
+      scale={digits.scale}
+      top={top}
+    />
+  );
+}
 
+/**
+ * The baked number glyphs on one baseline. `placements` are draw origins and
+ * `scale`/`top` map glyph units onto the target: same paint as the badge, so a
+ * level display can carry the game's textured figures. Needs DigitInkDefs.
+ */
+export function TexturedDigits({
+  id,
+  placements,
+  scale,
+  top,
+  glyphs = DIGIT_GLYPHS,
+}: {
+  id: SvgId;
+  placements: DigitPlacement[];
+  scale: number;
+  top: number;
+  glyphs?: Record<string, DigitGlyph>;
+}) {
+  const { digits } = BADGE;
   return (
     <>
       {placements.map(({ char, x }, n) => {
-        const glyph = DIGIT_GLYPHS[char];
+        const glyph = glyphs[char];
         const clip = id(`clip${n}`);
         return (
-          <g
-            key={n}
-            transform={`translate(${x} ${top}) scale(${digits.scale})`}
-          >
+          <g key={n} transform={`translate(${x} ${top}) scale(${scale})`}>
             <clipPath id={clip}>
               <path clipRule="evenodd" d={glyph.outline} />
             </clipPath>

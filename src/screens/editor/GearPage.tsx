@@ -5,7 +5,7 @@ import type {
   Weapon,
   Wrightstone,
 } from "../../domain/build";
-import { WEAPON_LEVEL, WEAPON_TRAIT_ROWS } from "../../domain/build";
+import { WEAPON_LEVEL_MAX, WEAPON_TRAIT_ROWS } from "../../domain/build";
 import {
   TRAITS,
   traitById,
@@ -124,7 +124,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
           ))}
         </Select>
         <span className="text-dim text-[12px] whitespace-nowrap">
-          {resolved?.seriesName ?? "-"} · Lv.{WEAPON_LEVEL}
+          {resolved?.seriesName ?? "-"} · Lv.{WEAPON_LEVEL_MAX}
         </span>
       </div>
       {/* placeholder until per-weapon art exists */}
