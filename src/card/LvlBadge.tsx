@@ -1,5 +1,13 @@
 import { useEffect, useId, useState } from "react";
-import { BADGE, CELL, CELL_INK_TOP, digitPositions } from "./lvl-badge";
+import {
+  BADGE,
+  CELL,
+  CELL_INK_TOP,
+  digitPositions,
+  LABEL_INK,
+  mix,
+  type LabelTone,
+} from "./lvl-badge";
 import { DIGIT_GLYPHS } from "./digits.generated";
 
 /**
@@ -46,27 +54,7 @@ export function LvlBadge({
   );
 }
 
-type SvgId = (name: string) => string;
-
-/** Clamped: p may exceed 1. */
-function mix(hex: string, p: number, to = "#ffffff") {
-  const parse = (c: string) => {
-    const n = parseInt(c.slice(1), 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  };
-  const a = parse(hex);
-  const b = parse(to);
-  return (
-    "#" +
-    a
-      .map((v, i) =>
-        Math.max(0, Math.min(255, Math.round(v + (b[i] - v) * p)))
-          .toString(16)
-          .padStart(2, "0"),
-      )
-      .join("")
-  );
-}
+export type SvgId = (name: string) => string;
 
 function Defs({ id }: { id: SvgId }) {
   const { diamond, glow, digits, color } = BADGE;
@@ -147,13 +135,23 @@ function Defs({ id }: { id: SvgId }) {
   );
 }
 
-/** Split out so the wordmark can paint on its own, outside the diamond. */
-function LabelDefs({ id }: { id: SvgId }) {
-  const { lvl, color } = BADGE;
+/**
+ * Split out so the wordmark can paint on its own, outside the diamond.
+ * `tone` is the palette; the ramp across it is the badge's either way.
+ */
+export function LabelDefs({
+  id,
+  tone = "plain",
+}: {
+  id: SvgId;
+  tone?: LabelTone;
+}) {
+  const { lvl } = BADGE;
+  const ink = LABEL_INK[tone];
   const labelTop = lvl.baseline - lvl.cap;
   return (
     <>
-      {/* No texture, so the ramp alone shades it: starts tinted, runs past inkBottom. */}
+      {/* No texture, so the ramp alone shades it: starts tinted, runs past bottom. */}
       <linearGradient
         id={id("lblink")}
         gradientUnits="userSpaceOnUse"
@@ -162,18 +160,12 @@ function LabelDefs({ id }: { id: SvgId }) {
         x2="0"
         y2={lvl.baseline}
       >
-        <stop
-          offset="0"
-          stopColor={mix(color.inkTop, lvl.inkStart, color.inkBottom)}
-        />
+        <stop offset="0" stopColor={mix(ink.top, lvl.inkStart, ink.bottom)} />
         <stop
           offset={lvl.shadeHold}
-          stopColor={mix(color.inkTop, lvl.inkStart, color.inkBottom)}
+          stopColor={mix(ink.top, lvl.inkStart, ink.bottom)}
         />
-        <stop
-          offset="1"
-          stopColor={mix(color.inkTop, lvl.inkEnd, color.inkBottom)}
-        />
+        <stop offset="1" stopColor={mix(ink.top, lvl.inkEnd, ink.bottom)} />
       </linearGradient>
       <linearGradient
         id={id("lblkey")}
@@ -183,8 +175,8 @@ function LabelDefs({ id }: { id: SvgId }) {
         x2="0"
         y2={lvl.baseline}
       >
-        <stop offset="0" stopColor={mix(color.keyline, lvl.keylineFade)} />
-        <stop offset="1" stopColor={color.keyline} />
+        <stop offset="0" stopColor={mix(ink.keyline, lvl.keylineFade)} />
+        <stop offset="1" stopColor={ink.keyline} />
       </linearGradient>
     </>
   );
@@ -301,10 +293,6 @@ type LabelMetrics = {
   descent: number;
 };
 
-/**
- * Fits size by measuring - the font's cap-height ratio is unknown.
- * Hand kerning applies only to a leading "Lvl"
- */
 function useLvlLabel(text: string = LABEL): LabelMetrics | null {
   const [metrics, setMetrics] = useState<LabelMetrics | null>(null);
 

@@ -73,6 +73,47 @@ export const BADGE = {
   } as Record<string, number>,
 } as const;
 
+/** Clamped: p may exceed 1. */
+export function mix(hex: string, p: number, to = "#ffffff") {
+  const parse = (c: string) => {
+    const n = parseInt(c.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  const a = parse(hex);
+  const b = parse(to);
+  return (
+    "#" +
+    a
+      .map((v, i) =>
+        Math.max(0, Math.min(255, Math.round(v + (b[i] - v) * p)))
+          .toString(16)
+          .padStart(2, "0"),
+      )
+      .join("")
+  );
+}
+
+const OFF_WHITE = "#f7f3ea";
+const statInk = (color: string) => ({
+  top: mix(color, 0.3),
+  bottom: color,
+  keyline: OFF_WHITE,
+});
+
+export const LABEL_INK = {
+  plain: {
+    top: BADGE.color.inkTop,
+    bottom: BADGE.color.inkBottom,
+    keyline: BADGE.color.keyline,
+  },
+  gold: { top: "#ffeedc", bottom: "#ffbe86", keyline: "#80402f" },
+  hp: statInk("#007d50"),
+  atk: statInk("#b45a00"),
+  ui: statInk("#325f7d"),
+} as const;
+
+export type LabelTone = keyof typeof LABEL_INK;
+
 /** The cell every digit shares, in glyph units; pad sits each side of the ink. */
 export const CELL = { baseline: 333, ascent: 325, pad: 8 } as const;
 export const CELL_INK_TOP = CELL.baseline - CELL.ascent;
