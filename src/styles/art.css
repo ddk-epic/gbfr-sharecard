@@ -54,7 +54,6 @@
     transform-origin: top left;
     z-index: 0;
   }
-  /* portrait: fades out at the bottom and both sides */
   .portrait {
     mask-image:
       linear-gradient(#000 92%, transparent 99%),
@@ -77,18 +76,6 @@
     transform: skewX(-26deg);
     transform-origin: bottom;
   }
-  /* base-stat plate: underline wash, corner cut off the leading edge */
-  .notch {
-    background: linear-gradient(
-        90deg,
-        rgba(106, 147, 181, 0.3),
-        rgba(106, 147, 181, 0.4) calc(100% - 16px),
-        rgba(106, 147, 181, 0)
-      )
-      bottom/100% 40% no-repeat;
-    clip-path: polygon(23px 0, 100% 0, 100% 100%, 0 100%);
-  }
-  /* name banner: opaque in the middle, feathered at both ends */
   .nameBanner {
     background: linear-gradient(
       90deg,

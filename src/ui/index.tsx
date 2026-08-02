@@ -1,6 +1,11 @@
 import type { CSSProperties, MouseEventHandler, ReactNode } from "react";
 import type { TraitId } from "../domain/build";
-import { traitIconUrl } from "../data";
+import {
+  STAT_ICON_ART,
+  statIconUrl,
+  traitIconUrl,
+  type StatIconId,
+} from "../data";
 
 /* Leaf primitives the card and the editor both render. */
 
@@ -36,10 +41,6 @@ export type TraitIconSize = keyof typeof TRAIT_ICON_SIZE;
 /** The glyph's box alone, for a caller holding the indent without drawing. */
 export const traitIconBox = (size: TraitIconSize = 16) => TRAIT_ICON_SIZE[size];
 
-/**
- * A trait's glyph. `trait` is non-nullable; an empty cell is a
- * different component (`EmptyTraitIcon`).
- */
 export function TraitIcon({
   trait,
   size = 16,
@@ -79,22 +80,25 @@ export function Orb({ size = 16 }: { size?: keyof typeof ORB_SIZE }) {
   );
 }
 
-const STAT_ICON_TONE = {
-  default: "from-[#5a6f96] to-[#2c3f63]",
-  hp: "from-[#8fdf63] to-[#2f9c3c]",
-};
+/** Px per source px: the glyphs differ in size and the game scales, not boxes. */
+const STAT_ICON_SCALE = 0.27;
 
-/** Rotated square marking a base stat. */
 export function StatIcon({
-  tone = "default",
+  stat,
+  scale = STAT_ICON_SCALE,
   className = "",
 }: {
-  tone?: keyof typeof STAT_ICON_TONE;
+  stat: StatIconId;
+  scale?: number;
   className?: string;
 }) {
+  const art = STAT_ICON_ART[stat];
   return (
-    <span
-      className={`size-4 flex-none rotate-45 rounded-xs bg-linear-135 ${STAT_ICON_TONE[tone]} ${className}`}
+    <img
+      src={statIconUrl(stat)}
+      alt=""
+      className={`flex-none ${className}`}
+      style={{ width: art.w * scale, height: art.h * scale }}
     />
   );
 }
@@ -158,15 +162,34 @@ export function SlantedBar({ share }: { share?: string }) {
 /** One base-stat plate: icon, then the caller's value field. */
 export function BaseStat({
   children,
-  tone = "default",
+  stat,
+  iconScale,
+  slot = 17,
+  padRight = 16,
+  flush = false,
 }: {
   children: ReactNode;
-  tone?: keyof typeof STAT_ICON_TONE;
+  stat: StatIconId;
+  iconScale?: number;
+  slot?: number;
+  padRight?: number;
+  flush?: boolean;
 }) {
   return (
-    <span className="notch inline-flex min-w-0 flex-1 items-center gap-2.25 py-0.75 pr-4 pl-4.5">
-      <StatIcon tone={tone} className="self-center" />
-      {children}
+    <span
+      className={`relative inline-flex min-w-0 flex-1 items-center ${flush ? "" : "py-0.75"}`}
+      style={{ paddingRight: padRight }}
+    >
+      <SlantedBar />
+      <span
+        className="relative flex flex-none justify-center"
+        style={{ width: slot * 2 }}
+      >
+        <StatIcon stat={stat} scale={iconScale} />
+      </span>
+      <span className="relative flex min-w-0 flex-1 items-center">
+        {children}
+      </span>
     </span>
   );
 }

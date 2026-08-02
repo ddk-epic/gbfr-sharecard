@@ -28,6 +28,7 @@ import {
   traitName,
   resolveWeapon,
   wrightstoneName,
+  type StatIconId,
 } from "../data";
 import { LvlBadge } from "./LvlBadge";
 import { LvlDisplay } from "./LvlDisplay";
@@ -74,11 +75,13 @@ const STYLE_RANK_LABELS: Record<StyleRank, string> = {
   ex: "Style Rank EX",
 };
 
-/** Heading to body is 7px under the 11px column gap. */
 const COL_HEADING = "-mb-1.25";
 
 /** The portrait's share of the card height; it bleeds past the inset. */
 const PORTRAIT_H = "70%";
+
+/** Weapon stat plate Icon inset */
+const STAT_PLATE_ICON_INSET = 3;
 
 const SECTION =
   "rounded-lg bg-white/78 px-4.75 py-4 shadow-[0_1px_8px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
@@ -141,8 +144,50 @@ const ROW_MARKER = 32;
 /** Matches the glyph box, so name and icon carry the same weight in the row. */
 const ROW_TEXT = "text-2xl font-med text-ui";
 
-/** Cap height in px, not the ink box (~1.21x this). Free of row height to ~26. */
+/** Cap height, not the ink box. */
 const ROW_LVL_CAP = 22;
+
+/**
+ * The base stats, calibrated plate by plate against tmp/gear-select.png.
+ * Everything below is stated x cap, so the band scales from this one number.
+ * It happens to match the trait rows' figures; the two are set independently.
+ */
+const WEAPON_STAT_CAP = 22;
+
+/** How the game sets a stat figure, against how it sets a level. */
+const WEAPON_STAT_SET = {
+  boxH: 1.35,
+  nudge: 0.06,
+  track: -0.09,
+  outline: 1.5,
+  // The plate's bar is the one that shows: the figure's box hugs its ink and
+  // the plate's padRight is the whole indent.
+  pad: 0,
+};
+
+/**
+ * Each plate, x cap: the icon's centre in from the bar's foot, and the figure's
+ * ink in from the plate's right edge.
+ */
+const WEAPON_STAT_PLATES = {
+  hp: { slot: 0.86, padRight: 0.98 },
+  atk: { slot: 0.86, padRight: 1.37 },
+  crit: { slot: 0.93, padRight: 0.96 },
+  stun: { slot: 0.85, padRight: 1.16 },
+};
+
+/** Source px per cap px. */
+const WEAPON_STAT_ICON = 0.27 / 20;
+
+/** One plate's props, with everything stated x cap resolved against it. */
+const statPlate = (stat: keyof typeof WEAPON_STAT_PLATES) => ({
+  stat,
+  // Flat px on top of the calibrated slot, so it holds as the cap changes.
+  slot: WEAPON_STAT_PLATES[stat].slot * WEAPON_STAT_CAP + STAT_PLATE_ICON_INSET,
+  padRight: WEAPON_STAT_PLATES[stat].padRight * WEAPON_STAT_CAP,
+  iconScale: WEAPON_STAT_ICON * WEAPON_STAT_CAP,
+  flush: true,
+});
 
 /**
  * Letter-spacing by name length, tightest for the longest. Steps are em so they
@@ -243,8 +288,8 @@ function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
 }
 
 /**
- * Read-only, exactly 2880x1440, never scaled itself - on-screen fitting is the
- * wrapper's job and the PNG export captures this node.
+ * Read-only and never scaled itself - on-screen fitting is the wrapper's job,
+ * and the PNG export captures this node.
  */
 export function Card({
   build,
@@ -378,16 +423,28 @@ export function Card({
           </div>
           <section className={SECTION}>
             <div className="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-3.5 gap-y-2">
-              <StatCell tone="hp" label="HP" value={build.status.hp} />
-              <StatCell tone="atk" label="ATK" value={build.status.atk} />
+              <StatCell
+                tone="hp"
+                stat="hp"
+                label="HP"
+                value={build.status.hp}
+              />
+              <StatCell
+                tone="atk"
+                stat="atk"
+                label="ATK"
+                value={build.status.atk}
+              />
               <StatCell
                 tone="ui"
+                stat="crit"
                 label="Crit. Hit Rate"
                 value={build.status.critRate}
                 unit="%"
               />
               <StatCell
                 tone="ui"
+                stat="stun"
                 label="Stun Power"
                 value={build.status.stunPower}
               />
@@ -462,30 +519,29 @@ export function Card({
               className="mt-0.75 mb-1.25 rounded-[13.5px] bg-linear-115 from-[rgba(106,147,181,0.26)] to-[rgba(106,147,181,0.05)]"
               style={{ height: layout.artH }}
             />
-            <div className="mt-1.25 mb-2 flex items-baseline gap-1.25 text-xl">
-              <BaseStat tone="hp">
-                <WeaponStat tone="hp" filled={!!resolved}>
-                  {resolved?.hp ?? "-"}
-                </WeaponStat>
+            <div
+              className="mt-1.25 mb-2 flex items-baseline gap-5 px-2.5 text-xl"
+              style={{
+                paddingLeft: `calc(var(--spacing) * 2.5 + ${ROW_MARKER}px)`,
+              }}
+            >
+              {/* Each plate carries its own slot and indent: the glyphs are
+                  not one width, and the game sets each figure to its own. */}
+              <BaseStat {...statPlate("hp")}>
+                <WeaponStat tone="hp" value={resolved?.hp ?? null} />
               </BaseStat>
-              <BaseStat>
-                <WeaponStat tone="atk" filled={!!resolved}>
-                  {resolved?.atk ?? "-"}
-                </WeaponStat>
+              <BaseStat {...statPlate("atk")}>
+                <WeaponStat tone="atk" value={resolved?.atk ?? null} />
               </BaseStat>
-              <BaseStat>
+              <BaseStat {...statPlate("crit")}>
                 <WeaponStat
                   tone="ui"
-                  filled={!!weapon}
-                  unit={weapon ? "%" : undefined}
-                >
-                  {weapon ? weapon.critRate : "-"}
-                </WeaponStat>
+                  value={weapon?.critRate ?? null}
+                  unit="%"
+                />
               </BaseStat>
-              <BaseStat>
-                <WeaponStat tone="ui" filled={!!weapon}>
-                  {weapon?.stun ?? "-"}
-                </WeaponStat>
+              <BaseStat {...statPlate("stun")}>
+                <WeaponStat tone="ui" value={weapon?.stun ?? null} />
               </BaseStat>
             </div>
             {resolved
@@ -670,21 +726,21 @@ export function Card({
 /** A c1 status box: label left, number right with its unit hung outside. */
 function StatCell({
   tone,
+  stat,
   label,
   value,
   unit,
 }: {
+  /** The number's colour; `stat` is the glyph, and crit and stun share a tone. */
   tone: "hp" | "atk" | "ui";
+  stat: StatIconId;
   label: string;
   value: number;
   unit?: string;
 }) {
   return (
     <div className={`${PLATE} flex items-baseline gap-2.75 px-3.5 py-1.25`}>
-      <StatIcon
-        tone={tone === "hp" ? "hp" : "default"}
-        className="mr-0.75 self-center"
-      />
+      <StatIcon stat={stat} className="mr-0.75 self-center" />
       <span className="text-dim text-lg">{label}</span>
       <Lvl
         size="stat"
@@ -698,26 +754,36 @@ function StatCell({
   );
 }
 
-/** A weapon base stat; `filled` is false when no weapon is equipped. */
+/**
+ * A weapon base stat, keylined like a level. The display's box is the plate's
+ * whole height, so the plate's bottom half is exactly the bar it would have
+ * drawn itself. A null value keeps that box and shows a dash in it.
+ */
 function WeaponStat({
-  children,
   tone,
-  filled,
+  value,
   unit,
 }: {
-  children: ReactNode;
   tone: "hp" | "atk" | "ui";
-  filled: boolean;
+  value: number | null;
   unit?: string;
 }) {
   return (
-    <Lvl
-      size="wbase"
-      tone={filled ? tone : "dim"}
-      unit={unit}
-      className={`ml-auto ${tone === "ui" ? "mr-3" : ""}`}
-    >
-      {children}
-    </Lvl>
+    <span className="relative ml-auto inline-flex">
+      <LvlDisplay
+        cap={WEAPON_STAT_CAP}
+        level={value}
+        lvlWord={false}
+        unit={value === null ? undefined : unit}
+        bar={false}
+        tone={tone}
+        set={WEAPON_STAT_SET}
+      />
+      {value === null && (
+        <span className="text-dim absolute inset-0 grid place-items-center text-2xl">
+          -
+        </span>
+      )}
+    </span>
   );
 }

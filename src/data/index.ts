@@ -36,7 +36,7 @@ import cagliostroJson from "./characters/cagliostro.json";
 import rackamJson from "./characters/rackam.json";
 import charlottaJson from "./characters/charlotta.json";
 
-/** T7 index into a slot's level sequence. */
+/** The maxed transcendence rung, as an index into a slot's level sequence. */
 const MAX_RUNG = 7;
 /** Terminus HP does not take the character offset - it is flat for everyone. */
 const HP_FLAT_SERIES = "terminus";
@@ -88,8 +88,18 @@ export const elementIconUrl = (element: ElementId) =>
 export const skillIconUrl = (characterId: CharacterId, skillId: string) =>
   `${import.meta.env.BASE_URL}icons/skills/${characterId}/${skillId}.webp`;
 
-/** A trait carries its own glyph; a sigil shows its primary trait's. Null only
-    when the glyph is absent from the index - unreachable for the shipped roster. */
+export type StatIconId = "hp" | "atk" | "crit" | "stun" | "power";
+export const statIconUrl = (stat: StatIconId) =>
+  `${import.meta.env.BASE_URL}icons/stats/${stat}.webp`;
+
+export const STAT_ICON_ART: Record<StatIconId, { w: number; h: number }> = {
+  hp: { w: 67, h: 67 },
+  atk: { w: 85, h: 85 },
+  crit: { w: 80, h: 84 },
+  stun: { w: 79, h: 76 },
+  power: { w: 127, h: 128 },
+};
+
 const TRAIT_GLYPHS = iconIndexJson.traits as Record<string, string>;
 export const traitIconUrl = (trait: TraitId): string | null => {
   const glyph = TRAIT_GLYPHS[trait];
@@ -98,7 +108,7 @@ export const traitIconUrl = (trait: TraitId): string | null => {
     : null;
 };
 
-/** The traits a summon can roll, in catalog order. */
+/** The traits in catalog order. */
 export const summonTraits = (summonId: SummonId | null | undefined) =>
   (summonId ? (summonById.get(summonId)?.traits ?? []) : [])
     .map((id) => traitById.get(id))
@@ -129,7 +139,7 @@ export function characterCatalog(id: CharacterId): CharacterCatalog {
   return catalog;
 }
 
-/** The weapons a character owns, in canonical series order, for the selector. */
+/** The weapons a character owns, in canonical series order. */
 export function characterWeaponOptions(
   id: CharacterId,
 ): { series: string; name: string }[] {
@@ -140,7 +150,7 @@ export function characterWeaponOptions(
   });
 }
 
-/** HP is series.hp + weaponHpOffset, except Terminus, which is flat. Null if unowned. */
+/** HP is series.hp + weaponHpOffset, except Terminus. Null if unowned. */
 export function resolveWeapon(
   id: CharacterId,
   weapon: Weapon,

@@ -130,7 +130,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
       {/* placeholder until per-weapon art exists */}
       <div className="pointer-events-none my-1 min-h-15.5 flex-1 rounded-md bg-linear-115 from-[rgba(106,147,181,0.28)] to-[rgba(106,147,181,0.05)]" />
       <div className="mt-1 mb-1.5 flex items-baseline gap-1 text-[12.5px]">
-        <BaseStat>
+        <BaseStat stat="hp">
           <Lvl
             tone={resolved ? "value" : "dim"}
             size="gear"
@@ -139,7 +139,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
             {resolved?.hp ?? "-"}
           </Lvl>
         </BaseStat>
-        <BaseStat>
+        <BaseStat stat="atk">
           <Lvl
             tone={resolved ? "value" : "dim"}
             size="gear"
@@ -148,7 +148,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
             {resolved?.atk ?? "-"}
           </Lvl>
         </BaseStat>
-        <BaseStat>
+        <BaseStat stat="crit">
           {weapon ? (
             <NumInput
               width="wbase"
@@ -163,7 +163,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
             </Lvl>
           )}
         </BaseStat>
-        <BaseStat>
+        <BaseStat stat="stun">
           {weapon ? (
             <NumInput
               width="wbase"
