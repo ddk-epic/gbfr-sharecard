@@ -76,8 +76,6 @@ const STYLE_RANK_LABELS: Record<StyleRank, string> = {
   ex: "Style Rank EX",
 };
 
-const COL_HEADING = "-mb-1.25";
-
 /** The portrait's share of the card height; it bleeds past the inset. */
 const PORTRAIT_H = "70%";
 
@@ -171,10 +169,10 @@ const WEAPON_STAT_SET = {
  * ink in from the plate's right edge.
  */
 const WEAPON_STAT_PLATES = {
-  hp: { slot: 0.86, padRight: 0.98 },
-  atk: { slot: 0.86, padRight: 1.37 },
-  crit: { slot: 0.93, padRight: 0.96 },
-  stun: { slot: 0.85, padRight: 1.16 },
+  hp: { slot: 0.9, padRight: 1 },
+  atk: { slot: 0.9, padRight: 1 },
+  crit: { slot: 0.9, padRight: 1 },
+  stun: { slot: 0.9, padRight: 1 },
 };
 
 /** Source px per cap px. */
@@ -218,12 +216,7 @@ function TraitCell({ trait }: { trait: TraitId | null }) {
         <span aria-hidden className={`flex-none ${traitIconBox(ROW_ICON)}`} />
       )}
       {/* Not clipped: short names and tracking do the fitting, so an overflow shows rather than trims. */}
-      <span
-        className={`whitespace-nowrap ${trait ? "" : "text-dim"}`}
-        style={{ letterSpacing: nameTracking(name) }}
-      >
-        {name}
-      </span>
+      <span style={{ letterSpacing: nameTracking(name) }}>{name}</span>
     </div>
   );
 }
@@ -238,7 +231,7 @@ function GearRow({
 }) {
   return (
     <div
-      className={`border-line grid items-center border-b-2 px-2.5 py-0.75 ${ROW_TEXT}`}
+      className={`border-line grid items-center border-b-2 px-2.5 py-1 ${ROW_TEXT}`}
       style={{ gridTemplateColumns: `${cols} auto` }}
     >
       {children}
@@ -487,7 +480,7 @@ export function Card({
                       />
                     </>
                   ) : (
-                    <span className="text-dim">-</span>
+                    <span>-</span>
                   )}
                 </div>
               );
@@ -500,10 +493,10 @@ export function Card({
           className="relative z-1 flex flex-col gap-3.75 overflow-hidden"
           style={{ gridColumn: 3, gridRow: "1 / 3" }}
         >
-          <Heading size="lg" className={`${COL_HEADING} flex-none`}>
+          <Heading size="lg" className="flex-none">
             Weapon
           </Heading>
-          <div className="flex-none">
+          <div className="flex-none pb-3">
             <div className="flex items-baseline justify-center gap-2.75 px-2.5">
               <span
                 className={`text-2xl font-bold ${resolved ? "" : "text-dim"}`}
@@ -571,7 +564,7 @@ export function Card({
               : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
                   <GearTraitRow trait={null} level={null} key={i} />
                 ))}
-            <div className="font-med text-dim mt-3 -mb-1 flex justify-between px-2.5 tracking-[0.07em]">
+            <div className="font-med text-dim mt-3 flex justify-between px-2.5 tracking-[0.07em]">
               <span>Imbued Traits</span>
               <span>{wrightstoneName(build.wrightstone?.main.trait)}</span>
             </div>
@@ -583,7 +576,7 @@ export function Card({
               />
             ))}
           </div>
-          <Heading size="lg" className={`${COL_HEADING} flex-none`}>
+          <Heading size="lg" className="flex-none">
             Sigils
           </Heading>
           <SigilsSection sigils={build.sigils} />
@@ -598,9 +591,9 @@ export function Card({
             <Heading
               tone="deep"
               size="lg"
-              className={`${COL_HEADING} flex flex-none items-baseline justify-between`}
+              className="flex flex-none items-baseline justify-between"
             >
-              Master Traits
+              <span>Master Traits</span>
               <span className="text-deep-label text-lg font-semibold tracking-[0.02em] normal-case text-shadow-none">
                 {perkSummary}
               </span>
@@ -672,7 +665,7 @@ export function Card({
                       </Lvl>
                     </>
                   ) : (
-                    <span className="text-dim">-</span>
+                    <span>-</span>
                   )}
                 </div>
               ))}

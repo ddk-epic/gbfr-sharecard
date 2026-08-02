@@ -259,8 +259,8 @@ const HEADING_TONE = {
 /* Size and padding as one step: the padding must track the text or the band
    stops reading as a band. The card sets its own, exporting at a fixed px size. */
 const HEADING_SIZE = {
-  md: "px-3 py-1 text-[15px]",
-  lg: "px-4 py-1.25 text-[20px]",
+  md: "px-3 py-1.75 text-[15px]",
+  lg: "px-4 py-2 text-[20px]",
 };
 
 /** Section heading. Spacing is the parent's job, so this declares no margin. */

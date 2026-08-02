@@ -99,3 +99,14 @@
   --color-deep-ring: var(--deep-ring);
   --color-deep-cell: var(--deep-cell);
 }
+
+/* Trim line boxes to cap height / alphabetic baseline so text centres on the
+   caps. Not inherited, so applied to every element. Chromium 133+. */
+@layer base {
+  *,
+  ::before,
+  ::after {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
+}
