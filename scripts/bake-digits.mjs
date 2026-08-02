@@ -1,98 +1,150 @@
 /**
- * Bakes the Lvl badge's digit glyphs into src/card/digits.generated.ts.
- * Run: node scripts/bake-digits.mjs
+ * Bakes the level figures and the Lvl diamond into src/card/digits.generated.ts.
+ * Run: node scripts/bake-digits.mjs [extract-dir]
  *
- * Only tex and tint are baked - the correction is per-pixel and independent of
- * where a glyph sits. shade stays at runtime: it also drives the ink gradient under
- * the texture, and baking it would put one number in two places that must agree.
+ * The figures are the game's own number sprites, not a font and not a trace.
+ * Their layout metrics come from the atlas descriptor rather than from
+ * measuring a screenshot - see docs/digits.md for what Rect and Padding mean
+ * and how the padding order was settled.
+ *
+ * Art is embedded as WebP data URIs rather than shipped under public/. The card
+ * is rasterised on export, and inlining is what keeps that self-contained; it
+ * is also smaller than the outline-plus-texture file it replaces.
+ * Art and game data (c) Cygames. Archive access: docs/archive.md.
+ *
+ * The extract dir needs the number atlas cropped out of the archive:
+ *
+ *   GBFRDataTools extract-all -i <game>/data.i -o <dir> -f ui/atlas/common_number.
+ *   GBFRDataTools b-convert -i <dir>/ui/atlas/common_number.tex.texb
+ *
+ * which writes both the sprite PNGs and common_number.tex.yaml beside them.
  */
-import fs from "node:fs";
-import path from "node:path";
+import { readFile, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const SRC = path.join(ROOT, "assets", "digits");
-const OUT = path.join(ROOT, "src", "card", "digits.generated.ts");
+const EXTRACT_DIR = process.argv[2] ?? "../gbfr-extract";
+const ATLAS = `${EXTRACT_DIR}/ui/atlas/common_number`;
+const DESCRIPTOR = `${ATLAS}.tex.yaml`;
+const DIAMOND = fileURLToPath(new URL("../assets/lvl-diamond.png", import.meta.url));
+const OUT = new URL("../src/card/digits.generated.ts", import.meta.url);
+const QUALITY = 90;
 
-/** Re-bake when these move. */
-const TREATMENT = { tex: 1, tint: 0.8 };
+/** `cmn_num_lv12` is the dash the game shows for an unknown level. */
+const DASH = "12";
 
-/**
- * How much of the field each channel keeps: v' = k.v + (1 - k). Red keeps the most,
- * so it darkens hardest, which is what tips the shading blue rather than grey.
- */
-const keep = ({ tex, tint }) => [
-  tex,
-  tex * (1 - 0.3 * tint),
-  tex * (1 - 0.75 * tint),
-];
+if (!existsSync(DESCRIPTOR))
+  throw new Error(
+    `no ${DESCRIPTOR} - crop the atlas first, see this file's header`,
+  );
 
-async function bakeTexture(file) {
-  const grey = sharp(file).greyscale();
-  const { data, info } = await grey.raw().toBuffer({ resolveWithObject: true });
-  const k = keep(TREATMENT);
-  const out = Buffer.alloc(info.width * info.height * 3);
-  for (let i = 0; i < info.width * info.height; i++) {
-    const v = data[i];
-    for (let c = 0; c < 3; c++) {
-      out[i * 3 + c] = Math.max(
-        0,
-        Math.min(255, Math.round(k[c] * v + (1 - k[c]) * 255)),
-      );
-    }
-  }
-  // Lossless here: the correction is a function of one grey value, so the result
-  // only ever holds 256 distinct colours. A third the bytes of truecolour.
-  return sharp(out, {
-    raw: { width: info.width, height: info.height, channels: 3 },
-  })
-    .png({ compressionLevel: 9, palette: true, colours: 256, dither: 0 })
-    .toBuffer();
-}
-
+// ------------------------------------------------------------------ metrics
+// Rect is the glyph's cell (its width is the advance, its height is shared by
+// the set); Padding insets the ink within it, ordered left, bottom, right, top.
+const lines = (await readFile(DESCRIPTOR, "utf8")).split("\n").map((l) => l.trim());
 const glyphs = {};
-for (const ch of "0123456789") {
-  const svg = fs.readFileSync(path.join(SRC, `${ch}.svg`), "utf8");
-  const box = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
-  const outline = /\sd="([^"]+)"/.exec(svg);
-  if (!box || !outline)
-    throw new Error(`cannot read outline or viewBox from ${ch}.svg`);
-  const png = await bakeTexture(path.join(SRC, "texture", `${ch}.png`));
-  glyphs[ch] = {
-    width: Number(box[1]),
-    height: Number(box[2]),
-    outline: outline[1],
-    texture: `data:image/png;base64,${png.toString("base64")}`,
+let cell = null;
+for (let i = 0; i < lines.length; i++) {
+  const named = /^- Name: (cmn_num_lv(\d\d))$/.exec(lines[i]);
+  if (!named) continue;
+  const field = (re) => {
+    for (let j = i; j < i + 6; j++) {
+      const m = re.exec(lines[j]);
+      if (m) return m[1].split(",").map((v) => Number(v.trim()));
+    }
+    throw new Error(`${named[1]}: no ${re}`);
+  };
+  const [, , rectW, rectH] = field(/^Rect: (.+)$/);
+  const [left, bottom, right, top] = field(/^Padding: (.+)$/);
+  if (cell !== null && rectH !== cell)
+    throw new Error(`${named[1]}: cell height ${rectH} breaks the set's ${cell}`);
+  cell ??= rectH;
+  const round = (v) => Math.round(v * 100) / 100;
+  glyphs[named[2] === DASH ? "-" : String(Number(named[2]))] = {
+    sprite: named[1],
+    advance: rectW,
+    x: round(left),
+    y: round(top),
+    w: round(rectW - left - right),
+    h: round(rectH - top - bottom),
   };
 }
 
-const body = Object.entries(glyphs)
-  .map(
-    ([ch, g]) => `  "${ch}": {
-    width: ${g.width},
-    height: ${g.height},
-    outline:
-      "${g.outline}",
-    texture:
-      "${g.texture}",
-  },`,
-  )
-  .join("\n");
+const wanted = [..."0123456789", "-"];
+const missing = wanted.filter((c) => !(c in glyphs));
+if (missing.length) throw new Error(`missing figures: ${missing.join(", ")}`);
 
-fs.writeFileSync(
-  OUT,
-  `// Generated by scripts/bake-digits.mjs - do not edit.
-// Baked with tex ${TREATMENT.tex}, tint ${TREATMENT.tint}; re-run the script to change them.
-import type { DigitGlyph } from "./lvl-badge";
+/** Where the feet sit. The glyphs that sit on it agree to a rounding error. */
+const feet = ["0", "2", "6", "8"].map((d) => glyphs[d].y + glyphs[d].h);
+const spread = Math.max(...feet) - Math.min(...feet);
+if (spread > 1)
+  throw new Error(`baseline glyphs disagree by ${spread}; padding order wrong?`);
+const baseline = Math.round(feet.reduce((a, b) => a + b) / feet.length);
+
+// --------------------------------------------------------------------- art
+const webp = async (source) =>
+  `data:image/webp;base64,${(await sharp(source).webp({ quality: QUALITY }).toBuffer()).toString("base64")}`;
+
+for (const glyph of Object.values(glyphs)) {
+  const file = `${ATLAS}/${glyph.sprite}.png`;
+  if (!existsSync(file)) throw new Error(`no sprite ${file}`);
+  // The crop is the ink exactly, so its size is the check on the metrics.
+  const { width, height } = await sharp(file).metadata();
+  if (Math.abs(width - glyph.w) > 1 || Math.abs(height - glyph.h) > 1)
+    throw new Error(
+      `${glyph.sprite}: crop is ${width}x${height}, metrics say ${glyph.w}x${glyph.h}`,
+    );
+  glyph.src = await webp(file);
+}
+
+const diamond = await webp(DIAMOND);
+const diamondMeta = await sharp(DIAMOND).metadata();
+
+// ------------------------------------------------------------------ output
+const entry = ([char, g]) =>
+  `  ${JSON.stringify(char)}: { advance: ${g.advance}, x: ${g.x}, y: ${g.y}, ` +
+  `w: ${g.w}, h: ${g.h}, src: "${g.src}" },`;
+
+const source = `/* Generated by scripts/bake-digits.mjs - do not edit.
+   Level figures and the Lvl diamond, from the game archive. Metrics are the
+   atlas descriptor's own; see docs/digits.md. Art (c) Cygames. */
+
+export type DigitGlyph = {
+  /** Cell units from this glyph's origin to the next glyph's. */
+  advance: number;
+  /** The ink's offset inside the cell, from its top-left. */
+  x: number;
+  y: number;
+  /** The ink's size, which is also the art's pixel size. */
+  w: number;
+  h: number;
+  /** WebP data URI of the ink. */
+  src: string;
+};
+
+/** Every figure shares this cell height; it is what aligns them. */
+export const FIGURE_CELL = ${cell};
+
+/** Where the feet sit, in cell units. 3 4 5 7 9 hang below it. */
+export const FIGURE_BASELINE = ${baseline};
+
+/** The "0" ink height. These are old-style figures, so this is the x-height,
+    and it is the only sane handle to scale the set by. */
+export const FIGURE_XHEIGHT = ${glyphs["0"].h};
 
 export const DIGIT_GLYPHS: Record<string, DigitGlyph> = {
-${body}
+${wanted.map((c) => entry([c, glyphs[c]])).join("\n")}
 };
-`,
-);
 
-const kb = (fs.statSync(OUT).size / 1024).toFixed(0);
+/** The diamond behind the level. Square art; the diamond body is inset from
+    its edge by a glow margin, which BADGE.diamond.bodyShare accounts for. */
+export const LVL_DIAMOND = "${diamond}";
+`;
+
+await writeFile(OUT, source);
 console.log(
-  `wrote ${path.relative(ROOT, OUT)} (${kb} KB, ${Object.keys(glyphs).length} glyphs)`,
+  `wrote src/card/digits.generated.ts: ${wanted.length} figures + diamond ` +
+    `(${diamondMeta.width}x${diamondMeta.height}), cell ${cell}, baseline ${baseline}, ` +
+    `${Math.round(source.length / 1024)} KB`,
 );

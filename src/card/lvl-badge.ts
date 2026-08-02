@@ -1,37 +1,52 @@
 /**
- * Lvl badge measurements and digit-run layout, in reference-screenshot coordinates.
- * Texture treatment (tex, tint) is baked into the glyphs by scripts/bake-digits.mjs.
+ * Lvl badge measurements, in reference-screenshot coordinates.
+ *
+ * The figures and the diamond are the game's own art. Their own metrics - cell,
+ * baseline, advances - live in digits.generated.ts and are explained in
+ * docs/digits.md; what is here is only where the badge puts them.
  */
+import { DIGIT_GLYPHS, type DigitGlyph } from "./digits.generated";
 
-/** Produced by scripts/bake-digits.mjs. */
-export type DigitGlyph = {
-  /** Glyph units; cells vary in width, share a height. */
-  width: number;
-  height: number;
-  /** even-odd */
-  outline: string;
-  /** Data URI, pre-corrected; must be multiplied. */
-  texture: string;
+export type DigitPlacement = {
+  char: string;
+  /** The ink's left edge, in cell units. */
+  x: number;
+  glyph: DigitGlyph;
 };
 
-export type DigitPlacement = { char: string; x: number };
-
 export const BADGE = {
-  /** Origin matches the reference screenshot; the diamond is 111 square. */
+  /** Origin matches the reference screenshot; the diamond is 110 across. */
   box: { w: 140, h: 140 },
-  /** Half-diagonals. */
-  diamond: { cx: 69, cy: 70, outer: 55, inner: 50 },
-  rule: { outerWidth: 1.5, innerWidth: 1.4 },
-  /** Eyeballed, not measured: the number covers the core in the reference shot. */
-  glow: { r: 25.5, core: 0.67, bend: 0.5 },
-  /** outline is glyph units, painted under the fill so half shows. */
+  diamond: {
+    cx: 69,
+    cy: 70,
+    /** Half-diagonal of the diamond body. */
+    outer: 55,
+    /**
+     * The art's diamond as a share of its canvas half-width. It carries a glow
+     * margin outside the body, so the image box is larger than the diamond and
+     * cannot simply be drawn at `outer`.
+     */
+    bodyShare: 133.5 / 148,
+  },
+  /**
+   * Where the figures sit, as shares of the diamond's width. The diamond is
+   * the anchor - it is the art everything else is placed against - so stating
+   * these against it keeps the number put when the diamond is resized, and
+   * lets them be calibrated on the diamond rather than through the badge box.
+   */
   digits: {
-    scale: 0.13,
-    centre: 70,
-    baseline: 83.3,
-    outline: 27,
-    keylineFade: 0.3,
-    shadeHold: 0.3,
+    /** The figures' x-height. */
+    xHeight: 0.31,
+    /** The run's ink centre, off the diamond's own centre. */
+    centre: 0,
+    /** The baseline, below the diamond's centre. */
+    baseline: 0.143,
+    /**
+     * Cell units between figures. The set's own advances are the game's, but
+     * the badge sets them tighter than the atlas ships them.
+     */
+    tracking: -17,
   },
   /** kern1 is the L-v pair, kern2 v-l, added to the font's advances. */
   lvl: {
@@ -47,30 +62,12 @@ export const BADGE = {
     kern2: 0.1,
     outline: 2.7,
   },
+  /** The figures carry their own colour; these dress the "Lvl" word. */
   color: {
-    halo: "#2a648f", // soft brightening hugging the diamond, not a shadow
-    face: "#3280ae",
-    glow: "#5ad3f9",
-    ruleOuter: "#ccdfe0",
-    ruleInner: "#83c4dd",
     inkTop: "#ffffff",
     inkBottom: "#c3e3ff",
-    /** Shared by both keylines. */
     keyline: "#1e3852",
   },
-  /** Ink-left to ink-left, glyph units; digits never seen paired are estimated. */
-  advance: {
-    0: 229,
-    1: 119,
-    2: 225,
-    3: 205,
-    4: 207,
-    5: 226,
-    6: 227,
-    7: 217,
-    8: 233,
-    9: 228,
-  } as Record<string, number>,
 } as const;
 
 /** Clamped: p may exceed 1. */
@@ -114,31 +111,40 @@ export const LABEL_INK = {
 
 export type LabelTone = keyof typeof LABEL_INK;
 
-/** The cell every digit shares, in glyph units; pad sits each side of the ink. */
-export const CELL = { baseline: 333, ascent: 325, pad: 8 } as const;
-export const CELL_INK_TOP = CELL.baseline - CELL.ascent;
+/**
+ * Walks the pen across the figures' shared-height cells, in cell units.
+ * `tracking` sits between figures and never after the last, so a single figure
+ * is not padded and a run's box hugs its ink on both sides.
+ */
+export function layoutDigits(
+  text: string,
+  tracking = 0,
+  glyphs: Record<string, DigitGlyph> = DIGIT_GLYPHS,
+): DigitPlacement[] {
+  const placements: DigitPlacement[] = [];
+  let pen = 0;
+  for (const char of text) {
+    const glyph = glyphs[char];
+    if (!glyph) continue; // an unknown character sets nothing rather than guess
+    if (placements.length) pen += tracking;
+    placements.push({ char, x: pen + glyph.x, glyph });
+    pen += glyph.advance;
+  }
+  return placements;
+}
 
 /**
- * Badge units. Centred on the run's ink, not its advances - the last glyph
- * contributes only its ink width.
+ * The run's ink span in cell units - what a centred run is centred on. The
+ * advances overhang the ink at both ends, so centring on them sits a run
+ * visibly off.
  */
-export function digitPositions(
-  level: number,
-  glyphs: Record<string, DigitGlyph>,
-): DigitPlacement[] {
-  const chars = [...String(level)].filter((c) => c in glyphs);
-  if (!chars.length) return [];
-
-  const { scale, centre } = BADGE.digits;
-  const inkWidth = (c: string) => glyphs[c].width - CELL.pad * 2;
-  const total =
-    chars.slice(0, -1).reduce((sum, c) => sum + BADGE.advance[c], 0) +
-    inkWidth(chars[chars.length - 1]);
-
-  let pen = centre - (total * scale) / 2;
-  return chars.map((char) => {
-    const placement = { char, x: pen - CELL.pad * scale };
-    pen += BADGE.advance[char] * scale;
-    return placement;
-  });
+export function inkSpan(placements: DigitPlacement[]): {
+  lo: number;
+  hi: number;
+} {
+  if (!placements.length) return { lo: 0, hi: 0 };
+  return {
+    lo: Math.min(...placements.map((p) => p.x)),
+    hi: Math.max(...placements.map((p) => p.x + p.glyph.w)),
+  };
 }

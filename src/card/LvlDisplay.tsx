@@ -11,7 +11,7 @@ import {
   type Run,
 } from "./lvl-run";
 
-/** The display is set in the medium face; the badge's own label is not. */
+/** The medium face, as every "Lvl" word on the card is set in. */
 const FAMILY = "'GBFR UI Medium'";
 
 /** What the game puts in front of a trait's level. */
@@ -44,11 +44,7 @@ const LVL = {
   shadow: { dx: 0, dy: 0.02, blur: 0.02, opacity: 0.6, darken: 0.5 },
 } as const;
 
-/**
- * How a figure is set inside its box. The level chip's values are the defaults;
- * the base stats are set from the same measuring but differently, so a caller
- * may take any of it over.
- */
+/** How a figure is set inside its box. */
 export type FigureSet = {
   /** Box height in cap heights. The bar fills its bottom half. */
   boxH: number;

@@ -1,15 +1,10 @@
 import { useEffect, useId, useState } from "react";
-import {
-  DigitInkDefs,
-  LabelDefs,
-  TexturedDigits,
-  type SvgId,
-} from "./LvlBadge";
-import { BADGE, CELL, type DigitPlacement } from "./lvl-badge";
-import { DIGIT_GLYPHS } from "./digits.generated";
+import { Figures, LabelDefs, type SvgId } from "./LvlBadge";
+import { BADGE, inkSpan, layoutDigits, type DigitPlacement } from "./lvl-badge";
+import { FIGURE_BASELINE, FIGURE_XHEIGHT } from "./digits.generated";
 import { fitSize, layoutRun, LVL_WORD, type LaidPart } from "./lvl-run";
 
-/** The word is set in the medium face; the number is the baked glyph run. */
+/** The word is set in the medium face; the number is the game's own figures. */
 const FAMILY = "'GBFR UI Medium'";
 
 /** All x the number's cap height. */
@@ -18,12 +13,24 @@ const WORD_OUTLINE = 2; // the word's keyline, badge units
 const GAP = 0.28; // Lvl to number
 const PAD = 0.14; // box past the ink
 
+/**
+ * The figures' x-height as a share of BADGE.lvl.cap. The figures are old-style,
+ * so they have no cap to match the word against; this is the size the hand-cut
+ * glyphs this replaced were rendering at, kept so the row does not resize.
+ */
+const FIGURE_RATIO = 0.711;
+
 type Laid = {
   word: LaidPart | null;
-  glyphs: { placements: DigitPlacement[]; scale: number; top: number };
+  glyphs: {
+    placements: DigitPlacement[];
+    scale: number;
+    originX: number;
+    originY: number;
+  };
   lo: number;
   hi: number;
-  /** How far the figures' cell reaches below the baseline, badge units. */
+  /** How far the figures reach below the baseline, badge units. */
   descent: number;
 };
 
@@ -53,27 +60,19 @@ function useWeaponLvl(level: number, wordRatio: number): Laid | null {
         { text: LVL_WORD, scale, track: WORD_TRACK },
       ]);
 
-      // Step the baked figures off the word's advance by the game's gap; the
-      // last figure counts its ink, so the box hugs the number on both sides.
-      const gScale = cap / CELL.ascent;
+      // Step the figures off the word's advance by the game's gap, and start
+      // them on their ink rather than their cell, so the box hugs the number.
+      const gScale = (FIGURE_RATIO * cap) / FIGURE_XHEIGHT;
       const start = word.end + GAP * cap;
-      const chars = [...String(level)].filter((c) => c in DIGIT_GLYPHS);
-      let pen = start;
-      const placements: DigitPlacement[] = chars.map((char) => {
-        const p = { char, x: pen - CELL.pad * gScale };
-        pen += BADGE.advance[char] * gScale;
-        return p;
-      });
-      const inkWidth = (c: string) => DIGIT_GLYPHS[c].width - CELL.pad * 2;
-      const total = chars.length
-        ? chars.slice(0, -1).reduce((s, c) => s + BADGE.advance[c], 0) +
-          inkWidth(chars[chars.length - 1])
-        : 0;
+      // The badge's tracking, for want of a separate calibration for this row.
+      const placements = layoutDigits(String(level), BADGE.digits.tracking);
+      const span = inkSpan(placements);
 
-      // The figures' cell runs well below the baseline; reserve it so the ink
-      // is never clipped. The component cancels it back out with a margin.
-      const cellBelow = chars.reduce(
-        (mx, c) => Math.max(mx, DIGIT_GLYPHS[c].height - CELL.baseline),
+      // Descenders run below the baseline; reserve what this number actually
+      // needs so the ink is never clipped. The component cancels it back out
+      // with a margin.
+      const below = placements.reduce(
+        (mx, p) => Math.max(mx, p.glyph.y + p.glyph.h - FIGURE_BASELINE),
         0,
       );
 
@@ -82,11 +81,12 @@ function useWeaponLvl(level: number, wordRatio: number): Laid | null {
         glyphs: {
           placements,
           scale: gScale,
-          top: baseline - CELL.baseline * gScale,
+          originX: start - span.lo * gScale,
+          originY: baseline - FIGURE_BASELINE * gScale,
         },
         lo: Math.min(word.lo, start),
-        hi: Math.max(word.hi, start + total * gScale),
-        descent: cellBelow * gScale,
+        hi: Math.max(word.hi, start + (span.hi - span.lo) * gScale),
+        descent: below * gScale,
       });
     };
 
@@ -132,8 +132,8 @@ export function LvlWeapon({
   const left = laid.lo - pad;
   const right = laid.hi + pad;
   const top = baseline - uCap - pad;
-  // Reserve the figures' full below-baseline cell so nothing clips; the box
-  // otherwise ends a pad below the baseline, as the word does.
+  // Reserve the figures' full below-baseline cell so nothing clips
+  // below the baseline.
   const boxH = uCap + laid.descent + 2 * pad;
   const px = cap / uCap;
 
@@ -156,7 +156,6 @@ export function LvlWeapon({
           {/* The ramp spans the word's own cap, so the smaller word reads as
               light as the badge's rather than only its dark foot. */}
           <LabelDefs id={id} cap={wordRatio * uCap} />
-          <DigitInkDefs id={id} />
         </defs>
         {laid.word && (
           <text
@@ -175,11 +174,11 @@ export function LvlWeapon({
             {laid.word.text}
           </text>
         )}
-        <TexturedDigits
-          id={id}
+        <Figures
           placements={laid.glyphs.placements}
           scale={laid.glyphs.scale}
-          top={laid.glyphs.top}
+          originX={laid.glyphs.originX}
+          originY={laid.glyphs.originY}
         />
       </svg>
     </span>

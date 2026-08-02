@@ -1,16 +1,18 @@
 import { useEffect, useId, useState } from "react";
 import {
   BADGE,
-  CELL,
-  CELL_INK_TOP,
-  digitPositions,
+  inkSpan,
   LABEL_INK,
+  layoutDigits,
   mix,
-  type DigitGlyph,
   type DigitPlacement,
   type LabelTone,
 } from "./lvl-badge";
-import { DIGIT_GLYPHS } from "./digits.generated";
+import {
+  FIGURE_BASELINE,
+  FIGURE_XHEIGHT,
+  LVL_DIAMOND,
+} from "./digits.generated";
 import { fitSize, layoutRun, LVL_WORD } from "./lvl-run";
 
 /**
@@ -42,111 +44,16 @@ export function LvlBadge({
       aria-label={`Level ${level}`}
     >
       <defs>
-        <Defs id={id} />
+        <LabelDefs id={id} />
       </defs>
-      <LvlDiamond id={id} />
-      <rect
-        width={box.w}
-        height={box.h}
-        fill={`url(#${id("glow")})`}
-        clipPath={`url(#${id("face")})`}
-      />
+      <LvlDiamond />
       {label && <LvlLabel id={id} metrics={label} />}
-      <LvlDigits level={level} id={id} />
+      <LvlDigits level={level} />
     </svg>
   );
 }
 
 export type SvgId = (name: string) => string;
-
-function Defs({ id }: { id: SvgId }) {
-  const { diamond, glow, color } = BADGE;
-  return (
-    <>
-      <radialGradient
-        id={id("glow")}
-        gradientUnits="userSpaceOnUse"
-        cx={diamond.cx}
-        cy={diamond.cy}
-        r={glow.r}
-      >
-        <stop offset="0" stopColor={color.glow} stopOpacity="1" />
-        <stop offset={glow.core} stopColor={color.glow} stopOpacity="1" />
-        <stop
-          offset={(1 + glow.core) / 2}
-          stopColor={color.glow}
-          stopOpacity={glow.bend}
-        />
-        <stop offset="1" stopColor={color.glow} stopOpacity="0" />
-      </radialGradient>
-      <clipPath id={id("face")}>
-        <path d={diamondPath(diamond.outer)} />
-      </clipPath>
-      <filter id={id("soft")} x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="1.6" />
-      </filter>
-
-      <DigitInkDefs id={id} />
-      <LabelDefs id={id} />
-    </>
-  );
-}
-
-/** The digit ink, keyline and texture ramp, in glyph units. Shared by any run
-    that paints the baked number glyphs, badge or not. */
-export function DigitInkDefs({ id }: { id: SvgId }) {
-  const { digits, color } = BADGE;
-  return (
-    <>
-      {/* Glyph units over the shared span, so every digit gets the same ramp. */}
-      <linearGradient
-        id={id("ink")}
-        gradientUnits="userSpaceOnUse"
-        x1="0"
-        y1={CELL_INK_TOP}
-        x2="0"
-        y2={CELL.baseline}
-      >
-        <stop offset="0" stopColor={color.inkTop} />
-        <stop offset={digits.shadeHold} stopColor={color.inkTop} />
-        <stop offset="1" stopColor={color.inkBottom} />
-      </linearGradient>
-      <linearGradient
-        id={id("key")}
-        gradientUnits="userSpaceOnUse"
-        x1="0"
-        y1={CELL_INK_TOP}
-        x2="0"
-        y2={CELL.baseline}
-      >
-        <stop offset="0" stopColor={mix(color.keyline, digits.keylineFade)} />
-        <stop offset="1" stopColor={color.keyline} />
-      </linearGradient>
-      {/* Held off above the shade line, fading in towards the baseline. */}
-      <linearGradient
-        id={id("texramp")}
-        gradientUnits="userSpaceOnUse"
-        x1="0"
-        y1={CELL_INK_TOP}
-        x2="0"
-        y2={CELL.baseline}
-      >
-        <stop offset="0" stopColor="#ffffff" stopOpacity="0" />
-        <stop offset={digits.shadeHold} stopColor="#ffffff" stopOpacity="0" />
-        <stop offset="1" stopColor="#ffffff" stopOpacity="1" />
-      </linearGradient>
-      <mask id={id("texmask")} maskContentUnits="userSpaceOnUse">
-        <rect
-          x="-200"
-          y="-200"
-          width="2000"
-          height="1200"
-          fill={`url(#${id("texramp")})`}
-        />
-      </mask>
-    </>
-  );
-}
 
 /**
  * Split out so a level display can paint the same ink, outside the diamond.
@@ -199,124 +106,68 @@ export function LabelDefs({
   );
 }
 
-const diamondPath = (r: number) => {
-  const { cx, cy } = BADGE.diamond;
-  return `M ${cx} ${cy - r} L ${cx + r} ${cy} L ${cx} ${cy + r} L ${cx - r} ${cy} Z`;
-};
-
-function LvlDiamond({ id }: { id: SvgId }) {
-  const { diamond, rule, color } = BADGE;
-  const side = diamond.outer * Math.SQRT2;
-  const inner = diamond.inner * Math.SQRT2;
+function LvlDiamond() {
+  const { diamond } = BADGE;
+  const size = (diamond.outer * 2) / diamond.bodyShare;
   return (
-    <g transform={`translate(${diamond.cx} ${diamond.cy}) rotate(45)`}>
-      {/* Brightening, not a shadow. */}
-      <rect
-        x={-side / 2 - 2}
-        y={-side / 2 - 2}
-        width={side + 4}
-        height={side + 4}
-        fill="none"
-        stroke={color.halo}
-        strokeWidth="4"
-        filter={`url(#${id("soft")})`}
-      />
-      <rect
-        x={-side / 2}
-        y={-side / 2}
-        width={side}
-        height={side}
-        fill={color.face}
-        stroke={color.ruleOuter}
-        strokeWidth={rule.outerWidth}
-      />
-      <rect
-        x={-inner / 2}
-        y={-inner / 2}
-        width={inner}
-        height={inner}
-        fill="none"
-        stroke={color.ruleInner}
-        strokeWidth={rule.innerWidth}
-      />
-    </g>
-  );
-}
-
-function LvlDigits({ level, id }: { level: number; id: SvgId }) {
-  const { digits } = BADGE;
-  const placements = digitPositions(level, DIGIT_GLYPHS);
-  const top = digits.baseline - CELL.baseline * digits.scale;
-  return (
-    <TexturedDigits
-      id={id}
-      placements={placements}
-      scale={digits.scale}
-      top={top}
+    <image
+      href={LVL_DIAMOND}
+      x={diamond.cx - size / 2}
+      y={diamond.cy - size / 2}
+      width={size}
+      height={size}
     />
   );
 }
 
-/**
- * The baked number glyphs on one baseline. `placements` are draw origins and
- * `scale`/`top` map glyph units onto the target: same paint as the badge, so a
- * level display can carry the game's textured figures. Needs DigitInkDefs.
- */
-export function TexturedDigits({
-  id,
+function LvlDigits({ level }: { level: number }) {
+  const { diamond, digits } = BADGE;
+  const placements = layoutDigits(String(level), digits.tracking);
+  const span = inkSpan(placements);
+  // Everything is a share of the diamond's width, so the figures ride it.
+  const width = diamond.outer * 2;
+  const scale = (digits.xHeight * width) / FIGURE_XHEIGHT;
+  return (
+    <Figures
+      placements={placements}
+      scale={scale}
+      // Centred on the run's ink, not its advances, and sat on the baseline.
+      originX={
+        diamond.cx + digits.centre * width - ((span.lo + span.hi) / 2) * scale
+      }
+      originY={diamond.cy + digits.baseline * width - FIGURE_BASELINE * scale}
+    />
+  );
+}
+
+export function Figures({
   placements,
   scale,
-  top,
-  glyphs = DIGIT_GLYPHS,
+  originX,
+  originY,
 }: {
-  id: SvgId;
   placements: DigitPlacement[];
   scale: number;
-  top: number;
-  glyphs?: Record<string, DigitGlyph>;
+  originX: number;
+  originY: number;
 }) {
-  const { digits } = BADGE;
   return (
     <>
-      {placements.map(({ char, x }, n) => {
-        const glyph = glyphs[char];
-        const clip = id(`clip${n}`);
-        return (
-          <g key={n} transform={`translate(${x} ${top}) scale(${scale})`}>
-            <clipPath id={clip}>
-              <path clipRule="evenodd" d={glyph.outline} />
-            </clipPath>
-            <path
-              d={glyph.outline}
-              fill={`url(#${id("ink")})`}
-              fillRule="evenodd"
-              stroke={`url(#${id("key")})`}
-              strokeWidth={digits.outline}
-              strokeLinejoin="round"
-              paintOrder="stroke"
-            />
-            <g clipPath={`url(#${clip})`} style={{ isolation: "isolate" }}>
-              <rect
-                width={glyph.width}
-                height={glyph.height}
-                fill={`url(#${id("ink")})`}
-              />
-              <image
-                href={glyph.texture}
-                width={glyph.width}
-                height={glyph.height}
-                mask={`url(#${id("texmask")})`}
-                style={{ mixBlendMode: "multiply" }}
-              />
-            </g>
-          </g>
-        );
-      })}
+      {placements.map(({ x, glyph }, n) => (
+        <image
+          key={n}
+          href={glyph.src}
+          x={originX + x * scale}
+          y={originY + glyph.y * scale}
+          width={glyph.w * scale}
+          height={glyph.h * scale}
+        />
+      ))}
     </>
   );
 }
 
-const FAMILY = "'GBFR UI'";
+const FAMILY = "'GBFR UI Medium'";
 
 type LabelMetrics = { size: number; xs: number[] };
 
