@@ -1,6 +1,12 @@
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import { ArrowLeftRight } from "lucide-react";
-import type { Build, SigilSlot, StyleId, StyleRank } from "../domain/build";
+import type {
+  Build,
+  SigilSlot,
+  StyleId,
+  StyleRank,
+  TraitId,
+} from "../domain/build";
 import {
   CHARACTER_LEVEL,
   RANKS,
@@ -38,7 +44,6 @@ import {
 } from "./layout";
 import {
   BaseStat,
-  EmptyTraitIcon,
   Heading,
   Icon,
   Lvl,
@@ -46,7 +51,6 @@ import {
   StatIcon,
   TraitIcon,
   traitIconBox,
-  TraitRow,
   Wpanel,
 } from "../ui";
 
@@ -90,9 +94,6 @@ const CLIP = "overflow-hidden text-ellipsis whitespace-nowrap";
 const OPT =
   "flex items-center gap-2 overflow-hidden rounded-sm px-2.25 py-1 text-lg leading-[1.12] data-long:gap-1.25 data-long:px-1.75 data-long:py-0.75 data-long:text-base data-long:leading-[1.06]";
 
-/** Figure-space pad so single-digit trait levels stay column-aligned. */
-const padLevel = (level: number | string) => String(level).padStart(2, " ");
-
 /**
  * What the layout is costing the content, counted on every render. `artPx` is
  * the art box's *rendered* height rather than its requested one - the two differ
@@ -124,28 +125,24 @@ function Soft({ h, part }: { h: number; part: SoftPart }) {
   );
 }
 
-function EmptyTraitRow() {
-  return (
-    <TraitRow size="lg">
-      <EmptyTraitIcon />
-      <span className="text-dim">-</span>
-      <Lvl tone="dim">T.Lvl {padLevel("-")}</Lvl>
-    </TraitRow>
-  );
-}
-
-/* A sigil row: glyph, name, "Lvl <n>", separated by hairline rules, not plates.
-   One row carries both of a slot's traits as two glyph+name columns sharing the
-   level; names are set at the glyph's size so each reads as one line. */
+/* A gear row: glyph, name, level, separated by hairline rules, not plates.
+   Sigils carry two glyph+name columns sharing one level; weapon and imbued rows
+   carry one. Names are set at the glyph's size, so each reads as one line. */
 
 /* Sized within the name's line box so the glyph doesn't drive row height. */
-const SIGIL_ICON = 22;
+const ROW_ICON = 22;
+
+/**
+ * The marker gutter, px - a trait glyph's width, the marker at its trailing
+ * edge. Held open on every trait row, marked or not, so the glyphs share an x.
+ */
+const ROW_MARKER = 32;
 
 /** Matches the glyph box, so name and icon carry the same weight in the row. */
-const SIGIL_TEXT = "text-2xl font-med text-ui";
+const ROW_TEXT = "text-2xl font-med text-ui";
 
 /** Cap height in px, not the ink box (~1.21x this). Free of row height to ~26. */
-const SIGIL_LVL_CAP = 22;
+const ROW_LVL_CAP = 22;
 
 /**
  * Letter-spacing by name length, tightest for the longest. Steps are em so they
@@ -163,16 +160,16 @@ const nameTracking = (name: string) => {
   return step ? `${step.em}em` : undefined;
 };
 
-/** Primary and secondary render identically; the column is what tells them apart. */
-function SigilCell({ trait }: { trait: SigilSlot["primaryTrait"] | null }) {
+/** Sigil primary and secondary, weapon slot, imbued row: all one cell. */
+function TraitCell({ trait }: { trait: TraitId | null }) {
   const name = trait ? traitName(trait) : "-";
   return (
     <div className={CELL}>
       {trait ? (
-        <TraitIcon trait={trait} size={SIGIL_ICON} />
+        <TraitIcon trait={trait} size={ROW_ICON} />
       ) : (
         /* Spacer, not a dash: holds the glyph's width so the dash indents like a name. */
-        <span aria-hidden className={`flex-none ${traitIconBox(SIGIL_ICON)}`} />
+        <span aria-hidden className={`flex-none ${traitIconBox(ROW_ICON)}`} />
       )}
       {/* Not clipped: short names and tracking do the fitting, so an overflow shows rather than trims. */}
       <span
@@ -185,23 +182,61 @@ function SigilCell({ trait }: { trait: SigilSlot["primaryTrait"] | null }) {
   );
 }
 
+/** `cols` is the name columns' track; the level always trails in an auto one. */
+function GearRow({
+  children,
+  cols = "1fr",
+}: {
+  children: ReactNode;
+  cols?: string;
+}) {
+  return (
+    <div
+      className={`border-line grid items-center border-b-2 px-2.5 py-0.75 ${ROW_TEXT}`}
+      style={{ gridTemplateColumns: `${cols} auto` }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/**
+ * One trait and one level: the weapon and imbued rows. They lead with the
+ * marker gutter; sigils are their own list and do not carry it.
+ */
+function GearTraitRow({
+  trait,
+  level,
+  marker,
+}: {
+  trait: TraitId | null;
+  level: number | null;
+  marker?: ReactNode;
+}) {
+  return (
+    <GearRow cols={`${ROW_MARKER}px 1fr`}>
+      <span className="flex items-center justify-end pr-1">{marker}</span>
+      <TraitCell trait={trait} />
+      {/* A trait's level, not a sigil's: the game labels the two differently. */}
+      <LvlDisplay cap={ROW_LVL_CAP} level={level} tone="gold" traitPrefix />
+    </GearRow>
+  );
+}
+
 function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
   return (
     <div className="flex flex-none flex-col">
       {sigils.map((slot, i) => (
-        <div
-          className={`border-line grid grid-cols-[1fr_1fr_auto] items-center border-b-2 px-2.5 py-1 ${SIGIL_TEXT}`}
-          key={i}
-        >
-          <SigilCell trait={slot?.primaryTrait ?? null} />
-          <SigilCell trait={slot?.secondaryTrait ?? null} />
+        <GearRow cols="1fr 1fr" key={i}>
+          <TraitCell trait={slot?.primaryTrait ?? null} />
+          <TraitCell trait={slot?.secondaryTrait ?? null} />
           {/* No slot, no level; the box stays unpainted so name columns keep their x. */}
           <LvlDisplay
-            cap={SIGIL_LVL_CAP}
+            cap={ROW_LVL_CAP}
             level={slot ? slot.level : null}
             tone="gold"
           />
-        </div>
+        </GearRow>
       ))}
     </div>
   );
@@ -332,8 +367,7 @@ export function Card({
           height: `calc(100% - ${layout.floor}px)`,
         }}
       >
-        {/* Column 1 above the upper line: Status bottoms on it, the banner rides
-            above. Neither resizes - raising the line just lifts them. */}
+        {/* Column 1, above the upper line */}
         <div
           className="relative z-2 flex flex-col justify-end gap-5.75"
           style={{ gridColumn: 1, gridRow: 1 }}
@@ -361,8 +395,7 @@ export function Card({
           </section>
         </div>
 
-        {/* Column 1 below it: Skills fills down to the bottom line, its four rows
-            sharing whatever height that leaves. */}
+        {/* Column 1, below the upper line */}
         <div
           className="relative z-2 flex flex-col"
           style={{ gridColumn: 1, gridRow: 2 }}
@@ -404,11 +437,7 @@ export function Card({
           </section>
         </div>
 
-        {/* Column 2 spans both rows, top-anchored: the art box sets how far down
-            it reaches. It may stop short of the bottom line but never cross it,
-            so overflow-hidden is the cap rather than the column pushing through.
-            Every child is flex-none - left shrinkable, flexbox claws back exactly
-            what the art box grows by and the slider does nothing. */}
+        {/* Column 2, spanning both rows */}
         <div
           className="relative z-1 flex flex-col gap-3.75 overflow-hidden"
           style={{ gridColumn: 3, gridRow: "1 / 3" }}
@@ -416,8 +445,8 @@ export function Card({
           <Heading size="lg" className={`${COL_HEADING} flex-none`}>
             Weapon
           </Heading>
-          <Wpanel shadow className="flex-none">
-            <div className="flex items-baseline gap-2.75">
+          <div className="flex-none">
+            <div className="flex items-baseline justify-center gap-2.75 px-2.5">
               <span
                 className={`text-2xl font-bold ${resolved ? "" : "text-dim"}`}
               >
@@ -461,64 +490,43 @@ export function Card({
             </div>
             {resolved
               ? resolved.slots.map((slot, i) => (
-                  <TraitRow
-                    size="lg"
-                    flush={i === resolved.slots.length - 1}
+                  <GearTraitRow
+                    trait={slot.trait}
+                    level={slot.level}
                     key={i}
-                  >
-                    {slot.trait ? (
-                      <TraitIcon trait={slot.trait} />
-                    ) : (
-                      <EmptyTraitIcon />
-                    )}
-                    <span>
-                      {slot.kind === "pool" ? (
-                        <div className="flex">
-                          {slot.trait ? (
-                            traitName(slot.trait)
-                          ) : (
-                            <span className="text-dim">-</span>
-                          )}
-                          <ArrowLeftRight
-                            className="text-essence ml-2 align-[-0.12em]"
-                            size="1em"
-                          />
-                        </div>
-                      ) : (
-                        traitName(slot.trait)
-                      )}
-                    </span>
-                    <Lvl>T.Lvl {padLevel(slot.level)}</Lvl>
-                  </TraitRow>
+                    marker={
+                      slot.kind === "pool" && (
+                        <ArrowLeftRight
+                          className="text-ui flex-none"
+                          size="0.95em"
+                          strokeWidth={3}
+                        />
+                      )
+                    }
+                  />
                 ))
               : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
-                  <EmptyTraitRow key={i} />
+                  <GearTraitRow trait={null} level={null} key={i} />
                 ))}
-            <div className="text-dim mt-5 mb-0.75 flex justify-between text-lg tracking-[0.07em] uppercase">
+            <div className="font-med text-dim mt-3 -mb-1 flex justify-between px-2.5 tracking-[0.07em]">
               <span>Imbued Traits</span>
               <span>{wrightstoneName(build.wrightstone?.main.trait)}</span>
             </div>
-            {wrightstoneRows.map((row, i) =>
-              row ? (
-                <TraitRow size="lg" key={i}>
-                  <TraitIcon trait={row.trait} />
-                  <span>{traitName(row.trait)}</span>
-                  <Lvl>T.Lvl {padLevel(row.level)}</Lvl>
-                </TraitRow>
-              ) : (
-                <EmptyTraitRow key={i} />
-              ),
-            )}
-          </Wpanel>
+            {wrightstoneRows.map((row, i) => (
+              <GearTraitRow
+                trait={row?.trait ?? null}
+                level={row?.level ?? null}
+                key={i}
+              />
+            ))}
+          </div>
           <Heading size="lg" className={`${COL_HEADING} flex-none`}>
             Sigils
           </Heading>
           <SigilsSection sigils={build.sigils} />
         </div>
 
-        {/* Column 3, above the upper line. Fills row 1 exactly: lowering the line
-            squeezes the soft spacers inside the style columns until they bottom
-            out, which is the point at which only the cell height can give more. */}
+        {/* Column 3, above the upper line */}
         <div
           className="relative z-1 flex flex-col overflow-hidden"
           style={{ gridColumn: 5, gridRow: 1 }}
@@ -536,10 +544,7 @@ export function Card({
             </Heading>
             <div className="grid min-h-0 flex-1 grid-cols-3 gap-1.25">
               {STYLES.map((style) => (
-                /* Flattened deliberately: every spacer is a sibling of every
-                   other, so flexbox can talk them all down together when the
-                   band takes the room. Nesting them per rank would hide them
-                   inside a rigid child and nothing would squish. */
+                /* Flattened deliberately so column can squish. */
                 <div
                   data-fit
                   className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
@@ -583,9 +588,7 @@ export function Card({
           </div>
         </div>
 
-        {/* Column 3, below the upper line. Same three tracks and gap as the style
-            columns above, so Over Mastery sits under the first and Summons the
-            other two, and both stretch down to the bottom line. */}
+        {/* Column 3, below the upper line */}
         <div
           className="relative z-1 grid grid-cols-3 gap-1.25"
           style={{ gridColumn: 5, gridRow: 2 }}
