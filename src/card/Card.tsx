@@ -27,6 +27,7 @@ import {
   summonById,
   traitName,
   resolveWeapon,
+  weaponArtUrl,
   wrightstoneName,
   type StatIconId,
 } from "../data";
@@ -513,20 +514,26 @@ export function Card({
                 {resolved?.seriesName ?? "-"} · Lv. {WEAPON_LEVEL}
               </span>
             </div>
-            {/* Sized, not stretched - placeholder until per-weapon art exists. */}
             <div
               data-art
-              className="mt-0.75 mb-1.25 rounded-[13.5px] bg-linear-115 from-[rgba(106,147,181,0.26)] to-[rgba(106,147,181,0.05)]"
+              className="mt-0.75 mb-1.25 flex items-center justify-center overflow-hidden"
               style={{ height: layout.artH }}
-            />
+            >
+              {resolved && (
+                <img
+                  src={weaponArtUrl(build.characterId, resolved.name)}
+                  alt=""
+                  className="max-h-full max-w-full object-contain"
+                />
+              )}
+            </div>
             <div
               className="mt-1.25 mb-2 flex items-baseline gap-5 px-2.5 text-xl"
               style={{
                 paddingLeft: `calc(var(--spacing) * 2.5 + ${ROW_MARKER}px)`,
               }}
             >
-              {/* Each plate carries its own slot and indent: the glyphs are
-                  not one width, and the game sets each figure to its own. */}
+              {/* Each plate carries its own slot and indent. */}
               <BaseStat {...statPlate("hp")}>
                 <WeaponStat tone="hp" value={resolved?.hp ?? null} />
               </BaseStat>

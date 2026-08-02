@@ -57,7 +57,7 @@ export const CARD_LAYOUT: CardLayout = {
   rowGap: 24,
   floor: 2,
   slack: 1,
-  artH: 51,
+  artH: 172,
   cellH: 46,
 };
 

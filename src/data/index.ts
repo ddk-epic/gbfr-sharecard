@@ -88,6 +88,22 @@ export const elementIconUrl = (element: ElementId) =>
 export const skillIconUrl = (characterId: CharacterId, skillId: string) =>
   `${import.meta.env.BASE_URL}icons/skills/${characterId}/${skillId}.webp`;
 
+/**
+ * Weapon art carries no index; the exporter names each file after the weapon's
+ * display name, and this rule is the join.
+ */
+const slug = (name: string) =>
+  name
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+export const weaponArtUrl = (characterId: CharacterId, name: string) =>
+  `${import.meta.env.BASE_URL}weapons/${characterId}/${slug(name)}.webp`;
+
 export type StatIconId = "hp" | "atk" | "crit" | "stun" | "power";
 export const statIconUrl = (stat: StatIconId) =>
   `${import.meta.env.BASE_URL}icons/stats/${stat}.webp`;
