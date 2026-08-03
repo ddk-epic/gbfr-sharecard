@@ -21,7 +21,6 @@ import {
   bonusValueText,
   characterById,
   characterCatalog,
-  portraitUrl,
   summonById,
   traitName,
   resolveWeapon,
@@ -30,6 +29,7 @@ import {
 } from "../data";
 import { nameTracking } from "./name-tracking";
 import { SkillsSection } from "./SkillsSection";
+import { Portrait } from "./Portrait";
 import { LvlBadge } from "./LvlBadge";
 import { LvlDisplay } from "./LvlDisplay";
 import { LvlWeapon } from "./LvlWeapon";
@@ -37,7 +37,6 @@ import {
   CARD_H,
   CARD_LAYOUT,
   CARD_W,
-  columnWidths,
   gridColumns,
   soft,
   softFloor,
@@ -76,9 +75,6 @@ const STYLE_RANK_LABELS: Record<StyleRank, string> = {
   r3: "Style Rank 3",
   ex: "Style Rank EX",
 };
-
-/** The portrait's share of the card height; it bleeds past the inset. */
-const PORTRAIT_H = "70%";
 
 /** Weapon stat plate Icon inset */
 const STAT_PLATE_ICON_INSET = 3;
@@ -303,7 +299,6 @@ export function Card({
     build.wrightstone?.sub2 ?? null,
   ];
 
-  const [portraitW] = columnWidths(layout);
   const colGap = soft("colGap", layout.slack);
   const rankGap = soft("rankGap", layout.slack);
   const rankMt = soft("rankMt", layout.slack);
@@ -370,20 +365,7 @@ export function Card({
     >
       <ParchmentBackdrop />
 
-      {/* The one declared bleed: art reaches the card's real edge, not the inset. */}
-      <div
-        className="absolute top-0 left-0 z-1"
-        style={{ width: layout.inset + portraitW, height: PORTRAIT_H }}
-      >
-        <div
-          className="portrait absolute inset-0 bg-size-[auto_115%] bg-top"
-          style={{
-            backgroundImage: `url('${portraitUrl(build.characterId)}')`,
-            backgroundPosition: `center ${character?.portraitY ?? 20}%`,
-          }}
-        />
-        <LvlBadge level={CHARACTER_LEVEL} size={189} inset={14} />
-      </div>
+      <Portrait characterId={build.characterId} layout={layout} />
 
       <div
         className="grid"
@@ -665,6 +647,8 @@ export function Card({
           </div>
         </div>
       </div>
+      {/* UI layer, above the portrait backdrop: the level badge in the corner. */}
+      <LvlBadge level={CHARACTER_LEVEL} size={189} inset={14} />
       <div className="text-dim absolute right-4 bottom-2 z-5 text-base tracking-wider">
         gbfr-sharecard · ddk-epic.github.io/gbfr-sharecard
       </div>

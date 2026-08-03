@@ -20,7 +20,8 @@ export type Character = {
   name: string;
   artId: string;
   portrait: string; // path
-  portraitY: number; // framing y-offset (%; default 20)
+  portraitX: number; // framing x-offset (px off centre)
+  portraitY: number; // framing y-offset (px off centre)
   element: string;
   enabled: boolean;
 };
