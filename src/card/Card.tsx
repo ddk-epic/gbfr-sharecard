@@ -29,7 +29,6 @@ import {
   resolveWeapon,
   weaponArtUrl,
   wrightstoneName,
-  type StatIconId,
 } from "../data";
 import { LvlBadge } from "./LvlBadge";
 import { LvlDisplay } from "./LvlDisplay";
@@ -45,6 +44,7 @@ import {
   type CardLayout,
   type SoftPart,
 } from "./layout";
+import { StatusPanel } from "./StatusPanel";
 import {
   BaseStat,
   Heading,
@@ -52,7 +52,6 @@ import {
   Lvl,
   Orb,
   ParchmentBackdrop,
-  StatIcon,
   TraitIcon,
   traitIconBox,
   Wpanel,
@@ -85,7 +84,7 @@ const PORTRAIT_H = "70%";
 const STAT_PLATE_ICON_INSET = 3;
 
 const SECTION =
-  "rounded-lg bg-white/78 px-4.75 py-4 shadow-[0_1px_8px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
+  "rounded-lg bg-white/90 px-4.75 py-4 shadow-[0_1px_8px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
 
 const PLATE =
   "rounded-[7px] bg-white/85 shadow-[inset_0_0_0_1px_var(--line-soft)]";
@@ -422,35 +421,7 @@ export function Card({
             <Orb size={20} />
             {character?.name ?? build.characterId}
           </div>
-          <section className={SECTION}>
-            <div className="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-3.5 gap-y-2">
-              <StatCell
-                tone="hp"
-                stat="hp"
-                label="HP"
-                value={build.status.hp}
-              />
-              <StatCell
-                tone="atk"
-                stat="atk"
-                label="ATK"
-                value={build.status.atk}
-              />
-              <StatCell
-                tone="ui"
-                stat="crit"
-                label="Crit. Hit Rate"
-                value={build.status.critRate}
-                unit="%"
-              />
-              <StatCell
-                tone="ui"
-                stat="stun"
-                label="Stun Power"
-                value={build.status.stunPower}
-              />
-            </div>
-          </section>
+          <StatusPanel status={build.status} className={SECTION} />
         </div>
 
         {/* Column 1, below the upper line */}
@@ -740,37 +711,6 @@ export function Card({
       <div className="text-dim absolute right-4 bottom-2 z-5 text-base tracking-wider">
         gbfr-sharecard · ddk-epic.github.io/gbfr-sharecard
       </div>
-    </div>
-  );
-}
-
-/** A c1 status box: label left, number right with its unit hung outside. */
-function StatCell({
-  tone,
-  stat,
-  label,
-  value,
-  unit,
-}: {
-  /** The number's colour; `stat` is the glyph, and crit and stun share a tone. */
-  tone: "hp" | "atk" | "ui";
-  stat: StatIconId;
-  label: string;
-  value: number;
-  unit?: string;
-}) {
-  return (
-    <div className={`${PLATE} flex items-baseline gap-2.75 px-3.5 py-1.25`}>
-      <StatIcon stat={stat} className="mr-0.75 self-center" />
-      <span className="text-dim text-lg">{label}</span>
-      <Lvl
-        size="stat"
-        tone={tone}
-        unit={unit}
-        className={`ml-auto ${tone === "ui" ? "mr-3" : ""}`}
-      >
-        {value}
-      </Lvl>
     </div>
   );
 }
