@@ -2,6 +2,7 @@ import type { CSSProperties, MouseEventHandler, ReactNode } from "react";
 import type { TraitId } from "../domain/build";
 
 export {
+  BackdropFrame,
   ParchmentBackdrop,
   type ParchmentBackdropProps,
 } from "./ParchmentBackdrop";

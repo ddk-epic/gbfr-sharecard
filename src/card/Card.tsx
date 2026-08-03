@@ -45,6 +45,7 @@ import {
 } from "./layout";
 import { StatusPanel } from "./StatusPanel";
 import {
+  BackdropFrame,
   BaseStat,
   Heading,
   Icon,
@@ -364,6 +365,7 @@ export function Card({
       ref={cardRef}
     >
       <ParchmentBackdrop />
+      <BackdropFrame />
 
       <Portrait characterId={build.characterId} layout={layout} />
 
