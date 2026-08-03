@@ -1,8 +1,9 @@
 import { CHARACTER_LEVEL } from "../../domain/build";
 import { characterById, portraitUrl } from "../../data";
 import { LvlBadge } from "../../card/LvlBadge";
+import { NameBadge } from "../../card/NameBadge";
 import { NumInput, type PageProps } from "./controls";
-import { Orb, StatIcon } from "../../ui";
+import { StatIcon } from "../../ui";
 
 const STATUS_FIELDS = [
   ["hp", "HP", "hp", "text-hp"],
@@ -24,10 +25,10 @@ export function IdentityCol({ build, onChange }: PageProps) {
         }}
       />
       <LvlBadge level={CHARACTER_LEVEL} size={120} inset={6} />
-      <div className="nameBanner relative z-2 mx-2 mb-3 flex items-center justify-center gap-2.25 px-3.5 py-1.25 text-[22px] font-bold text-white">
-        <Orb size={18} />
-        {character?.name ?? build.characterId}
-      </div>
+      <NameBadge
+        characterId={build.characterId}
+        className="relative mx-2 mb-3"
+      />
       <section className="relative z-2 rounded-lg bg-white/78 px-3 py-2.5 shadow-[0_1px_6px_rgba(23,60,90,0.12)] backdrop-blur-[3px]">
         <div className="grid grid-flow-col grid-cols-2 grid-rows-2 gap-x-2 gap-y-1.5">
           {STATUS_FIELDS.map(([key, label, stat, numColor]) => (

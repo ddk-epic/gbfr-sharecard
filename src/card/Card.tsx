@@ -19,7 +19,6 @@ import { PERK_THRESHOLDS } from "../domain/catalog";
 import {
   bonusTypeById,
   bonusValueText,
-  characterById,
   characterCatalog,
   summonById,
   traitName,
@@ -30,6 +29,7 @@ import {
 import { nameTracking } from "./name-tracking";
 import { SkillsSection } from "./SkillsSection";
 import { Portrait } from "./Portrait";
+import { NameBadge } from "./NameBadge";
 import { LvlBadge } from "./LvlBadge";
 import { LvlDisplay } from "./LvlDisplay";
 import { LvlWeapon } from "./LvlWeapon";
@@ -50,7 +50,6 @@ import {
   Heading,
   Icon,
   Lvl,
-  Orb,
   ParchmentBackdrop,
   TraitIcon,
   traitIconBox,
@@ -285,7 +284,6 @@ export function Card({
   strain?: boolean;
   onStrain?: (strain: Strain) => void;
 }) {
-  const character = characterById.get(build.characterId);
   const catalog = characterCatalog(build.characterId);
   const weapon = build.weapon;
   const resolved = weapon ? resolveWeapon(build.characterId, weapon) : null;
@@ -388,10 +386,7 @@ export function Card({
           className="relative z-2 flex flex-col justify-end gap-5.75"
           style={{ gridColumn: 1, gridRow: 1 }}
         >
-          <div className="nameBanner z-2 flex items-center justify-center gap-3.5 px-5.5 py-2 text-4xl font-bold text-white">
-            <Orb size={20} />
-            {character?.name ?? build.characterId}
-          </div>
+          <NameBadge characterId={build.characterId} />
           <StatusPanel status={build.status} className={SECTION} />
         </div>
 

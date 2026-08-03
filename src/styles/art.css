@@ -31,15 +31,6 @@
     transform: skewX(-26deg);
     transform-origin: bottom;
   }
-  .nameBanner {
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(5, 63, 99, 0.88) 30%,
-      rgba(5, 63, 99, 0.88) 70%,
-      transparent
-    );
-  }
   .styleCol {
     background:
       var(--slashTex) 0 0/351px 351px repeat,
