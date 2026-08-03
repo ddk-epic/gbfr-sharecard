@@ -1,19 +1,6 @@
-import { Fragment, useEffect, useRef, type ReactNode } from "react";
-import { ArrowLeftRight } from "lucide-react";
-import type {
-  Build,
-  SigilSlot,
-  StyleId,
-  StyleRank,
-  TraitId,
-} from "../domain/build";
-import {
-  CHARACTER_LEVEL,
-  RANKS,
-  STYLES,
-  WEAPON_LEVEL_MAX,
-  WEAPON_TRAIT_ROWS,
-} from "../domain/build";
+import { Fragment, useEffect, useRef } from "react";
+import type { Build, SigilSlot, StyleId, StyleRank } from "../domain/build";
+import { CHARACTER_LEVEL, RANKS, STYLES } from "../domain/build";
 import { STYLE_RANK_BUDGETS, stylePerkStates } from "../domain/derive";
 import { PERK_THRESHOLDS } from "../domain/catalog";
 import {
@@ -22,17 +9,14 @@ import {
   characterCatalog,
   summonById,
   traitName,
-  resolveWeapon,
-  weaponArtUrl,
-  wrightstoneName,
 } from "../data";
-import { nameTracking } from "./name-tracking";
 import { SkillsSection } from "./SkillsSection";
+import { WeaponSection } from "./WeaponSection";
+import { GearRow, ROW_LVL_CAP_HEIGHT, TraitCell } from "./gear-row";
 import { Portrait } from "./Portrait";
 import { NameBadge } from "./NameBadge";
 import { LvlBadge } from "./LvlBadge";
 import { LvlDisplay } from "./LvlDisplay";
-import { LvlWeapon } from "./LvlWeapon";
 import {
   CARD_H,
   CARD_LAYOUT,
@@ -46,13 +30,10 @@ import {
 import { StatusPanel } from "./StatusPanel";
 import {
   BackdropFrame,
-  BaseStat,
   Heading,
   Icon,
   Lvl,
   ParchmentBackdrop,
-  TraitIcon,
-  traitIconBox,
   Wpanel,
 } from "../ui";
 
@@ -76,9 +57,6 @@ const STYLE_RANK_LABELS: Record<StyleRank, string> = {
   ex: "Style Rank EX",
 };
 
-/** Weapon stat plate Icon inset */
-const STAT_PLATE_ICON_INSET = 3;
-
 const SECTION =
   "rounded-lg bg-white/90 px-4.75 py-4 shadow-[0_1px_8px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
 
@@ -88,8 +66,6 @@ const SKILLS_SECTION = SECTION.replace("px-4.75", "px-2.5");
 
 const PLATE =
   "rounded-[7px] bg-white/85 shadow-[inset_0_0_0_1px_var(--line-soft)]";
-
-const CELL = "flex min-w-0 items-center gap-1.25";
 
 const CLIP = "overflow-hidden text-ellipsis whitespace-nowrap";
 
@@ -128,128 +104,6 @@ function Soft({ h, part }: { h: number; part: SoftPart }) {
   );
 }
 
-/* A gear row: glyph, name, level, separated by hairline rules, not plates.
-   Sigils carry two glyph+name columns sharing one level; weapon and imbued rows
-   carry one. Names are set at the glyph's size, so each reads as one line. */
-
-/* Sized within the name's line box so the glyph doesn't drive row height. */
-const ROW_ICON = 22;
-
-/**
- * The marker gutter, px - a trait glyph's width, the marker at its trailing
- * edge. Held open on every trait row, marked or not, so the glyphs share an x.
- */
-const ROW_MARKER = 32;
-
-/** Left indent shared by the stat bar and the art box: marker gutter + edge pad. */
-const BAR_INDENT = `calc(var(--spacing) * 2.5 + ${ROW_MARKER}px)`;
-
-/** Matches the glyph box, so name and icon carry the same weight in the row. */
-const ROW_TEXT = "text-2xl font-med text-ui";
-
-/** Cap height, not the ink box. */
-const ROW_LVL_CAP = 22;
-
-/**
- * The base stats, calibrated plate by plate against tmp/gear-select.png.
- * Everything below is stated x cap, so the band scales from this one number.
- * It happens to match the trait rows' figures; the two are set independently.
- */
-const WEAPON_STAT_CAP = 22;
-
-/** How the game sets a stat figure, against how it sets a level. */
-const WEAPON_STAT_SET = {
-  boxH: 1.35,
-  nudge: 0.06,
-  track: -0.09,
-  outline: 1.5,
-  // The plate's bar is the one that shows: the figure's box hugs its ink and
-  // the plate's padRight is the whole indent.
-  pad: 0,
-};
-
-/**
- * Each plate, x cap: the icon's centre in from the bar's foot, and the figure's
- * ink in from the plate's right edge.
- */
-const WEAPON_STAT_PLATES = {
-  hp: { slot: 0.9, padRight: 1 },
-  atk: { slot: 0.9, padRight: 1 },
-  crit: { slot: 0.9, padRight: 1 },
-  stun: { slot: 0.9, padRight: 1 },
-};
-
-/** Source px per cap px. */
-const WEAPON_STAT_ICON = 0.27 / 20;
-
-/** One plate's props, with everything stated x cap resolved against it. */
-const statPlate = (stat: keyof typeof WEAPON_STAT_PLATES) => ({
-  stat,
-  // Flat px on top of the calibrated slot, so it holds as the cap changes.
-  slot: WEAPON_STAT_PLATES[stat].slot * WEAPON_STAT_CAP + STAT_PLATE_ICON_INSET,
-  padRight: WEAPON_STAT_PLATES[stat].padRight * WEAPON_STAT_CAP,
-  iconScale: WEAPON_STAT_ICON * WEAPON_STAT_CAP,
-  flush: true,
-});
-
-/** Sigil primary and secondary, weapon slot, imbued row: all one cell. */
-function TraitCell({ trait }: { trait: TraitId | null }) {
-  const name = trait ? traitName(trait) : "-";
-  return (
-    <div className={CELL}>
-      {trait ? (
-        <TraitIcon trait={trait} size={ROW_ICON} />
-      ) : (
-        /* Spacer, not a dash: holds the glyph's width so the dash indents like a name. */
-        <span aria-hidden className={`flex-none ${traitIconBox(ROW_ICON)}`} />
-      )}
-      {/* Not clipped: short names and tracking do the fitting, so an overflow shows rather than trims. */}
-      <span style={{ letterSpacing: nameTracking(name) }}>{name}</span>
-    </div>
-  );
-}
-
-/** `cols` is the name columns' track; the level always trails in an auto one. */
-function GearRow({
-  children,
-  cols = "1fr",
-}: {
-  children: ReactNode;
-  cols?: string;
-}) {
-  return (
-    <div
-      className={`border-line grid items-center border-b-2 px-2.5 py-1 ${ROW_TEXT}`}
-      style={{ gridTemplateColumns: `${cols} auto` }}
-    >
-      {children}
-    </div>
-  );
-}
-
-/**
- * One trait and one level: the weapon and imbued rows. They lead with the
- * marker gutter; sigils are their own list and do not carry it.
- */
-function GearTraitRow({
-  trait,
-  level,
-  marker,
-}: {
-  trait: TraitId | null;
-  level: number | null;
-  marker?: ReactNode;
-}) {
-  return (
-    <GearRow cols={`${ROW_MARKER}px 1fr`}>
-      <span className="flex items-center justify-end pr-1">{marker}</span>
-      <TraitCell trait={trait} />
-      {/* A trait's level, not a sigil's: the game labels the two differently. */}
-      <LvlDisplay cap={ROW_LVL_CAP} level={level} tone="gold" traitPrefix />
-    </GearRow>
-  );
-}
-
 function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
   return (
     <div className="flex flex-none flex-col">
@@ -259,7 +113,7 @@ function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
           <TraitCell trait={slot?.secondaryTrait ?? null} />
           {/* No slot, no level; the box stays unpainted so name columns keep their x. */}
           <LvlDisplay
-            cap={ROW_LVL_CAP}
+            cap={ROW_LVL_CAP_HEIGHT}
             level={slot ? slot.level : null}
             tone="gold"
           />
@@ -285,18 +139,11 @@ export function Card({
   onStrain?: (strain: Strain) => void;
 }) {
   const catalog = characterCatalog(build.characterId);
-  const weapon = build.weapon;
-  const resolved = weapon ? resolveWeapon(build.characterId, weapon) : null;
   const perks = stylePerkStates(build.masterTraits, PERK_THRESHOLDS);
   const perkSummary = STYLES.map(
     (style) =>
       `${STYLE_LABEL[style]}: ${catalog.masterTraits[style].title} Perk ${perks[style].lastIndexOf(true) + 1}`,
   ).join(" · ");
-  const wrightstoneRows = [
-    build.wrightstone?.main ?? null,
-    build.wrightstone?.sub1 ?? null,
-    build.wrightstone?.sub2 ?? null,
-  ];
 
   const colGap = soft("colGap", layout.slack);
   const rankGap = soft("rankGap", layout.slack);
@@ -407,103 +254,7 @@ export function Card({
           className="relative z-1 flex flex-col gap-3.75 overflow-hidden"
           style={{ gridColumn: 3, gridRow: "1 / 3" }}
         >
-          <Heading size="lg" className="flex-none">
-            Weapon
-          </Heading>
-          <div className="flex-none pb-3">
-            <div className="flex items-baseline justify-center px-2.5 text-2xl font-bold">
-              <span className={resolved ? "" : "text-dim"}>
-                {resolved?.name ?? "No Weapon"}
-              </span>
-              {/* Hardcoded max bonus for now. */}
-              {resolved && (
-                <span className="pl-1.5 font-normal text-[#ffff5f] [-webkit-text-stroke:4px_var(--ui)] [paint-order:stroke]">
-                  +99
-                </span>
-              )}
-            </div>
-            <div
-              data-art
-              // No clip: the art is object-contained anyway, and the level's
-              // descenders need to show past the bottom edge.
-              className="relative mt-0.75 mb-1.25 flex items-center justify-center px-2.5"
-              style={{ height: layout.artH, paddingLeft: BAR_INDENT }}
-            >
-              {resolved && (
-                <img
-                  src={weaponArtUrl(build.characterId, resolved.name)}
-                  alt=""
-                  className="max-h-full max-w-full object-contain"
-                />
-              )}
-              {resolved && (
-                // Overlaid on the art: level bottom-left at the bar indent,
-                // series bottom-right; the fraction is dropped.
-                <div
-                  className="absolute inset-x-0 bottom-1 flex items-end justify-between px-2.5"
-                  style={{ paddingLeft: BAR_INDENT }}
-                >
-                  <LvlWeapon cap={42} level={WEAPON_LEVEL_MAX} />
-                  <span className="text-dim text-base whitespace-nowrap">
-                    {resolved.seriesName}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div
-              className="mt-1.25 mb-2 flex items-baseline gap-5 px-2.5 text-xl"
-              style={{ paddingLeft: BAR_INDENT }}
-            >
-              {/* Each plate carries its own slot and indent. */}
-              <BaseStat {...statPlate("hp")}>
-                <WeaponStat tone="hp" value={resolved?.hp ?? null} />
-              </BaseStat>
-              <BaseStat {...statPlate("atk")}>
-                <WeaponStat tone="atk" value={resolved?.atk ?? null} />
-              </BaseStat>
-              <BaseStat {...statPlate("crit")}>
-                <WeaponStat
-                  tone="ui"
-                  value={weapon?.critRate ?? null}
-                  unit="%"
-                />
-              </BaseStat>
-              <BaseStat {...statPlate("stun")}>
-                <WeaponStat tone="ui" value={weapon?.stun ?? null} />
-              </BaseStat>
-            </div>
-            {resolved
-              ? resolved.slots.map((slot, i) => (
-                  <GearTraitRow
-                    trait={slot.trait}
-                    level={slot.level}
-                    key={i}
-                    marker={
-                      slot.kind === "pool" && (
-                        <ArrowLeftRight
-                          className="text-ui flex-none"
-                          size="0.95em"
-                          strokeWidth={3}
-                        />
-                      )
-                    }
-                  />
-                ))
-              : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
-                  <GearTraitRow trait={null} level={null} key={i} />
-                ))}
-            <div className="font-med text-dim mt-3 flex justify-between px-2.5 tracking-[0.07em]">
-              <span>Imbued Traits</span>
-              <span>{wrightstoneName(build.wrightstone?.main.trait)}</span>
-            </div>
-            {wrightstoneRows.map((row, i) => (
-              <GearTraitRow
-                trait={row?.trait ?? null}
-                level={row?.level ?? null}
-                key={i}
-              />
-            ))}
-          </div>
+          <WeaponSection build={build} layout={layout} />
           <Heading size="lg" className="flex-none">
             Sigils
           </Heading>
@@ -650,39 +401,5 @@ export function Card({
         gbfr-sharecard · ddk-epic.github.io/gbfr-sharecard
       </div>
     </div>
-  );
-}
-
-/**
- * A weapon base stat, keylined like a level. The display's box is the plate's
- * whole height, so the plate's bottom half is exactly the bar it would have
- * drawn itself. A null value keeps that box and shows a dash in it.
- */
-function WeaponStat({
-  tone,
-  value,
-  unit,
-}: {
-  tone: "hp" | "atk" | "ui";
-  value: number | null;
-  unit?: string;
-}) {
-  return (
-    <span className="relative ml-auto inline-flex">
-      <LvlDisplay
-        cap={WEAPON_STAT_CAP}
-        level={value}
-        lvlWord={false}
-        unit={value === null ? undefined : unit}
-        bar={false}
-        tone={tone}
-        set={WEAPON_STAT_SET}
-      />
-      {value === null && (
-        <span className="text-dim absolute inset-0 grid place-items-center text-2xl">
-          -
-        </span>
-      )}
-    </span>
   );
 }

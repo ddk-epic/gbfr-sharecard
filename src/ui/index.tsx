@@ -187,26 +187,26 @@ export function BaseStat({
   children,
   stat,
   iconScale,
-  slot = 17,
+  iconOffset = 17,
   padRight = 16,
-  flush = false,
+  noPadY = false,
 }: {
   children: ReactNode;
   stat: StatIconId;
   iconScale?: number;
-  slot?: number;
+  iconOffset?: number;
   padRight?: number;
-  flush?: boolean;
+  noPadY?: boolean;
 }) {
   return (
     <span
-      className={`relative inline-flex min-w-0 flex-1 items-center ${flush ? "" : "py-0.75"}`}
+      className={`relative inline-flex min-w-0 flex-1 items-center ${noPadY ? "" : "py-0.75"}`}
       style={{ paddingRight: padRight }}
     >
       <SlantedBar />
       <span
         className="relative flex flex-none justify-center"
-        style={{ width: slot * 2 }}
+        style={{ width: iconOffset * 2 }}
       >
         <StatIcon stat={stat} scale={iconScale} />
       </span>

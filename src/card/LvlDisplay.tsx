@@ -47,23 +47,23 @@ const LVL = {
 /** How a figure is set inside its box. */
 export type FigureSet = {
   /** Box height in cap heights. The bar fills its bottom half. */
-  boxH: number;
+  boxHeight: number;
   /** Box past the run's ink, x cap - the same both sides, as the game sets it. */
-  pad: number;
+  padX: number;
   /** The figure raised off the box's centre, x cap. */
-  nudge: number;
+  offsetY: number;
   /** Between figures, x cap, on top of whatever the face sets. */
-  track: number;
+  tracking: number;
   /** The number's keyline. */
-  outline: number;
+  outlineWidth: number;
 };
 
 const FIGURE: FigureSet = {
-  boxH: 1.65,
-  pad: 0.64,
-  nudge: 0,
-  track: 0,
-  outline: 2.5,
+  boxHeight: 1.65,
+  padX: 0.64,
+  offsetY: 0,
+  tracking: 0,
+  outlineWidth: 2.5,
 };
 
 function useLvlRun(
@@ -208,24 +208,25 @@ export function LvlDisplay({
     lvlWord,
     level === null ? "" : `${level}`,
     unit,
-    figure.track,
+    figure.tracking,
   );
   if (!run) return null;
 
   const { lvl } = BADGE;
-  const boxH = figure.boxH * lvl.cap;
-  const pad = figure.pad * lvl.cap;
-  const left = run.lo - pad;
-  const right = run.hi + pad;
-  // Centred on the number's middle, where the bar's top edge lands; nudge is
+  const boxHeight = figure.boxHeight * lvl.cap;
+  const padX = figure.padX * lvl.cap;
+  const left = run.lo - padX;
+  const right = run.hi + padX;
+  // Centred on the number's middle, where the bar's top edge lands; offsetY is
   // how far the game's own box sits off that centre.
-  const top = lvl.baseline - lvl.cap / 2 + figure.nudge * lvl.cap - boxH / 2;
+  const top =
+    lvl.baseline - lvl.cap / 2 + figure.offsetY * lvl.cap - boxHeight / 2;
   const px = cap / lvl.cap;
 
   return (
     <span
       className={`relative inline-block ${className}`}
-      style={{ width: (right - left) * px, height: boxH * px }}
+      style={{ width: (right - left) * px, height: boxHeight * px }}
       role={level === null ? "presentation" : "img"}
       aria-label={level === null ? undefined : `Level ${level}`}
     >
@@ -234,9 +235,9 @@ export function LvlDisplay({
           {bar && <SlantedBar />}
           <svg
             className="relative block"
-            viewBox={`${left} ${top} ${right - left} ${boxH}`}
+            viewBox={`${left} ${top} ${right - left} ${boxHeight}`}
             width={(right - left) * px}
-            height={boxH * px}
+            height={boxHeight * px}
           >
             <defs>
               <LabelDefs id={id} tone={tone} />
@@ -284,7 +285,7 @@ export function LvlDisplay({
                     fontSize={part.size}
                     fill={`url(#${g("lblink")})`}
                     stroke={`url(#${g("lblkey")})`}
-                    strokeWidth={figure.outline * part.outline}
+                    strokeWidth={figure.outlineWidth * part.outline}
                     strokeLinejoin="round"
                     paintOrder="stroke"
                     xmlSpace="preserve"
