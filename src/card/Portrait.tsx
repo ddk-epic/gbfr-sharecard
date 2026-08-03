@@ -38,7 +38,7 @@ export function Portrait({
 
   return (
     <div
-      className="portrait absolute top-0 z-0"
+      className="absolute top-0 z-0"
       style={{
         left: -PORTRAIT_BLEED_RIGHT,
         width: artW,
@@ -46,7 +46,9 @@ export function Portrait({
         backgroundImage: `url('${portraitUrl(characterId)}')`,
         backgroundPosition: `calc(50% + ${portraitX}px) calc(50% + ${portraitY}px)`,
         backgroundSize: `auto ${PORTRAIT_SCALE}%`,
+        // Two mask layers combined per-pixel: a pixel shows only where both keep it.
         maskImage: `${maskH}, ${maskV}`,
+        maskComposite: "intersect",
       }}
     />
   );

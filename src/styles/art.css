@@ -1,8 +1,6 @@
 /* The style column's panel gradient: the one piece utilities cannot express. */
 
 :root {
-  /* faint crest tile: circles + four-pointed stars */
-  --slashTex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.06'%3E%3Ccircle cx='130' cy='130' r='95'/%3E%3Ccircle cx='130' cy='130' r='58'/%3E%3Cpath d='M130 12 L156 104 L248 130 L156 156 L130 248 L104 156 L12 130 L104 104 Z'/%3E%3C/g%3E%3Cg fill='none' stroke='%23003a5c' stroke-opacity='.09'%3E%3Cpath d='M130 34 L151 109 L226 130 L151 151 L130 226 L109 151 L34 130 L109 109 Z'/%3E%3C/g%3E%3C/svg%3E");
   /* style-column panel gradient geometry, hand-tuned and frozen */
   --pgx: 50%;
   --pgy: 50%;
@@ -11,23 +9,16 @@
 }
 
 @layer components {
-  .portrait {
-    /* mask-image is built per-render in Card.tsx (two layers, intersected). */
-    mask-composite: intersect;
-    -webkit-mask-composite: source-in;
-  }
   .styleCol {
-    background:
-      var(--slashTex) 0 0/351px 351px repeat,
-      radial-gradient(
-        circle var(--pgr) at var(--pgx) var(--pgy),
-        var(--deep-3) 0%,
-        var(--deep-4) calc(var(--pge) * 0.32),
-        var(--deep-5) calc(var(--pge) * 0.57),
-        var(--deep-6) calc(var(--pge) * 0.77),
-        var(--deep-7) var(--pge),
-        var(--deep-8) calc(var(--pge) * 1.3)
-      );
+    background: radial-gradient(
+      circle var(--pgr) at var(--pgx) var(--pgy),
+      var(--deep-3) 0%,
+      var(--deep-4) calc(var(--pge) * 0.32),
+      var(--deep-5) calc(var(--pge) * 0.57),
+      var(--deep-6) calc(var(--pge) * 0.77),
+      var(--deep-7) var(--pge),
+      var(--deep-8) calc(var(--pge) * 1.3)
+    );
     box-shadow:
       0 1px 11px rgba(5, 63, 99, 0.4),
       inset 0 0 59px rgba(76, 196, 226, 0.15);

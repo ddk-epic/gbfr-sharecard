@@ -18,7 +18,7 @@ export function IdentityCol({ build, onChange }: PageProps) {
   return (
     <div className="relative flex min-w-0 flex-col justify-end">
       <div
-        className="portrait absolute inset-x-0 top-0 h-[76%] bg-size-[auto_115%] bg-top"
+        className="absolute inset-x-0 top-0 h-[76%] bg-size-[auto_115%] bg-top"
         style={{
           backgroundImage: `url('${portraitUrl(build.characterId)}')`,
           backgroundPosition: `center ${character?.portraitY ?? 20}%`,
