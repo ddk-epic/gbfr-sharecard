@@ -36,13 +36,14 @@ export function SkillsSection({
     <section className={`${className} flex flex-col overflow-hidden`}>
       <Heading size="lg">Skills</Heading>
       <div className="relative mt-1 grid grid-cols-2 grid-rows-2 gap-x-4">
+        {/** Cross divider */}
         <span
           aria-hidden
-          className="bg-line-soft pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2"
+          className="bg-line-soft pointer-events-none absolute inset-y-0.5 left-1/2 w-px -translate-x-1/2"
         />
         <span
           aria-hidden
-          className="bg-line-soft pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-1/2"
+          className="bg-line-soft pointer-events-none absolute inset-x-1.5 top-1/2 h-px -translate-y-1/2"
         />
         {skills.map((skill, i) => {
           const def = skill ? skillById.get(skill) : undefined;
@@ -93,9 +94,7 @@ export function SkillsSection({
   );
 }
 
-/**
- * An empty skill slot ghost placeholder.
- */
+/** An empty skill slot ghost placeholder. */
 function SkillGhost({ bottom }: { bottom: boolean }) {
   return (
     <div
