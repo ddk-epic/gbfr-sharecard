@@ -1,6 +1,6 @@
 import type { CharacterId } from "../domain/build";
 import type { Character } from "../domain/catalog";
-import { CHARACTERS, portraitUrl } from "../data";
+import { CHARACTERS, thumbUrl } from "../data";
 import { hasBuild } from "../domain/storage";
 import { Heading, Panel } from "../ui";
 
@@ -66,15 +66,12 @@ function CharacterTile({
       }`}
       onClick={on ? () => onCharacterPick(character.id) : undefined}
     >
-      {/* framing frozen at 180% zoom, y per character */}
+      {/* Pre-cut, pre-baked square thumbnail. */}
       <div
-        className={`absolute inset-0 bg-size-[auto_180%] bg-no-repeat ${
+        className={`absolute inset-0 bg-cover bg-center ${
           on ? "" : "opacity-40 brightness-[1.06] grayscale"
         }`}
-        style={{
-          backgroundImage: `url('${portraitUrl(character.id)}')`,
-          backgroundPosition: `center ${character.portraitY}%`,
-        }}
+        style={{ backgroundImage: `url('${thumbUrl(character.id)}')` }}
       />
       {/* own layer, so its 28px is fixed regardless of the name's font size */}
       <div

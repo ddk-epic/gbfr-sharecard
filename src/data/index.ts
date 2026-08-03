@@ -82,6 +82,9 @@ export const asCharacterId = (value: unknown): CharacterId | null =>
 export const portraitUrl = (characterId: CharacterId) =>
   `${import.meta.env.BASE_URL}${characterById.get(characterId)?.portrait ?? ""}`;
 
+export const thumbUrl = (characterId: CharacterId) =>
+  `${import.meta.env.BASE_URL}thumbnails/${characterId}.webp`;
+
 export const parchmentUrl = `${import.meta.env.BASE_URL}card/parchment.webp`;
 
 export const elementIconUrl = (element: ElementId) =>
