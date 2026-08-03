@@ -157,10 +157,10 @@ export function SlantedBar({ share }: { share?: string }) {
   return (
     <span
       aria-hidden
-      className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden [mask-image:linear-gradient(90deg,#000_82%,transparent)]"
+      className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden mask-[linear-gradient(90deg,#000_82%,transparent)]"
       style={{ height: share ?? "50%" }}
     >
-      <span className="absolute inset-y-0 -right-full left-0 origin-bottom -skew-x-[26deg] bg-[var(--slanted-bar)]" />
+      <span className="absolute inset-y-0 -right-full left-0 origin-bottom skew-x-[-26deg] bg-(--slanted-bar)" />
     </span>
   );
 }
