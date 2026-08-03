@@ -164,6 +164,23 @@ export function SlantedBar({ share }: { share?: string }) {
   );
 }
 
+export function ReverseSlantedBar({
+  share,
+  className = "",
+}: {
+  share?: string;
+  className?: string;
+}) {
+  return (
+    <span
+      aria-hidden
+      className={`pointer-events-none absolute inset-0 -scale-x-100 ${className}`}
+    >
+      <SlantedBar share={share} />
+    </span>
+  );
+}
+
 /** One base-stat plate: icon, then the caller's value field. */
 export function BaseStat({
   children,

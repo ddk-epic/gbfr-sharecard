@@ -21,15 +21,15 @@ import {
   bonusValueText,
   characterById,
   characterCatalog,
-  elementIconUrl,
   portraitUrl,
-  skillIconUrl,
   summonById,
   traitName,
   resolveWeapon,
   weaponArtUrl,
   wrightstoneName,
 } from "../data";
+import { nameTracking } from "./name-tracking";
+import { SkillsSection } from "./SkillsSection";
 import { LvlBadge } from "./LvlBadge";
 import { LvlDisplay } from "./LvlDisplay";
 import { LvlWeapon } from "./LvlWeapon";
@@ -85,6 +85,10 @@ const STAT_PLATE_ICON_INSET = 3;
 
 const SECTION =
   "rounded-lg bg-white/90 px-4.75 py-4 shadow-[0_1px_8px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
+
+// The Skills card runs tighter side padding than SECTION to buy the 2x2 names
+// more width.
+const SKILLS_SECTION = SECTION.replace("px-4.75", "px-2.5");
 
 const PLATE =
   "rounded-[7px] bg-white/85 shadow-[inset_0_0_0_1px_var(--line-soft)]";
@@ -192,22 +196,6 @@ const statPlate = (stat: keyof typeof WEAPON_STAT_PLATES) => ({
   flush: true,
 });
 
-/**
- * Letter-spacing by name length, tightest for the longest. Steps are em so they
- * scale with the row; names below the last threshold keep the face's spacing.
- */
-const NAME_TRACKING = [
-  { from: 20, em: -0.048 },
-  { from: 16, em: -0.036 },
-  { from: 12, em: -0.024 },
-  { from: 8, em: -0.012 },
-];
-
-const nameTracking = (name: string) => {
-  const step = NAME_TRACKING.find((t) => name.length >= t.from);
-  return step ? `${step.em}em` : undefined;
-};
-
 /** Sigil primary and secondary, weapon slot, imbued row: all one cell. */
 function TraitCell({ trait }: { trait: TraitId | null }) {
   const name = trait ? traitName(trait) : "-";
@@ -309,7 +297,6 @@ export function Card({
     (style) =>
       `${STYLE_LABEL[style]}: ${catalog.masterTraits[style].title} Perk ${perks[style].lastIndexOf(true) + 1}`,
   ).join(" · ");
-  const skillById = new Map(catalog.skills.map((s) => [s.id, s]));
   const wrightstoneRows = [
     build.wrightstone?.main ?? null,
     build.wrightstone?.sub1 ?? null,
@@ -429,41 +416,11 @@ export function Card({
           className="relative z-2 flex flex-col"
           style={{ gridColumn: 1, gridRow: 2 }}
         >
-          <section
-            className={`${SECTION} flex flex-1 flex-col overflow-hidden`}
-          >
-            <Heading size="lg">Skills</Heading>
-            {build.skills.map((skill, i) => {
-              const def = skill ? skillById.get(skill) : undefined;
-              return (
-                <div
-                  className="border-line-soft flex min-h-0 flex-1 items-center gap-2.75 border-b py-2 text-2xl last:border-b-0 last:pb-0"
-                  key={i}
-                >
-                  {def ? (
-                    <>
-                      <img
-                        src={elementIconUrl(def.element)}
-                        className="size-5.5 flex-none"
-                      />
-                      <span className="text-dim flex-none text-lg capitalize">
-                        {def.element}
-                      </span>
-                      <span className="min-w-0 flex-1 truncate">
-                        {def.name}
-                      </span>
-                      <img
-                        src={skillIconUrl(build.characterId, def.id)}
-                        className="ml-auto size-10.75 flex-none"
-                      />
-                    </>
-                  ) : (
-                    <span>-</span>
-                  )}
-                </div>
-              );
-            })}
-          </section>
+          <SkillsSection
+            characterId={build.characterId}
+            skills={build.skills}
+            className={SKILLS_SECTION}
+          />
         </div>
 
         {/* Column 2, spanning both rows */}
