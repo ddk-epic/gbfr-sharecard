@@ -23,6 +23,7 @@
 
   --line: #c3d4e4; /* panel and container borders */
   --line-soft: #dbe6f0; /* inner hairlines: row rules and inset rings */
+  --slanted-bar: rgba(72, 114, 149, 0.26);
 
   --gold: #ecaf4a; /* CTA, saved badge, tile hover ring */
   --gold-deep: #d37c35; /* the far end of those gradients */

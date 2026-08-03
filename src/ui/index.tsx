@@ -1,4 +1,4 @@
-import type { CSSProperties, MouseEventHandler, ReactNode } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 import type { TraitId } from "../domain/build";
 
 export {
@@ -157,10 +157,10 @@ export function SlantedBar({ share }: { share?: string }) {
   return (
     <span
       aria-hidden
-      className="slantedBar"
-      style={share ? ({ "--bar-share": share } as CSSProperties) : undefined}
+      className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden [mask-image:linear-gradient(90deg,#000_82%,transparent)]"
+      style={{ height: share ?? "50%" }}
     >
-      <span className="slantedBarInk" />
+      <span className="absolute inset-y-0 -right-full left-0 origin-bottom -skew-x-[26deg] bg-[var(--slanted-bar)]" />
     </span>
   );
 }
