@@ -6,14 +6,17 @@ import { nameTracking } from "./name-tracking";
 
 const skillNameSize = (name: string) => (name.length <= 18 ? 24 : 22);
 
+/** Empty-slot ghost fill: the slanted bar's ink. */
+const GHOST_FILL = "var(--slanted-bar)";
+
 const ELEMENT_COLOR: Record<ElementId, string> = {
-  fire: "#d9542f",
-  water: "#2f83d1",
-  earth: "#b3823a",
-  wind: "#3f9e5f",
-  light: "#d1a52f",
-  dark: "#8a5cc4",
-  plain: "#8497a3",
+  fire: "#ff5c5c",
+  water: "#55b3ff",
+  earth: "#DB9546",
+  wind: "#3ad973",
+  light: "#ffdc4d",
+  dark: "#bd5cff",
+  plain: "#e2e2e2",
 };
 
 export function SkillsSection({
@@ -45,15 +48,7 @@ export function SkillsSection({
           const def = skill ? skillById.get(skill) : undefined;
           // Bottom row (i >= 2) drops its bottom padding so it rests on the
           // section's own padding rather than stacking on it.
-          if (!def)
-            return (
-              <div
-                key={i}
-                className={`flex min-h-0 items-center justify-center ${i >= 2 ? "pt-1" : "py-1"}`}
-              >
-                <span className="text-dim text-2xl">-</span>
-              </div>
-            );
+          if (!def) return <SkillGhost key={i} bottom={i >= 2} />;
           return (
             <div
               key={i}
@@ -65,8 +60,7 @@ export function SkillsSection({
                 alt=""
               />
               <span className="flex min-w-0 flex-1 flex-col gap-1.5">
-                {/* One line; tracking + a size step keep long names in; pb-0.5
-                    keeps descenders under the clip box. */}
+                {/* pb-0.5 keeps descenders under the clip box. */}
                 <span
                   className="pb-0.5 leading-[1.3] font-semibold"
                   style={{
@@ -76,7 +70,7 @@ export function SkillsSection({
                 >
                   {def.name}
                 </span>
-                <span className="relative flex items-center gap-1.5 self-start py-0.5 pr-4 pl-1">
+                <span className="font-med relative flex items-center gap-1.5 self-start py-0.5 pr-4 pl-1">
                   <ReverseSlantedBar className="-translate-x-1.5" />
                   <img
                     src={elementIconUrl(def.element)}
@@ -84,7 +78,7 @@ export function SkillsSection({
                     alt=""
                   />
                   <span
-                    className="relative text-sm capitalize"
+                    className="relative text-sm capitalize [-webkit-text-stroke:1.5px_var(--ui)] [paint-order:stroke] [text-shadow:0_1px_3px_var(--dim)]"
                     style={{ color: ELEMENT_COLOR[def.element] }}
                   >
                     {def.element}
@@ -96,5 +90,33 @@ export function SkillsSection({
         })}
       </div>
     </section>
+  );
+}
+
+/**
+ * An empty skill slot ghost placeholder.
+ */
+function SkillGhost({ bottom }: { bottom: boolean }) {
+  return (
+    <div
+      className={`flex min-h-0 items-center ${bottom ? "pt-1.5" : "py-1.5"}`}
+    >
+      <span className="grid size-16 flex-none place-items-center">
+        <span
+          className="size-11 rotate-45 rounded-sm"
+          style={{ backgroundColor: GHOST_FILL }}
+        />
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <span
+          className="h-4 w-4/5 rounded-sm"
+          style={{ backgroundColor: GHOST_FILL }}
+        />
+        <span
+          className="h-2.5 w-2/5 rounded-sm"
+          style={{ backgroundColor: GHOST_FILL }}
+        />
+      </span>
+    </div>
   );
 }
