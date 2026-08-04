@@ -10,6 +10,8 @@ import {
   summonById,
   traitName,
 } from "../data";
+import { BonusIcon } from "./BonusIcon";
+import { OverMasterySection } from "./OverMasterySection";
 import { SkillsSection } from "./SkillsSection";
 import { WeaponSection } from "./WeaponSection";
 import { GearRow, ROW_LVL_CAP_HEIGHT, TraitCell } from "./gear-row";
@@ -28,14 +30,7 @@ import {
   type SoftPart,
 } from "./layout";
 import { StatusPanel } from "./StatusPanel";
-import {
-  BackdropFrame,
-  Heading,
-  Icon,
-  Lvl,
-  ParchmentBackdrop,
-  Wpanel,
-} from "../ui";
+import { BackdropFrame, Heading, Icon, Lvl, ParchmentBackdrop } from "../ui";
 
 const STYLE_BORDER: Record<StyleId, string> = {
   insight: "border-t-insight",
@@ -328,28 +323,7 @@ export function Card({
           className="relative z-1 grid grid-cols-3 gap-1.25"
           style={{ gridColumn: 5, gridRow: 2 }}
         >
-          <div className="flex flex-col">
-            <Heading size="lg">Over Mastery</Heading>
-            <Wpanel shadow className="flex flex-1 flex-col overflow-hidden">
-              {build.overMastery.map((line, i) => (
-                <div
-                  className="border-line-soft flex min-h-0 flex-1 items-center gap-2.75 border-b py-1.5 text-2xl last:border-b-0 last:pb-0"
-                  key={i}
-                >
-                  {line ? (
-                    <>
-                      {bonusTypeById.get(line.bonusType)?.name}
-                      <Lvl className="ml-auto">
-                        {bonusValueText(line.bonusType, line.value)}
-                      </Lvl>
-                    </>
-                  ) : (
-                    <span>-</span>
-                  )}
-                </div>
-              ))}
-            </Wpanel>
-          </div>
+          <OverMasterySection overMastery={build.overMastery} />
           <div className="col-span-2 flex flex-col">
             <Heading size="lg">Summons</Heading>
             {/* Matches the style columns' gap, so each card edge lands on one. */}
@@ -368,13 +342,16 @@ export function Card({
                   {/* The card's give: stretch lands here, not between the rows. */}
                   <div className="grid flex-1 grid-cols-[6fr_5fr] items-center gap-4">
                     <div className="border-line-soft flex min-w-0 items-baseline gap-2 border-r pr-3.5">
-                      <span data-clip className={`${CLIP} text-ui`}>
+                      <span className={`${CLIP} text-ui`}>
                         {slot?.trait ? traitName(slot.trait) : "-"}
                       </span>
                       {slot && <Lvl className="ml-1.25">{slot.traitLevel}</Lvl>}
                     </div>
-                    <div className="flex min-w-0 items-baseline gap-2">
-                      <span data-clip className={`${CLIP} text-dim`}>
+                    <div className="flex min-w-0 items-center gap-1.5">
+                      {slot?.equipBonus && (
+                        <BonusIcon bonusType={slot.equipBonus.bonusType} />
+                      )}
+                      <span className={`${CLIP} text-dim`}>
                         {slot?.equipBonus
                           ? bonusTypeById.get(slot.equipBonus.bonusType)?.name
                           : "-"}
