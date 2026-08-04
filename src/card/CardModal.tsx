@@ -8,8 +8,7 @@ import {
 import { createPortal } from "react-dom";
 import { Minus, Plus, Scan, X } from "lucide-react";
 import type { Build } from "../domain/build";
-import { Card } from "./Card";
-import { CARD_H, CARD_W, type CardLayout } from "./layout";
+import { Card, CARD_HEIGHT, CARD_WIDTH } from "./Card";
 
 /* Full-resolution inspector. Zooms out only - 100% is the ceiling, no
    upscaling; the floor fits the whole card in the viewport. Wheel zooms toward
@@ -23,8 +22,8 @@ const DRAG_SLOP = 5; // px of movement that turns a click into a drag
 
 /** Keep the card within the viewport; centre the axis smaller than it. */
 function clampPan(x: number, y: number, zoom: number, vw: number, vh: number) {
-  const sw = CARD_W * zoom;
-  const sh = CARD_H * zoom;
+  const sw = CARD_WIDTH * zoom;
+  const sh = CARD_HEIGHT * zoom;
   const cx = sw <= vw ? (vw - sw) / 2 : Math.min(0, Math.max(vw - sw, x));
   const cy = sh <= vh ? (vh - sh) / 2 : Math.min(0, Math.max(vh - sh, y));
   return { x: cx, y: cy };
@@ -32,16 +31,14 @@ function clampPan(x: number, y: number, zoom: number, vw: number, vh: number) {
 
 /** Pan that centres the card in the viewport at any zoom. */
 function centrePan(zoom: number, vw: number, vh: number) {
-  return { x: (vw - CARD_W * zoom) / 2, y: (vh - CARD_H * zoom) / 2 };
+  return { x: (vw - CARD_WIDTH * zoom) / 2, y: (vh - CARD_HEIGHT * zoom) / 2 };
 }
 
 export function CardModal({
   build,
-  layout,
   onClose,
 }: {
   build: Build;
-  layout: CardLayout;
   onClose: () => void;
 }) {
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -70,7 +67,7 @@ export function CardModal({
     const w = el.clientWidth;
     const h = el.clientHeight;
     sizeRef.current = { w, h };
-    const floor = Math.min(w / CARD_W, h / CARD_H);
+    const floor = Math.min(w / CARD_WIDTH, h / CARD_HEIGHT);
     setMinZoom(floor);
     const nextZoom = Math.min(MAX_ZOOM, Math.max(floor, zoomRef.current));
     setZoom(nextZoom);
@@ -84,7 +81,7 @@ export function CardModal({
     const w = el.clientWidth;
     const h = el.clientHeight;
     sizeRef.current = { w, h };
-    const floor = Math.min(w / CARD_W, h / CARD_H);
+    const floor = Math.min(w / CARD_WIDTH, h / CARD_HEIGHT);
     setMinZoom(floor);
     // Open at START_ZOOM, never below the fit floor, centred.
     const start = Math.min(MAX_ZOOM, Math.max(floor, START_ZOOM));
@@ -206,12 +203,12 @@ export function CardModal({
           ref={cardWrapRef}
           className="origin-top-left"
           style={{
-            width: CARD_W,
-            height: CARD_H,
+            width: CARD_WIDTH,
+            height: CARD_HEIGHT,
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
           }}
         >
-          <Card build={build} layout={layout} />
+          <Card build={build} />
         </div>
       </div>
 

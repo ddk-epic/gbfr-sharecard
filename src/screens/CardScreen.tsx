@@ -1,10 +1,8 @@
-import { Fragment, useCallback, useRef, useState, type ReactNode } from "react";
+import { Fragment, useRef, useState, type ReactNode } from "react";
 import { Check, ChevronLeft, Copy, Download, Maximize2 } from "lucide-react";
 import type { Build } from "../domain/build";
-import { Card, type Strain } from "../card/Card";
-import { CARD_H, CARD_LAYOUT, CARD_W, type CardLayout } from "../card/layout";
+import { Card, CARD_HEIGHT, CARD_WIDTH } from "../card/Card";
 import { CardModal } from "../card/CardModal";
-import { Tuner } from "../card/Tuner";
 import { canCopy, copyCard, downloadCard } from "../card/export";
 import { BackButton, Cta, Heading, Panel } from "../ui";
 
@@ -30,8 +28,8 @@ const done = (text: string) => (
 const FLASH_MS = 900;
 
 /** Fixed preview-box width; the card's aspect sets the height and the scale. */
-const PREVIEW_W = 1190.4;
-const PREVIEW_SCALE = PREVIEW_W / CARD_W;
+const PREVIEW_WIDTH = 1190.4;
+const PREVIEW_SCALE = PREVIEW_WIDTH / CARD_WIDTH;
 
 const CREDITS = [
   {
@@ -59,19 +57,6 @@ export function CardScreen({
   const cardRef = useRef<HTMLDivElement>(null);
   const [copyLabel, setCopyLabel] = useState<ReactNode>(COPY_IDLE);
   const [downloadLabel, setDownloadLabel] = useState<ReactNode>(DOWNLOAD_IDLE);
-
-  // Dev-only layout tuning. The card renders from `layout` either way, so there
-  // is no second code path for the tuned card to drift from.
-  const [layout, setLayout] = useState<CardLayout>(CARD_LAYOUT);
-  const [strain, setStrain] = useState(false);
-  const [counts, setCounts] = useState<Strain>({
-    clipped: 0,
-    shrunk: 0,
-    overflow: 0,
-    artPx: 0,
-  });
-  const onStrain = useCallback((next: Strain) => setCounts(next), []);
-
   const [zoomed, setZoomed] = useState(false);
 
   // Locking the measured width keeps the longer done-state from shifting layout.
@@ -117,7 +102,7 @@ export function CardScreen({
           <div className="flex items-center gap-2.5">
             <Heading>Share Card</Heading>
             <span className="text-dim ml-auto text-[12.5px]">
-              PNG · {CARD_W}×{CARD_H}
+              PNG · {CARD_WIDTH}×{CARD_HEIGHT}
             </span>
             <Cta sm onClick={onCopy}>
               {copyLabel}
@@ -129,7 +114,10 @@ export function CardScreen({
           {/* Preview scales the full-size node down; click opens the 1:1 inspector. */}
           <div
             className="group relative cursor-zoom-in overflow-hidden rounded-lg shadow-[0_4px_24px_rgba(23,60,90,0.25)]"
-            style={{ width: PREVIEW_W, height: PREVIEW_W * (CARD_H / CARD_W) }}
+            style={{
+              width: PREVIEW_WIDTH,
+              height: PREVIEW_WIDTH * (CARD_HEIGHT / CARD_WIDTH),
+            }}
             onClick={() => setZoomed(true)}
             title="View at full resolution"
           >
@@ -138,12 +126,7 @@ export function CardScreen({
               style={{ transform: `scale(${PREVIEW_SCALE})` }}
             >
               <div ref={cardRef}>
-                <Card
-                  build={build}
-                  layout={layout}
-                  strain={strain}
-                  onStrain={onStrain}
-                />
+                <Card build={build} />
               </div>
             </div>
             <span className="pointer-events-none absolute top-2.5 right-2.5 flex items-center gap-1.5 rounded-md bg-black/45 px-2 py-1 text-[11px] font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
@@ -187,22 +170,7 @@ export function CardScreen({
           GitHub
         </a>
       </div>
-      {zoomed && (
-        <CardModal
-          build={build}
-          layout={layout}
-          onClose={() => setZoomed(false)}
-        />
-      )}
-      {import.meta.env.DEV && (
-        <Tuner
-          layout={layout}
-          onChange={setLayout}
-          strain={strain}
-          onStrainToggle={setStrain}
-          counts={counts}
-        />
-      )}
+      {zoomed && <CardModal build={build} onClose={() => setZoomed(false)} />}
     </>
   );
 }

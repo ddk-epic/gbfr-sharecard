@@ -1,6 +1,5 @@
 import type { CharacterId } from "../domain/build";
 import { characterById, portraitUrl } from "../data";
-import { columnWidths, type CardLayout } from "./layout";
 
 /**
  * The full-height backdrop layer: the character art, spanning column 1 top to
@@ -19,14 +18,13 @@ const PORTRAIT_SCALE = 135;
 
 export function Portrait({
   characterId,
-  layout,
+  seam,
 }: {
   characterId: CharacterId;
-  layout: CardLayout;
+  /** Column 1's right edge (inset + first column width): the art aligns to it. */
+  seam: number;
 }) {
   const character = characterById.get(characterId);
-  const [portraitW] = columnWidths(layout);
-  const seam = layout.inset + portraitW;
   const artW = seam + 2 * PORTRAIT_BLEED_RIGHT;
   const bleedEnd = `rgba(0,0,0,${PORTRAIT_BLEED_OPACITY})`;
   const maskH = `linear-gradient(to right, ${bleedEnd} ${PORTRAIT_BLEED_RIGHT - PORTRAIT_BLEED_LEFT}px, #000 ${PORTRAIT_PAD + PORTRAIT_BLEED_RIGHT}px, #000 ${seam - PORTRAIT_PAD + PORTRAIT_BLEED_RIGHT}px, ${bleedEnd} ${artW}px)`;

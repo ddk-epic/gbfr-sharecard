@@ -7,7 +7,8 @@ import { BaseStat, Heading } from "../ui";
 import { LvlDisplay } from "./LvlDisplay";
 import { LvlWeapon } from "./LvlWeapon";
 import { GearRow, TraitCell, ROW_LVL_CAP_HEIGHT } from "./gear-row";
-import type { CardLayout } from "./layout";
+
+const WEAPON_ART_HEIGHT = 186;
 
 /** Added to each plate's icon offset, in px. */
 const STAT_PLATE_ICON_INSET = 3;
@@ -77,13 +78,7 @@ function WeaponTraitRow({
   );
 }
 
-export function WeaponSection({
-  build,
-  layout,
-}: {
-  build: Build;
-  layout: CardLayout;
-}) {
+export function WeaponSection({ build }: { build: Build }) {
   const weapon = build.weapon;
   const resolvedWeapon = weapon
     ? resolveWeapon(build.characterId, weapon)
@@ -112,11 +107,10 @@ export function WeaponSection({
           )}
         </div>
         <div
-          data-art
           // No clip: the art is object-contained and the level's
           // descenders need to show past the bottom edge.
           className="relative mt-0.75 mb-1.25 flex items-center justify-center px-2.5"
-          style={{ height: layout.artH, paddingLeft: ROW_INDENT }}
+          style={{ height: WEAPON_ART_HEIGHT, paddingLeft: ROW_INDENT }}
         >
           {resolvedWeapon && (
             <img
