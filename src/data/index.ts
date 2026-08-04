@@ -93,6 +93,10 @@ export const elementIconUrl = (element: ElementId) =>
 export const skillIconUrl = (characterId: CharacterId, skillId: string) =>
   `${import.meta.env.BASE_URL}icons/skills/${characterId}/${skillId}.webp`;
 
+/** The bonus-type id is the filename; over-mastery and summon equip bonuses share these. */
+export const bonusIconUrl = (bonusType: BonusTypeId) =>
+  `${import.meta.env.BASE_URL}icons/bonus/${bonusType}.webp`;
+
 /**
  * Weapon art carries no index; the exporter names each file after the weapon's
  * display name, and this rule is the join.

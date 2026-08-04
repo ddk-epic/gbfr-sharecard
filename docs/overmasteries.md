@@ -169,3 +169,37 @@ sharecard shows a build that already exists, not the odds of rolling it.
 same `2 … 20` ladder as the percentage stats. The catalog holds only whole
 numbers, so nothing downstream deals in fractions. It is still flat rather than
 percent - the format string decides that, and Stun Power's carries no `%`.
+
+## The stat icons
+
+Each stat carries a bonus icon, `cmn_iclb_s_01`-`s_15` in `ui/atlas/common_icon_lb`.
+The stat -> sprite pairing is **not in any table**: the meditation rows carry
+`LimitBonusParamTypeId = -1`, and the icon is chosen at runtime by
+`LimitBonusIconSetter` (`window_dialog01_lb01.prfb`). The ordered sprite list is
+in the UI image descriptors instead - `meditationicons.image.imageb` holds the
+four basics and `meditationlatters.image.imageb` the seven damage-family, and
+`summonbaseparamicons.image.imageb` holds all eleven concatenated in the same
+order. All three agree.
+
+Those `.imageb` files reference each sprite by the 32-bit `texb|subid` hash from
+Nenkai's [hashlist](https://nenkai.github.io/relink-modding/resources/re/hashes/)
+(XXHash32 variant). Reading them back is: grep the hashlist for `cmn_iclb_s_NN`
+to get each hash, then scan the `.imageb` bytes (uint32 LE) for those hashes in
+offset order. In catalog order:
+
+| Stat                        | Sprite |
+| --------------------------- | ------ |
+| Attack Power Up             | s_01   |
+| Health Up                   | s_02   |
+| Critical Hit Rate Up        | s_03   |
+| Stun Power Up               | s_04   |
+| Skill Damage Up             | s_08   |
+| Skybound Art Damage Up      | s_06   |
+| Chain Burst Damage Up       | s_07   |
+| Normal Attack Damage Cap Up | s_11   |
+| Skill Damage Cap Up         | s_13   |
+| Skybound Art Damage Cap Up  | s_14   |
+| Skill Healing Cap Up        | s_15   |
+
+`s_05`, `s_09`, `s_10`, `s_12` are board stats (DEF, non-cap damage variants) the
+meditation system never rolls, so they go unused.

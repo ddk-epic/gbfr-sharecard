@@ -127,6 +127,60 @@ async function solidGlyphBox(sourcePath) {
   return { left: minX, top: minY, width: maxX - minX + 1, height: maxY - minY + 1 };
 }
 
+/**
+ * A bonus sprite hangs a small "up" arrow off its box's bottom-right corner, so
+ * the box sits above-left of the sprite's own centre - centre the raw sprite and
+ * the box floats off the text. Re-canvas onto a square with the box centred and
+ * the arrow overhanging into transparent margin, so the card centres the file
+ * and the box lands on the text. The box's right and bottom edges are read off a
+ * top-left band the arrow never reaches.
+ */
+async function centeredBonusCanvas(sourcePath) {
+  const { data, info } = await sharp(sourcePath)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width, height, channels } = info;
+  const opaque = (x, y) => data[(y * width + x) * channels + 3] >= 128;
+  let cL = width,
+    cT = height,
+    cR = -1,
+    cB = -1;
+  for (let y = 0; y < height; y++)
+    for (let x = 0; x < width; x++)
+      if (opaque(x, y)) {
+        if (x < cL) cL = x;
+        if (x > cR) cR = x;
+        if (y < cT) cT = y;
+        if (y > cB) cB = y;
+      }
+  const band = 18;
+  const hasInk = (pixels) => pixels.some((on) => on);
+  let boxR = cL;
+  for (let x = width - 1; x >= 0; x--) {
+    const col = [];
+    for (let y = cT; y <= cT + band; y++) col.push(opaque(x, y));
+    if (hasInk(col)) { boxR = x; break; }
+  }
+  let boxB = cT;
+  for (let y = height - 1; y >= 0; y--) {
+    const row = [];
+    for (let x = cL; x <= cL + band; x++) row.push(opaque(x, y));
+    if (hasInk(row)) { boxB = y; break; }
+  }
+  const boxW = boxR - cL + 1;
+  const boxH = boxB - cT + 1;
+  const side = Math.max(boxW + 2 * (cR - boxR), boxH + 2 * (cB - boxB));
+  const left = Math.round((side - boxW) / 2) - cL;
+  const top = Math.round((side - boxH) / 2) - cT;
+  return sharp({
+    create: { width: side, height: side, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+  })
+    .composite([{ input: sourcePath, left, top }])
+    .png()
+    .toBuffer();
+}
+
 /** Convert one PNG to WebP, skipping work already committed. */
 async function convert(sourcePath, destinationUrl, resizeWidth, cropToGlyph = false) {
   if (!existsSync(sourcePath)) {
@@ -271,6 +325,46 @@ index.traits = traits;
 console.log(
   `traits: ${Object.keys(traits).length} traits -> ${new Set(Object.values(traits)).size} glyphs`,
 );
+
+// ------------------------------------------------------------------ bonus
+// public/icons/bonus/<bonus-type-id>.webp - the over-mastery and summon equip
+// bonus glyphs, `cmn_iclb_s_*` in common_icon_lb. The stat -> sprite pairing is
+// in no table; it is read out of the meditation UI image descriptors and
+// recorded in docs/overmasteries.md, the source for this hand-authored map. The
+// bonus-type id is already a slug, so the card builds the path and needs no index.
+const bonusDirectory = new URL("bonus/", ICONS_DIR);
+await mkdir(bonusDirectory, { recursive: true });
+const BONUS_SPRITES = {
+  "attack-power-up": "s_01",
+  "health-up": "s_02",
+  "critical-hit-rate-up": "s_03",
+  "stun-power-up": "s_04",
+  "skill-damage-up": "s_08",
+  "skybound-art-damage-up": "s_06",
+  "chain-burst-damage-up": "s_07",
+  "normal-attack-damage-cap-up": "s_11",
+  "skill-damage-cap-up": "s_13",
+  "skybound-art-damage-cap-up": "s_14",
+  "skill-healing-cap-up": "s_15",
+};
+let bonusCount = 0;
+for (const [id, sprite] of Object.entries(BONUS_SPRITES)) {
+  const source = `${atlas("common_icon_lb")}/cmn_iclb_${sprite}.png`;
+  const destination = new URL(`${id}.webp`, bonusDirectory);
+  if (!existsSync(source)) {
+    missing.push(`${sprite}.png`);
+    continue;
+  }
+  if (!existsSync(destination))
+    await writeFile(
+      destination,
+      await sharp(await centeredBonusCanvas(source))
+        .webp({ quality: WEBP_QUALITY })
+        .toBuffer(),
+    );
+  bonusCount++;
+}
+console.log(`bonus: ${bonusCount} bonus types`);
 
 // ------------------------------------------------------------------ skills
 // public/icons/skills/<character>/<skill>.webp. Both halves come from the game
