@@ -1,16 +1,15 @@
-import type { Build, SigilSlot } from "../domain/build";
+import type { Build } from "../domain/build";
 import { CHARACTER_LEVEL } from "../domain/build";
 import { bonusTypeById, bonusValueText, summonById, traitName } from "../data";
 import { BonusIcon } from "./BonusIcon";
 import { MasterTraitsSection } from "./MasterTraitsSection";
 import { OverMasterySection } from "./OverMasterySection";
+import { SigilsSection } from "./SigilsSection";
 import { SkillsSection } from "./SkillsSection";
 import { WeaponSection } from "./WeaponSection";
-import { GearRow, ROW_LVL_CAP_HEIGHT, TraitCell } from "./gear-row";
 import { Portrait } from "./Portrait";
 import { NameBadge } from "./NameBadge";
 import { LvlBadge } from "./LvlBadge";
-import { LvlDisplay } from "./LvlDisplay";
 import { StatusPanel } from "./StatusPanel";
 import { BackdropFrame, Heading, Lvl, ParchmentBackdrop } from "../ui";
 
@@ -61,25 +60,6 @@ const PLATE =
 
 const CLIP = "overflow-hidden text-ellipsis whitespace-nowrap";
 
-function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
-  return (
-    <div className="flex flex-none flex-col">
-      {sigils.map((slot, i) => (
-        <GearRow cols="1fr 1fr" key={i}>
-          <TraitCell trait={slot?.primaryTrait ?? null} />
-          <TraitCell trait={slot?.secondaryTrait ?? null} />
-          {/* No slot, no level; the box stays unpainted so name columns keep their x. */}
-          <LvlDisplay
-            cap={ROW_LVL_CAP_HEIGHT}
-            level={slot ? slot.level : null}
-            tone="gold"
-          />
-        </GearRow>
-      ))}
-    </div>
-  );
-}
-
 /**
  * Read-only and never scaled itself - on-screen fitting is the wrapper's job,
  * and the PNG export captures this node.
@@ -129,7 +109,7 @@ export function Card({ build }: { build: Build }) {
           height: "100%",
         }}
       >
-        {/* Column 1, above the upper line */}
+        {/* Column 1 */}
         <div
           className="relative z-2 flex flex-col justify-end gap-5.75"
           style={{ gridColumn: 1, gridRow: 1 }}
@@ -137,8 +117,6 @@ export function Card({ build }: { build: Build }) {
           <NameBadge characterId={build.characterId} />
           <StatusPanel status={build.status} className={SECTION} />
         </div>
-
-        {/* Column 1, below the upper line */}
         <div
           className="relative z-2 flex flex-col"
           style={{ gridColumn: 1, gridRow: 2 }}
@@ -150,27 +128,22 @@ export function Card({ build }: { build: Build }) {
           />
         </div>
 
-        {/* Column 2, spanning both rows */}
+        {/* Column 2, Gear */}
         <div
           className="relative z-1 flex flex-col gap-3.75 overflow-hidden"
           style={{ gridColumn: 3, gridRow: "1 / 3" }}
         >
           <WeaponSection build={build} />
-          <Heading size="lg" className="flex-none">
-            Sigils
-          </Heading>
           <SigilsSection sigils={build.sigils} />
         </div>
 
-        {/* Column 3, above the upper line */}
+        {/* Column 3 */}
         <div
           className="relative z-1 flex flex-col overflow-hidden"
           style={{ gridColumn: 5, gridRow: 1 }}
         >
           <MasterTraitsSection build={build} />
         </div>
-
-        {/* Column 3, below the upper line */}
         <div
           className="relative z-1 grid grid-cols-3 gap-1.25"
           style={{ gridColumn: 5, gridRow: 2 }}
