@@ -20,7 +20,7 @@ import { NameBadge } from "./NameBadge";
 import { LvlBadge } from "./LvlBadge";
 import { LvlDisplay } from "./LvlDisplay";
 import { StatusPanel } from "./StatusPanel";
-import { BackdropFrame, Heading, Icon, Lvl, ParchmentBackdrop } from "../ui";
+import { BackdropFrame, Heading, Lvl, ParchmentBackdrop } from "../ui";
 
 export const CARD_WIDTH = 2880;
 export const CARD_HEIGHT = 1440;
@@ -274,7 +274,6 @@ export function Card({ build }: { build: Build }) {
                                 : "bg-deep-cell text-deep-mute"
                             }`}
                           >
-                            <Icon tone="style" sm />
                             {cell.label}
                           </div>
                         ))}
@@ -303,7 +302,6 @@ export function Card({ build }: { build: Build }) {
                   key={i}
                 >
                   <div className="from-gold via-gold-deep to-gold-dark -mx-3.75 -mt-2.75 mb-1 flex min-w-0 flex-none items-center gap-2 rounded-t-md bg-linear-90 from-0% via-55% to-100% px-3.75 py-1.75">
-                    <Icon tone="summon" sm />
                     <b className="text-2xl font-bold text-white [text-shadow:0_1px_2.5px_rgba(90,30,0,0.55)]">
                       {slot ? summonById.get(slot.summonId)?.name : "-"}
                     </b>

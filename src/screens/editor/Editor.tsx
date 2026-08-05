@@ -7,7 +7,7 @@ import type { PageProps } from "./controls";
 import { SkillsPage } from "./SkillsPage";
 import { GearPage } from "./GearPage";
 import { MasterTraitsPage } from "./MasterTraitsPage";
-import { BackButton, Cta, Heading, Icon, Lvl, Panel, TraitRow } from "../../ui";
+import { BackButton, Cta, Heading, Lvl, Panel, TraitRow } from "../../ui";
 
 const PAGE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
 
@@ -183,13 +183,11 @@ function TraitChecklist({
       </div>
       {totals.length === 0 && (
         <TraitRow size="sm">
-          <Icon sm />
           <span className="text-dim">no traits yet</span>
         </TraitRow>
       )}
       {totals.map(([trait, level]) => (
         <TraitRow size="sm" key={trait}>
-          <Icon sm />
           <span>{traitName(trait)}</span>
           <Lvl>{level}</Lvl>
         </TraitRow>

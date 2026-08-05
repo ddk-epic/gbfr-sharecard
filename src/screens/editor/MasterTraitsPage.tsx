@@ -9,7 +9,7 @@ import {
 import { PERK_THRESHOLDS } from "../../domain/catalog";
 import { characterCatalog } from "../../data";
 import type { PageProps } from "./controls";
-import { Heading, Icon } from "../../ui";
+import { Heading } from "../../ui";
 
 const STYLE_BORDER: Record<StyleId, string> = {
   insight: "border-t-insight",
@@ -109,7 +109,6 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
                         title={cell.description}
                         onClick={() => toggleCell(style, rank, cell.id)}
                       >
-                        <Icon tone="style" sm />
                         {cell.label}
                       </div>
                     ))}

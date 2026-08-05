@@ -15,31 +15,6 @@ import {
 
 /* Leaf primitives the card and the editor both render. */
 
-const ICON_TONE = {
-  /* the plain slate chip */
-  default: "border-[#a5bcd4] from-line to-[#93aecb]",
-  /* recoloured inside a style column */
-  style: "border-[#5090d8] from-[#7fd4f8] to-[#2f6ec2]",
-  /* recoloured on a summon card's gold strip */
-  summon: "border-[#a5502a] from-[#ffd9a0] to-[#c96a2c]",
-};
-
-export function Icon({
-  tone = "default",
-  sm = false,
-}: {
-  tone?: keyof typeof ICON_TONE;
-  sm?: boolean;
-}) {
-  return (
-    <span
-      className={`inline-block flex-none rounded border bg-linear-135 ${
-        sm ? "size-4.5" : "size-5.5"
-      } ${ICON_TONE[tone]}`}
-    />
-  );
-}
-
 const TRAIT_ICON_SIZE = { 16: "size-5.5", 18: "size-6", 22: "size-7" };
 
 export type TraitIconSize = keyof typeof TRAIT_ICON_SIZE;
@@ -160,7 +135,7 @@ export function SlantedBar({ share }: { share?: string }) {
       className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden mask-[linear-gradient(90deg,#000_82%,transparent)]"
       style={{ height: share ?? "50%" }}
     >
-      <span className="absolute inset-y-0 -right-full left-0 origin-bottom skew-x-[-26deg] bg-(--slanted-bar)" />
+      <span className="bg-slanted-bar absolute inset-y-0 -right-full left-0 origin-bottom skew-x-[-26deg]" />
     </span>
   );
 }
