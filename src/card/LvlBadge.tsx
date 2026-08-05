@@ -19,14 +19,14 @@ import { fitSize, layoutRun, LVL_WORD } from "./lvl-run";
  * Paints nothing outside the diamond; the portrait shows through around it.
  * Places itself, so it needs a positioned ancestor - inset is px in from its top-left.
  */
-export function LvlBadge({
+export function LvlDiamond({
   level,
   size = BADGE.box.w,
-  inset,
+  inset = 0,
 }: {
   level: number;
   size?: number;
-  inset: number;
+  inset?: number;
 }) {
   const uid = useId();
   // url(#name) resolves document-wide, not per svg, so every id is namespaced.
@@ -46,7 +46,7 @@ export function LvlBadge({
       <defs>
         <LabelDefs id={id} />
       </defs>
-      <LvlDiamond />
+      <DiamondBackdrop />
       {label && <LvlLabel id={id} metrics={label} />}
       <LvlDigits level={level} />
     </svg>
@@ -106,7 +106,7 @@ export function LabelDefs({
   );
 }
 
-function LvlDiamond() {
+function DiamondBackdrop() {
   const { diamond } = BADGE;
   const size = (diamond.outer * 2) / diamond.bodyShare;
   return (

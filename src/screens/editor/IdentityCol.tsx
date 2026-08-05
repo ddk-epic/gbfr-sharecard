@@ -1,6 +1,6 @@
 import { CHARACTER_LEVEL } from "../../domain/build";
 import { characterById, portraitUrl } from "../../data";
-import { LvlBadge } from "../../card/LvlBadge";
+import { LvlDiamond } from "../../card/LvlBadge";
 import { NameBadge } from "../../card/NameBadge";
 import { NumInput, type PageProps } from "./controls";
 import { StatIcon } from "../../ui";
@@ -24,7 +24,7 @@ export function IdentityCol({ build, onChange }: PageProps) {
           backgroundPosition: `center ${character?.portraitY ?? 20}%`,
         }}
       />
-      <LvlBadge level={CHARACTER_LEVEL} size={120} inset={6} />
+      <LvlDiamond level={CHARACTER_LEVEL} size={120} inset={6} />
       <NameBadge
         characterId={build.characterId}
         className="relative mx-2 mb-3"

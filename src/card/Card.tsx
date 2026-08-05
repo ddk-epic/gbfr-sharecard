@@ -8,7 +8,7 @@ import { SummonsSection } from "./SummonsSection";
 import { WeaponSection } from "./WeaponSection";
 import { Portrait } from "./Portrait";
 import { NameBadge } from "./NameBadge";
-import { LvlBadge } from "./LvlBadge";
+import { LvlDiamond } from "./LvlBadge";
 import { StatusPanel } from "./StatusPanel";
 import { BackdropFrame, ParchmentBackdrop } from "../ui";
 
@@ -108,6 +108,9 @@ export function Card({ build }: { build: Build }) {
           className="relative z-2 flex flex-col justify-end gap-5.75"
           style={{ gridColumn: 1, gridRow: 1 }}
         >
+          <div className="border-red-500">
+            <LvlDiamond level={CHARACTER_LEVEL} size={189} />
+          </div>
           <NameBadge characterId={build.characterId} />
           <StatusPanel status={build.status} className={SECTION} />
         </div>
@@ -146,8 +149,6 @@ export function Card({ build }: { build: Build }) {
           <SummonsSection summons={build.summons} />
         </div>
       </div>
-      {/* UI layer, above the portrait backdrop: the level badge in the corner. */}
-      <LvlBadge level={CHARACTER_LEVEL} size={189} inset={14} />
       <div className="text-dim absolute right-4 bottom-2 z-5 text-base tracking-wider">
         gbfr-sharecard · ddk-epic.github.io/gbfr-sharecard
       </div>
