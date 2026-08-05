@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import type { Build, SigilSlot } from "../domain/build";
 import { CHARACTER_LEVEL } from "../domain/build";
 import { bonusTypeById, bonusValueText, summonById, traitName } from "../data";
@@ -86,25 +85,10 @@ function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
  * and the PNG export captures this node.
  */
 export function Card({ build }: { build: Build }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  // Cells are uniform height, so master-trait labels that overflow get shrunk
-  // after layout. Cleared first so a re-render can un-shrink what it shrank.
-  useEffect(() => {
-    const root = cardRef.current;
-    if (!root) return;
-    root.querySelectorAll<HTMLElement>("[data-opt]").forEach((el) => {
-      el.removeAttribute("data-long");
-      if (el.scrollHeight > el.clientHeight + 1)
-        el.setAttribute("data-long", "");
-    });
-  });
-
   return (
     <div
       className="shareCard text-ui relative overflow-hidden bg-linear-160 from-[#f4f8fc] from-0% via-[#e8eff7] via-60% to-[#dfe9f4] to-100% font-sans"
       style={{ width: CARD_WIDTH, height: CARD_HEIGHT, padding: CARD_INSET }}
-      ref={cardRef}
     >
       <ParchmentBackdrop />
       <BackdropFrame />
@@ -117,11 +101,29 @@ export function Card({ build }: { build: Build }) {
       <div
         className="grid"
         style={{
+          // Grid layout:
+          //
+          //  ┌──────────────────────────────────────────┐
+          //  │ Row 1 (ROW_UPPER px)                     │
+          //  │ ┌────────────┐  ┌─────────────────────┐  │
+          //  │ │            │  │                     │  │
+          //  │ |  Portrait  │  │                     │  │
+          //  │ │            │  │                     │  │
+          //  │ │            │  │    Master Traits    │  │
+          //  │ └────────────┘  │                     │  │
+          //  │ ┌────────────┐  │                     │  │
+          //  │ │   Status   │  │                     │  │
+          //  │ └────────────┘  └─────────────────────┘  │
+          //  ├──────────────────────────────────────────┤ ← shared bottom edge
+          //  │ Row 2 (minmax(0, 1fr))                   │
+          //  │ ┌────────────┐  ┌─────────────────────┐  │
+          //  │ │   Skills   │  │    OM + Summons     │  │
+          //  │ └────────────┘  └─────────────────────┘  │
+          //  └──────────────────────────────────────────┘
+          //
+          // Using minmax(0, 1fr) allows Row 2 to shrink when needed
+          // instead of forcing the overall grid taller than its container.
           gridTemplateColumns: gridColumns(),
-          // Row 1 ends on the upper line - where Status and the master-traits
-          // box both bottom out. Row 2 runs from there to the bottom line, its
-          // two boxes stretching to fill. minmax(0,...) not 1fr so row 2 is
-          // squeezed rather than growing the grid past the bottom line.
           gridTemplateRows: `${ROW_UPPER}px minmax(0, 1fr)`,
           rowGap: ROW_GAP,
           height: "100%",

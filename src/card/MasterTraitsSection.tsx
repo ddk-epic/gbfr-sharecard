@@ -46,7 +46,6 @@ function MasterTraitStyleRank({
         {cells.map((cell) => (
           <div
             key={cell.id}
-            data-opt
             className={`flex h-[46px] items-center overflow-hidden rounded-sm px-2.25 py-1 text-lg ${cell.label.length >= 19 && "px-1.75 text-[20px] leading-[1.02]"} ${
               selected.includes(cell.id)
                 ? "to-deep-3/30 bg-linear-135 from-white/18 text-white shadow-[inset_0_0_0_1px_var(--deep-ring)]"

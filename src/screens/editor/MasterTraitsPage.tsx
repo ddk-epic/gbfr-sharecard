@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import type { CellId, StyleId, StyleRank } from "../../domain/build";
 import { RANKS, STYLES } from "../../domain/build";
 import {
@@ -31,7 +30,7 @@ const STYLE_RANK_LABELS: Record<StyleRank, string> = {
 };
 
 const OPT =
-  "flex h-8.5 cursor-pointer items-center gap-1.5 overflow-hidden rounded-[4px] px-1.75 py-0.75 text-[13px] leading-[1.12] data-long:gap-1 data-long:px-1.25 data-long:py-0.5 data-long:text-[11px] data-long:leading-[1.06]";
+  "flex h-8.5 cursor-pointer items-center gap-1.5 overflow-hidden rounded-[4px] px-1.75 py-0.75 text-[13px] leading-[1.12]";
 
 export function MasterTraitsPage({ build, onChange }: PageProps) {
   const catalog = characterCatalog(build.characterId);
@@ -58,15 +57,6 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
     });
   };
 
-  // Cells are uniform height, so labels that overflow get shrunk after layout.
-  const gridRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    gridRef.current?.querySelectorAll("[data-opt]").forEach((el) => {
-      if (el.scrollHeight > el.clientHeight + 1)
-        el.setAttribute("data-long", "");
-    });
-  });
-
   return (
     <div className="grid h-full grid-cols-2 gap-3.5 overflow-hidden px-4 py-3.5">
       <div className="col-span-full flex min-w-0 flex-col gap-3.5">
@@ -76,10 +66,7 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
             {perkSummary}
           </span>
         </Heading>
-        <div
-          className="grid flex-1 grid-cols-3 items-start gap-3"
-          ref={gridRef}
-        >
+        <div className="grid flex-1 grid-cols-3 items-start gap-3">
           {STYLES.map((style) => (
             <div
               className={`styleCol text-deep-ink flex flex-col gap-1.75 rounded-lg border-t-[3px] px-3 py-3.5 ${STYLE_BORDER[style]}`}
@@ -100,7 +87,6 @@ export function MasterTraitsPage({ build, onChange }: PageProps) {
                     {catalog.masterTraits[style][rank].map((cell) => (
                       <div
                         key={cell.id}
-                        data-opt
                         className={`${OPT} ${
                           build.masterTraits[style][rank].includes(cell.id)
                             ? "to-deep-3/30 bg-linear-135 from-white/18 text-white shadow-[inset_0_0_0_1px_var(--deep-ring)]"
