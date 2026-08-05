@@ -1,16 +1,9 @@
-import { Fragment, useEffect, useRef } from "react";
-import type { Build, SigilSlot, StyleId, StyleRank } from "../domain/build";
-import { CHARACTER_LEVEL, RANKS, STYLES } from "../domain/build";
-import { STYLE_RANK_BUDGETS, stylePerkStates } from "../domain/derive";
-import { PERK_THRESHOLDS } from "../domain/catalog";
-import {
-  bonusTypeById,
-  bonusValueText,
-  characterCatalog,
-  summonById,
-  traitName,
-} from "../data";
+import { useEffect, useRef } from "react";
+import type { Build, SigilSlot } from "../domain/build";
+import { CHARACTER_LEVEL } from "../domain/build";
+import { bonusTypeById, bonusValueText, summonById, traitName } from "../data";
 import { BonusIcon } from "./BonusIcon";
+import { MasterTraitsSection } from "./MasterTraitsSection";
 import { OverMasterySection } from "./OverMasterySection";
 import { SkillsSection } from "./SkillsSection";
 import { WeaponSection } from "./WeaponSection";
@@ -57,26 +50,6 @@ function gridColumns() {
   return `${c1}px ${COL_GAP}px ${c2}px ${COL_GAP}px ${c3}px`;
 }
 
-const STYLE_BORDER: Record<StyleId, string> = {
-  insight: "border-t-insight",
-  essence: "border-t-essence",
-  crux: "border-t-crux",
-};
-
-// Universal style word; masterTraits[style].title holds the per-character half.
-const STYLE_LABEL: Record<StyleId, string> = {
-  insight: "Insight",
-  essence: "Essence",
-  crux: "Crux",
-};
-
-const STYLE_RANK_LABELS: Record<StyleRank, string> = {
-  r1: "Style Rank 1",
-  r2: "Style Rank 2",
-  r3: "Style Rank 3",
-  ex: "Style Rank EX",
-};
-
 const SECTION =
   "rounded-lg bg-white/90 px-4.75 py-4 shadow-[0_1px_8px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
 
@@ -88,39 +61,6 @@ const PLATE =
   "rounded-[7px] bg-white/85 shadow-[inset_0_0_0_1px_var(--line-soft)]";
 
 const CLIP = "overflow-hidden text-ellipsis whitespace-nowrap";
-
-/** A master-trait cell: fixed height, an overflowing label shrinks via data-long. */
-const OPT =
-  "h-[46px] flex items-center gap-2 overflow-hidden rounded-sm px-2.25 py-1 text-lg leading-[1.12] data-long:gap-1.25 data-long:px-1.75 data-long:py-0.75 data-long:text-base data-long:leading-[1.06]";
-
-/**
- * The compressible spacing between the master-traits sections: authored height
- * and how far flexbox may squeeze it. Cell height and the cell-grid row gap are
- * deliberately absent so the trait grid keeps its rhythm however tight it gets.
- */
-const SOFT = {
-  colGap: { base: 9, floor: 4 }, // between the style name and each rank section
-  rankGap: { base: 9, floor: 4 }, // between a rank's label and its cell grid
-  rankMt: { base: 15, floor: 0 }, // above each rank label
-} as const;
-
-type SoftPart = keyof typeof SOFT;
-
-/**
- * One piece of the master-traits soft spacing, a flex item rather than a gap or
- * margin so it can shrink: it sits at its authored height but flexbox may
- * squeeze it to the part's floor when the band grows, no further.
- */
-function Soft({ part }: { part: SoftPart }) {
-  const { base, floor } = SOFT[part];
-  return (
-    <div
-      aria-hidden
-      className="shrink"
-      style={{ height: base, minHeight: floor, flexBasis: base }}
-    />
-  );
-}
 
 function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
   return (
@@ -146,13 +86,6 @@ function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
  * and the PNG export captures this node.
  */
 export function Card({ build }: { build: Build }) {
-  const catalog = characterCatalog(build.characterId);
-  const perks = stylePerkStates(build.masterTraits, PERK_THRESHOLDS);
-  const perkSummary = STYLES.map(
-    (style) =>
-      `${STYLE_LABEL[style]}: ${catalog.masterTraits[style].title} Perk ${perks[style].lastIndexOf(true) + 1}`,
-  ).join(" · ");
-
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Cells are uniform height, so master-trait labels that overflow get shrunk
@@ -232,58 +165,7 @@ export function Card({ build }: { build: Build }) {
           className="relative z-1 flex flex-col overflow-hidden"
           style={{ gridColumn: 5, gridRow: 1 }}
         >
-          <div className="flex h-full min-h-0 flex-col gap-3.75">
-            <Heading
-              tone="deep"
-              size="lg"
-              className="flex flex-none items-baseline justify-between"
-            >
-              <span>Master Traits</span>
-              <span className="text-deep-label text-lg font-semibold tracking-[0.02em] normal-case text-shadow-none">
-                {perkSummary}
-              </span>
-            </Heading>
-            <div className="grid min-h-0 flex-1 grid-cols-3 gap-1.25">
-              {STYLES.map((style) => (
-                /* Flattened deliberately so column can squish. */
-                <div
-                  className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
-                  key={style}
-                >
-                  <h4 className="flex-none text-2xl font-bold text-white [text-shadow:0_1px_4px_rgba(10,50,70,0.55)]">
-                    {STYLE_LABEL[style]}: {catalog.masterTraits[style].title}
-                  </h4>
-                  {RANKS.map((rank) => (
-                    <Fragment key={rank}>
-                      <Soft part="colGap" />
-                      <Soft part="rankMt" />
-                      <div className="text-deep-label flex flex-none justify-between text-lg tracking-[0.08em] uppercase">
-                        <span>{STYLE_RANK_LABELS[rank]}</span>
-                        <span>{STYLE_RANK_BUDGETS[rank]} pts</span>
-                      </div>
-                      <Soft part="rankGap" />
-                      {/* Locked: cell height and this row gap never squish. */}
-                      <div className="grid flex-none grid-cols-2 gap-1.75">
-                        {catalog.masterTraits[style][rank].map((cell) => (
-                          <div
-                            key={cell.id}
-                            data-opt
-                            className={`${OPT} ${
-                              build.masterTraits[style][rank].includes(cell.id)
-                                ? "to-deep-3/30 bg-linear-135 from-white/18 text-white shadow-[inset_0_0_0_1px_var(--deep-ring)]"
-                                : "bg-deep-cell text-deep-mute"
-                            }`}
-                          >
-                            {cell.label}
-                          </div>
-                        ))}
-                      </div>
-                    </Fragment>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
+          <MasterTraitsSection build={build} />
         </div>
 
         {/* Column 3, below the upper line */}
