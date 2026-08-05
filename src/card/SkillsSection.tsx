@@ -6,9 +6,6 @@ import { nameTracking } from "./name-tracking";
 
 const skillNameSize = (name: string) => (name.length <= 18 ? 24 : 22);
 
-/** Empty-slot ghost fill: the slanted bar's ink. */
-const GHOST_FILL = "var(--slanted-bar)";
-
 const ELEMENT_COLOR: Record<ElementId, string> = {
   fire: "#ff5c5c",
   water: "#55b3ff",
@@ -34,8 +31,10 @@ export function SkillsSection({
 
   return (
     <section className={`${className} flex flex-col overflow-hidden`}>
-      <Heading size="lg">Skills</Heading>
-      <div className="relative mt-1 grid grid-cols-2 grid-rows-2 gap-x-4">
+      <Heading size="lg" className="mb-1">
+        Skills
+      </Heading>
+      <div className="relative grid grid-cols-2 grid-rows-2 gap-x-4">
         {/** Cross divider */}
         <span
           aria-hidden
@@ -101,20 +100,11 @@ function SkillGhost({ bottom }: { bottom: boolean }) {
       className={`flex min-h-0 items-center ${bottom ? "pt-1.5" : "py-1.5"}`}
     >
       <span className="grid size-16 flex-none place-items-center">
-        <span
-          className="size-11 rotate-45 rounded-sm"
-          style={{ backgroundColor: GHOST_FILL }}
-        />
+        <span className="bg-slanted-bar size-11 rotate-45 rounded-sm" />
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <span
-          className="h-4 w-4/5 rounded-sm"
-          style={{ backgroundColor: GHOST_FILL }}
-        />
-        <span
-          className="h-2.5 w-2/5 rounded-sm"
-          style={{ backgroundColor: GHOST_FILL }}
-        />
+        <span className="bg-slanted-bar h-4 w-4/5 rounded-sm" />
+        <span className="bg-slanted-bar h-2.5 w-2/5 rounded-sm" />
       </span>
     </div>
   );

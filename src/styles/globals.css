@@ -70,6 +70,7 @@
 
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);
+  --color-slanted-bar: var(--slanted-bar);
 
   --color-gold: var(--gold);
   --color-gold-deep: var(--gold-deep);
