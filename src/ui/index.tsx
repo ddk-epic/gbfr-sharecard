@@ -165,6 +165,7 @@ export function BaseStat({
   iconOffset = 17,
   padRight = 16,
   noPadY = false,
+  height,
 }: {
   children: ReactNode;
   stat: StatIconId;
@@ -172,11 +173,14 @@ export function BaseStat({
   iconOffset?: number;
   padRight?: number;
   noPadY?: boolean;
+  /** Fixed plate height; unset sizes to content. Pin it so a taller icon does
+      not drive the row's baseline and shift the value. */
+  height?: number;
 }) {
   return (
     <span
       className={`relative inline-flex min-w-0 flex-1 items-center ${noPadY ? "" : "py-0.75"}`}
-      style={{ paddingRight: padRight }}
+      style={{ paddingRight: padRight, height }}
     >
       <SlantedBar />
       <span
@@ -185,7 +189,11 @@ export function BaseStat({
       >
         <StatIcon stat={stat} scale={iconScale} />
       </span>
-      <span className="relative flex min-w-0 flex-1 items-center">
+      {/* With a fixed height, take the row's baseline from the value box - which
+          is one height across plates - not the icon, whose height varies. */}
+      <span
+        className={`relative flex min-w-0 flex-1 items-center ${height === undefined ? "" : "self-baseline"}`}
+      >
         {children}
       </span>
     </span>

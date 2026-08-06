@@ -5,6 +5,7 @@ import { WEAPON_LEVEL_MAX, WEAPON_TRAIT_ROWS } from "../domain/build";
 import { resolveWeapon, weaponArtUrl, wrightstoneName } from "../data";
 import { BaseStat, Heading } from "../ui";
 import { LvlDisplay } from "./LvlDisplay";
+import { StatDisplay, STAT_BOX_HEIGHT } from "./StatDisplay";
 import { LvlWeapon } from "./LvlWeapon";
 import { GearRow, TraitCell, ROW_LVL_CAP_HEIGHT } from "./gear-row";
 
@@ -21,15 +22,6 @@ const ROW_INDENT = `calc(var(--spacing) * 2.5 + ${MARKER_GUTTER_WIDTH}px)`;
 
 /** Cap height the stat figures scale from. */
 const WEAPON_STAT_CAP_HEIGHT = 22;
-
-/** Typesetting overrides for a stat figure, fed to LvlDisplay's set. */
-const WEAPON_STAT_TYPE_SETTING = {
-  boxHeight: 1.35,
-  offsetY: 0.06,
-  tracking: -0.09,
-  outlineWidth: 1.5,
-  padX: 0,
-};
 
 /** Per-plate geometry. */
 const WEAPON_STAT_PLATES = {
@@ -51,6 +43,7 @@ const statPlate = (stat: keyof typeof WEAPON_STAT_PLATES) => ({
   padRight: WEAPON_STAT_PLATES[stat].padRight * WEAPON_STAT_CAP_HEIGHT,
   iconScale: WEAPON_STAT_ICON_SCALE * WEAPON_STAT_CAP_HEIGHT,
   noPadY: true,
+  height: WEAPON_STAT_CAP_HEIGHT * STAT_BOX_HEIGHT,
 });
 
 /** One trait and one level: the weapon and imbued rows. */
@@ -120,13 +113,11 @@ export function WeaponSection({ build }: { build: Build }) {
             />
           )}
           {resolvedWeapon && (
-            // Overlaid on the art: level bottom-left at the bar indent,
-            // series bottom-right; the fraction is dropped.
+            // Overlaid on the art: series bottom-right; the fraction is dropped.
             <div
-              className="absolute inset-x-0 bottom-1 flex items-end justify-between px-2.5"
+              className="absolute inset-x-0 bottom-1 flex items-end justify-end px-2.5"
               style={{ paddingLeft: ROW_INDENT }}
             >
-              <LvlWeapon cap={42} level={WEAPON_LEVEL_MAX} />
               <span className="text-dim text-base whitespace-nowrap">
                 {resolvedWeapon.seriesName}
               </span>
@@ -134,22 +125,37 @@ export function WeaponSection({ build }: { build: Build }) {
           )}
         </div>
         <div
-          className="mt-1.25 mb-2 flex items-baseline gap-5 px-2.5 text-xl"
+          className="mt-1.25 mb-2 flex items-baseline justify-between px-2.5 text-xl"
           style={{ paddingLeft: ROW_INDENT }}
         >
-          {/* Stats */}
-          <BaseStat {...statPlate("hp")}>
-            <WeaponStat tone="hp" value={resolvedWeapon?.hp ?? null} />
-          </BaseStat>
-          <BaseStat {...statPlate("atk")}>
-            <WeaponStat tone="atk" value={resolvedWeapon?.atk ?? null} />
-          </BaseStat>
-          <BaseStat {...statPlate("crit")}>
-            <WeaponStat tone="ui" value={weapon?.critRate ?? null} unit="%" />
-          </BaseStat>
-          <BaseStat {...statPlate("stun")}>
-            <WeaponStat tone="ui" value={weapon?.stun ?? null} />
-          </BaseStat>
+          <LvlWeapon cap={42} level={WEAPON_LEVEL_MAX} />
+          <div className="flex items-baseline">
+            <BaseStat {...statPlate("hp")}>
+              <WeaponStat
+                tone="hp"
+                value={resolvedWeapon?.hp ?? null}
+                reserve={5}
+              />
+            </BaseStat>
+            <BaseStat {...statPlate("atk")}>
+              <WeaponStat
+                tone="atk"
+                value={resolvedWeapon?.atk ?? null}
+                reserve={5}
+              />
+            </BaseStat>
+            <BaseStat {...statPlate("crit")}>
+              <WeaponStat
+                tone="ui"
+                value={weapon?.critRate ?? null}
+                unit="%"
+                reserve={4}
+              />
+            </BaseStat>
+            <BaseStat {...statPlate("stun")}>
+              <WeaponStat tone="ui" value={weapon?.stun ?? null} reserve={4} />
+            </BaseStat>
+          </div>
         </div>
         {resolvedWeapon
           ? resolvedWeapon.slots.map((slot, i) => (
@@ -191,21 +197,21 @@ function WeaponStat({
   tone,
   value,
   unit,
+  reserve,
 }: {
   tone: "hp" | "atk" | "ui";
   value: number | null;
   unit?: string;
+  reserve: number;
 }) {
   return (
     <span className="relative ml-auto inline-flex">
-      <LvlDisplay
+      <StatDisplay
         cap={WEAPON_STAT_CAP_HEIGHT}
-        level={value}
-        lvlWord={false}
-        unit={value === null ? undefined : unit}
-        bar={false}
+        value={value}
+        unit={unit}
         tone={tone}
-        set={WEAPON_STAT_TYPE_SETTING}
+        reserveDigits={reserve}
       />
       {value === null && (
         <span className="text-dim absolute inset-0 grid place-items-center text-2xl">

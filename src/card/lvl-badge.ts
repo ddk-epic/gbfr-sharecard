@@ -58,9 +58,14 @@ export const BADGE = {
     inkEnd: 1.4, // overshoots inkBottom on purpose
 
     shadeHold: 0,
-    kern1: -3,
+    kern1: -1.5,
     kern2: 0.1,
-    outline: 2.7,
+    /** The number's keyline width, badge units. */
+    outline: 2.5,
+    /** The "Lvl" word's ink height as a share of the number's cap. */
+    wordRatio: 0.82,
+    /** The word's keyline as a share of the number's. */
+    wordOutline: 0.82,
   },
   /** The figures carry their own colour; these dress the "Lvl" word. */
   color: {

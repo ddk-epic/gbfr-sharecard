@@ -1,303 +1,150 @@
-import { useEffect, useId, useState } from "react";
+import { useId } from "react";
 import { SlantedBar } from "../ui";
-import { LabelDefs, type SvgId } from "./LvlBadge";
-import { BADGE, LABEL_INK, mix, type LabelTone } from "./lvl-badge";
+import { BADGE, type LabelTone } from "./lvl-badge";
 import {
-  fitSize,
-  ghosted,
-  layoutRun,
-  LEVEL_DIGITS,
-  LVL_WORD,
-  type Run,
-} from "./lvl-run";
-
-/** The medium face, as every "Lvl" word on the card is set in. */
-const FAMILY = "'GBFR UI Medium'";
+  LabelDefs,
+  LabelRun,
+  LabelShadowFilter,
+  CAP_RATIO,
+  type SvgId,
+} from "./label-run";
 
 /** What the game puts in front of a trait's level. */
 const TRAIT_PREFIX = "T.";
 
 /**
- * The game's own proportions, off its trait rows. Every measure is stated
- * against the number's cap height, so `cap` scales the whole thing.
+ * Placement in badge units (viewBox space; cap 17, baseline 36). Nothing is
+ * measured: the browser sets the text, these constants place it. SEED marks
+ * the runtime-measured ones with no closed form here - calibrate them by eye.
  */
 const LVL = {
-  /** The words' *ink* height against the number's, not their font size. */
-  wordRatio: 0.82,
-  /** Badge units between letters: inside "T.", then inside "Lvl". */
-  track: { prefix: -0.2, word: 0.25 },
+  cap: BADGE.lvl.cap, //           number cap height
+  baseline: BADGE.lvl.baseline, // shared baseline
+  outline: BADGE.lvl.outline,
+  wordRatio: BADGE.lvl.wordRatio,
+  wordOutline: BADGE.lvl.wordOutline,
+  /** Box height in cap heights; the bar fills its bottom half. */
+  boxHeight: 1.65,
+  /** Box past the ink each side, x cap. */
+  padX: 0.64,
+  /** SEED: "Lvl" left edge (textAnchor start). */
+  wordX: 0,
   /** "T." to "Lvl", x cap. */
   prefixGap: 0.33,
-  /** "Lvl" to the number, x cap, at the reserved two-digit width. */
-  gap: 0.76,
-  /** The number to its unit, x cap. */
-  unitGap: 0.35,
+  /** SEED: "T." ink left when hung off the word; the box pads left of it so the
+      slant clears the T as it does the L. */
+  prefixInkLeft: -20,
+  /** SEED: right edge the number pins to (past the word by the game's gap). */
+  numberRight: 57,
   /**
-   * The words' share of the number's keyline. Absolute, not their size ratio:
-   * the game's keyline is one pixel at every size.
+   * The gaps inside "Lvl" as per-glyph `dx`, at word scale. Each folds the hand
+   * kern (asymmetric L-v vs v-l) and the uniform word track, as the old layout
+   * did. Applied on top of the font's own advances.
    */
-  wordOutline: 0.82,
-  /**
-   * The run's drop shadow. Offset and blur are x cap; `darken` is how far past
-   * the keyline the colour sits towards black, 0 being the keyline's own.
-   */
-  shadow: { dx: 0, dy: 0.02, blur: 0.02, opacity: 0.6, darken: 0.5 },
+  kernLv: (BADGE.lvl.kern1 + 0.25) * 0.82, // before v
+  kernVl: (BADGE.lvl.kern2 + 0.25) * 0.82, // before the last l
+  /** The one gap inside "T.", at word scale. */
+  prefixKern: -0.2 * 0.82,
 } as const;
 
-/** How a figure is set inside its box. */
-export type FigureSet = {
-  /** Box height in cap heights. The bar fills its bottom half. */
-  boxHeight: number;
-  /** Box past the run's ink, x cap - the same both sides, as the game sets it. */
-  padX: number;
-  /** The figure raised off the box's centre, x cap. */
-  offsetY: number;
-  /** Between figures, x cap, on top of whatever the face sets. */
-  tracking: number;
-  /** The number's keyline. */
-  outlineWidth: number;
-};
+const NUMBER_SIZE = LVL.cap / CAP_RATIO;
+const WORD_SIZE = NUMBER_SIZE * LVL.wordRatio;
 
-const FIGURE: FigureSet = {
-  boxHeight: 1.65,
-  padX: 0.64,
-  offsetY: 0,
-  tracking: 0,
-  outlineWidth: 2.5,
-};
-
-function useLvlRun(
-  traitPrefix: boolean,
-  lvlWord: boolean,
-  digits: string,
-  unit: string,
-  track: number,
-): Run | null {
-  const [run, setRun] = useState<Run | null>(null);
-
-  useEffect(() => {
-    let live = true;
-    const measure = () => {
-      const ctx = document.createElement("canvas").getContext("2d");
-      if (!ctx || !live) return;
-      if (!document.fonts.check(`16px ${FAMILY}`)) {
-        console.warn(`${FAMILY} did not load; level display omitted`);
-        return;
-      }
-
-      const size = fitSize(ctx, FAMILY, BADGE.lvl.cap);
-      if (!size) {
-        console.warn(`${FAMILY} measured no ink; level display omitted`);
-        return;
-      }
-
-      // wordRatio names the ink, and this face's caps and digits are not one
-      // height, so the font scale that delivers it has to be solved for.
-      ctx.font = `${size}px ${FAMILY}`;
-      const scale =
-        (LVL.wordRatio * ctx.measureText("0").actualBoundingBoxAscent) /
-        ctx.measureText(LVL_WORD).actualBoundingBoxAscent;
-
-      const { cap } = BADGE.lvl;
-      const lay = (level: string) =>
-        layoutRun(ctx, FAMILY, size, [
-          ...(traitPrefix
-            ? [
-                {
-                  text: TRAIT_PREFIX,
-                  scale,
-                  track: LVL.track.prefix,
-                  outline: LVL.wordOutline,
-                },
-              ]
-            : []),
-          ...(lvlWord
-            ? [
-                {
-                  text: LVL_WORD,
-                  scale,
-                  track: LVL.track.word,
-                  outline: LVL.wordOutline,
-                  lead: traitPrefix ? LVL.prefixGap * cap : 0,
-                },
-              ]
-            : []),
-          {
-            text: level,
-            scale: 1,
-            track: track * cap,
-            lead: traitPrefix || lvlWord ? LVL.gap * cap : 0,
-          },
-          // Set like the words: a mark on the figure, not another figure.
-          ...(unit
-            ? [
-                {
-                  text: unit,
-                  scale,
-                  outline: LVL.wordOutline,
-                  lead: LVL.unitGap * cap,
-                },
-              ]
-            : []),
-        ]);
-
-      // Every display reserves the two-digit box, so a column of them is one
-      // width; a level wider than that grows the box rather than overflowing it.
-      const own = lay(ghosted(digits));
-      const ref = lay("0".repeat(LEVEL_DIGITS));
-      setRun({
-        parts: own.parts,
-        lo: Math.min(own.lo, ref.lo),
-        hi: Math.max(own.hi, ref.hi),
-        end: own.end,
-      });
-    };
-
-    // measureText never triggers a load; fonts.load does. Catching matters:
-    // a rejection here is how an undecodable face silently emptied the label.
-    void document.fonts
-      .load(`16px ${FAMILY}`, `${TRAIT_PREFIX}${LVL_WORD}${unit}0123456789`)
-      .then(() => document.fonts.ready)
-      .then(measure)
-      .catch((err: unknown) => {
-        console.warn(`${FAMILY} failed to load; level display omitted`, err);
-      });
-
-    return () => {
-      live = false;
-    };
-  }, [traitPrefix, lvlWord, digits, unit, track]);
-
-  return run;
-}
-
+/**
+ * A level: the "Lvl" word (or a "T." trait prefix) over the game's figures on a
+ * slanted bar. Pure JSX; the browser reflows when the face loads. Used for
+ * weapon traits, sigils, and summons.
+ */
 export function LvlDisplay({
   cap,
   level,
   traitPrefix = false,
-  lvlWord = true,
-  unit = "",
-  bar = true,
-  shadow = true,
   tone = "plain",
-  set,
   className = "",
 }: {
   cap: number;
   level: number | null;
   traitPrefix?: boolean;
-  lvlWord?: boolean;
-  /** Hung off the figure at the words' size; "%" and nothing else so far. */
-  unit?: string;
-  bar?: boolean;
-  shadow?: boolean;
-  /** `plain` is the card's own ink, `gold` the game's; the rest are stats. */
+  /** `plain` is the card's own ink, `gold` the game's. */
   tone?: LabelTone;
-  /** Overrides the level chip's own setting; see FigureSet. */
-  set?: Partial<FigureSet>;
   className?: string;
 }) {
   const uid = useId();
-  const id: SvgId = (name) => `${uid}-${name}`;
-  // A second ink, spanning the words' cap, so they read as light as the number
-  // rather than only its darker foot.
-  const wordId: SvgId = (name) => id(`w-${name}`);
-  const figure = { ...FIGURE, ...set };
-  const run = useLvlRun(
-    traitPrefix,
-    lvlWord,
-    level === null ? "" : `${level}`,
-    unit,
-    figure.tracking,
-  );
-  if (!run) return null;
+  const id: SvgId = (name) => `${uid}-${name}`; //    number ramp (full cap)
+  const wordId: SvgId = (name) => id(`w-${name}`); // word ramp (lighter, word cap)
 
-  const { lvl } = BADGE;
-  const boxHeight = figure.boxHeight * lvl.cap;
-  const padX = figure.padX * lvl.cap;
-  const left = run.lo - padX;
-  const right = run.hi + padX;
-  // Centred on the number's middle, where the bar's top edge lands; offsetY is
-  // how far the game's own box sits off that centre.
-  const top =
-    lvl.baseline - lvl.cap / 2 + figure.offsetY * lvl.cap - boxHeight / 2;
-  const px = cap / lvl.cap;
+  const boxHeight = LVL.boxHeight * LVL.cap;
+  const padX = LVL.padX * LVL.cap;
+  // The bar's top edge lands on the number's middle; the box is centred there.
+  const top = LVL.baseline - LVL.cap / 2 - boxHeight / 2;
+  const left = (traitPrefix ? LVL.prefixInkLeft : LVL.wordX) - padX;
+  const right = LVL.numberRight + padX;
+  const px = cap / LVL.cap;
+  const size = { width: (right - left) * px, height: boxHeight * px };
+
+  if (level === null) {
+    return (
+      <span
+        className={`inline-block ${className}`}
+        style={size}
+        role="presentation"
+      />
+    );
+  }
 
   return (
     <span
       className={`relative inline-block ${className}`}
-      style={{ width: (right - left) * px, height: boxHeight * px }}
-      role={level === null ? "presentation" : "img"}
-      aria-label={level === null ? undefined : `Level ${level}`}
+      style={size}
+      role="img"
+      aria-label={`Level ${level}`}
     >
-      {level !== null && (
-        <>
-          {bar && <SlantedBar />}
-          <svg
-            className="relative block"
-            viewBox={`${left} ${top} ${right - left} ${boxHeight}`}
-            width={(right - left) * px}
-            height={boxHeight * px}
+      <SlantedBar />
+      <svg
+        className="relative block"
+        viewBox={`${left} ${top} ${right - left} ${boxHeight}`}
+        width={size.width}
+        height={size.height}
+      >
+        <defs>
+          <LabelDefs id={id} tone={tone} />
+          <LabelDefs id={wordId} tone={tone} cap={LVL.wordRatio * LVL.cap} />
+          <LabelShadowFilter id={id} tone={tone} />
+        </defs>
+        {/* One group so the shadow casts once, not per part. */}
+        <g filter={`url(#${id("lblshadow")})`}>
+          {traitPrefix && (
+            <LabelRun
+              ink={wordId}
+              x={LVL.wordX - LVL.prefixGap * LVL.cap}
+              dx={`0 ${LVL.prefixKern}`}
+              textAnchor="end"
+              size={WORD_SIZE}
+              outline={LVL.outline * LVL.wordOutline}
+            >
+              {TRAIT_PREFIX}
+            </LabelRun>
+          )}
+          <LabelRun
+            ink={wordId}
+            x={LVL.wordX}
+            dx={`0 ${LVL.kernLv} ${LVL.kernVl}`}
+            size={WORD_SIZE}
+            outline={LVL.outline * LVL.wordOutline}
           >
-            <defs>
-              <LabelDefs id={id} tone={tone} />
-              <LabelDefs
-                id={wordId}
-                tone={tone}
-                cap={LVL.wordRatio * lvl.cap}
-              />
-              {shadow && (
-                // Room for the blur, which the default region would clip.
-                <filter
-                  id={id("lblshadow")}
-                  x="-20%"
-                  y="-20%"
-                  width="140%"
-                  height="140%"
-                >
-                  <feDropShadow
-                    dx={LVL.shadow.dx * lvl.cap}
-                    dy={LVL.shadow.dy * lvl.cap}
-                    stdDeviation={LVL.shadow.blur * lvl.cap}
-                    floodColor={mix(
-                      LABEL_INK[tone].keyline,
-                      LVL.shadow.darken,
-                      "#000000",
-                    )}
-                    floodOpacity={LVL.shadow.opacity}
-                  />
-                </filter>
-              )}
-            </defs>
-            {/* Filtered as one group: part by part, each would cast onto the
-                next and double up where they overlap. */}
-            <g filter={shadow ? `url(#${id("lblshadow")})` : undefined}>
-              {run.parts.map((part, i) => {
-                // The number takes the full-cap ink; the words take their own.
-                const g = part.text === `${level}` ? id : wordId;
-                return (
-                  <text
-                    key={i}
-                    x={part.xs.join(" ")}
-                    y={lvl.baseline}
-                    textAnchor="start"
-                    fontFamily={FAMILY}
-                    fontSize={part.size}
-                    fill={`url(#${g("lblink")})`}
-                    stroke={`url(#${g("lblkey")})`}
-                    strokeWidth={figure.outlineWidth * part.outline}
-                    strokeLinejoin="round"
-                    paintOrder="stroke"
-                    xmlSpace="preserve"
-                  >
-                    {part.text}
-                  </text>
-                );
-              })}
-            </g>
-          </svg>
-        </>
-      )}
+            Lvl
+          </LabelRun>
+          <LabelRun
+            ink={id}
+            x={LVL.numberRight}
+            textAnchor="end"
+            size={NUMBER_SIZE}
+            outline={LVL.outline}
+          >
+            {level}
+          </LabelRun>
+        </g>
+      </svg>
     </span>
   );
 }
