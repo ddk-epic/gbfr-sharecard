@@ -21,7 +21,7 @@ import {
   TraitSelect,
   type PageProps,
 } from "./controls";
-import { Diamond, Heading, Orb, Wpanel } from "../../ui";
+import { Diamond, Heading, Orb, Panel } from "../../ui";
 
 // Summon main traits only roll Lv 11-15.
 const SUMMON_TRAIT_MIN_LEVEL = 11;
@@ -37,7 +37,7 @@ export function SkillsPage({ build, onChange }: PageProps) {
       <IdentityCol build={build} onChange={onChange} />
       <div className="flex min-w-0 flex-col gap-3.5">
         <Heading>Skills</Heading>
-        <Wpanel>
+        <Panel>
           <div className="flex flex-col gap-1.5">
             {build.skills.map((skill, i) => (
               <div
@@ -66,9 +66,9 @@ export function SkillsPage({ build, onChange }: PageProps) {
               </div>
             ))}
           </div>
-        </Wpanel>
+        </Panel>
         <Heading>Over Mastery</Heading>
-        <Wpanel>
+        <Panel>
           {build.overMastery.map((line, i) => (
             <OverMasteryRow
               key={i}
@@ -81,7 +81,7 @@ export function SkillsPage({ build, onChange }: PageProps) {
               }
             />
           ))}
-        </Wpanel>
+        </Panel>
         <Heading>Summons</Heading>
         <div className="flex flex-col gap-0.75">
           {build.summons.map((slot, i) => (

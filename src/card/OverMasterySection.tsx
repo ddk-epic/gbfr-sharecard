@@ -1,6 +1,6 @@
 import type { Build } from "../domain/build";
 import { bonusTypeById, bonusValueText } from "../data";
-import { Heading, Wpanel } from "../ui";
+import { Heading, SectionPanel } from "../ui";
 import { BonusIcon } from "./BonusIcon";
 
 export function OverMasterySection({
@@ -11,7 +11,7 @@ export function OverMasterySection({
   className?: string;
 }) {
   return (
-    <Wpanel
+    <SectionPanel
       shadow
       className={`flex flex-col self-start overflow-hidden ${className}`}
     >
@@ -38,6 +38,6 @@ export function OverMasterySection({
           </div>
         ))}
       </div>
-    </Wpanel>
+    </SectionPanel>
   );
 }

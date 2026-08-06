@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import type { Build } from "../domain/build";
 import type { StatIconId } from "../data";
-import { StatIcon } from "../ui";
+import { StatIcon, SectionPanel } from "../ui";
 
 const LABEL_FONT = "font-med";
 const VALUE_FONT = "font-med";
@@ -52,12 +52,12 @@ export function StatusPanel({
   className?: string;
 }) {
   return (
-    <section className={`${className} pr-4 pl-4`}>
+    <SectionPanel shadow className={`${className} pr-4 pl-4`}>
       <div className="grid grid-cols-[9fr_11fr] gap-x-5">
         <Half rows={LEFT} status={status} digits={6} />
         <Half rows={RIGHT} status={status} digits={5} className="pr-4" />
       </div>
-    </section>
+    </SectionPanel>
   );
 }
 

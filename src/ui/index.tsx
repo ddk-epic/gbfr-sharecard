@@ -224,8 +224,8 @@ export function TraitRow({
   );
 }
 
-/** Bordered panel grouping one section's rows. */
-export function Wpanel({
+/** Bordered panel exclusively for the card. */
+export function SectionPanel({
   children,
   fill = false,
   shadow = false,

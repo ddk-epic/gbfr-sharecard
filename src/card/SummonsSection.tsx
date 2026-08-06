@@ -1,7 +1,7 @@
 import type { Build } from "../domain/build";
 import { bonusTypeById, bonusValueText, summonById, traitName } from "../data";
 import { BonusIcon } from "./BonusIcon";
-import { Heading, Lvl } from "../ui";
+import { Lvl, SectionPanel } from "../ui";
 
 const PLATE =
   "rounded-[7px] bg-white/85 shadow-[inset_0_0_0_1px_var(--line-soft)]";
@@ -10,8 +10,8 @@ const CLIP = "overflow-hidden text-ellipsis whitespace-nowrap";
 
 export function SummonsSection({ summons }: { summons: Build["summons"] }) {
   return (
-    <div className="col-span-2 flex flex-col">
-      <Heading size="lg">Summons</Heading>
+    <SectionPanel shadow className="col-span-2 flex flex-col">
+      {/*<Heading size="lg">Summons</Heading>*/}
       <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-1.25">
         {summons.map((slot, i) => (
           <div
@@ -52,6 +52,6 @@ export function SummonsSection({ summons }: { summons: Build["summons"] }) {
           </div>
         ))}
       </div>
-    </div>
+    </SectionPanel>
   );
 }

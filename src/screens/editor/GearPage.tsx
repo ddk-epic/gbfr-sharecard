@@ -23,7 +23,7 @@ import {
   Lvl,
   TraitIcon,
   TraitRow,
-  Wpanel,
+  Panel,
 } from "../../ui";
 
 // Levels are fixed by the wrightstone, not entered: main / sub1 / sub2.
@@ -98,7 +98,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
     });
 
   return (
-    <Wpanel fill>
+    <Panel>
       <div className="flex items-baseline gap-2">
         <Select
           className="flex-1 text-[17px] font-bold"
@@ -209,7 +209,7 @@ function WeaponPanel({ build, onChange }: PageProps) {
             <EmptyTraitRow key={i} />
           ))}
       <WrightstonePanel build={build} onChange={onChange} />
-    </Wpanel>
+    </Panel>
   );
 }
 
