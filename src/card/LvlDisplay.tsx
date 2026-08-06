@@ -5,6 +5,7 @@ import {
   LabelDefs,
   LabelRun,
   LabelShadowFilter,
+  LvlWord,
   CAP_RATIO,
   type SvgId,
 } from "./label-run";
@@ -23,8 +24,7 @@ const LVL = {
   outline: BADGE.lvl.outline,
   wordRatio: BADGE.lvl.wordRatio,
   wordOutline: BADGE.lvl.wordOutline,
-  /** Box height in cap heights; the bar fills its bottom half. */
-  boxHeight: 1.65,
+  boxHeight: BADGE.lvl.boxHeight,
   /** Box past the ink each side, x cap. */
   padX: 0.64,
   /** SEED: "Lvl" left edge (textAnchor start). */
@@ -36,13 +36,6 @@ const LVL = {
   prefixInkLeft: -20,
   /** SEED: right edge the number pins to (past the word by the game's gap). */
   numberRight: 57,
-  /**
-   * The gaps inside "Lvl" as per-glyph `dx`, at word scale. Each folds the hand
-   * kern (asymmetric L-v vs v-l) and the uniform word track, as the old layout
-   * did. Applied on top of the font's own advances.
-   */
-  kernLv: (BADGE.lvl.kern1 + 0.25) * 0.82, // before v
-  kernVl: (BADGE.lvl.kern2 + 0.25) * 0.82, // before the last l
   /** The one gap inside "T.", at word scale. */
   prefixKern: -0.2 * 0.82,
 } as const;
@@ -125,15 +118,7 @@ export function LvlDisplay({
               {TRAIT_PREFIX}
             </LabelRun>
           )}
-          <LabelRun
-            ink={wordId}
-            x={LVL.wordX}
-            dx={`0 ${LVL.kernLv} ${LVL.kernVl}`}
-            size={WORD_SIZE}
-            outline={LVL.outline * LVL.wordOutline}
-          >
-            Lvl
-          </LabelRun>
+          <LvlWord id={wordId} x={LVL.wordX} />
           <LabelRun
             ink={id}
             x={LVL.numberRight}

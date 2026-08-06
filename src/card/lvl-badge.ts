@@ -60,12 +60,19 @@ export const BADGE = {
     shadeHold: 0,
     kern1: -1.5,
     kern2: 0.1,
+    /** Uniform tracking inside "Lvl", on top of kern1/kern2, word-scale x cap. */
+    wordTrack: 0.25,
     /** The number's keyline width, badge units. */
     outline: 2.5,
     /** The "Lvl" word's ink height as a share of the number's cap. */
     wordRatio: 0.82,
     /** The word's keyline as a share of the number's. */
     wordOutline: 0.82,
+    /** A "Lvl" chip's box height, cap heights. The bar fills its bottom half in
+        LvlDisplay; a bar-less chip still uses it so its synthesized flex
+        baseline (a box's bottom edge) lands the same distance below the true
+        text baseline as one with a bar does. */
+    boxHeight: 1.65,
   },
   /** The figures carry their own colour; these dress the "Lvl" word. */
   color: {

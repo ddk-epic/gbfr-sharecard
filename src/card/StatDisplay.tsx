@@ -12,12 +12,10 @@ import {
     taller icon cannot drive the row's baseline. */
 export const STAT_BOX_HEIGHT = 1.35;
 
-/**
- * Stat-plate placement in badge units (viewBox space; cap 17, baseline 36).
- * Nothing is measured: the browser sets the text, these constants place it.
- * SEED marks the runtime-measured ones with no closed form here - calibrate
- * them by eye.
- */
+/** The figure raised off the box's centre, x cap. */
+export const STAT_OFFSET_Y = 0.06;
+
+/** Stat-plate placement in badge units (viewBox space; cap 17, baseline 36). */
 const STAT = {
   cap: BADGE.lvl.cap, //           number cap height
   baseline: BADGE.lvl.baseline, // shared baseline
@@ -26,7 +24,7 @@ const STAT = {
   /** Box height in cap heights; flatter than a level chip. */
   boxHeight: STAT_BOX_HEIGHT,
   /** The figure raised off the box's centre, x cap. */
-  offsetY: 0.06,
+  offsetY: STAT_OFFSET_Y,
   /** Between digits, x cap; uniform, so a plain letter-spacing carries it. */
   tracking: -0.09,
   /** SEED: right edge the number pins to; the origin here. */

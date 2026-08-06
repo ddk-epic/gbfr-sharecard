@@ -23,6 +23,9 @@ const ROW_INDENT = `calc(var(--spacing) * 2.5 + ${MARKER_GUTTER_WIDTH}px)`;
 /** Cap height the stat figures scale from. */
 const WEAPON_STAT_CAP_HEIGHT = 22;
 
+/** Cap height the weapon's own digit figure scales from. */
+const WEAPON_LVL_CAP_HEIGHT = WEAPON_STAT_CAP_HEIGHT * 1.8;
+
 /** Per-plate geometry. */
 const WEAPON_STAT_PLATES = {
   hp: { iconOffset: 0.9, padRight: 1 },
@@ -125,11 +128,15 @@ export function WeaponSection({ build }: { build: Build }) {
           )}
         </div>
         <div
-          className="mt-1.25 mb-2 flex items-baseline justify-between px-2.5 text-xl"
+          className="mb-2 flex items-baseline gap-6 text-xl"
           style={{ paddingLeft: ROW_INDENT }}
         >
-          <LvlWeapon cap={42} level={WEAPON_LEVEL_MAX} />
-          <div className="flex items-baseline">
+          <LvlWeapon
+            cap={WEAPON_LVL_CAP_HEIGHT}
+            level={WEAPON_LEVEL_MAX}
+            wordRatio={WEAPON_STAT_CAP_HEIGHT / WEAPON_LVL_CAP_HEIGHT}
+          />
+          <div className="flex flex-1 items-baseline">
             <BaseStat {...statPlate("hp")}>
               <WeaponStat
                 tone="hp"

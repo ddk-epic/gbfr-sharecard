@@ -69,7 +69,7 @@ export function LabelDefs({
 }
 
 /** Places pre-rendered digit-glyph images along a laid-out run. */
-export function Figures({
+export function DigitFigures({
   placements,
   scale,
   originX,
@@ -149,6 +149,46 @@ export function LabelRun({
     >
       {children}
     </text>
+  );
+}
+
+/**
+ * The "Lvl" word, one shared rendering for every context it appears in - the
+ * chip, the diamond badge, the weapon plate - kerned and stroked off
+ * `BADGE.lvl` so they read identically; only `id`'s tone, the caller's
+ * placement, and `ratio` (a composition's own word-to-number size) differ.
+ */
+export function LvlWord({
+  id,
+  x,
+  textAnchor = "start",
+  ratio = BADGE.lvl.wordRatio,
+}: {
+  id: SvgId;
+  x: number | string;
+  textAnchor?: "start" | "end" | "middle";
+  /** The word's ink height as a share of the number's cap. Defaults to the
+      shared calibration; override where a composition sizes its word
+      differently from its number, as the weapon plate's smaller "Lvl" does. */
+  ratio?: number;
+}) {
+  const { cap, kern1, kern2, wordTrack, outline, wordOutline, wordRatio } =
+    BADGE.lvl;
+  const size = (cap / CAP_RATIO) * ratio;
+  const dx = `0 ${(kern1 + wordTrack) * ratio} ${(kern2 + wordTrack) * ratio}`;
+  return (
+    <LabelRun
+      ink={id}
+      x={x}
+      dx={dx}
+      textAnchor={textAnchor}
+      size={size}
+      // Keyline scales with the word, so it stays the same share of the glyphs
+      // at any ratio; wordOutline is calibrated at the default wordRatio.
+      outline={outline * wordOutline * (ratio / wordRatio)}
+    >
+      Lvl
+    </LabelRun>
   );
 }
 
