@@ -6,16 +6,15 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { Minus, Plus, Scan, X } from "lucide-react";
+import { Fullscreen, Minus, Plus, Scan, X } from "lucide-react";
 import type { Build } from "../domain/build";
 import { Card, CARD_HEIGHT, CARD_WIDTH } from "./Card";
 
-/* Full-resolution inspector. Zooms out only - 100% is the ceiling, no
-   upscaling; the floor fits the whole card in the viewport. Wheel zooms toward
-   the cursor, drag pans. */
+/* Full-resolution inspector. */
 
 const MAX_ZOOM = 1;
 const START_ZOOM = 0.66; // initial zoom
+const VOID_RATIO = 1 / 0.75; // Deepest zoom-out: the card at 75% of fit size.
 const WHEEL_STEP = 0.0015; // per wheel delta unit
 const BUTTON_STEP = 1.25; // multiplier per +/- click
 const DRAG_SLOP = 5; // px of movement that turns a click into a drag
@@ -44,6 +43,7 @@ export function CardModal({
   const viewportRef = useRef<HTMLDivElement>(null);
   const cardWrapRef = useRef<HTMLDivElement>(null);
   const [minZoom, setMinZoom] = useState(0.4);
+  const [fitFloor, setFitFloor] = useState(0.4);
   const [zoom, setZoom] = useState(START_ZOOM);
   const [pan, setPan] = useState({ x: 0, y: 0 });
 
@@ -68,7 +68,9 @@ export function CardModal({
     const h = el.clientHeight;
     sizeRef.current = { w, h };
     const floor = Math.min(w / CARD_WIDTH, h / CARD_HEIGHT);
-    setMinZoom(floor);
+    setFitFloor(floor);
+    setMinZoom(floor / VOID_RATIO);
+    // On shrink, pull back up so the card never overflows the viewport.
     const nextZoom = Math.min(MAX_ZOOM, Math.max(floor, zoomRef.current));
     setZoom(nextZoom);
     setPan((p) => clampPan(p.x, p.y, nextZoom, w, h));
@@ -82,7 +84,8 @@ export function CardModal({
     const h = el.clientHeight;
     sizeRef.current = { w, h };
     const floor = Math.min(w / CARD_WIDTH, h / CARD_HEIGHT);
-    setMinZoom(floor);
+    setFitFloor(floor);
+    setMinZoom(floor / VOID_RATIO);
     // Open at START_ZOOM, never below the fit floor, centred.
     const start = Math.min(MAX_ZOOM, Math.max(floor, START_ZOOM));
     setZoom(start);
@@ -136,6 +139,13 @@ export function CardModal({
   };
 
   const fit = () => {
+    const { w, h } = sizeRef.current;
+    setZoom(fitFloor);
+    setPan(centrePan(fitFloor, w, h));
+  };
+
+  // Jump all the way out to the void floor, re-centred.
+  const voidOut = () => {
     const { w, h } = sizeRef.current;
     setZoom(minZoom);
     setPan(centrePan(minZoom, w, h));
@@ -234,6 +244,13 @@ export function CardModal({
           <Plus size={18} />
         </HudBtn>
         <span className="mx-0.5 h-5 w-px bg-white/20" />
+        <HudBtn
+          onClick={voidOut}
+          disabled={pct <= Math.round(minZoom * 100)}
+          title="Zoom out to void"
+        >
+          <Fullscreen size={18} />
+        </HudBtn>
         <HudBtn onClick={fit} title="Fit to screen">
           <Scan size={18} />
         </HudBtn>
