@@ -18,6 +18,7 @@ export function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
               cap={ROW_LVL_CAP_HEIGHT}
               level={slot ? slot.level : null}
               tone="gold"
+              className="-translate-y-0.5"
             />
           </GearRow>
         ))}

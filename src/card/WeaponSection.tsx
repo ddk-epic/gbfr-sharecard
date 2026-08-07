@@ -68,6 +68,7 @@ function WeaponTraitRow({
         cap={ROW_LVL_CAP_HEIGHT}
         level={level}
         tone="gold"
+        className="-translate-y-0.5"
         traitPrefix
       />
     </GearRow>
