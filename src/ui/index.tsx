@@ -246,7 +246,7 @@ export function SectionPanel({
 }) {
   return (
     <div
-      className={`border-line relative rounded-lg border bg-white/80 px-4.5 py-3.5 ${
+      className={`border-line relative rounded-lg border bg-white/90 px-4.5 py-3.5 backdrop-blur-[3px] ${
         fill ? "flex flex-1 flex-col" : ""
       } ${shadow ? "shadow-[0_1px_8px_rgba(23,60,90,0.1)]" : ""} ${className}`}
     >

@@ -47,13 +47,6 @@ function gridColumns() {
   return `${c1}px ${COL_GAP}px ${c2}px ${COL_GAP}px ${c3}px`;
 }
 
-const SECTION =
-  "rounded-lg bg-white/90 px-4.75 py-4 shadow-[0_1px_8px_rgba(23,60,90,0.12)] backdrop-blur-[3px]";
-
-// The Skills card runs tighter side padding than SECTION to buy the 2x2 names
-// more width.
-const SKILLS_SECTION = SECTION.replace("px-4.75", "px-2.5");
-
 /**
  * Read-only and never scaled itself - on-screen fitting is the wrapper's job,
  * and the PNG export captures this node.
@@ -112,7 +105,7 @@ export function Card({ build }: { build: Build }) {
             <LvlDiamond level={CHARACTER_LEVEL} size={189} />
           </div>
           <NameBadge characterId={build.characterId} />
-          <StatusPanel status={build.status} className={SECTION} />
+          <StatusPanel status={build.status} />
         </div>
         <div
           className="relative z-2 flex flex-col"
@@ -121,7 +114,6 @@ export function Card({ build }: { build: Build }) {
           <SkillsSection
             characterId={build.characterId}
             skills={build.skills}
-            className={SKILLS_SECTION}
           />
         </div>
 
