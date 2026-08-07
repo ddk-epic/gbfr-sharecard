@@ -97,6 +97,10 @@ export const skillIconUrl = (characterId: CharacterId, skillId: string) =>
 export const bonusIconUrl = (bonusType: BonusTypeId) =>
   `${import.meta.env.BASE_URL}icons/bonus/${bonusType}.webp`;
 
+/** The summon id is already the name slug, which is the filename. */
+export const summonIconUrl = (summonId: SummonId) =>
+  `${import.meta.env.BASE_URL}icons/summon/${summonId}.webp`;
+
 /**
  * Weapon art carries no index; the exporter names each file after the weapon's
  * display name, and this rule is the join.

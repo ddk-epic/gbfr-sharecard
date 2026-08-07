@@ -458,6 +458,39 @@ for (const character of characters) {
 }
 console.log(`art: ${artCount} characters`);
 
+// ---------------------------------------------------------- summon icons
+// public/icons/summon/<id>.webp - the equipped-summon portraits, diamond-cropped
+// menu art. summon_info keys each by IconIdMaybe (the cmn_icsmn_<hex> sprite) and
+// names it via a TXT_SMN_* key; the name slug is our summon id, so the card
+// builds the path and needs no index. Only the catalog's 74 ship; the game's few
+// story-only summons (Proto Bahamut, Excavallion) are not equippable. Names span
+// two lines in the table, so they are joined with a space, not truncated to the
+// first line like the single-line names english() handles.
+const summonsDirectory = new URL("summon/", ICONS_DIR);
+await mkdir(summonsDirectory, { recursive: true });
+const summonName = (key) => String(text.get(key) ?? "").replace(/\s+/g, " ").trim();
+const summonCatalog = JSON.parse(await readFile(new URL("summons.json", DATA_DIR)));
+const summonIds = new Set(summonCatalog.map((s) => s.id));
+const summonsSeen = new Set();
+for (const row of database
+  .prepare("select IconIdMaybe, SummonName from summon_info where IconIdMaybe != ''")
+  .all()) {
+  const id = slug(summonName(row.SummonName));
+  if (!summonIds.has(id)) continue;
+  if (
+    await convert(
+      `${atlas("common_icon_summon")}/cmn_icsmn_${row.IconIdMaybe}.png`,
+      new URL(`${id}.webp`, summonsDirectory),
+      null,
+    )
+  )
+    summonsSeen.add(id);
+}
+const summonsMissing = [...summonIds].filter((id) => !summonsSeen.has(id));
+console.log(`summons: ${summonsSeen.size}/${summonIds.size} portraits`);
+if (summonsMissing.length)
+  console.warn(`  no icon for: ${summonsMissing.join(", ")}`);
+
 // ------------------------------------------------------------- weapon art
 // public/weapons/<character>/<weapon>.webp - the same derived path as skills,
 // so the card reaches art from the character plus the weapon id, which is the
