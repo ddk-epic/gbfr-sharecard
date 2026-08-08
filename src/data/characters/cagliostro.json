@@ -30,9 +30,9 @@
         { "id": "insight.r1.4", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "r2": [
-        { "id": "insight.r2.5", "label": "(I) Collapse ++ ATK +5% Cap +10%", "description": "Insight Rank I: Collapse ++ gains an additional ATK +5% and DMG Cap +10%" },
+        { "id": "insight.r2.5", "label": "Collapse ++ ATK +5% Cap +10%", "description": "Insight Rank I: Collapse ++ gains an additional ATK +5% and DMG Cap +10%", "perkRank": 1 },
         { "id": "insight.r2.6", "label": "Charge Time -5%", "description": "Charged Attacks: Charge Time -5%" },
-        { "id": "insight.r2.7", "label": "(II) Combo Finisher Debuff Chance +10%", "description": "Insight Rank II: Combo Finisher Debuff Chance +10%" },
+        { "id": "insight.r2.7", "label": "Combo Finisher Debuff Chance +10%", "description": "Insight Rank II: Combo Finisher Debuff Chance +10%", "perkRank": 2 },
         { "id": "insight.r2.8", "label": "Mimic Doll ATK +10%", "description": "Mimic Doll: ATK +10%" },
         { "id": "insight.r2.9", "label": "Mehen CD -5%", "description": "Mehen: Cooldown -5%" },
         { "id": "insight.r2.10", "label": "DMG Cap +20%", "description": "DMG Cap +20%" },
@@ -40,8 +40,8 @@
         { "id": "insight.r2.12", "label": "Poison: DMG Cap +100%", "description": "While inflicted with Poison: DMG Cap +100%" }
       ],
       "r3": [
-        { "id": "insight.r3.13", "label": "(I) Collapse ++ ATK +5% Cap +10%", "description": "Insight Rank I: Collapse ++ gains an additional ATK +5% and DMG Cap +10%" },
-        { "id": "insight.r3.14", "label": "(II) Combo Finisher Debuff +10%", "description": "Insight Rank II: Combo Finisher Debuff Duration +10%" },
+        { "id": "insight.r3.13", "label": "Collapse ++ ATK +5% Cap +10%", "description": "Insight Rank I: Collapse ++ gains an additional ATK +5% and DMG Cap +10%", "perkRank": 1 },
+        { "id": "insight.r3.14", "label": "Combo Finisher Debuff +10%", "description": "Insight Rank II: Combo Finisher Debuff Duration +10%", "perkRank": 2 },
         { "id": "insight.r3.15", "label": "Upon inflicting a debuff, skill cooldowns are shortened", "description": "Upon inflicting a debuff, skill cooldowns are shortened" },
         { "id": "insight.r3.16", "label": "Skill DMG Cap +35%", "description": "Skill DMG Cap +35%" },
         { "id": "insight.r3.17", "label": "Disruption CD -5%", "description": "Disruption: Cooldown -5%" },
@@ -81,9 +81,9 @@
         { "id": "essence.r2.12", "label": "Burn: DMG Cap +100%", "description": "While inflicted with Burn: DMG Cap +100%" }
       ],
       "r3": [
-        { "id": "essence.r3.13", "label": "(II) Super Collapse ATK +10% Cap +30%", "description": "Essence Rank II: Super Collapse grants an additional ATK +10% and DMG Cap +30%" },
-        { "id": "essence.r3.14", "label": "(III) Chance to instantly charge Collapse +25%", "description": "Essence Rank III: Chance to instantly charge Collapse +25%" },
-        { "id": "essence.r3.15", "label": "(III) Instant Collapse: Cap +30%", "description": "Essence Rank III: Whenever Collapse is instantly charged, Cagliostro gains DMG Cap Up (30%)" },
+        { "id": "essence.r3.13", "label": "Super Collapse ATK +10% Cap +30%", "description": "Essence Rank II: Super Collapse grants an additional ATK +10% and DMG Cap +30%", "perkRank": 2 },
+        { "id": "essence.r3.14", "label": "Chance to instantly charge Collapse +25%", "description": "Essence Rank III: Chance to instantly charge Collapse +25%", "perkRank": 3 },
+        { "id": "essence.r3.15", "label": "Instant Collapse: Cap +30%", "description": "Essence Rank III: Whenever Collapse is instantly charged, Cagliostro gains DMG Cap Up (30%)", "perkRank": 3 },
         { "id": "essence.r3.16", "label": "Attacks DMG Cap +35%", "description": "Attacks: DMG Cap +35%" },
         { "id": "essence.r3.17", "label": "DMG Cap +25%", "description": "DMG Cap +25%" },
         { "id": "essence.r3.18", "label": "ATK +10% ×Attack", "description": "ATK +10% per Attack-type sigil equipped (max sigils: 5)" },
@@ -107,13 +107,13 @@
       "title": "Alchemedic",
       "r1": [
         { "id": "crux.r1.1", "label": "Skill CD -2%", "description": "Skill Cooldown -2%" },
-        { "id": "crux.r1.2", "label": "(I) Shield Str +3k", "description": "Crux Rank I: Shield Strength +3000" },
+        { "id": "crux.r1.2", "label": "Shield Str +3k", "description": "Crux Rank I: Shield Strength +3000", "perkRank": 1 },
         { "id": "crux.r1.3", "label": "DMG Cap +15%", "description": "DMG Cap +15%" },
         { "id": "crux.r1.4", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "r2": [
-        { "id": "crux.r2.5", "label": "(II) Rhizomata: Phantasmagoria to all", "description": "Crux Rank II: Rhizomata now grants Phantasmagoria to all allies even if they weren't rescued from critical condition" },
-        { "id": "crux.r2.6", "label": "(II) Phantasmagoria Dur +10%", "description": "Crux Rank II: Extends the duration of Phantasmagoria on self by 10%" },
+        { "id": "crux.r2.5", "label": "Rhizomata: Phantasmagoria to all", "description": "Crux Rank II: Rhizomata now grants Phantasmagoria to all allies even if they weren't rescued from critical condition", "perkRank": 2 },
+        { "id": "crux.r2.6", "label": "Phantasmagoria Dur +10%", "description": "Crux Rank II: Extends the duration of Phantasmagoria on self by 10%", "perkRank": 2 },
         { "id": "crux.r2.7", "label": "Skill DMG Cap +35%", "description": "Skill DMG Cap +35%" },
         { "id": "crux.r2.8", "label": "Rhizomata CD -5%", "description": "Rhizomata: Cooldown -5%" },
         { "id": "crux.r2.9", "label": "Phantasmagoria CD -5%", "description": "Phantasmagoria: Cooldown -5%" },
@@ -123,8 +123,8 @@
       ],
       "r3": [
         { "id": "crux.r3.13", "label": "Charged ATK +10%", "description": "Charged Attacks: ATK +10%" },
-        { "id": "crux.r3.14", "label": "(II) Phantasmagoria grants Cap↑", "description": "Crux Rank II: Phantasmagoria also grants DMG Cap Up (50%)" },
-        { "id": "crux.r3.15", "label": "(III) Collapse ++: 20% chance to reset CD", "description": "Crux Rank III: Landing Collapse ++ grants an additional 20% chance to reset 1 skill cooldown at random" },
+        { "id": "crux.r3.14", "label": "Phantasmagoria grants Cap↑", "description": "Crux Rank II: Phantasmagoria also grants DMG Cap Up (50%)", "perkRank": 2 },
+        { "id": "crux.r3.15", "label": "Collapse ++: 20% chance to reset CD", "description": "Crux Rank III: Landing Collapse ++ grants an additional 20% chance to reset 1 skill cooldown at random", "perkRank": 3 },
         { "id": "crux.r3.16", "label": "DMG Cap +25%", "description": "DMG Cap +25%" },
         { "id": "crux.r3.17", "label": "Phantasmagoria Buff Dur +10%", "description": "Phantasmagoria: Buff Duration +10%" },
         { "id": "crux.r3.18", "label": "HP +10k ×Def/Sup", "description": "HP +10,000 per Defense- or Support-type sigil equipped (max sigils: 4)" },
@@ -132,7 +132,7 @@
         { "id": "crux.r3.20", "label": "Crit Rate +25%", "description": "Critical Hit Rate +25%" }
       ],
       "ex": [
-        { "id": "crux.ex.21", "label": "(III) Phantasmagoria grants Cap↑", "description": "Crux Rank III: Phantasmagoria also grants DMG Cap Up (20%)" },
+        { "id": "crux.ex.21", "label": "Phantasmagoria grants Cap↑", "description": "Crux Rank III: Phantasmagoria also grants DMG Cap Up (20%)", "perkRank": 3 },
         { "id": "crux.ex.22", "label": "Reinforce→Shield 5% of max HP", "description": "Reinforce now grants Shield (5% of max HP) instead of healing HP. Stacks with other master traits of the same effect" },
         { "id": "crux.ex.23", "label": "Mehen ATK↓ Dur +10%", "description": "Mehen: ATK Down Duration +10%" },
         { "id": "crux.ex.24", "label": "Low HP: Crit Gauge -10%", "description": "While in critical condition: Critical Gauge Depletion -10%" },

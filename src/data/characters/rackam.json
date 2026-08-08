@@ -50,7 +50,7 @@
         { "id": "insight.r3.20", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "ex": [
-        { "id": "insight.ex.21", "label": "(III) Bull's Eye Blast Charge Speed +10%", "description": "Insight Rank III: Bull's Eye Blast Charge Speed +10%" },
+        { "id": "insight.ex.21", "label": "Bull's Eye Blast Charge Speed +10%", "description": "Insight Rank III: Bull's Eye Blast Charge Speed +10%", "perkRank": 3 },
         { "id": "insight.ex.22", "label": "Bullet Hail DMG Cap +45%", "description": "Bullet Hail: DMG Cap +45%" },
         { "id": "insight.ex.23", "label": "Slag Shot DMG Cap +45%", "description": "Slag Shot: DMG Cap +45%" },
         { "id": "insight.ex.24", "label": "Dodge: Shield 1k", "description": "Upon performing a perfect dodge: Grants Shield (1000)" },
@@ -71,7 +71,7 @@
         { "id": "essence.r1.4", "label": "DEF +5%", "description": "DEF +5%" }
       ],
       "r2": [
-        { "id": "essence.r2.5", "label": "ATK +10% max", "description": "Essence Rank I: Attacks gain up to an additional ATK +10% based on Heat gauge level" },
+        { "id": "essence.r2.5", "label": "ATK +10% max", "description": "Essence Rank I: Attacks gain up to an additional ATK +10% based on Heat gauge level", "perkRank": 1 },
         { "id": "essence.r2.6", "label": "Heat Gauge Gain +10%", "description": "Heat Gauge Gain +10%" },
         { "id": "essence.r2.7", "label": "Rhythmic Trigger attacks: ATK +10%", "description": "Rhythmic Trigger attacks: ATK +10%" },
         { "id": "essence.r2.8", "label": "Double Tap CD -5%", "description": "Double Tap: Cooldown -5%" },
@@ -81,17 +81,17 @@
         { "id": "essence.r2.12", "label": "Burn: DMG Cap +100%", "description": "While inflicted with Burn: DMG Cap +100%" }
       ],
       "r3": [
-        { "id": "essence.r3.13", "label": "(I) 5% chance to shorten skill cooldowns", "description": "Essence Rank I: Grants an additional 5% chance to shorten Rackam's skill cooldowns" },
-        { "id": "essence.r3.14", "label": "DMG Cap +100% max", "description": "Essence Rank II: Coffinmaker gains up to an additional DMG Cap +100% based on Heat gauge level" },
-        { "id": "essence.r3.15", "label": "DMG +50% max", "description": "Essence Rank II: Coffinmaker also gains a max of DMG Dealt +50% based on Heat gauge level" },
+        { "id": "essence.r3.13", "label": "5% chance to shorten skill cooldowns", "description": "Essence Rank I: Grants an additional 5% chance to shorten Rackam's skill cooldowns", "perkRank": 1 },
+        { "id": "essence.r3.14", "label": "DMG Cap +100% max", "description": "Essence Rank II: Coffinmaker gains up to an additional DMG Cap +100% based on Heat gauge level", "perkRank": 2 },
+        { "id": "essence.r3.15", "label": "DMG +50% max", "description": "Essence Rank II: Coffinmaker also gains a max of DMG Dealt +50% based on Heat gauge level", "perkRank": 2 },
         { "id": "essence.r3.16", "label": "DMG Cap +30%", "description": "DMG Cap +30%" },
-        { "id": "essence.r3.17", "label": "(II) Full Heat: Stout Heart", "description": "Essence Rank II: When the Heat gauge becomes full, Rackam gains Stout Heart" },
+        { "id": "essence.r3.17", "label": "Full Heat: Stout Heart", "description": "Essence Rank II: When the Heat gauge becomes full, Rackam gains Stout Heart", "perkRank": 2 },
         { "id": "essence.r3.18", "label": "ATK +10% ×Attack", "description": "ATK +10% per Attack-type sigil equipped (max sigils: 5)" },
         { "id": "essence.r3.19", "label": "Chain Burst DMG Cap +40%", "description": "Chain Burst DMG Cap +40%" },
         { "id": "essence.r3.20", "label": "ATK +20%", "description": "ATK +20%" }
       ],
       "ex": [
-        { "id": "essence.ex.21", "label": "(III) Reduces Heat gauge depletion penalty by 10%", "description": "Essence Rank III: Reduces Heat gauge depletion penalty by 10%. Heat gauge no longer depletes while using Duration" },
+        { "id": "essence.ex.21", "label": "Reduces Heat gauge depletion penalty by 10%", "description": "Essence Rank III: Reduces Heat gauge depletion penalty by 10%. Heat gauge no longer depletes while using Duration", "perkRank": 3 },
         { "id": "essence.ex.22", "label": "Wild Gunsmoke Reduces DEF↓ penalty by 10%", "description": "Wild Gunsmoke: Reduces DEF Down penalty by 10%" },
         { "id": "essence.ex.23", "label": "Wild Gunsmoke: add. ATK +5% / Dur +10%", "description": "Wild Gunsmoke: ATK Up grants an additional ATK +5%. Duration +10%" },
         { "id": "essence.ex.24", "label": "Double Tap Buff Dur +10%", "description": "Double Tap: Buff Duration +10%" },
@@ -112,7 +112,7 @@
         { "id": "crux.r1.4", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "r2": [
-        { "id": "crux.r2.5", "label": "(I) Post-Collateral: HP +10%", "description": "Crux Rank I: Leaves Rackam with 10% more HP after being hit by Collateral Damage's resulting explosion" },
+        { "id": "crux.r2.5", "label": "Post-Collateral: HP +10%", "description": "Crux Rank I: Leaves Rackam with 10% more HP after being hit by Collateral Damage's resulting explosion", "perkRank": 1 },
         { "id": "crux.r2.6", "label": "Skill CD -3%", "description": "Skill Cooldown -3%" },
         { "id": "crux.r2.7", "label": "DMG Cap +20%", "description": "DMG Cap +20%" },
         { "id": "crux.r2.8", "label": "Collateral Damage CD -5%", "description": "Collateral Damage: Cooldown -5%" },
@@ -123,7 +123,7 @@
       ],
       "r3": [
         { "id": "crux.r3.13", "label": "Collateral Damage ATK +10%", "description": "Collateral Damage: ATK +10%" },
-        { "id": "crux.r3.14", "label": "(III) Collateral Damage: Shield Str +10k", "description": "Crux Rank III: Shield from landing Collateral Damage gains Shield Strength +10000" },
+        { "id": "crux.r3.14", "label": "Collateral Damage: Shield Str +10k", "description": "Crux Rank III: Shield from landing Collateral Damage gains Shield Strength +10000", "perkRank": 3 },
         { "id": "crux.r3.15", "label": "Dur lasts 30% longer", "description": "Duration lasts 30% longer. Successfully dodging a hit with Duration resets Collateral Damage's cooldown" },
         { "id": "crux.r3.16", "label": "Attacks DMG Cap +35%", "description": "Attacks: DMG Cap +35%" },
         { "id": "crux.r3.17", "label": "Spitfire ATK +10%", "description": "Spitfire: ATK +10%" },

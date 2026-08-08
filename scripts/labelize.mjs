@@ -170,14 +170,11 @@ export function labelize(description, selfName) {
     if (allSkillsCd) return `Skill CD ${allSkillsCd[1]}`;
   }
 
-  // 1. perk gate -> roman-numeral marker. The style name is redundant with the
-  //    column the cell renders in.
-  let marker = "";
-  const gate = text.match(/^(?:Insight|Essence|Crux) Rank (I{1,3}):\s*/);
-  if (gate) {
-    marker = `(${gate[1]}) `;
-    text = text.slice(gate[0].length);
-  }
+  // 1. strip the perk gate ("Insight Rank II:"). Its tier rides on the cell's
+  //    perkRank field (see perkRankOf), not the label; the style name is
+  //    redundant with the column the cell renders in.
+  const gate = text.match(/^(?:Insight|Essence|Crux) Rank I{1,3}:\s*/);
+  if (gate) text = text.slice(gate[0].length);
 
   // 2. first sentence only - the rest is stacking/exclusivity boilerplate - and
   //    drop the "but <drawback>" tail
@@ -227,7 +224,7 @@ export function labelize(description, selfName) {
   // 7. filler, then the term dictionary over the assembled label - the
   //    condition prefix names skills too
   for (const [re, out] of FILLER) text = text.replace(re, out);
-  let label = (marker + condition + text).replace(/\s+/g, " ").trim();
+  let label = (condition + text).replace(/\s+/g, " ").trim();
   for (const [re, out] of TERMS) label = label.replace(re, out);
   // a kept subject already says which charge this is
   if (subject) label = label.replace(/ Charge Time\b/, " Charge");
@@ -240,14 +237,17 @@ export function labelize(description, selfName) {
   // last resort: a *subject* prefix (not a condition we built on purpose) can
   // go if nothing else freed up room
   if (label.length > HARD && !condition)
-    label = label.replace(/^(\([IV]+\) )?[^:]{1,14}:\s*/, "$1");
+    label = label.replace(/^[^:]{1,14}:\s*/, "");
   // a condition can carry mid-sentence case from the source text ("butterfly
   // count") - a label is always its own sentence
-  label = label.replace(
-    /^(\([IV]+\) )?([a-z])/,
-    (_, m, c) => (m ?? "") + c.toUpperCase(),
-  );
+  label = label.replace(/^[a-z]/, (c) => c.toUpperCase());
   return label;
+}
+
+/** The style-rank perk tier a description is gated behind, as 1-3, or undefined. */
+export function perkRankOf(description) {
+  const gate = description.match(/^(?:Insight|Essence|Crux) Rank (I{1,3}):/);
+  return gate ? gate[1].length : undefined;
 }
 
 // Hand-tuned labels that no text rule should generalize from - each one needed
@@ -259,27 +259,27 @@ const OVERRIDES = {
     "insight.r2.7": "Zone Attack Charge Speed +20%",
   },
   "cagliostro.json": {
-    "essence.r3.15": "(III) Instant Collapse: Cap +30%",
-    "crux.r2.5": "(II) Rhizomata: Phantasmagoria to all",
-    "crux.r2.6": "(II) Phantasmagoria Dur +10%",
-    "crux.r3.14": "(II) Phantasmagoria grants Cap↑", // value varies by tier, not worth showing
-    "crux.r3.15": "(III) Collapse ++: 20% chance to reset CD",
-    "crux.ex.21": "(III) Phantasmagoria grants Cap↑",
+    "essence.r3.15": "Instant Collapse: Cap +30%",
+    "crux.r2.5": "Rhizomata: Phantasmagoria to all",
+    "crux.r2.6": "Phantasmagoria Dur +10%",
+    "crux.r3.14": "Phantasmagoria grants Cap↑", // value varies by tier, not worth showing
+    "crux.r3.15": "Collapse ++: 20% chance to reset CD",
+    "crux.ex.21": "Phantasmagoria grants Cap↑",
   },
   "rackam.json": {
     "essence.ex.23": "Wild Gunsmoke: add. ATK +5% / Dur +10%", // two effects in one cell
-    "crux.r2.5": "(I) Post-Collateral: HP +10%",
+    "crux.r2.5": "Post-Collateral: HP +10%",
   },
   "charlotta.json": {
-    "insight.ex.21": "(II) Noble Order: +50k dmg buffer",
+    "insight.ex.21": "Noble Order: +50k dmg buffer",
     "essence.r3.15": "Charged block window +10%",
     "crux.r3.15": "Enhanced Noble Stance: Cap +30%",
   },
 };
 
 // ------------------------------------------------------------------ cli
-// Character files are hand-authored from in-game screenshots; this only fills
-// the label field, never the description it derives from.
+// Character files are hand-authored from in-game screenshots; this fills the
+// label and perkRank fields, never the description they derive from.
 const { pathToFileURL } = await import("node:url");
 const entryPoint = process.argv[1];
 if (entryPoint && import.meta.url === pathToFileURL(entryPoint).href) {
@@ -321,6 +321,12 @@ if (entryPoint && import.meta.url === pathToFileURL(entryPoint).href) {
             cell.label = labelize(cell.description, selfName);
             derived++;
           }
+          // Legacy labels carried the gate as a "(I)" prefix; it now lives in
+          // perkRank, read from the description (the archive truth).
+          cell.label = cell.label.replace(/^\(I{1,3}\)\s*/, "");
+          const rank = perkRankOf(cell.description);
+          if (rank) cell.perkRank = rank;
+          else delete cell.perkRank;
           if (cell.label.length > SOFT) long.push(cell.label);
         }
       }

@@ -30,8 +30,8 @@
         { "id": "insight.r1.4", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "r2": [
-        { "id": "insight.r2.5", "label": "(II) Enhanced Dawnfly Dur +10%", "description": "Insight Rank II: Enhanced Dawnfly Duration +10%" },
-        { "id": "insight.r2.6", "label": "(II) Enhanced Freeflutter Dur +10%", "description": "Insight Rank II: Enhanced Freeflutter Duration +10%" },
+        { "id": "insight.r2.5", "label": "Enhanced Dawnfly Dur +10%", "description": "Insight Rank II: Enhanced Dawnfly Duration +10%", "perkRank": 2 },
+        { "id": "insight.r2.6", "label": "Enhanced Freeflutter Dur +10%", "description": "Insight Rank II: Enhanced Freeflutter Duration +10%", "perkRank": 2 },
         { "id": "insight.r2.7", "label": "Zone Attack Charge Speed +20%", "description": "Dawnfly Zone Attack: Charge Speed +20%" },
         { "id": "insight.r2.8", "label": "Dance of Blue Petals CD -5%", "description": "Dance of Blue Petals: Cooldown -5%" },
         { "id": "insight.r2.9", "label": "Crescent Moon ATK +10%", "description": "Crescent Moon: ATK +10%" },
@@ -40,9 +40,9 @@
         { "id": "insight.r2.12", "label": "Poison: DMG Cap +100%", "description": "While inflicted with Poison: DMG Cap +100%" }
       ],
       "r3": [
-        { "id": "insight.r3.13", "label": "(II) Enhanced Dawnfly Dur +10%", "description": "Insight Rank II: Enhanced Dawnfly Duration +10%" },
-        { "id": "insight.r3.14", "label": "(II) Enhanced Freeflutter Dur +10%", "description": "Insight Rank II: Enhanced Freeflutter Duration +10%" },
-        { "id": "insight.r3.15", "label": "(II) Enhanced Dawnfly DMG Cap +5%", "description": "Insight Rank II: Enhanced Dawnfly grants an additional DMG Cap +5%" },
+        { "id": "insight.r3.13", "label": "Enhanced Dawnfly Dur +10%", "description": "Insight Rank II: Enhanced Dawnfly Duration +10%", "perkRank": 2 },
+        { "id": "insight.r3.14", "label": "Enhanced Freeflutter Dur +10%", "description": "Insight Rank II: Enhanced Freeflutter Duration +10%", "perkRank": 2 },
+        { "id": "insight.r3.15", "label": "Enhanced Dawnfly DMG Cap +5%", "description": "Insight Rank II: Enhanced Dawnfly grants an additional DMG Cap +5%", "perkRank": 2 },
         { "id": "insight.r3.16", "label": "Attacks DMG Cap +35%", "description": "Attacks: DMG Cap +35%" },
         { "id": "insight.r3.17", "label": "Dance of Pink Petals CD -5%", "description": "Dance of Pink Petals: Cooldown -5%" },
         { "id": "insight.r3.18", "label": "DMG Cap +20% ×Basic", "description": "DMG Cap +20% per Basic Stats-type sigil equipped (max sigils: 5)" },
@@ -50,7 +50,7 @@
         { "id": "insight.r3.20", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "ex": [
-        { "id": "insight.ex.21", "label": "(II) Enhanced Freeflutter Supp DMG +5%", "description": "Insight Rank II: Enhanced Freeflutter gains an additional Supplementary DMG +5%" },
+        { "id": "insight.ex.21", "label": "Enhanced Freeflutter Supp DMG +5%", "description": "Insight Rank II: Enhanced Freeflutter gains an additional Supplementary DMG +5%", "perkRank": 2 },
         { "id": "insight.ex.22", "label": "Crescent Moon DMG Cap +45%", "description": "Crescent Moon: DMG Cap +45%" },
         { "id": "insight.ex.23", "label": "Dance of Pink Petals Buff Dur +10%", "description": "Dance of Pink Petals: Buff Duration +10% (ATK Up / Stout Heart / Supplementary DMG)" },
         { "id": "insight.ex.24", "label": "Dodge: Shield 1k", "description": "Upon performing a perfect dodge: Grants Shield (1000)" },
@@ -91,7 +91,7 @@
         { "id": "essence.r3.20", "label": "ATK +20%", "description": "ATK +20%" }
       ],
       "ex": [
-        { "id": "essence.ex.21", "label": "(III) SBA: Kaleidoscope", "description": "Essence Rank III: Upon activating her SBA, Narmaya gains Kaleidoscope" },
+        { "id": "essence.ex.21", "label": "SBA: Kaleidoscope", "description": "Essence Rank III: Upon activating her SBA, Narmaya gains Kaleidoscope", "perkRank": 3 },
         { "id": "essence.ex.22", "label": "Setsuna ATK +10%", "description": "Setsuna: ATK +10%" },
         { "id": "essence.ex.23", "label": "Kyokasuigetsu DMG Cap +45%", "description": "Kyokasuigetsu: DMG Cap +45%" },
         { "id": "essence.ex.24", "label": "Transient DMG Cap +45%", "description": "Transient: DMG Cap +45%" },

@@ -30,8 +30,8 @@
         { "id": "insight.r1.4", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "r2": [
-        { "id": "insight.r2.5", "label": "(I) Damage Skill ATK +20%", "description": "Insight Rank I: Damage Skill ATK +20%" },
-        { "id": "insight.r2.6", "label": "(I) Damage Skill DMG Cap +20%", "description": "Insight Rank I: Damage Skill DMG Cap +20%" },
+        { "id": "insight.r2.5", "label": "Damage Skill ATK +20%", "description": "Insight Rank I: Damage Skill ATK +20%", "perkRank": 1 },
+        { "id": "insight.r2.6", "label": "Damage Skill DMG Cap +20%", "description": "Insight Rank I: Damage Skill DMG Cap +20%", "perkRank": 1 },
         { "id": "insight.r2.7", "label": "Realm of Ice ATK +25%", "description": "Realm of Ice: ATK +25%" },
         { "id": "insight.r2.8", "label": "Frozen Blade ATK +10%", "description": "Frozen Blade: ATK +10%" },
         { "id": "insight.r2.9", "label": "Enchanted Lands ATK +10%", "description": "Enchanted Lands: ATK +10%" },
@@ -40,8 +40,8 @@
         { "id": "insight.r2.12", "label": "Poison: DMG Cap +100%", "description": "While inflicted with Poison: DMG Cap +100%" }
       ],
       "r3": [
-        { "id": "insight.r3.13", "label": "(III) Ares Summon Dur +1s", "description": "Insight Rank III: Ares Summon Duration +1 sec." },
-        { "id": "insight.r3.14", "label": "(III) Dual Raid DMG +5%/lvl", "description": "Insight Rank III: Dual Raid grants an additional DMG Dealt +5% per effect lvl" },
+        { "id": "insight.r3.13", "label": "Ares Summon Dur +1s", "description": "Insight Rank III: Ares Summon Duration +1 sec.", "perkRank": 3 },
+        { "id": "insight.r3.14", "label": "Dual Raid DMG +5%/lvl", "description": "Insight Rank III: Dual Raid grants an additional DMG Dealt +5% per effect lvl", "perkRank": 3 },
         { "id": "insight.r3.15", "label": "Ares summoned: ATK +10%", "description": "While Ares is summoned: ATK +10%" },
         { "id": "insight.r3.16", "label": "Combo Finishers DMG Cap +35%", "description": "Combo Finishers: DMG Cap +35%" },
         { "id": "insight.r3.17", "label": "Azure Sword CD -5%", "description": "Azure Sword: Cooldown -5%" },
@@ -81,7 +81,7 @@
         { "id": "essence.r2.12", "label": "Burn: DMG Cap +100%", "description": "While inflicted with Burn: DMG Cap +100%" }
       ],
       "r3": [
-        { "id": "essence.r3.13", "label": "(II) Special Supp DMG +20%", "description": "Essence Rank II: Special Supplementary DMG +20%" },
+        { "id": "essence.r3.13", "label": "Special Supp DMG +20%", "description": "Essence Rank II: Special Supplementary DMG +20%", "perkRank": 2 },
         { "id": "essence.r3.14", "label": "Ares summons: DMG Cap +40% max", "description": "Boosts DMG Cap by a max of +40% based on the number of times Ares has been summoned during the quest" },
         { "id": "essence.r3.15", "label": "Ares dismissed: DMG Cut 20", "description": "When Ares is dismissed: Gain DMG Cut (20)" },
         { "id": "essence.r3.16", "label": "Skill DMG Cap +30%", "description": "Skill DMG Cap +30%" },
@@ -112,7 +112,7 @@
         { "id": "crux.r1.4", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "r2": [
-        { "id": "crux.r2.5", "label": "(I) Blade Blue ATK +3% Cap +5%/lvl", "description": "Crux Rank I: Blade Blue grants an additional ATK +3% and DMG Cap +5% per effect lvl" },
+        { "id": "crux.r2.5", "label": "Blade Blue ATK +3% Cap +5%/lvl", "description": "Crux Rank I: Blade Blue grants an additional ATK +3% and DMG Cap +5% per effect lvl", "perkRank": 1 },
         { "id": "crux.r2.6", "label": "Ares summoned: ATK +10%", "description": "While Ares is summoned: ATK +10%" },
         { "id": "crux.r2.7", "label": "Ares not summoned: ATK +10%", "description": "While Ares isn't summoned: ATK +10%" },
         { "id": "crux.r2.8", "label": "Emerald Shield add. DEF +5%", "description": "Emerald Shield: DEF Up grants an additional DEF +5%" },
@@ -123,7 +123,7 @@
       ],
       "r3": [
         { "id": "crux.r3.13", "label": "Ares summon: Shield 1k (party)", "description": "Upon summoning Ares: Grants Shield (1000) to the entire party" },
-        { "id": "crux.r3.14", "label": "(I) Blade Blue ATK +3% Cap +5%/lvl", "description": "Crux Rank I: Blade Blue grants an additional ATK +3% and DMG Cap +5% per effect lvl" },
+        { "id": "crux.r3.14", "label": "Blade Blue ATK +3% Cap +5%/lvl", "description": "Crux Rank I: Blade Blue grants an additional ATK +3% and DMG Cap +5% per effect lvl", "perkRank": 1 },
         { "id": "crux.r3.15", "label": "Ares not summoned: DMG Cap +30%", "description": "While Ares isn't summoned: DMG Cap +30%" },
         { "id": "crux.r3.16", "label": "DMG Cap +25%", "description": "DMG Cap +25%" },
         { "id": "crux.r3.17", "label": "Emerald Shield Buff Dur +10%", "description": "Emerald Shield: Buff Duration +10% (DEF Up / Stout Heart)" },

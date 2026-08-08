@@ -90,11 +90,14 @@ export type ResolvedWeapon = {
 
 export type WrightstonePrefixMap = Record<TraitId, string>; // main trait -> display prefix
 
-/** `label` is the short UI string, `description` the full in-game text. */
+/** `label` is the short UI string, `description` the full in-game text.
+ *  `perkRank` is the style-rank perk tier (I-III) a cell is gated behind, read
+ *  off the description's "<Style> Rank I/II/III:" prefix; absent when ungated. */
 export type MasterTraitCell = {
   id: CellId;
   label: string;
   description: string;
+  perkRank?: 1 | 2 | 3;
 };
 
 /** `title` is the character-specific half of the style's in-game heading

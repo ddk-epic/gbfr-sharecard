@@ -32,7 +32,7 @@
       "r2": [
         { "id": "insight.r2.5", "label": "Attacks ATK +10%", "description": "Attacks: ATK +10%" },
         { "id": "insight.r2.6", "label": "Attacks DMG Cap +35%", "description": "Attacks: DMG Cap +35%" },
-        { "id": "insight.r2.7", "label": "(I) Noble Order Dur +10%", "description": "Insight Rank I: Noble Order Duration +10%" },
+        { "id": "insight.r2.7", "label": "Noble Order Dur +10%", "description": "Insight Rank I: Noble Order Duration +10%", "perkRank": 1 },
         { "id": "insight.r2.8", "label": "Holy Ladder ATK +10%", "description": "Holy Ladder: ATK +10%" },
         { "id": "insight.r2.9", "label": "Rising Cut counter: Supp DMG 10%", "description": "Upon countering with Rising Cut: Grants Supplementary DMG (10%)" },
         { "id": "insight.r2.10", "label": "Skill DMG Cap +35%", "description": "Skill DMG Cap +35%" },
@@ -41,8 +41,8 @@
       ],
       "r3": [
         { "id": "insight.r3.13", "label": "Attacks DMG Cap +35%", "description": "Attacks: DMG Cap +35%" },
-        { "id": "insight.r3.14", "label": "(I) Noble Order ATK +10% Cap +10%", "description": "Insight Rank I: Noble Order grants an additional ATK +10% and DMG Cap +10%" },
-        { "id": "insight.r3.15", "label": "(II) Noble Order ATK +2% Cap +5%/lvl", "description": "Insight Rank II: Noble Order grants an additional ATK +2% and DMG Cap +5% per effect lvl" },
+        { "id": "insight.r3.14", "label": "Noble Order ATK +10% Cap +10%", "description": "Insight Rank I: Noble Order grants an additional ATK +10% and DMG Cap +10%", "perkRank": 1 },
+        { "id": "insight.r3.15", "label": "Noble Order ATK +2% Cap +5%/lvl", "description": "Insight Rank II: Noble Order grants an additional ATK +2% and DMG Cap +5% per effect lvl", "perkRank": 2 },
         { "id": "insight.r3.16", "label": "DMG Cap +25%", "description": "DMG Cap +25%" },
         { "id": "insight.r3.17", "label": "Valiant Stance Stack add. ATK +5%", "description": "Valiant Stance: Stackable ATK Up grants an additional ATK +5% per stack" },
         { "id": "insight.r3.18", "label": "DMG Cap +20% ×Basic", "description": "DMG Cap +20% per Basic Stats-type sigil equipped (max sigils: 5)" },
@@ -50,7 +50,7 @@
         { "id": "insight.r3.20", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "ex": [
-        { "id": "insight.ex.21", "label": "(II) Noble Order: +50k dmg buffer", "description": "Insight Rank II: Withstand 50000 more damage before losing Noble Order" },
+        { "id": "insight.ex.21", "label": "Noble Order: +50k dmg buffer", "description": "Insight Rank II: Withstand 50000 more damage before losing Noble Order", "perkRank": 2 },
         { "id": "insight.ex.22", "label": "Holy Ladder DMG Cap +45%", "description": "Holy Ladder: DMG Cap +45%" },
         { "id": "insight.ex.23", "label": "Valiant Stance CD -5%", "description": "Valiant Stance: Cooldown -5%" },
         { "id": "insight.ex.24", "label": "Dodge: Shield 1k", "description": "Upon performing a perfect dodge: Grants Shield (1000)" },
@@ -73,7 +73,7 @@
       "r2": [
         { "id": "essence.r2.5", "label": "Attacks ATK +10%", "description": "Attacks: ATK +10%" },
         { "id": "essence.r2.6", "label": "Attacks DMG Cap +35%", "description": "Attacks: DMG Cap +35%" },
-        { "id": "essence.r2.7", "label": "(I) Diamond Cutter ATK +2%/lvl", "description": "Essence Rank I: Diamond Cutter grants an additional ATK +2% per effect lvl to Charged attacks" },
+        { "id": "essence.r2.7", "label": "Diamond Cutter ATK +2%/lvl", "description": "Essence Rank I: Diamond Cutter grants an additional ATK +2% per effect lvl to Charged attacks", "perkRank": 1 },
         { "id": "essence.r2.8", "label": "Königsschild DMG Cut -10%", "description": "Königsschild: DMG Cut reduces DMG taken by an additional 10%" },
         { "id": "essence.r2.9", "label": "Shining Onslaught ATK +10%", "description": "Shining Onslaught: ATK +10%" },
         { "id": "essence.r2.10", "label": "Attacks DMG Cap +35%", "description": "Attacks: DMG Cap +35%" },
@@ -81,8 +81,8 @@
         { "id": "essence.r2.12", "label": "Burn: DMG Cap +100%", "description": "While inflicted with Burn: DMG Cap +100%" }
       ],
       "r3": [
-        { "id": "essence.r3.13", "label": "(III) Diamond Cutter Cap +20%/lvl", "description": "Essence Rank III: Diamond Cutter grants an additional DMG Cap +20% per effect lvl to Charged attacks" },
-        { "id": "essence.r3.14", "label": "(I) Diamond Cutter ATK +2%/lvl", "description": "Essence Rank I: Diamond Cutter grants an additional ATK +2% per effect lvl to Charged attacks" },
+        { "id": "essence.r3.13", "label": "Diamond Cutter Cap +20%/lvl", "description": "Essence Rank III: Diamond Cutter grants an additional DMG Cap +20% per effect lvl to Charged attacks", "perkRank": 3 },
+        { "id": "essence.r3.14", "label": "Diamond Cutter ATK +2%/lvl", "description": "Essence Rank I: Diamond Cutter grants an additional ATK +2% per effect lvl to Charged attacks", "perkRank": 1 },
         { "id": "essence.r3.15", "label": "Charged block window +10%", "description": "Extends the window of time to perform a block using a Charged attack by 10%" },
         { "id": "essence.r3.16", "label": "Attacks DMG Cap +35%", "description": "Attacks: DMG Cap +35%" },
         { "id": "essence.r3.17", "label": "DMG Cap +25%", "description": "DMG Cap +25%" },
@@ -91,7 +91,7 @@
         { "id": "essence.r3.20", "label": "ATK +20%", "description": "ATK +20%" }
       ],
       "ex": [
-        { "id": "essence.ex.21", "label": "(III) Diamond Cutter Cap +20%/lvl", "description": "Essence Rank III: Diamond Cutter grants an additional DMG Cap +20% per effect lvl to Charged attacks" },
+        { "id": "essence.ex.21", "label": "Diamond Cutter Cap +20%/lvl", "description": "Essence Rank III: Diamond Cutter grants an additional DMG Cap +20% per effect lvl to Charged attacks", "perkRank": 3 },
         { "id": "essence.ex.22", "label": "Charged block: Combo Finisher Cap +40%", "description": "Upon blocking with a Charged attack: Combo Finisher DMG Cap +40%" },
         { "id": "essence.ex.23", "label": "Königsschild DMG Cut Dur +10%", "description": "Königsschild: DMG Cut Duration +10%" },
         { "id": "essence.ex.24", "label": "Sword of Lumiel DMG Cap +45%", "description": "Sword of Lumiel: DMG Cap +45%" },
@@ -123,7 +123,7 @@
       ],
       "r3": [
         { "id": "crux.r3.13", "label": "Invincibility: DMG Cap +30%", "description": "While buffed by Invincibility: DMG Cap +30%" },
-        { "id": "crux.r3.14", "label": "(II) Divine Justice Supp DMG +20%", "description": "Crux Rank II: Divine Justice grants an additional Supplementary DMG +20%" },
+        { "id": "crux.r3.14", "label": "Divine Justice Supp DMG +20%", "description": "Crux Rank II: Divine Justice grants an additional Supplementary DMG +20%", "perkRank": 2 },
         { "id": "crux.r3.15", "label": "Enhanced Noble Stance: Cap +30%", "description": "Attacks while Noble Stance is in its enhanced state: DMG Cap +30%" },
         { "id": "crux.r3.16", "label": "ATK +20%", "description": "ATK +20%" },
         { "id": "crux.r3.17", "label": "Rising Cut Counter Stance Dur +10%", "description": "Rising Cut: Counter Stance Duration +10%" },
