@@ -259,7 +259,7 @@ export function SectionPanel({
    properties, so they cannot be resolved by class-string order. */
 const HEADING_TONE = {
   band: "from-band via-band-soft to-[rgba(156,198,221,0)] text-ink-strong",
-  deep: "from-deep-2 via-deep-4 to-deep-4/0 text-white [text-shadow:0_1px_4px_rgba(10,50,70,0.5)]",
+  deep: "from-deep-2 via-deep-3 to-deep-4 text-white [text-shadow:0_1px_4px_rgba(10,50,70,0.5)]",
 };
 
 /* Size and padding as one step: the padding must track the text or the band
