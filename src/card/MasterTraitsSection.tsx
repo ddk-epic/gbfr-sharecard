@@ -69,7 +69,7 @@ function MasterTraitStyleRank({
   return (
     <div className="relative flex flex-col">
       {/** Rank Label */}
-      <div className="text-deep-label flex items-center pb-1 text-lg tracking-[0.06em] uppercase">
+      <div className="text-deep-label flex items-center pb-1.75 text-lg tracking-[0.06em] uppercase">
         <span className="mr-auto pl-0.5">
           <span className="text-deep-mute text-[0.8em]">Style Rank </span>
           {STYLE_RANK_NUM[rank]}
@@ -81,9 +81,8 @@ function MasterTraitStyleRank({
             className="absolute top-1/2 left-1/2 h-[1.5em] w-auto max-w-none -translate-x-1/2 -translate-y-1/2"
           />
         </span>
-        <span className="tabular-nums">
-          {/** Reserve two digits for the spent count so the slash never shifts. */}
-          <span className="inline-block w-[3ch] text-right">
+        <span>
+          <span className="inline-block pl-2.5 text-right">
             {selected.length}
           </span>
           <span className="text-deep-mute text-[0.8em]">
@@ -120,7 +119,7 @@ function MasterTraitStyleRank({
 
 export function MasterTraitsSection({ build }: { build: Build }) {
   const catalog = characterCatalog(build.characterId);
-  /** Stars = rank sections whose own selection count clears its threshold. */
+  // Stars = rank sections whose own selection count clears its threshold.
   const perkStars = (style: StyleId) =>
     RANKS.filter(
       (rank, i) =>
