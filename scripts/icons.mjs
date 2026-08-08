@@ -491,6 +491,35 @@ console.log(`summons: ${summonsSeen.size}/${summonIds.size} portraits`);
 if (summonsMissing.length)
   console.warn(`  no icon for: ${summonsMissing.join(", ")}`);
 
+// ------------------------------------------------------------------ sboard
+// public/icons/sboard/ - the master-trait board glyphs from pause_pause_common:
+// the four Style Rank badges (round/diamond/hex gems, EX gold-rimmed) and the
+// level star with its highlight backing. The star marks a trait's I-III tier in
+// a cell and a style's earned perk tier in the header; the backing is a larger,
+// mostly-transparent glow that stacks behind it. Path-derived, so no index.
+const sboardDirectory = new URL("sboard/", ICONS_DIR);
+await mkdir(sboardDirectory, { recursive: true });
+const SBOARD_SPRITES = {
+  "rank-r1": "lv_icon01",
+  "rank-r2": "lv_icon02",
+  "rank-r3": "lv_icon03",
+  "rank-ex": "lv_icon_ex01",
+  star: "lv02",
+  "star-bg": "lv03_add",
+};
+const SBOARD_WIDTH = 64; // ~1em on the card; 64 leaves room before it softens
+let sboardCount = 0;
+for (const [id, sprite] of Object.entries(SBOARD_SPRITES))
+  if (
+    await convert(
+      `${atlas("pause_pause_common")}/ps_cmn_sboard_${sprite}.png`,
+      new URL(`${id}.webp`, sboardDirectory),
+      SBOARD_WIDTH,
+    )
+  )
+    sboardCount++;
+console.log(`sboard: ${sboardCount} sprites`);
+
 // ------------------------------------------------------------- weapon art
 // public/weapons/<character>/<weapon>.webp - the same derived path as skills,
 // so the card reaches art from the character plus the weapon id, which is the
