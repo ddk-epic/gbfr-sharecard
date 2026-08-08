@@ -6,7 +6,7 @@ const GLYPH_TO_TEXT = 7 / 6;
 /** Scales back up for the transparent margin the generator centres the box in (icons.mjs): 86px canvas, 62px box. */
 const MARGIN_COMPENSATION = 86 / 62;
 /** Icon side, in em, so the box matches a trait glyph and tracks the text. */
-const ICON_EM = `${GLYPH_TO_TEXT * MARGIN_COMPENSATION}em`;
+export const BONUS_ICON_EM = `${GLYPH_TO_TEXT * MARGIN_COMPENSATION}em`;
 
 export function BonusIcon({
   bonusType,
@@ -19,7 +19,7 @@ export function BonusIcon({
     <img
       src={bonusIconUrl(bonusType)}
       className={`flex-none ${className}`}
-      style={{ width: ICON_EM, height: ICON_EM }}
+      style={{ width: BONUS_ICON_EM, height: BONUS_ICON_EM }}
       alt=""
     />
   );
