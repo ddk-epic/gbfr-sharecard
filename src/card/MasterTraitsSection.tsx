@@ -30,9 +30,15 @@ const STYLE_RANK_NUM: Record<StyleRank, string> = {
 };
 
 /** N level Style Rank stars */
-function Stars({ count }: { count: number }) {
+function Stars({
+  count,
+  className = "",
+}: {
+  count: number;
+  className?: string;
+}) {
   return (
-    <span className="inline-flex align-middle">
+    <span className={`inline-flex align-middle ${className}`}>
       {Array.from({ length: count }, (_, i) => (
         <span
           key={i}
@@ -105,7 +111,12 @@ function MasterTraitStyleRank({
               }`}
             >
               <span className="[-webkit-text-stroke:3px_var(--deep-5)] [paint-order:stroke]">
-                {cell.perkRank && <Stars count={cell.perkRank} />}
+                {cell.perkRank && (
+                  <Stars
+                    count={cell.perkRank}
+                    className="translate-y-[-0.1em]"
+                  />
+                )}
                 {cell.perkRank && " "}
                 {cell.label}
               </span>
