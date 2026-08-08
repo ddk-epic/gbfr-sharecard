@@ -1,7 +1,7 @@
 import type { Build } from "../domain/build";
 import { bonusTypeById, bonusValueText } from "../data";
 import { Heading, SectionPanel } from "../ui";
-import { BonusIcon } from "./BonusIcon";
+import { BONUS_ICON_EM, BonusIcon } from "./BonusIcon";
 
 export function OverMasterySection({
   overMastery,
@@ -34,12 +34,32 @@ export function OverMasterySection({
                   </span>
                 </>
               ) : (
-                <span>-</span>
+                <OverMasteryGhost index={i} />
               )}
             </div>
           ))}
         </div>
       </div>
     </SectionPanel>
+  );
+}
+
+// Varied bar widths so stacked empty rows read as distinct lines; cycled by
+// index to stay stable across renders.
+const GHOST_WIDTHS = ["w-44", "w-32", "w-38", "w-28", "w-40", "w-34"];
+
+// Strut carries the real row's BonusIcon height so filled and empty rows match.
+function OverMasteryGhost({ index }: { index: number }) {
+  return (
+    <>
+      <span
+        aria-hidden
+        className="w-0 flex-none"
+        style={{ height: BONUS_ICON_EM }}
+      />
+      <span
+        className={`bg-slanted-bar h-3.5 rounded-sm ${GHOST_WIDTHS[index % GHOST_WIDTHS.length]}`}
+      />
+    </>
   );
 }
