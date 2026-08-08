@@ -16,6 +16,7 @@ import type {
 import type {
   BonusTypeId,
   CharacterId,
+  StyleRank,
   SummonId,
   TraitId,
   Weapon,
@@ -128,6 +129,12 @@ export const STAT_ICON_ART: Record<StatIconId, { w: number; h: number }> = {
   stun: { w: 79, h: 76 },
   power: { w: 127, h: 128 },
 };
+
+/** Master-trait board glyphs: rank badge by Style Rank, plus the level star and its backing. */
+export const sboardRankIconUrl = (rank: StyleRank) =>
+  `${import.meta.env.BASE_URL}icons/sboard/rank-${rank}.webp`;
+export const starIconUrl = `${import.meta.env.BASE_URL}icons/sboard/star.webp`;
+export const starBgUrl = `${import.meta.env.BASE_URL}icons/sboard/star-bg.webp`;
 
 const TRAIT_GLYPHS = iconIndexJson.traits as Record<string, string>;
 export const traitIconUrl = (trait: TraitId): string | null => {

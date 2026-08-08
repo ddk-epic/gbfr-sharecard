@@ -1,8 +1,13 @@
 import type { Build, CellId, StyleId, StyleRank } from "../domain/build";
 import { RANKS, STYLES } from "../domain/build";
-import { STYLE_RANK_BUDGETS, stylePerkStates } from "../domain/derive";
+import { STYLE_RANK_BUDGETS } from "../domain/derive";
 import { PERK_THRESHOLDS, type MasterTraitCell } from "../domain/catalog";
-import { characterCatalog } from "../data";
+import {
+  characterCatalog,
+  sboardRankIconUrl,
+  starBgUrl,
+  starIconUrl,
+} from "../data";
 import { Heading } from "../ui";
 
 const STYLE_BORDER: Record<StyleId, string> = {
@@ -17,14 +22,39 @@ const STYLE_LABEL: Record<StyleId, string> = {
   crux: "Crux",
 };
 
-const STYLE_RANK_LABELS: Record<StyleRank, string> = {
-  r1: "Style Rank 1",
-  r2: "Style Rank 2",
-  r3: "Style Rank 3",
-  ex: "Style Rank EX",
+const STYLE_RANK_NUM: Record<StyleRank, string> = {
+  r1: "1",
+  r2: "2",
+  r3: "3",
+  ex: "EX",
 };
 
-/** One style rank section. */
+/** N level Style Rank stars */
+function Stars({ count }: { count: number }) {
+  return (
+    <span className="inline-flex align-middle">
+      {Array.from({ length: count }, (_, i) => (
+        <span
+          key={i}
+          className={`relative ml-[-0.08em] inline-block h-[0.8em] w-[0.8em]`}
+        >
+          <img
+            src={starBgUrl}
+            alt=""
+            className="absolute top-1/2 left-1/2 h-[0.72em] w-[0.72em] max-w-none -translate-x-1/2 -translate-y-1/2"
+          />
+          <img
+            src={starIconUrl}
+            alt=""
+            className="absolute top-1/2 left-1/2 h-[0.72em] w-auto max-w-none -translate-x-1/2 -translate-y-1/2"
+          />
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** One Style Rank section. */
 function MasterTraitStyleRank({
   rank,
   cells,
@@ -34,27 +64,55 @@ function MasterTraitStyleRank({
   cells: MasterTraitCell[];
   selected: CellId[];
 }) {
+  const threshold = PERK_THRESHOLDS[RANKS.indexOf(rank)];
+  const perkHit = threshold !== undefined && selected.length >= threshold;
   return (
-    <div className="flex flex-none flex-col">
-      {/** Label */}
-      <div className="text-deep-label flex justify-between pb-2 text-lg tracking-[0.08em] uppercase">
-        <span>{STYLE_RANK_LABELS[rank]}</span>
-        <span>{STYLE_RANK_BUDGETS[rank]} pts</span>
+    <div className="relative flex flex-col">
+      {/** Rank Label */}
+      <div className="text-deep-label flex items-center pb-1 text-lg tracking-[0.06em] uppercase">
+        <span className="mr-auto pl-0.5">
+          <span className="text-deep-mute text-[0.8em]">Style Rank </span>
+          {STYLE_RANK_NUM[rank]}
+        </span>
+        <span className="relative inline-block h-[1em] w-[0.7em]">
+          <img
+            src={sboardRankIconUrl(rank)}
+            alt=""
+            className="absolute top-1/2 left-1/2 h-[1.5em] w-auto max-w-none -translate-x-1/2 -translate-y-1/2"
+          />
+        </span>
+        <span className="tabular-nums">
+          {/** Reserve two digits for the spent count so the slash never shifts. */}
+          <span className="inline-block w-[3ch] text-right">
+            {selected.length}
+          </span>
+          <span className="text-deep-mute text-[0.8em]">
+            /{STYLE_RANK_BUDGETS[rank]}
+          </span>
+        </span>
       </div>
       {/** Cells */}
-      <div className="grid grid-cols-2 gap-1.75 pb-4.5">
-        {cells.map((cell) => (
-          <div
-            key={cell.id}
-            className={`flex h-[46px] items-center overflow-hidden rounded-sm px-2.25 py-1 text-lg ${cell.label.length >= 19 && "px-1.75 text-[20px] leading-[1.02]"} ${
-              selected.includes(cell.id)
-                ? "to-deep-3/30 bg-linear-135 from-white/18 text-white shadow-[inset_0_0_0_1px_var(--deep-ring)]"
-                : "bg-deep-cell text-deep-mute"
-            }`}
-          >
-            <span>{cell.label}</span>
-          </div>
-        ))}
+      <div className="grid grid-cols-2 gap-1.5 pb-4.5">
+        {cells.map((cell) => {
+          // wrap when text length + star (2 weight each) larger than 18
+          const wrapRule = cell.label.length + (cell.perkRank ?? 0) * 2 >= 19;
+          return (
+            <div
+              key={cell.id}
+              className={`flex h-[46px] items-center overflow-hidden rounded-sm px-2.25 py-1 text-lg ${wrapRule && "px-1.75 text-[20px] leading-[1.02]"} ${
+                selected.includes(cell.id)
+                  ? `bg-linear-135 from-white/18 text-white ${perkHit ? "to-purple-400/35 shadow-[inset_0_0_0_1px_var(--color-purple-400)]" : "to-deep-3/30 shadow-[inset_0_0_0_1px_var(--deep-ring)]"}`
+                  : "bg-deep-cell text-deep-mute"
+              }`}
+            >
+              <span className="[-webkit-text-stroke:3px_var(--deep-5)] [paint-order:stroke]">
+                {cell.perkRank && <Stars count={cell.perkRank} />}
+                {cell.perkRank && " "}
+                {cell.label}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -62,11 +120,13 @@ function MasterTraitStyleRank({
 
 export function MasterTraitsSection({ build }: { build: Build }) {
   const catalog = characterCatalog(build.characterId);
-  const perks = stylePerkStates(build.masterTraits, PERK_THRESHOLDS);
-  const perkSummary = STYLES.map(
-    (style) =>
-      `${STYLE_LABEL[style]} Perk ${perks[style].lastIndexOf(true) + 1}`,
-  ).join(" · ");
+  /** Stars = rank sections whose own selection count clears its threshold. */
+  const perkStars = (style: StyleId) =>
+    RANKS.filter(
+      (rank, i) =>
+        PERK_THRESHOLDS[i] !== undefined &&
+        build.masterTraits[style][rank].length >= PERK_THRESHOLDS[i],
+    ).length;
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-3.75">
@@ -76,8 +136,14 @@ export function MasterTraitsSection({ build }: { build: Build }) {
         className="flex flex-none items-baseline justify-between"
       >
         <span>Master Traits</span>
-        <span className="text-deep-label text-lg font-semibold tracking-[0.02em] normal-case text-shadow-none">
-          {perkSummary}
+        <span className="flex items-center gap-2 font-sans text-lg tracking-[0.02em] normal-case [-webkit-text-stroke:3px_var(--deep-5)] [paint-order:stroke]">
+          {STYLES.map((style, i) => (
+            <span key={style} className="flex items-center gap-1.5">
+              {i > 0 && <span className="text-deep-mute/80">·</span>}
+              <span>{STYLE_LABEL[style]}</span>
+              <Stars count={perkStars(style)} />
+            </span>
+          ))}
         </span>
       </Heading>
       <div className="grid min-h-0 flex-1 grid-cols-3 gap-1.25">
@@ -86,7 +152,7 @@ export function MasterTraitsSection({ build }: { build: Build }) {
             className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
             key={style}
           >
-            <h4 className="flex-none pb-6 text-2xl font-bold text-white [text-shadow:0_1px_4px_rgba(10,50,70,0.55)]">
+            <h4 className="flex-none pb-4 text-2xl font-bold text-white [text-shadow:0_1px_5px_rgba(10,50,70,0.55)]">
               {STYLE_LABEL[style]}: {catalog.masterTraits[style].title}
             </h4>
             {RANKS.map((rank) => (
