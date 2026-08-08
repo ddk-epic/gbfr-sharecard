@@ -21,7 +21,7 @@ const TRAIT_ICON = 18;
 export function SummonsSection({ summons }: { summons: Build["summons"] }) {
   return (
     <SectionPanel shadow className="col-span-2 self-start overflow-hidden !p-0">
-      <div className="relative grid grid-cols-2 grid-rows-2">
+      <div className="relative grid grid-cols-2 grid-rows-2 pb-px">
         <span
           aria-hidden
           className="bg-line-soft pointer-events-none absolute inset-y-3 left-1/2 z-1 w-px -translate-x-1/2"
@@ -52,10 +52,16 @@ function SummonCell({ slot }: { slot: SummonSlot | null }) {
         </div>
       )}
 
-      <div className="relative z-1 mb-px flex min-w-0 flex-col gap-1 px-4.5 py-3.25">
+      <div className="relative z-1 mb-px flex min-w-0 flex-col gap-1.25 px-4.5 py-3.25">
         {slot ? <SummonNameBand slot={slot} /> : <SummonNameGhost />}
-        {slot ? <TraitRow slot={slot} /> : <TraitGhost />}
-        {slot?.equipBonus ? <EquipBonusRow slot={slot} /> : <EquipBonusGhost />}
+        <div className="space-y-1">
+          {slot ? <TraitRow slot={slot} /> : <TraitGhost />}
+          {slot?.equipBonus ? (
+            <EquipBonusRow slot={slot} />
+          ) : (
+            <EquipBonusGhost />
+          )}
+        </div>
       </div>
     </div>
   );
