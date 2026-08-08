@@ -15,30 +15,28 @@ export function OverMasterySection({
       shadow
       className={`flex flex-col self-start overflow-hidden ${className}`}
     >
-      <div className="-mx-1">
-        <Heading size="lg" className="mb-1 flex-none">
-          Over Mastery
-        </Heading>
-        <div className="mt-2 flex flex-col gap-1">
-          {overMastery.map((line, i) => (
-            <div
-              className="border-line-soft text-ui flex items-center gap-1.25 text-xl"
-              key={i}
-            >
-              {line ? (
-                <>
-                  <BonusIcon bonusType={line.bonusType} className="-ml-1" />
-                  <span>{bonusTypeById.get(line.bonusType)?.name} </span>
-                  <span className="font-med">
-                    {bonusValueText(line.bonusType, line.value)}
-                  </span>
-                </>
-              ) : (
-                <OverMasteryGhost index={i} />
-              )}
-            </div>
-          ))}
-        </div>
+      <Heading size="lg" className="mb-1 flex-none">
+        Over Mastery
+      </Heading>
+      <div className="mt-2 flex flex-col gap-1">
+        {overMastery.map((line, i) => (
+          <div
+            className="border-line-soft text-ui flex items-center gap-1.25 text-xl"
+            key={i}
+          >
+            {line ? (
+              <>
+                <BonusIcon bonusType={line.bonusType} className="-ml-1" />
+                <span>{bonusTypeById.get(line.bonusType)?.name} </span>
+                <span className="font-med">
+                  {bonusValueText(line.bonusType, line.value)}
+                </span>
+              </>
+            ) : (
+              <OverMasteryGhost index={i} />
+            )}
+          </div>
+        ))}
       </div>
     </SectionPanel>
   );
