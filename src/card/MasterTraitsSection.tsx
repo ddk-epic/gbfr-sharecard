@@ -60,6 +60,18 @@ function Stars({
   );
 }
 
+function RankIcon({ rank }: { rank: StyleRank }) {
+  return (
+    <span className="relative inline-block h-[1em] w-[0.7em]">
+      <img
+        src={sboardRankIconUrl(rank)}
+        alt=""
+        className="absolute top-1/2 left-1/2 h-[1.7em] w-auto max-w-none -translate-x-1/2 -translate-y-1/2"
+      />
+    </span>
+  );
+}
+
 /** One Style Rank section. */
 function MasterTraitStyleRank({
   rank,
@@ -80,13 +92,7 @@ function MasterTraitStyleRank({
           <span className="text-deep-mute text-[0.8em]">Style Rank </span>
           {STYLE_RANK_NUM[rank]}
         </span>
-        <span className="relative inline-block h-[1em] w-[0.7em]">
-          <img
-            src={sboardRankIconUrl(rank)}
-            alt=""
-            className="absolute top-1/2 left-1/2 h-[1.5em] w-auto max-w-none -translate-x-1/2 -translate-y-1/2"
-          />
-        </span>
+        <RankIcon rank={rank} />
         <span>
           <span className="inline-block pl-2.5 text-right">
             {selected.length}
