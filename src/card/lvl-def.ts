@@ -1,5 +1,6 @@
 /**
- * Lvl badge measurements, in reference-screenshot coordinates.
+ * Lvl measurements, in reference-screenshot coordinates - the badge diamond,
+ * the "Lvl" chip, and the shared digit layout.
  *
  * The figures and the diamond are the game's own art. Their own metrics - cell,
  * baseline, advances - live in digits.generated.ts and are explained in
@@ -14,7 +15,7 @@ export type DigitPlacement = {
   glyph: DigitGlyph;
 };
 
-export const BADGE = {
+export const LVL_DEF = {
   /** Origin matches the reference screenshot; the diamond is 110 across. */
   box: { w: 140, h: 140 },
   diamond: {
@@ -111,9 +112,9 @@ const statInk = (color: string) => ({
 
 export const LABEL_INK = {
   plain: {
-    top: BADGE.color.inkTop,
-    bottom: BADGE.color.inkBottom,
-    keyline: BADGE.color.keyline,
+    top: LVL_DEF.color.inkTop,
+    bottom: LVL_DEF.color.inkBottom,
+    keyline: LVL_DEF.color.keyline,
   },
   gold: { top: "#ffeedc", bottom: "#ffbe86", keyline: "#80402f" },
   hp: statInk("#007d50"),

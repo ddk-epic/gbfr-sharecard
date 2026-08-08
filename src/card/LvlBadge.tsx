@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { BADGE, inkSpan, layoutDigits } from "./lvl-badge";
+import { LVL_DEF, inkSpan, layoutDigits } from "./lvl-def";
 import {
   FIGURE_BASELINE,
   FIGURE_XHEIGHT,
@@ -13,7 +13,7 @@ import { DigitFigures, LabelDefs, LvlWord, type SvgId } from "./label-run";
  */
 export function LvlDiamond({
   level,
-  size = BADGE.box.w,
+  size = LVL_DEF.box.w,
   inset = 0,
 }: {
   level: number;
@@ -24,7 +24,7 @@ export function LvlDiamond({
   // url(#name) resolves document-wide, not per svg, so every id is namespaced.
   const id: SvgId = (name) => `${uid}-${name}`;
 
-  const { box, lvl } = BADGE;
+  const { box, lvl } = LVL_DEF;
   return (
     <svg
       viewBox={`0 0 ${box.w} ${box.h}`}
@@ -45,7 +45,7 @@ export function LvlDiamond({
 }
 
 function DiamondBackdrop() {
-  const { diamond } = BADGE;
+  const { diamond } = LVL_DEF;
   const size = (diamond.outer * 2) / diamond.bodyShare;
   return (
     <image
@@ -59,7 +59,7 @@ function DiamondBackdrop() {
 }
 
 function LvlDigits({ level }: { level: number }) {
-  const { diamond, digits } = BADGE;
+  const { diamond, digits } = LVL_DEF;
   const placements = layoutDigits(String(level), digits.tracking);
   const span = inkSpan(placements);
   // Everything is a share of the diamond's width, so the figures ride it.

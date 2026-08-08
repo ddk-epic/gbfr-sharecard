@@ -1,9 +1,9 @@
 import { useId } from "react";
-import { BADGE, inkSpan, layoutDigits, type LabelTone } from "./lvl-badge";
+import { LVL_DEF, inkSpan, layoutDigits, type LabelTone } from "./lvl-def";
 import { DigitFigures, LabelDefs, LvlWord, type SvgId } from "./label-run";
 import { FIGURE_BASELINE, FIGURE_XHEIGHT } from "./digits.generated";
 
-/** SEED: "Lvl"'s own advance at BADGE.lvl.cap (word ratio 1), badge units -
+/** SEED: "Lvl"'s own advance at LVL_DEF.lvl.cap (word ratio 1), badge units -
     scales with `wordRatio` like kern1/kern2 do; calibrate by eye, as
     LvlDisplay's numberRight is. */
 const WORD_ADVANCE = 33;
@@ -14,7 +14,7 @@ const OFFSET_Y = 2;
 const TOP_PAD = 0.06;
 
 /**
- * The figures' x-height as a share of BADGE.lvl.cap. The figures are old-style,
+ * The figures' x-height as a share of LVL_DEF.lvl.cap. The figures are old-style,
  * so they have no cap to match the word against; this is the size the hand-cut
  * glyphs this replaced were rendering at, kept so the row does not resize.
  */
@@ -43,11 +43,11 @@ export function LvlWeapon({
   const uid = useId();
   const id: SvgId = (name) => `${uid}-${name}`;
 
-  const { cap: uCap, baseline } = BADGE.lvl;
+  const { cap: uCap, baseline } = LVL_DEF.lvl;
   const gScale = (FIGURE_RATIO * uCap) / FIGURE_XHEIGHT;
   const start = WORD_ADVANCE * wordRatio + GAP * uCap;
   // The badge's tracking, for want of a separate calibration for this row.
-  const placements = layoutDigits(String(level), BADGE.digits.tracking);
+  const placements = layoutDigits(String(level), LVL_DEF.digits.tracking);
   const span = inkSpan(placements);
 
   const right = start + (span.hi - span.lo) * gScale;
@@ -67,9 +67,9 @@ export function LvlWeapon({
   const figuresAscent =
     (FIGURE_BASELINE - Math.min(...placements.map((p) => p.glyph.y))) * gScale;
   const wordStroke =
-    BADGE.lvl.outline *
-    BADGE.lvl.wordOutline *
-    (wordRatio / BADGE.lvl.wordRatio);
+    LVL_DEF.lvl.outline *
+    LVL_DEF.lvl.wordOutline *
+    (wordRatio / LVL_DEF.lvl.wordRatio);
   const wordAscent = OFFSET_Y / px + uCap * wordRatio + wordStroke / 2;
   const top = baseline - Math.max(figuresAscent, wordAscent) - TOP_PAD * uCap;
   const boxH = baseline - top;

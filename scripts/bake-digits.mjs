@@ -138,7 +138,7 @@ ${wanted.map((c) => entry([c, glyphs[c]])).join("\n")}
 };
 
 /** The diamond behind the level. Square art; the diamond body is inset from
-    its edge by a glow margin, which BADGE.diamond.bodyShare accounts for. */
+    its edge by a glow margin, which LVL_DEF.diamond.bodyShare accounts for. */
 export const LVL_DIAMOND = "${diamond}";
 `;
 

@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { BADGE, type LabelTone } from "./lvl-badge";
+import { LVL_DEF, type LabelTone } from "./lvl-def";
 import {
   LabelDefs,
   LabelRun,
@@ -17,8 +17,8 @@ export const STAT_OFFSET_Y = 0.06;
 
 /** Stat-plate placement in badge units (viewBox space; cap 17, baseline 36). */
 const STAT = {
-  cap: BADGE.lvl.cap, //           number cap height
-  baseline: BADGE.lvl.baseline, // shared baseline
+  cap: LVL_DEF.lvl.cap, //           number cap height
+  baseline: LVL_DEF.lvl.baseline, // shared baseline
   /** The number's keyline width. */
   outline: 1.5,
   /** Box height in cap heights; flatter than a level chip. */

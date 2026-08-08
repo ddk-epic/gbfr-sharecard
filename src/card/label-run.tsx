@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 import {
-  BADGE,
+  LVL_DEF,
   LABEL_INK,
   mix,
   type DigitPlacement,
   type LabelTone,
-} from "./lvl-badge";
+} from "./lvl-def";
 
 const FAMILY = "'GBFR UI Medium'";
 
@@ -24,7 +24,7 @@ export type SvgId = (name: string) => string;
 export function LabelDefs({
   id,
   tone = "plain",
-  cap = BADGE.lvl.cap,
+  cap = LVL_DEF.lvl.cap,
 }: {
   id: SvgId;
   tone?: LabelTone;
@@ -32,7 +32,7 @@ export function LabelDefs({
       word still takes the full ink ramp rather than only its darker foot. */
   cap?: number;
 }) {
-  const { lvl } = BADGE;
+  const { lvl } = LVL_DEF;
   const ink = LABEL_INK[tone];
   const labelTop = lvl.baseline - cap;
   return (
@@ -108,7 +108,7 @@ const SHADOW = { dy: 0.02, blur: 0.02, opacity: 0.6, darken: 0.5 };
 export function LabelRun({
   ink,
   x,
-  y = BADGE.lvl.baseline,
+  y = LVL_DEF.lvl.baseline,
   dx,
   textAnchor = "start",
   size,
@@ -155,14 +155,14 @@ export function LabelRun({
 /**
  * The "Lvl" word, one shared rendering for every context it appears in - the
  * chip, the diamond badge, the weapon plate - kerned and stroked off
- * `BADGE.lvl` so they read identically; only `id`'s tone, the caller's
+ * `LVL_DEF.lvl` so they read identically; only `id`'s tone, the caller's
  * placement, and `ratio` (a composition's own word-to-number size) differ.
  */
 export function LvlWord({
   id,
   x,
   textAnchor = "start",
-  ratio = BADGE.lvl.wordRatio,
+  ratio = LVL_DEF.lvl.wordRatio,
 }: {
   id: SvgId;
   x: number | string;
@@ -173,7 +173,7 @@ export function LvlWord({
   ratio?: number;
 }) {
   const { cap, kern1, kern2, wordTrack, outline, wordOutline, wordRatio } =
-    BADGE.lvl;
+    LVL_DEF.lvl;
   const size = (cap / CAP_RATIO) * ratio;
   const dx = `0 ${(kern1 + wordTrack) * ratio} ${(kern2 + wordTrack) * ratio}`;
   return (
@@ -201,7 +201,7 @@ export function LabelShadowFilter({
   id: SvgId;
   tone: LabelTone;
 }) {
-  const { cap } = BADGE.lvl;
+  const { cap } = LVL_DEF.lvl;
   return (
     <filter id={id("lblshadow")} x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow

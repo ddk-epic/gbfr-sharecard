@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { SlantedBar } from "../ui";
-import { BADGE, type LabelTone } from "./lvl-badge";
+import { LVL_DEF, type LabelTone } from "./lvl-def";
 import {
   LabelDefs,
   LabelRun,
@@ -14,17 +14,18 @@ import {
 const TRAIT_PREFIX = "T.";
 
 /**
- * Placement in badge units (viewBox space; cap 17, baseline 36). Nothing is
- * measured: the browser sets the text, these constants place it. SEED marks
- * the runtime-measured ones with no closed form here - calibrate them by eye.
+ * This chip's placement, in badge units (viewBox space; cap 17, baseline 36).
+ * Shared typography rides in from LVL_DEF.lvl; the box positions are local.
+ * Nothing is measured: the browser sets the text, these constants place it.
+ * SEED marks the hand-authored ones.
  */
 const LVL = {
-  cap: BADGE.lvl.cap, //           number cap height
-  baseline: BADGE.lvl.baseline, // shared baseline
-  outline: BADGE.lvl.outline,
-  wordRatio: BADGE.lvl.wordRatio,
-  wordOutline: BADGE.lvl.wordOutline,
-  boxHeight: BADGE.lvl.boxHeight,
+  cap: LVL_DEF.lvl.cap, //           number cap height
+  baseline: LVL_DEF.lvl.baseline, // shared baseline
+  outline: LVL_DEF.lvl.outline,
+  wordRatio: LVL_DEF.lvl.wordRatio,
+  wordOutline: LVL_DEF.lvl.wordOutline,
+  boxHeight: LVL_DEF.lvl.boxHeight,
   /** Box past the ink each side, x cap. */
   padX: 0.64,
   /** SEED: "Lvl" left edge (textAnchor start). */
