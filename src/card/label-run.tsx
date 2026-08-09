@@ -25,16 +25,20 @@ export function LabelDefs({
   id,
   tone = "plain",
   cap = LVL_DEF.lvl.cap,
+  solidKeyline = false,
 }: {
   id: SvgId;
   tone?: LabelTone;
   /** The ramp's span above the baseline; pass the word's own cap so a smaller
       word still takes the full ink ramp rather than only its darker foot. */
   cap?: number;
+  /** Drop the keyline's top-to-bottom fade. */
+  solidKeyline?: boolean;
 }) {
   const { lvl } = LVL_DEF;
   const ink = LABEL_INK[tone];
   const labelTop = lvl.baseline - cap;
+  const keyTop = solidKeyline ? ink.keyline : mix(ink.keyline, lvl.keylineFade);
   return (
     <>
       {/* No texture, so the ramp alone shades it: starts tinted, runs past bottom. */}
@@ -61,7 +65,7 @@ export function LabelDefs({
         x2="0"
         y2={lvl.baseline}
       >
-        <stop offset="0" stopColor={mix(ink.keyline, lvl.keylineFade)} />
+        <stop offset="0" stopColor={keyTop} />
         <stop offset="1" stopColor={ink.keyline} />
       </linearGradient>
     </>
@@ -114,6 +118,7 @@ export function LabelRun({
   size,
   outline = 1.5,
   letterSpacing = 0,
+  inset = 0,
   children,
 }: {
   ink: SvgId;
@@ -128,27 +133,46 @@ export function LabelRun({
   outline?: number;
   /** Badge units; negative tightens. */
   letterSpacing?: number;
+  /** Extra keyline width (badge units) painted over the fill, insetting the
+      glyph edge. 0 = none. */
+  inset?: number;
   children: ReactNode;
 }) {
+  const common = {
+    x,
+    y,
+    dx,
+    textAnchor,
+    fontFamily: FAMILY,
+    fontSize: size,
+    letterSpacing,
+    style: { fontVariantNumeric: "tabular-nums" as const },
+    xmlSpace: "preserve" as const,
+  };
   return (
-    <text
-      x={x}
-      y={y}
-      dx={dx}
-      textAnchor={textAnchor}
-      fontFamily={FAMILY}
-      fontSize={size}
-      letterSpacing={letterSpacing}
-      style={{ fontVariantNumeric: "tabular-nums" }}
-      fill={`url(#${ink("lblink")})`}
-      stroke={`url(#${ink("lblkey")})`}
-      strokeWidth={outline}
-      strokeLinejoin="round"
-      paintOrder="stroke"
-      xmlSpace="preserve"
-    >
-      {children}
-    </text>
+    <>
+      <text
+        {...common}
+        fill={`url(#${ink("lblink")})`}
+        stroke={`url(#${ink("lblkey")})`}
+        strokeWidth={outline}
+        strokeLinejoin="round"
+        paintOrder="stroke"
+      >
+        {children}
+      </text>
+      {inset > 0 && (
+        <text
+          {...common}
+          fill="none"
+          stroke={`url(#${ink("lblkey")})`}
+          strokeWidth={inset}
+          strokeLinejoin="round"
+        >
+          {children}
+        </text>
+      )}
+    </>
   );
 }
 

@@ -117,6 +117,7 @@ export const LABEL_INK = {
     keyline: LVL_DEF.color.keyline,
   },
   gold: { top: "#ffeedc", bottom: "#ffbe86", keyline: "#80402f" },
+  pwr: { top: "#fff1c1", bottom: "#f5cd72", keyline: "#654f0d" },
   hp: statInk("#007d50"),
   atk: statInk("#b45a00"),
   ui: statInk("#325f7d"),

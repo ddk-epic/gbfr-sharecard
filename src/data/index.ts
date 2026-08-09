@@ -91,6 +91,9 @@ export const parchmentUrl = `${import.meta.env.BASE_URL}card/parchment.webp`;
 export const masterlevelArtUrl = (file: string) =>
   `${import.meta.env.BASE_URL}masterlevel/${file}.webp`;
 
+export const pwrArtUrl = (file: string) =>
+  `${import.meta.env.BASE_URL}pwr/${file}.webp`;
+
 export const elementIconUrl = (element: ElementId) =>
   `${import.meta.env.BASE_URL}icons/elements/${element}.webp`;
 

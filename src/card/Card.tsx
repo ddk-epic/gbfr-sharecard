@@ -10,6 +10,7 @@ import { Portrait } from "./Portrait";
 import { NameBadge } from "./NameBadge";
 import { LvlBadge } from "./LvlBadge";
 import { MasterlevelBadge } from "./MasterLvlBadge";
+import { PwrBadge } from "./PwrBadge";
 import { StatusPanel } from "./StatusPanel";
 import { BackdropFrame, ParchmentBackdrop } from "../ui";
 
@@ -105,6 +106,7 @@ export function Card({ build }: { build: Build }) {
           <div className="border-red-500">
             <LvlBadge level={CHARACTER_LEVEL} size={189} />
             <MasterlevelBadge size={130} top={6} left={142} />
+            <PwrBadge power={56252} size={110} top={0} right={0} />
           </div>
           <NameBadge characterId={build.characterId} />
           <StatusPanel status={build.status} />
