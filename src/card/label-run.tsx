@@ -163,6 +163,7 @@ export function LvlWord({
   x,
   textAnchor = "start",
   ratio = LVL_DEF.lvl.wordRatio,
+  outline = LVL_DEF.lvl.outline,
 }: {
   id: SvgId;
   x: number | string;
@@ -171,9 +172,10 @@ export function LvlWord({
       shared calibration; override where a composition sizes its word
       differently from its number, as the weapon plate's smaller "Lvl" does. */
   ratio?: number;
+  /** Keyline width base. */
+  outline?: number;
 }) {
-  const { cap, kern1, kern2, wordTrack, outline, wordOutline, wordRatio } =
-    LVL_DEF.lvl;
+  const { cap, kern1, kern2, wordTrack, wordOutline, wordRatio } = LVL_DEF.lvl;
   const size = (cap / CAP_RATIO) * ratio;
   const dx = `0 ${(kern1 + wordTrack) * ratio} ${(kern2 + wordTrack) * ratio}`;
   return (

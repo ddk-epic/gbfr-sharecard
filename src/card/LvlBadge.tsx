@@ -7,6 +7,9 @@ import {
 } from "./digits.generated";
 import { DigitFigures, LabelDefs, LvlWord, type SvgId } from "./label-run";
 
+/** Keyline width base. */
+const KEYLINE = 3.4;
+
 /**
  * Paints nothing outside the diamond; the portrait shows through around it.
  * Places itself, so it needs a positioned ancestor - inset is px in from its top-left.
@@ -38,7 +41,7 @@ export function LvlDiamond({
         <LabelDefs id={id} />
       </defs>
       <DiamondBackdrop />
-      <LvlWord id={id} x={lvl.centre} textAnchor="middle" />
+      <LvlWord id={id} x={lvl.centre} textAnchor="middle" outline={KEYLINE} />
       <LvlDigits level={level} />
     </svg>
   );

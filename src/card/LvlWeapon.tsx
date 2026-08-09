@@ -12,6 +12,8 @@ const GAP = 0.2; // Lvl to number, x cap
 const OFFSET_Y = 2;
 /** Box top past the tallest ink, x cap - a hair of breathing room. */
 const TOP_PAD = 0.06;
+/** Keyline width base. */
+const KEYLINE = 2.8;
 
 /**
  * The figures' x-height as a share of LVL_DEF.lvl.cap. The figures are old-style,
@@ -67,9 +69,7 @@ export function LvlWeapon({
   const figuresAscent =
     (FIGURE_BASELINE - Math.min(...placements.map((p) => p.glyph.y))) * gScale;
   const wordStroke =
-    LVL_DEF.lvl.outline *
-    LVL_DEF.lvl.wordOutline *
-    (wordRatio / LVL_DEF.lvl.wordRatio);
+    KEYLINE * LVL_DEF.lvl.wordOutline * (wordRatio / LVL_DEF.lvl.wordRatio);
   const wordAscent = OFFSET_Y / px + uCap * wordRatio + wordStroke / 2;
   const top = baseline - Math.max(figuresAscent, wordAscent) - TOP_PAD * uCap;
   const boxH = baseline - top;
@@ -96,7 +96,7 @@ export function LvlWeapon({
           <LabelDefs id={id} tone={tone} cap={wordRatio * uCap} />
         </defs>
         <g transform={`translate(0 ${-OFFSET_Y / px})`}>
-          <LvlWord id={id} x={0} ratio={wordRatio} />
+          <LvlWord id={id} x={0} ratio={wordRatio} outline={KEYLINE} />
         </g>
         <DigitFigures
           placements={placements}
