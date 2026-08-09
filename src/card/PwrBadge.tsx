@@ -16,6 +16,11 @@ const CENTER = { x: 91, y: 91 };
 /** Headroom above the base for the crest; covers its top at CREST.dy - w*128/127/2. */
 const CREST_OVERHANG = 96;
 
+/** Pwr base background fill */
+const BODY = { cx: 90.5, cy: 90.5, r: 87 };
+const BODY_FILL = "var(--deep-5)";
+const BODY_OPACITY = 0.7;
+
 /** Offsets from the diamond centre (dx right, dy down), base 182px; cap is ink
     height, w the crest width. */
 const CREST = { dx: 1, dy: -120, w: 124 };
@@ -68,6 +73,7 @@ export function PwrBadge({
         <LabelDefs id={id} tone="pwr" solidKeyline />
         <LabelShadowFilter id={id} tone="pwr" />
       </defs>
+      <PwrBase />
       <image
         href={pwrArtUrl(BASE.file)}
         x={0}
@@ -86,6 +92,18 @@ export function PwrBadge({
         </PwrLabel>
       </g>
     </svg>
+  );
+}
+
+/** Opaque plate under the body art, cut to the same rhombus. */
+function PwrBase() {
+  const { cx, cy, r } = BODY;
+  return (
+    <polygon
+      points={`${cx},${cy - r} ${cx + r},${cy} ${cx},${cy + r} ${cx - r},${cy}`}
+      style={{ fill: BODY_FILL }}
+      fillOpacity={BODY_OPACITY}
+    />
   );
 }
 
