@@ -14,7 +14,7 @@ const KEYLINE = 3.4;
  * Paints nothing outside the diamond; the portrait shows through around it.
  * Places itself, so it needs a positioned ancestor - inset is px in from its top-left.
  */
-export function LvlDiamond({
+export function LvlBadge({
   level,
   size = LVL_DEF.box.w,
   inset = 0,
@@ -40,14 +40,20 @@ export function LvlDiamond({
       <defs>
         <LabelDefs id={id} />
       </defs>
-      <DiamondBackdrop />
-      <LvlWord id={id} x={lvl.centre} textAnchor="middle" outline={KEYLINE} />
+      <LvlBadgeBase />
+      <LvlWord
+        id={id}
+        x={lvl.centre}
+        textAnchor="middle"
+        ratio={1}
+        outline={KEYLINE}
+      />
       <LvlDigits level={level} />
     </svg>
   );
 }
 
-function DiamondBackdrop() {
+function LvlBadgeBase() {
   const { diamond } = LVL_DEF;
   const size = (diamond.outer * 2) / diamond.bodyShare;
   return (

@@ -8,7 +8,8 @@ import { SummonsSection } from "./SummonsSection";
 import { WeaponSection } from "./WeaponSection";
 import { Portrait } from "./Portrait";
 import { NameBadge } from "./NameBadge";
-import { LvlDiamond } from "./LvlBadge";
+import { LvlBadge } from "./LvlBadge";
+import { MasterlevelBadge } from "./MasterLvlBadge";
 import { StatusPanel } from "./StatusPanel";
 import { BackdropFrame, ParchmentBackdrop } from "../ui";
 
@@ -102,7 +103,8 @@ export function Card({ build }: { build: Build }) {
           style={{ gridColumn: 1, gridRow: 1 }}
         >
           <div className="border-red-500">
-            <LvlDiamond level={CHARACTER_LEVEL} size={189} />
+            <LvlBadge level={CHARACTER_LEVEL} size={189} />
+            <MasterlevelBadge size={130} top={6} left={142} />
           </div>
           <NameBadge characterId={build.characterId} />
           <StatusPanel status={build.status} />
