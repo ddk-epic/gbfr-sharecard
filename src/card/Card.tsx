@@ -103,10 +103,10 @@ export function Card({ build }: { build: Build }) {
           className="relative z-2 flex flex-col justify-end gap-5.75"
           style={{ gridColumn: 1, gridRow: 1 }}
         >
-          <div className="border-red-500">
-            <LvlBadge level={CHARACTER_LEVEL} size={189} />
-            <MasterlevelBadge size={130} top={6} left={142} />
-            <PwrBadge power={56252} size={110} top={0} right={0} />
+          <div>
+            <LvlBadge level={CHARACTER_LEVEL} size={189} inset={-10} />
+            <MasterlevelBadge size={130} top={-4} left={137} />
+            <PwrBadge power={56252} size={110} top={750} left={10} />
           </div>
           <NameBadge characterId={build.characterId} />
           <StatusPanel status={build.status} />
