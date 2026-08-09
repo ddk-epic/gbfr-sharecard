@@ -78,13 +78,13 @@ function MasterTraitStyleRank({
   rank,
   cells,
   selected,
+  perkHit,
 }: {
   rank: StyleRank;
   cells: MasterTraitCell[];
   selected: CellId[];
+  perkHit: boolean;
 }) {
-  const threshold = PERK_THRESHOLDS[RANKS.indexOf(rank)];
-  const perkHit = threshold !== undefined && selected.length >= threshold;
   return (
     <div className="relative flex flex-col">
       {/** Rank Label */}
@@ -137,13 +137,21 @@ function MasterTraitStyleRank({
 
 export function MasterTraitsSection({ build }: { build: Build }) {
   const catalog = characterCatalog(build.characterId);
-  // Stars = rank sections whose own selection count clears its threshold.
+  // A rank's perk activates only when its own threshold and every
+  // earlier rank's perk is active too (dependent chain).
+  const activePerks = (style: StyleId) => {
+    let prev = true;
+    return RANKS.map((rank, i) => {
+      const threshold = PERK_THRESHOLDS[i];
+      prev =
+        prev &&
+        threshold !== undefined &&
+        build.masterTraits[style][rank].length >= threshold;
+      return prev;
+    });
+  };
   const perkStars = (style: StyleId) =>
-    RANKS.filter(
-      (rank, i) =>
-        PERK_THRESHOLDS[i] !== undefined &&
-        build.masterTraits[style][rank].length >= PERK_THRESHOLDS[i],
-    ).length;
+    activePerks(style).filter(Boolean).length;
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-3.75">
@@ -166,24 +174,28 @@ export function MasterTraitsSection({ build }: { build: Build }) {
         </div>
       </Heading>
       <div className="grid min-h-0 flex-1 grid-cols-3 gap-1.25">
-        {STYLES.map((style) => (
-          <div
-            className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
-            key={style}
-          >
-            <h4 className="flex-none pb-4 text-2xl font-bold text-white [text-shadow:0_1px_5px_rgba(10,50,70,0.55)]">
-              {STYLE_LABEL[style]}: {catalog.masterTraits[style].title}
-            </h4>
-            {RANKS.map((rank) => (
-              <MasterTraitStyleRank
-                key={rank}
-                rank={rank}
-                cells={catalog.masterTraits[style][rank]}
-                selected={build.masterTraits[style][rank]}
-              />
-            ))}
-          </div>
-        ))}
+        {STYLES.map((style) => {
+          const perks = activePerks(style);
+          return (
+            <div
+              className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
+              key={style}
+            >
+              <h4 className="flex-none pb-4 text-2xl font-bold text-white [text-shadow:0_1px_5px_rgba(10,50,70,0.55)]">
+                {STYLE_LABEL[style]}: {catalog.masterTraits[style].title}
+              </h4>
+              {RANKS.map((rank, i) => (
+                <MasterTraitStyleRank
+                  key={rank}
+                  rank={rank}
+                  cells={catalog.masterTraits[style][rank]}
+                  selected={build.masterTraits[style][rank]}
+                  perkHit={perks[i]}
+                />
+              ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
