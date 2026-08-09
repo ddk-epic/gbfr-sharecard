@@ -23,8 +23,18 @@ const MASTERLEVEL_DEF = {
   num: { cx: 166, cy: 199, scale: 0.84 },
 } as const;
 
-/** Fixed master badge. Absolutely placed, so it needs a positioned ancestor;
-    top/left are px from it. */
+/** Gold flash streak's hotter gold color. */
+const FLASH_CORE = "#ffde75";
+/** Gold flash streak behind the number. */
+const FLASH = { cx: 166, cy: 174, w: 340, h: 52, opacity: 1 };
+
+/** Gold fade color */
+const GOLD = "#ffcf5a";
+/** Gold fade glow in front of the base. */
+const FADE = { cx: 166, cy: 174, w: 270, h: 270, opacity: 0.5 };
+/** Gold fade glow behind the base. */
+const FADE_BACK = { cx: 166, cy: 174, w: 380, h: 380, opacity: 0.5 };
+
 export function MasterlevelBadge({
   level = DEFAULT_MASTERLEVEL,
   size = BASE.w,
@@ -54,7 +64,10 @@ export function MasterlevelBadge({
     >
       <defs>
         <MasterlevelLabelDefs id={id} />
+        <MasterlevelGoldTint id={id} />
+        <MasterlevelFlashTint id={id} />
       </defs>
+      <MasterlevelFadeBack id={id} />
       <image
         href={masterlevelArtUrl(BASE.file)}
         x={0}
@@ -62,9 +75,82 @@ export function MasterlevelBadge({
         width={BASE.w}
         height={BASE.h}
       />
+      <MasterlevelFade id={id} />
+      <MasterlevelFlash id={id} />
       <MasterlevelWord id={id} />
       <MasterlevelNumber level={clamped} />
     </svg>
+  );
+}
+
+/** Tints a white sprite to gold via the offset column. */
+function MasterlevelGoldTint({ id }: { id: SvgId }) {
+  const c = (i: number) => parseInt(GOLD.slice(i, i + 2), 16) / 255;
+  const [r, g, b] = [c(1), c(3), c(5)];
+  const values = `0 0 0 0 ${r} 0 0 0 0 ${g} 0 0 0 0 ${b} 0 0 0 1 0`;
+  return (
+    <filter id={id("gold")} colorInterpolationFilters="sRGB">
+      <feColorMatrix type="matrix" values={values} />
+    </filter>
+  );
+}
+
+/** Flash tint */
+function MasterlevelFlashTint({ id }: { id: SvgId }) {
+  const hex = (h: string) => {
+    const c = (i: number) => parseInt(h.slice(i, i + 2), 16) / 255;
+    return [c(1), c(3), c(5)] as const;
+  };
+  const [er, eg, eb] = hex(GOLD);
+  const [cr, cg, cb] = hex(FLASH_CORE);
+  const row = (e: number, k: number) => `0 0 0 ${k - e} ${e}`;
+  const values = `${row(er, cr)} ${row(eg, cg)} ${row(eb, cb)} 0 0 0 1 0`;
+  return (
+    <filter id={id("flash")} colorInterpolationFilters="sRGB">
+      <feColorMatrix type="matrix" values={values} />
+    </filter>
+  );
+}
+
+function MasterlevelFadeBack({ id }: { id: SvgId }) {
+  return (
+    <image
+      href={masterlevelArtUrl("masterlevel-fade-back")}
+      x={FADE_BACK.cx - FADE_BACK.w / 2}
+      y={FADE_BACK.cy - FADE_BACK.h / 2}
+      width={FADE_BACK.w}
+      height={FADE_BACK.h}
+      opacity={FADE_BACK.opacity}
+      filter={`url(#${id("gold")})`}
+    />
+  );
+}
+
+function MasterlevelFade({ id }: { id: SvgId }) {
+  return (
+    <image
+      href={masterlevelArtUrl("masterlevel-fade-front")}
+      x={FADE.cx - FADE.w / 2}
+      y={FADE.cy - FADE.h / 2}
+      width={FADE.w}
+      height={FADE.h}
+      opacity={FADE.opacity}
+      filter={`url(#${id("gold")})`}
+    />
+  );
+}
+
+function MasterlevelFlash({ id }: { id: SvgId }) {
+  return (
+    <image
+      href={masterlevelArtUrl("masterlevel-flash")}
+      x={FLASH.cx - FLASH.w / 2}
+      y={FLASH.cy - FLASH.h / 2}
+      width={FLASH.w}
+      height={FLASH.h}
+      opacity={FLASH.opacity}
+      filter={`url(#${id("flash")})`}
+    />
   );
 }
 
@@ -100,8 +186,7 @@ function MasterlevelNumber({ level }: { level: number }) {
   );
 }
 
-/** Ink-ramp and keyline in the word's own bbox; the shared LabelDefs pins to
-    the Lvl badge's space, which this badge does not share. */
+/** Ink-ramp and keyline in the word's own bbox. */
 function MasterlevelLabelDefs({ id }: { id: SvgId }) {
   const ink = LABEL_INK.plain;
   return (

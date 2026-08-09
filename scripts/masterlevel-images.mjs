@@ -2,15 +2,17 @@
  * Extracts the Master Lvl badge art to public/masterlevel/ as WebP.
  * Run: node scripts/masterlevel-images.mjs [extract-dir]
  *
- * The badge is fixed art: one diamond base (cmn_ml_base02) plus one baked
- * "50 + N stars" sprite per star tier (cmn_mb_num_l01..l05). A master level of
- * 51..55 selects sprite l01..l05.
+ * The badge is fixed art: one diamond base (cmn_ml_base02), one baked
+ * "50 + N stars" sprite per star tier (cmn_mb_num_l01..l05, a master level of
+ * 51..55 selects l01..l05), plus the gold glow overlays (cmn_ml_flash01,
+ * cmn_mb_fade01, cmn_mb_fade02).
  *
  * GBFRDataTools exports each tier sprite trimmed to its ink, at differing
  * sizes. This pads each back onto its full 216x192 atlas cell (the descriptor's
  * Padding says where the ink sits), so every tier ships as one interchangeable
  * tile - the card drops it in at a fixed rect, no per-sprite metrics. The base
- * is full-frame already and is copied as-is. Art and game data (c) Cygames.
+ * and glow icons are full-frame already and are copied as-is. Art and game
+ * data (c) Cygames.
  *
  * The extract dir needs the atlas cropped out of the archive:
  *
@@ -36,6 +38,12 @@ const NUMS = [1, 2, 3, 4, 5].map((n) => ({
   src: `cmn_mb_num_l0${n}`,
   out: `masterlevel-${n}`,
 }));
+// Gold glow overlays, full-frame like the base.
+const ICONS = [
+  { src: "cmn_ml_flash01", out: "masterlevel-flash" },
+  { src: "cmn_mb_fade01", out: "masterlevel-fade-front" },
+  { src: "cmn_mb_fade02", out: "masterlevel-fade-back" },
+];
 
 if (!existsSync(DESCRIPTOR))
   throw new Error(`no ${DESCRIPTOR} - crop the atlas first, see this file's header`);
@@ -60,7 +68,7 @@ for (let i = 0; i < lines.length; i++) {
   rects[named[1]] = { cellW: rectW, cellH: rectH, left, bottom, right, top };
 }
 
-const missing = [BASE, ...NUMS].filter((s) => !(s.src in rects));
+const missing = [BASE, ...NUMS, ...ICONS].filter((s) => !(s.src in rects));
 if (missing.length) throw new Error(`missing sprites: ${missing.map((s) => s.src).join(", ")}`);
 
 const cell = { w: rects[NUMS[0].src].cellW, h: rects[NUMS[0].src].cellH };
@@ -76,8 +84,12 @@ const png = (name) => {
   return file;
 };
 
-// Base: copy at native size.
+// Base: opaque colour, lossy is fine.
 await sharp(png(BASE.src)).webp({ quality: QUALITY }).toFile(`${OUT_DIR}${BASE.out}.webp`);
+
+// Glow icons: white-on-alpha, kept lossless so the alpha stays crisp.
+for (const { src, out } of ICONS)
+  await sharp(png(src)).webp({ lossless: true }).toFile(`${OUT_DIR}${out}.webp`);
 
 // Tiers: composite the trimmed ink onto a transparent full cell at its inset.
 for (const { src, out } of NUMS) {
@@ -90,4 +102,6 @@ for (const { src, out } of NUMS) {
     .toFile(`${OUT_DIR}${out}.webp`);
 }
 
-console.log(`wrote public/masterlevel/: ${BASE.out} + ${NUMS.length} tiers padded to ${cell.w}x${cell.h}`);
+console.log(
+  `wrote public/masterlevel/: ${BASE.out} + ${NUMS.length} tiers (${cell.w}x${cell.h}) + ${ICONS.length} glow icons`,
+);
