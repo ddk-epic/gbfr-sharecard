@@ -32,6 +32,9 @@ const PWR_DEF = {
 /** Keyline width (badge px) painted over both texts' edges, insetting them. */
 const INSET = 0.5;
 
+const SHADOW = { dy: 3, blur: 8, color: "var(--deep-8)", opacity: 0.55 };
+const SHADOW_COLOR = `color-mix(in srgb, ${SHADOW.color} ${SHADOW.opacity * 100}%, transparent)`;
+
 export function PwrBadge({
   power,
   size = BASE.w,
@@ -52,6 +55,7 @@ export function PwrBadge({
   const id: SvgId = (name) => `${uid}-${name}`;
 
   const vbH = BASE.h + CREST_OVERHANG;
+  const k = (size / BASE.w) * 2;
   return (
     <svg
       viewBox={`0 ${-CREST_OVERHANG} ${BASE.w} ${vbH}`}
@@ -65,6 +69,7 @@ export function PwrBadge({
         right,
         zIndex,
         overflow: "visible",
+        filter: `drop-shadow(0 ${SHADOW.dy * k}px ${SHADOW.blur * k}px ${SHADOW_COLOR})`,
       }}
       role="img"
       aria-label={`Power ${power}`}
