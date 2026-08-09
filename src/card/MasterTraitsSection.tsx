@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { Build, CellId, StyleId, StyleRank } from "../domain/build";
 import { RANKS, STYLES } from "../domain/build";
 import { STYLE_RANK_BUDGETS } from "../domain/derive";
@@ -152,15 +153,17 @@ export function MasterTraitsSection({ build }: { build: Build }) {
         className="flex flex-none items-baseline justify-between"
       >
         <span>Master Traits</span>
-        <span className="flex items-center gap-2 font-sans text-lg tracking-[0.02em] normal-case [-webkit-text-stroke:3px_var(--deep-5)] [paint-order:stroke]">
+        <div className="my-[-0.3em] flex items-center gap-x-2.5 font-sans text-lg tracking-[0.02em] normal-case [-webkit-text-stroke:3px_var(--deep-5)] [paint-order:stroke]">
           {STYLES.map((style, i) => (
-            <span key={style} className="flex items-center gap-1.5">
+            <Fragment key={style}>
               {i > 0 && <span className="text-deep-mute/80">·</span>}
-              <span>{STYLE_LABEL[style]}</span>
-              <Stars count={perkStars(style)} />
-            </span>
+              <span className="flex items-center gap-x-1.5">
+                <span>{STYLE_LABEL[style]}</span>
+                <Stars count={perkStars(style)} className="text-[1.3em]" />
+              </span>
+            </Fragment>
           ))}
-        </span>
+        </div>
       </Heading>
       <div className="grid min-h-0 flex-1 grid-cols-3 gap-1.25">
         {STYLES.map((style) => (
