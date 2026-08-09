@@ -113,7 +113,7 @@ function MasterTraitStyleRank({
               key={cell.id}
               className={`flex h-[46px] items-center overflow-hidden rounded-sm px-2.25 py-1 text-lg ${wrapRule && "px-1.75 text-[20px] leading-[1.02]"} ${
                 selected.includes(cell.id)
-                  ? `bg-linear-135 from-white/18 text-white ${perkHit ? "to-purple-400/35 shadow-[inset_0_0_0_1px_var(--color-purple-400)]" : "to-deep-3/30 shadow-[inset_0_0_0_1px_var(--deep-ring)]"}`
+                  ? `bg-linear-135 from-white/18 text-white ${perkHit ? "to-purple-400/50 shadow-[inset_0_0_0_1px_var(--color-purple-300)]" : "to-deep-3/30 shadow-[inset_0_0_0_1px_var(--deep-ring)]"}`
                   : "bg-deep-cell text-deep-mute"
               }`}
             >
