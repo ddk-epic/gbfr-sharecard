@@ -283,7 +283,7 @@ export function Heading({
 }) {
   return (
     <h3
-      className={`rounded bg-linear-90 from-0% via-45% to-100% font-bold tracking-widest uppercase ${HEADING_SIZE[size]} ${HEADING_TONE[tone]} ${className}`}
+      className={`font-med rounded bg-linear-90 from-0% via-45% to-100% tracking-wider uppercase ${HEADING_SIZE[size]} ${HEADING_TONE[tone]} ${className}`}
     >
       {children}
     </h3>
