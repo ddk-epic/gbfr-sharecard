@@ -74,7 +74,7 @@ function Half({
 }) {
   return (
     <div
-      className={`grid min-w-0 grid-cols-[auto_auto_1fr] content-center items-baseline gap-x-1 gap-y-5.5 ${className}`}
+      className={`grid min-w-0 grid-cols-[auto_auto_1fr] content-center items-baseline gap-x-1 gap-y-4.5 ${className}`}
     >
       {rows.map((row) => (
         <Fragment key={row.stat}>
