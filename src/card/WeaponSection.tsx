@@ -88,9 +88,9 @@ export function WeaponSection({ build }: { build: Build }) {
 
   return (
     <>
-      <Heading size="lg" className="flex-none">
-        Weapon
-      </Heading>
+      <div className="flex-none" style={{ paddingLeft: ROW_INDENT }}>
+        <Heading size="lg">Weapon</Heading>
+      </div>
       <div className="flex-none pb-3">
         <div className="flex items-baseline justify-center px-2.5 text-2xl font-bold">
           <span className={resolvedWeapon ? "" : "text-dim"}>
