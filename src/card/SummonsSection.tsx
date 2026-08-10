@@ -55,7 +55,7 @@ function SummonCell({ slot }: { slot: SummonSlot | null }) {
       <div className="relative z-1 mb-px flex min-w-0 flex-col gap-1.25 px-4.5 py-3.25">
         {slot ? <SummonNameBand slot={slot} /> : <SummonNameGhost />}
         <div className="space-y-1">
-          {slot ? <TraitRow slot={slot} /> : <TraitGhost />}
+          {slot?.trait ? <TraitRow slot={slot} /> : <TraitGhost />}
           {slot?.equipBonus ? (
             <EquipBonusRow slot={slot} />
           ) : (
