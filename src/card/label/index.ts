@@ -1,5 +1,6 @@
 export {
   Label,
+  KEYLINE,
   usePart,
   type SvgId,
   type PartMode,

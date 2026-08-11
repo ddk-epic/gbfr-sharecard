@@ -1,6 +1,6 @@
 import { LVL_DEF, inkSpan, layoutDigits } from "./lvl-def";
 import { DigitFigures } from "./digit-figures";
-import { CAP_RATIO, Label, LvlWord, PALETTE } from "./label";
+import { CAP_RATIO, KEYLINE, Label, LvlWord, PALETTE } from "./label";
 import { FIGURE_BASELINE, FIGURE_XHEIGHT } from "./digits.generated";
 
 /** SEED: "Lvl"'s advance at LVL_DEF.lvl.cap (word ratio 1), badge units; scales
@@ -9,7 +9,6 @@ const WORD_ADVANCE = 30;
 const GAP = 0.2; // Lvl to number, x cap
 /** "Lvl" raised off the shared baseline, rendered px. */
 const OFFSET_Y = 2;
-const KEYLINE = { outer: 0.14, inner: 0.01 };
 
 /** The figures' x-height, x LVL_DEF.lvl.cap. Old-style figures have no cap to
     match the word against, so this is set to what the hand-cut glyphs it
@@ -65,7 +64,7 @@ export function LvlWeapon({
         height={boxH * px}
       >
         <g transform={`translate(0 ${-OFFSET_Y / px})`}>
-          <Label outerKeyline={KEYLINE.outer} innerKeyline={KEYLINE.inner}>
+          <Label>
             <LvlWord size={wordCap / CAP_RATIO} {...PALETTE[tone]} />
           </Label>
         </g>

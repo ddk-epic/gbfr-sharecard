@@ -2,8 +2,8 @@ import { createContext, useContext, useId, type ReactNode } from "react";
 
 const FAMILY = "'GBFR UI Medium'";
 
-/** Default keyline widths, scaled to own cap. */
-const KEYLINE = { outer: 0.17, inner: 0.01 };
+/** Default keyline widths, x a part's own cap. */
+export const KEYLINE = { outer: 0.17, inner: 0.01 };
 
 /** Namespaces a def's id to one label; `url(#name)` resolves document-wide,
     not per svg, so every id needs this. */
