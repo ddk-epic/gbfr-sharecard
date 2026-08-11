@@ -103,13 +103,6 @@ export function mix(hex: string, p: number, to = "#ffffff") {
   );
 }
 
-const OFF_WHITE = "#f7f3ea";
-const statInk = (color: string) => ({
-  top: mix(color, 0.3),
-  bottom: color,
-  keyline: OFF_WHITE,
-});
-
 export const LABEL_INK = {
   plain: {
     top: LVL_DEF.color.inkTop,
@@ -118,9 +111,6 @@ export const LABEL_INK = {
   },
   gold: { top: "#ffeedc", bottom: "#ffbe86", keyline: "#80402f" },
   pwr: { top: "#fff1c1", bottom: "#f5cd72", keyline: "#654f0d" },
-  hp: statInk("#007d50"),
-  atk: statInk("#b45a00"),
-  ui: statInk("#325f7d"),
 } as const;
 
 export type LabelTone = keyof typeof LABEL_INK;
