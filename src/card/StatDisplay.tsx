@@ -1,22 +1,13 @@
-import { useId } from "react";
 import { LVL_DEF } from "./lvl-def";
-import { CAP_RATIO, type SvgId } from "./label-run";
-import { PALETTE, type Tone } from "./label/palette";
-import { Label } from "./label/Label";
-import { Part, Value } from "./label/Part";
-import { labelBox } from "./label/box";
+import { CAP_RATIO, Label, labelBox, PALETTE, Part, Value } from "./label";
 
 /** The stat box's height in cap heights. */
 export const STAT_BOX_HEIGHT = 1.42;
-
-/** The figure raised off the box's centre. */
 const STAT_OFFSET_Y = 0.06;
 
-/** Stat-plate placement in badge units (viewBox space; cap 17, baseline 36).
-    The browser flows the glyphs; the box is declared - see label/box.ts. */
+/** Stat-plate placement in badge units (viewBox space, cap 17). */
 const STAT = {
   cap: LVL_DEF.lvl.cap,
-  baseline: LVL_DEF.lvl.baseline,
   outerKeyline: 0.1,
   innerKeyline: 0,
   boxHeight: STAT_BOX_HEIGHT,
@@ -29,16 +20,14 @@ const STAT = {
   /** A tabular digit's advance. */
   digitAdvance: 0.69,
   /** The unit's advance. */
-  unitAdvance: 1.261,
+  unitAdvance: 0.69,
   /** Box past the content each side. */
   padX: 0.1,
 } as const;
 
 const NUMBER_SIZE = STAT.cap / CAP_RATIO;
 
-/**
- * A stat value: the game's figures with an optional unit.
- */
+/** A stat value, unit optional. */
 export function StatDisplay({
   cap,
   value,
@@ -52,25 +41,21 @@ export function StatDisplay({
   /** the unit "%" */
   unit?: string;
   reserveDigits: number;
-  /** The stat palettes: `hp`, `atk`, `ui`. */
-  tone?: Tone;
+  tone?: "plain" | "hp" | "atk" | "ui";
   className?: string;
 }) {
-  const uid = useId();
-  const id: SvgId = (name) => `${uid}-${name}`;
   const palette = PALETTE[tone];
 
   const showUnit = value !== null && unit !== "";
   const unitCap = NUMBER_SIZE * STAT.unit.ratio * CAP_RATIO;
   const padX = STAT.padX * STAT.cap;
-  // The reserve sets the width, not the value: ghost + real digits advance
+  // The reserve sets the width: ghost + real digits advance
   // the same total at any digit count.
   const contentWidth =
     reserveDigits * STAT.digitAdvance * STAT.cap +
     (showUnit ? STAT.unit.gap * unitCap + STAT.unitAdvance * unitCap : 0);
 
   const box = labelBox({
-    baseline: STAT.baseline,
     cap: STAT.cap,
     boxHeight: STAT.boxHeight,
     centerOffset: STAT.offsetY,
@@ -104,9 +89,6 @@ export function StatDisplay({
         height={size.height}
       >
         <Label
-          id={id}
-          baseline={STAT.baseline}
-          anchorSize={NUMBER_SIZE}
           outerKeyline={STAT.outerKeyline}
           innerKeyline={STAT.innerKeyline}
         >

@@ -1,19 +1,11 @@
-import { useId, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { pwrArtUrl, statIconUrl, STAT_ICON_ART } from "../data";
-import { LVL_DEF } from "./lvl-def";
-import {
-  LabelDefs,
-  LabelRun,
-  LabelShadowFilter,
-  CAP_RATIO,
-  type SvgId,
-} from "./label-run";
+import { CAP_RATIO, Label, PALETTE, Value } from "./label";
 
 /** Diamond body nearly fills its own 182x182 canvas. */
 const BASE = { w: 182, h: 182, file: "pwr-diamond" };
-/** Diamond centre, base px; the placement anchor. */
-const CENTER = { x: 91, y: 91 };
-/** Headroom above the base for the crest; covers its top at CREST.dy - w*128/127/2. */
+const CENTER = { x: BASE.w / 2, y: BASE.h / 2 };
+/** Headroom above the base for the crest. */
 const CREST_OVERHANG = 96;
 
 /** Pwr base background fill */
@@ -25,12 +17,9 @@ const BODY_OPACITY = 0.7;
     height, w the crest width. */
 const CREST = { dx: 1, dy: -120, w: 124 };
 const PWR_DEF = {
-  word: { dx: 0, dy: -17.5, cap: 32, outline: 3 },
-  num: { dx: 0, dy: 50, cap: 58, outline: 2.6 },
+  word: { dx: 0, dy: -17.5, cap: 32 },
+  num: { dx: 0, dy: 50, cap: 58 },
 } as const;
-
-/** Keyline width (badge px) painted over both texts' edges, insetting them. */
-const INSET = 0.5;
 
 const SHADOW = { dy: 3, blur: 8, color: "var(--deep-8)", opacity: 0.55 };
 const SHADOW_COLOR = `color-mix(in srgb, ${SHADOW.color} ${SHADOW.opacity * 100}%, transparent)`;
@@ -50,10 +39,6 @@ export function PwrBadge({
   right?: number;
   zIndex?: number;
 }) {
-  const uid = useId();
-  // url(#name) resolves document-wide, not per svg, so every id is namespaced.
-  const id: SvgId = (name) => `${uid}-${name}`;
-
   const vbH = BASE.h + CREST_OVERHANG;
   const k = (size / BASE.w) * 2;
   return (
@@ -61,23 +46,18 @@ export function PwrBadge({
       viewBox={`0 ${-CREST_OVERHANG} ${BASE.w} ${vbH}`}
       width={size}
       height={(size * vbH) / BASE.w}
-      // Number rides past the 182 viewBox; overflow visible keeps it unclipped.
       style={{
         position: "absolute",
         top,
         left,
         right,
         zIndex,
-        overflow: "visible",
+        overflow: "visible", // keeps it unclipped
         filter: `drop-shadow(0 ${SHADOW.dy * k}px ${SHADOW.blur * k}px ${SHADOW_COLOR})`,
       }}
       role="img"
       aria-label={`Power ${power}`}
     >
-      <defs>
-        <LabelDefs id={id} tone="pwr" solidKeyline />
-        <LabelShadowFilter id={id} tone="pwr" />
-      </defs>
       <PwrBase />
       <image
         href={pwrArtUrl(BASE.file)}
@@ -87,20 +67,13 @@ export function PwrBadge({
         height={BASE.h}
       />
       <PwrCrest />
-      {/* One group so the shadow casts once, not per part. */}
-      <g filter={`url(#${id("lblshadow")})`}>
-        <PwrLabel id={id} {...PWR_DEF.word}>
-          PWR
-        </PwrLabel>
-        <PwrLabel id={id} {...PWR_DEF.num}>
-          {power}
-        </PwrLabel>
-      </g>
+      <PwrLabel {...PWR_DEF.word}>PWR</PwrLabel>
+      <PwrLabel {...PWR_DEF.num}>{power}</PwrLabel>
     </svg>
   );
 }
 
-/** Opaque plate under the body art, cut to the same rhombus. */
+/** Opaque plate under the body art, cut to the same diamond. */
 function PwrBase() {
   const { cx, cy, r } = BODY;
   return (
@@ -128,37 +101,21 @@ function PwrCrest() {
 }
 
 function PwrLabel({
-  id,
   dx,
   dy,
   cap,
-  outline,
   children,
 }: {
-  id: SvgId;
   dx: number;
   dy: number;
   cap: number;
-  outline: number;
   children: ReactNode;
 }) {
-  const { cap: lvlCap, baseline: lvlBaseline } = LVL_DEF.lvl;
-  const s = cap / lvlCap;
-  const x = CENTER.x + dx;
-  const ty = CENTER.y + dy - s * lvlBaseline;
   return (
-    <g transform={`translate(${x} ${ty}) scale(${s})`}>
-      <LabelRun
-        ink={id}
-        x={0}
-        textAnchor="middle"
-        size={lvlCap / CAP_RATIO}
-        outline={outline}
-        // /s keeps the badge-px inset uniform across both labels' scales.
-        inset={INSET / s}
-      >
+    <Label x={CENTER.x + dx} baseline={CENTER.y + dy} textAnchor="middle">
+      <Value size={cap / CAP_RATIO} {...PALETTE.pwr}>
         {children}
-      </LabelRun>
-    </g>
+      </Value>
+    </Label>
   );
 }

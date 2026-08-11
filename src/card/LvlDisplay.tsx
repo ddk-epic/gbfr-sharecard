@@ -1,22 +1,20 @@
-import { useId } from "react";
 import { SlantedBar } from "../ui";
 import { LVL_DEF } from "./lvl-def";
-import { CAP_RATIO, type SvgId } from "./label-run";
-import { PALETTE, type Tone } from "./label/palette";
-import { Label } from "./label/Label";
-import { TraitPrefix, LvlWord, Value } from "./label/Part";
-import { labelBox } from "./label/box";
+import {
+  CAP_RATIO,
+  Label,
+  labelBox,
+  LvlWord,
+  PALETTE,
+  TraitPrefix,
+  Value,
+} from "./label";
 
-/**
- * This chip's placement, in badge units (viewBox space; cap 17, baseline 36).
- * Shared typography rides in from LVL_DEF.lvl. The browser flows the glyphs,
- * but the box is still a declared estimate (see label/box.ts).
+/** This chip's placement, in badge units (viewBox space, cap 17).
+ * Advances are declared estimates.
  */
 const LVL = {
   cap: LVL_DEF.lvl.cap,
-  baseline: LVL_DEF.lvl.baseline,
-  outerKeyline: 0.12,
-  innerKeyline: 0.02,
   wordRatio: LVL_DEF.lvl.wordRatio,
   boxHeight: LVL_DEF.lvl.boxHeight,
   /** Box past the ink each side. */
@@ -37,10 +35,7 @@ const LVL = {
 const NUMBER_SIZE = LVL.cap / CAP_RATIO;
 const WORD_SIZE = NUMBER_SIZE * LVL.wordRatio;
 
-/**
- * A level: the "Lvl" word (or a "T." trait prefix) over the game's figures on a
- * slanted bar. Pure JSX; the browser reflows when the face loads.
- */
+/** A level: the "Lvl" word (or a "T." trait prefix) on a slanted bar. */
 export function LvlDisplay({
   cap,
   level,
@@ -51,12 +46,9 @@ export function LvlDisplay({
   cap: number;
   level: number | null;
   traitPrefix?: boolean;
-  /** `plain` is the card's own ink, `gold` the game's. */
-  tone?: Tone;
+  tone?: "plain" | "gold";
   className?: string;
 }) {
-  const uid = useId();
-  const id: SvgId = (name) => `${uid}-${name}`;
   const palette = PALETTE[tone];
 
   const wordCap = WORD_SIZE * CAP_RATIO;
@@ -69,7 +61,6 @@ export function LvlDisplay({
     LVL.reserveDigits * LVL.digitAdvance * numberCap;
 
   const box = labelBox({
-    baseline: LVL.baseline,
     cap: LVL.cap,
     boxHeight: LVL.boxHeight,
     left: -padX,
@@ -104,13 +95,7 @@ export function LvlDisplay({
         width={size.width}
         height={size.height}
       >
-        <Label
-          id={id}
-          baseline={LVL.baseline}
-          anchorSize={NUMBER_SIZE}
-          outerKeyline={LVL.outerKeyline}
-          innerKeyline={LVL.innerKeyline}
-        >
+        <Label>
           {traitPrefix && <TraitPrefix size={WORD_SIZE} {...palette} />}
           <LvlWord
             size={WORD_SIZE}

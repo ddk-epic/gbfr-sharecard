@@ -1,39 +1,36 @@
 import { useId } from "react";
 import { masterlevelArtUrl } from "../data";
-import { LABEL_INK, mix } from "./lvl-def";
-import { LabelRun, type SvgId } from "./label-run";
+import { Label, PALETTE, Part, type SvgId } from "./label";
 
-/** Base art and number-cell sizes; num sprites are padded to the cell so tiers
-    drop in interchangeably. */
+/** Base art and number-cell sizes */
 const BASE = { w: 332, h: 348, file: "masterlevel-diamond" };
 const NUM_CELL = { w: 216, h: 192 };
 
-/** Tiers l01..l05 are levels 51..55; tier = level - 50. */
+const CENTER = { x: BASE.w / 2, y: BASE.h / 2 };
+
 export const MIN_MASTERLEVEL = 51;
 export const MAX_MASTERLEVEL = 55;
 export const DEFAULT_MASTERLEVEL = MAX_MASTERLEVEL;
 
 const numFile = (level: number) => `masterlevel-${level - 50}`;
 
-/** Word and number placement, in the base art's own 332x348 pixels. */
+const KEYLINE = { outer: 0.22, inner: 0.01 };
+
 const MASTERLEVEL_DEF = {
-  /** Word baseline, centred on x. */
-  word: { x: 166.5, baseline: 110, size: 59, outline: 10 },
-  /** Number cell centre and scale off native cell pixels. */
-  num: { cx: 166, cy: 199, scale: 0.84 },
+  word: { x: CENTER.x, baseline: 110, size: 59 },
+  num: { cx: CENTER.x, cy: 199, scale: 0.84 },
 } as const;
 
 /** Gold flash streak's hotter gold color. */
 const FLASH_CORE = "#ffde75";
 /** Gold flash streak behind the number. */
-const FLASH = { cx: 166, cy: 174, w: 340, h: 52, opacity: 1 };
+const FLASH = { cx: CENTER.x, cy: CENTER.y, w: 280, h: 62, opacity: 1 };
 
-/** Gold fade color */
 const GOLD = "#ffcf5a";
 /** Gold fade glow in front of the base. */
-const FADE = { cx: 166, cy: 174, w: 270, h: 270, opacity: 0.5 };
+const FADE = { cx: CENTER.x, cy: CENTER.y, w: 270, h: 270, opacity: 0.5 };
 /** Gold fade glow behind the base. */
-const FADE_BACK = { cx: 166, cy: 174, w: 380, h: 380, opacity: 0.5 };
+const FADE_BACK = { cx: CENTER.x, cy: CENTER.y, w: 380, h: 380, opacity: 0.5 };
 
 export function MasterlevelBadge({
   level = DEFAULT_MASTERLEVEL,
@@ -63,7 +60,6 @@ export function MasterlevelBadge({
       aria-label={`Master Level ${clamped}`}
     >
       <defs>
-        <MasterlevelLabelDefs id={id} />
         <MasterlevelGoldTint id={id} />
         <MasterlevelFlashTint id={id} />
       </defs>
@@ -77,7 +73,7 @@ export function MasterlevelBadge({
       />
       <MasterlevelFade id={id} />
       <MasterlevelFlash id={id} />
-      <MasterlevelWord id={id} />
+      <MasterlevelWord />
       <MasterlevelNumber level={clamped} />
     </svg>
   );
@@ -154,19 +150,20 @@ function MasterlevelFlash({ id }: { id: SvgId }) {
   );
 }
 
-function MasterlevelWord({ id }: { id: SvgId }) {
+function MasterlevelWord() {
   const { word } = MASTERLEVEL_DEF;
   return (
-    <LabelRun
-      ink={id}
+    <Label
       x={word.x}
-      y={word.baseline}
+      baseline={word.baseline}
       textAnchor="middle"
-      size={word.size}
-      outline={word.outline}
+      outerKeyline={KEYLINE.outer}
+      innerKeyline={KEYLINE.inner}
     >
-      Master Lvl
-    </LabelRun>
+      <Part size={word.size} {...PALETTE.plain}>
+        Master Lvl
+      </Part>
+    </Label>
   );
 }
 
@@ -174,7 +171,6 @@ function MasterlevelNumber({ level }: { level: number }) {
   const { cx, cy, scale } = MASTERLEVEL_DEF.num;
   const w = NUM_CELL.w * scale;
   const h = NUM_CELL.h * scale;
-  // Tiers share one cell, so the tile just rides on its centre.
   return (
     <image
       href={masterlevelArtUrl(numFile(level))}
@@ -183,22 +179,5 @@ function MasterlevelNumber({ level }: { level: number }) {
       width={w}
       height={h}
     />
-  );
-}
-
-/** Ink-ramp and keyline in the word's own bbox. */
-function MasterlevelLabelDefs({ id }: { id: SvgId }) {
-  const ink = LABEL_INK.plain;
-  return (
-    <>
-      <linearGradient id={id("lblink")} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor={ink.top} />
-        <stop offset="1" stopColor={ink.bottom} />
-      </linearGradient>
-      <linearGradient id={id("lblkey")} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor={mix(ink.keyline, 0.1)} />
-        <stop offset="1" stopColor={ink.keyline} />
-      </linearGradient>
-    </>
   );
 }

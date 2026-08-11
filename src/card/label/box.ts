@@ -1,7 +1,3 @@
-/** Box geometry for a Label's wrapper span and SVG viewBox. `left`/`right`
-    are declared, not measured - the browser flows the glyphs. Draw with
-    overflow visible; an undersize box clips otherwise. */
-
 export type LabelBox = {
   top: number;
   left: number;
@@ -14,8 +10,10 @@ export type LabelBox = {
   barFade: string;
 };
 
+/** Box geometry for a Label's wrapper span and SVG viewBox, laid out around a
+    baseline at y=0 - so `top` comes out negative and the Label sits on the
+    origin. */
 export function labelBox({
-  baseline,
   cap,
   boxHeight,
   centerOffset = 0,
@@ -23,7 +21,6 @@ export function labelBox({
   right,
   fade = 0,
 }: {
-  baseline: number;
   /** The box's anchor cap. */
   cap: number;
   /** Box height. */
@@ -32,12 +29,12 @@ export function labelBox({
   centerOffset?: number;
   left: number;
   right: number;
-  /** The bar's fade length, box units; 0 leaves it hard-edged. */
+  /** The bar's fade length. */
   fade?: number;
 }): LabelBox {
   const height = boxHeight * cap;
-  const top = baseline - cap / 2 + centerOffset * cap - height / 2;
-  const barTop = baseline - cap / 2;
+  const top = -cap / 2 + centerOffset * cap - height / 2;
+  const barTop = -cap / 2;
   const width = right - left;
   return {
     top,

@@ -1,19 +1,19 @@
-import { useId } from "react";
 import { LVL_DEF, inkSpan, layoutDigits } from "./lvl-def";
 import {
   FIGURE_BASELINE,
   FIGURE_XHEIGHT,
   LVL_DIAMOND,
 } from "./digits.generated";
-import { DigitFigures, LabelDefs, LvlWord, type SvgId } from "./label-run";
+import { DigitFigures } from "./digit-figures";
+import { CAP_RATIO, Label, LvlWord, PALETTE } from "./label";
 
-/** Keyline width base. */
-const KEYLINE = 3.4;
+/** The word's position on the badge's fixed 140x140 canvas. */
+const WORD = { centre: LVL_DEF.diamond.cx, baseline: 36 };
 
-/**
- * Paints nothing outside the diamond; the portrait shows through around it.
- * Places itself, so it needs a positioned ancestor - inset is px in from its top-left.
- */
+/** Looser than the default LVL_DEF.lvl.wordTrack. */
+const WORD_TRACK = 1.2;
+
+/** Lvl 100 diamond badge; inset is px in from its top-left. */
 export function LvlBadge({
   level,
   size = LVL_DEF.box.w,
@@ -23,10 +23,6 @@ export function LvlBadge({
   size?: number;
   inset?: number;
 }) {
-  const uid = useId();
-  // url(#name) resolves document-wide, not per svg, so every id is namespaced.
-  const id: SvgId = (name) => `${uid}-${name}`;
-
   const { box, lvl } = LVL_DEF;
   return (
     <svg
@@ -37,17 +33,14 @@ export function LvlBadge({
       role="img"
       aria-label={`Level ${level}`}
     >
-      <defs>
-        <LabelDefs id={id} />
-      </defs>
       <LvlBadgeBase />
-      <LvlWord
-        id={id}
-        x={lvl.centre}
-        textAnchor="middle"
-        ratio={1}
-        outline={KEYLINE}
-      />
+      <Label x={WORD.centre} baseline={WORD.baseline} textAnchor="middle">
+        <LvlWord
+          size={lvl.cap / CAP_RATIO}
+          wordTrack={WORD_TRACK}
+          {...PALETTE.plain}
+        />
+      </Label>
       <LvlDigits level={level} />
     </svg>
   );

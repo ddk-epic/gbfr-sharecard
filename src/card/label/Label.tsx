@@ -1,11 +1,13 @@
-import { createContext, useContext, type ReactNode } from "react";
-import { CAP_RATIO, type SvgId } from "../label-run";
+import { createContext, useContext, useId, type ReactNode } from "react";
 
-/** Copy of label-run.tsx's private FAMILY. */
 const FAMILY = "'GBFR UI Medium'";
 
-const SHADOW = { dy: 0.02, blur: 0.02, opacity: 0.6 };
-const SHADOW_COLOR = "var(--deep-8)";
+/** Default keyline widths, scaled to own cap. */
+const KEYLINE = { outer: 0.17, inner: 0.01 };
+
+/** Namespaces a def's id to one label; `url(#name)` resolves document-wide,
+    not per svg, so every id needs this. */
+export type SvgId = (name: string) => string;
 
 export type PartMode = "defs" | "fill" | "inner";
 
@@ -60,41 +62,35 @@ function makePartContext(
 }
 
 /**
- * One SVG <text> assembled from ordered Parts. Renders its children three
- * times, once per context mode:
+ * One SVG <text> assembled from ordered Parts, rendered once per mode:
+ * "defs" emits each Part's gradient, "fill" its tspan, "inner" the same tspan
+ * unfilled for the inner keyline. The inner pass needs its own <text> - SVG
+ * takes one stroke per element.
  *
- * - "defs" - each Part emits its body-fade <linearGradient>.
- * - "fill" - each Part emits a <tspan> taking that gradient and the outer
- *   keyline, centred on the outline (paintOrder="stroke").
- * - "inner" - the same <tspan>, fill="none", stroked for the inner keyline.
- *   Its own <text>, since SVG takes one stroke per element. Rides the same
- *   dx chain and takes no gradient ids.
- *
- * A Part runs once per mode, so it must be pure - no useId, state, effects.
+ * A Part runs three times and must be pure. The Label renders once, so it
+ * holds the useId every gradient id hangs off and two never collide.
  */
 export function Label({
-  id,
   x = 0,
-  baseline,
-  anchorSize,
-  outerKeyline,
-  innerKeyline,
+  baseline = 0,
+  outerKeyline = KEYLINE.outer,
+  innerKeyline = KEYLINE.inner,
   textAnchor = "start",
   children,
 }: {
-  id: SvgId;
   x?: number | string;
-  baseline: number;
-  /** The largest part's `size`; scales the shadow. Passed in because a
-      preset's size is not readable before it renders. */
-  anchorSize: number;
+  /** The text's line, user space. A surface that measures a box around its own
+      text leaves this at the origin; one pinned to a fixed canvas sets it. */
+  baseline?: number;
   /** Keyline widths, x each part's own cap. */
-  outerKeyline: number;
-  innerKeyline: number;
+  outerKeyline?: number;
+  innerKeyline?: number;
   textAnchor?: "start" | "end" | "middle";
   children: ReactNode;
 }) {
-  const anchorCap = anchorSize * CAP_RATIO;
+  const uid = useId();
+  // url(#name) resolves document-wide, not per svg, so every id is namespaced.
+  const id: SvgId = (name) => `${uid}-${name}`;
   const textProps = {
     x,
     y: baseline,
@@ -117,55 +113,33 @@ export function Label({
         >
           {children}
         </LabelPartContext.Provider>
-        <filter
-          id={id("lblshadow")}
-          x="-20%"
-          y="-20%"
-          width="140%"
-          height="140%"
-        >
-          {/* floodColor through style: it is a var(), and export clones
-              the DOM. */}
-          <feDropShadow
-            dx={0}
-            dy={SHADOW.dy * anchorCap}
-            stdDeviation={SHADOW.blur * anchorCap}
-            style={{
-              floodColor: SHADOW_COLOR,
-              floodOpacity: SHADOW.opacity,
-            }}
-          />
-        </filter>
       </defs>
-      {/* One group: the shadow casts once, over the whole assembly. */}
-      <g filter={`url(#${id("lblshadow")})`}>
-        <text {...textProps} paintOrder="stroke" strokeLinejoin="round">
-          <LabelPartContext.Provider
-            value={makePartContext(
-              "fill",
-              id,
-              baseline,
-              outerKeyline,
-              innerKeyline,
-            )}
-          >
-            {children}
-          </LabelPartContext.Provider>
-        </text>
-        <text {...textProps} fill="none" strokeLinejoin="round">
-          <LabelPartContext.Provider
-            value={makePartContext(
-              "inner",
-              id,
-              baseline,
-              outerKeyline,
-              innerKeyline,
-            )}
-          >
-            {children}
-          </LabelPartContext.Provider>
-        </text>
-      </g>
+      <text {...textProps} paintOrder="stroke" strokeLinejoin="round">
+        <LabelPartContext.Provider
+          value={makePartContext(
+            "fill",
+            id,
+            baseline,
+            outerKeyline,
+            innerKeyline,
+          )}
+        >
+          {children}
+        </LabelPartContext.Provider>
+      </text>
+      <text {...textProps} fill="none" strokeLinejoin="round">
+        <LabelPartContext.Provider
+          value={makePartContext(
+            "inner",
+            id,
+            baseline,
+            outerKeyline,
+            innerKeyline,
+          )}
+        >
+          {children}
+        </LabelPartContext.Provider>
+      </text>
     </>
   );
 }
