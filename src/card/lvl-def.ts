@@ -59,10 +59,10 @@ export const LVL_DEF = {
     inkEnd: 1.4, // overshoots inkBottom on purpose
 
     shadeHold: 0,
-    kern1: -1.5,
-    kern2: 0.1,
-    /** Uniform tracking inside "Lvl", on top of kern1/kern2, word-scale x cap. */
-    wordTrack: 0.25,
+    kern1: -1.4,
+    kern2: -1,
+    /** Uniform tracking inside "Lvl", on top of kern1/kern2. */
+    wordTrack: 0.3,
     /** The number's keyline width, badge units. */
     outline: 2.5,
     /** The "Lvl" word's ink height as a share of the number's cap. */
