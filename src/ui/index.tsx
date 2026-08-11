@@ -84,8 +84,6 @@ export function StatIcon({
   );
 }
 
-/* A prop, not a className override: every context recolours the number, so the
-   colours would compete with each other rather than stack. */
 const LVL_TONE = {
   value: "text-value",
   hp: "text-hp",
@@ -133,7 +131,7 @@ export function SlantedBar({
   fadeFrom = "82%",
 }: {
   share?: string;
-  /** Where the fade starts, x the bar's width; it ends at the right edge.
+  /** The fade's start, x the bar's width; it ends at the right edge.
       Labels pass labelBox's `barFade`. */
   fadeFrom?: string;
 }) {
@@ -180,6 +178,7 @@ export function BaseStat({
   iconOffset = 17,
   padRight = 16,
   noPadY = false,
+  grow = true,
   height,
 }: {
   children: ReactNode;
@@ -188,13 +187,14 @@ export function BaseStat({
   iconOffset?: number;
   padRight?: number;
   noPadY?: boolean;
-  /** Fixed plate height; unset sizes to content. Pin it so a taller icon does
-      not drive the row's baseline and shift the value. */
+  /** Share the row's width evenly with its siblings. */
+  grow?: boolean;
+  /** Fixed plate height; unset sizes to content. */
   height?: number;
 }) {
   return (
     <span
-      className={`relative inline-flex min-w-0 flex-1 items-center ${noPadY ? "" : "py-0.75"}`}
+      className={`relative inline-flex min-w-0 items-center ${grow ? "flex-1" : "flex-none"} ${noPadY ? "" : "py-0.75"}`}
       style={{ paddingRight: padRight, height }}
     >
       <SlantedBar />
@@ -204,8 +204,6 @@ export function BaseStat({
       >
         <StatIcon stat={stat} scale={iconScale} />
       </span>
-      {/* With a fixed height, take the row's baseline from the value box - which
-          is one height across plates - not the icon, whose height varies. */}
       <span
         className={`relative flex min-w-0 flex-1 items-center ${height === undefined ? "" : "self-baseline"}`}
       >
@@ -270,21 +268,19 @@ export function SectionPanel({
   );
 }
 
-/* A prop, not a className override: the two bands set the same gradient
-   properties, so they cannot be resolved by class-string order. */
+/* Heading variants */
 const HEADING_TONE = {
   band: "from-band via-band-soft to-[rgba(156,198,221,0)] text-ink-strong",
   deep: "from-deep-2 via-deep-3 to-deep-4 text-white [text-shadow:0_1px_4px_rgba(10,50,70,0.5)]",
 };
 
-/* Size and padding as one step: the padding must track the text or the band
-   stops reading as a band. The card sets its own, exporting at a fixed px size. */
+/* Size variants */
 const HEADING_SIZE = {
   md: "px-3 py-1.75 text-[15px]",
   lg: "px-4 py-2 text-[20px]",
 };
 
-/** Section heading. Spacing is the parent's job, so this declares no margin. */
+/** Section heading */
 export function Heading({
   children,
   tone = "band",
@@ -305,8 +301,7 @@ export function Heading({
   );
 }
 
-/* A prop, not a className override: two competing padding utilities resolve by
-   generation order, not by the order they are written in. */
+/* Panel padding variants */
 const PANEL_PAD = { md: "px-4.5 py-4", sm: "px-4 py-3.5", none: "" };
 
 export function Panel({
@@ -359,7 +354,6 @@ export function Cta({
   );
 }
 
-/** Pinned clear of the margin the viewport clips off. */
 export function BackButton({
   children,
   onClick,

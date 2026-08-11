@@ -17,21 +17,27 @@ const STAT_PLATE_ICON_INSET = 3;
 /** Px gutter a weapon row holds open for its swap marker. */
 const MARKER_GUTTER_WIDTH = 32;
 
-/** Left pad for the stat bar and art box: marker gutter + edge pad. */
+/** Left pad for the stat bar and art box. */
 const ROW_INDENT = `calc(var(--spacing) * 2.5 + ${MARKER_GUTTER_WIDTH}px)`;
 
-/** Cap height the stat figures scale from. */
+/** Cap height */
 const WEAPON_STAT_CAP_HEIGHT = 22;
 
 /** Cap height the weapon's own digit figure scales from. */
 const WEAPON_LVL_CAP_HEIGHT = WEAPON_STAT_CAP_HEIGHT * 1.8;
 
-/** Per-plate geometry. */
+/** The weapon "Lvl"'s ink height, x the level's cap. By eye, not tied to the
+    stat plates' cap. */
+const WEAPON_WORD_RATIO = 0.45;
+
+/** Per-plate geometry, x the stat cap. `iconOffset` is half the icon cell's
+    width, so it pads the icon both sides; `padRight` is trailing pad inside the
+    plate, on top of the row's own gap. */
 const WEAPON_STAT_PLATES = {
-  hp: { iconOffset: 0.9, padRight: 1 },
-  atk: { iconOffset: 0.9, padRight: 1 },
-  crit: { iconOffset: 0.9, padRight: 1 },
-  stun: { iconOffset: 0.9, padRight: 1 },
+  hp: { iconOffset: 0.75, padRight: 1 },
+  atk: { iconOffset: 0.75, padRight: 1 },
+  crit: { iconOffset: 0.75, padRight: 1 },
+  stun: { iconOffset: 0.75, padRight: 1 },
 };
 
 /** Plate icon scale, source px per cap px. */
@@ -46,10 +52,12 @@ const statPlate = (stat: keyof typeof WEAPON_STAT_PLATES) => ({
   padRight: WEAPON_STAT_PLATES[stat].padRight * WEAPON_STAT_CAP_HEIGHT,
   iconScale: WEAPON_STAT_ICON_SCALE * WEAPON_STAT_CAP_HEIGHT,
   noPadY: true,
+  // Sized to its reserve, so a 5-digit plate is wider than a 4-digit one.
+  grow: false,
   height: WEAPON_STAT_CAP_HEIGHT * STAT_BOX_HEIGHT,
 });
 
-/** One trait and one level: the weapon and imbued rows. */
+/** One trait and one level. */
 function WeaponTraitRow({
   trait,
   level,
@@ -63,7 +71,6 @@ function WeaponTraitRow({
     <GearRow cols={`${MARKER_GUTTER_WIDTH}px 1fr`}>
       <span className="flex items-center justify-end pr-1">{marker}</span>
       <TraitCell trait={trait} />
-      {/* A trait's level, not a sigil's: the game labels the two differently. */}
       <LvlDisplay
         cap={ROW_LVL_CAP_HEIGHT}
         level={level}
@@ -104,8 +111,6 @@ export function WeaponSection({ build }: { build: Build }) {
           )}
         </div>
         <div
-          // No clip: the art is object-contained and the level's
-          // descenders need to show past the bottom edge.
           className="relative mt-0.75 mb-1.25 flex items-center justify-center px-2.5"
           style={{ height: WEAPON_ART_HEIGHT, paddingLeft: ROW_INDENT }}
         >
@@ -117,7 +122,7 @@ export function WeaponSection({ build }: { build: Build }) {
             />
           )}
           {resolvedWeapon && (
-            // Overlaid on the art: series bottom-right; the fraction is dropped.
+            // Series at the bottom-right; the fraction is dropped.
             <div
               className="absolute inset-x-0 bottom-1 flex items-end justify-end px-2.5"
               style={{ paddingLeft: ROW_INDENT }}
@@ -129,15 +134,15 @@ export function WeaponSection({ build }: { build: Build }) {
           )}
         </div>
         <div
-          className="mb-2 flex items-baseline gap-6 text-xl"
+          className="mr-2 mb-2 flex items-baseline text-xl"
           style={{ paddingLeft: ROW_INDENT }}
         >
           <LvlWeapon
             cap={WEAPON_LVL_CAP_HEIGHT}
             level={WEAPON_LEVEL_MAX}
-            wordRatio={WEAPON_STAT_CAP_HEIGHT / WEAPON_LVL_CAP_HEIGHT}
+            wordRatio={WEAPON_WORD_RATIO}
           />
-          <div className="flex flex-1 items-baseline">
+          <div className="flex flex-1 items-baseline justify-end gap-2">
             <BaseStat {...statPlate("hp")}>
               <WeaponStat
                 tone="hp"
@@ -207,13 +212,13 @@ function WeaponStat({
   unit,
   reserve,
 }: {
-  tone: "hp" | "atk" | "ui";
+  tone: "plain" | "hp" | "atk" | "ui";
   value: number | null;
   unit?: string;
   reserve: number;
 }) {
   return (
-    <span className="relative ml-auto inline-flex">
+    <span className="relative inline-flex">
       <StatDisplay
         cap={WEAPON_STAT_CAP_HEIGHT}
         value={value}
