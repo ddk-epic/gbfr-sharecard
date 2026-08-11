@@ -128,12 +128,25 @@ export function Lvl({
   );
 }
 
-export function SlantedBar({ share }: { share?: string }) {
+export function SlantedBar({
+  share,
+  fadeFrom = "82%",
+}: {
+  share?: string;
+  /** Where the fade starts, x the bar's width; it ends at the right edge.
+      Labels pass labelBox's `barFade`. */
+  fadeFrom?: string;
+}) {
+  const mask = `linear-gradient(90deg,#000 ${fadeFrom},transparent)`;
   return (
     <span
       aria-hidden
-      className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden mask-[linear-gradient(90deg,#000_82%,transparent)]"
-      style={{ height: share ?? "50%" }}
+      className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden"
+      style={{
+        height: share ?? "50%",
+        maskImage: mask,
+        WebkitMaskImage: mask,
+      }}
     >
       <span className="bg-slanted-bar absolute inset-y-0 -right-full left-0 origin-bottom skew-x-[-26deg]" />
     </span>
@@ -142,9 +155,11 @@ export function SlantedBar({ share }: { share?: string }) {
 
 export function ReverseSlantedBar({
   share,
+  fadeFrom,
   className = "",
 }: {
   share?: string;
+  fadeFrom?: string;
   className?: string;
 }) {
   return (
@@ -152,7 +167,7 @@ export function ReverseSlantedBar({
       aria-hidden
       className={`pointer-events-none absolute inset-0 -scale-x-100 ${className}`}
     >
-      <SlantedBar share={share} />
+      <SlantedBar share={share} fadeFrom={fadeFrom} />
     </span>
   );
 }
