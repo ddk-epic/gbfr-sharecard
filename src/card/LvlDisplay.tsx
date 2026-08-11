@@ -1,44 +1,37 @@
 import { useId } from "react";
 import { SlantedBar } from "../ui";
-import { LVL_DEF, type LabelTone } from "./lvl-def";
-import {
-  LabelDefs,
-  LabelRun,
-  LabelShadowFilter,
-  LvlWord,
-  CAP_RATIO,
-  type SvgId,
-} from "./label-run";
-
-/** What the game puts in front of a trait's level. */
-const TRAIT_PREFIX = "T.";
+import { LVL_DEF } from "./lvl-def";
+import { CAP_RATIO, type SvgId } from "./label-run";
+import { PALETTE, type Tone } from "./label/palette";
+import { Label } from "./label/Label";
+import { TraitPrefix, LvlWord, Value } from "./label/Part";
+import { labelBox } from "./label/box";
 
 /**
  * This chip's placement, in badge units (viewBox space; cap 17, baseline 36).
- * Shared typography rides in from LVL_DEF.lvl; the box positions are local.
- * Nothing is measured: the browser sets the text, these constants place it.
- * SEED marks the hand-authored ones.
+ * Shared typography rides in from LVL_DEF.lvl. The browser flows the glyphs,
+ * but the box is still a declared estimate (see label/box.ts).
  */
 const LVL = {
-  cap: LVL_DEF.lvl.cap, //           number cap height
-  baseline: LVL_DEF.lvl.baseline, // shared baseline
-  outline: LVL_DEF.lvl.outline,
+  cap: LVL_DEF.lvl.cap,
+  baseline: LVL_DEF.lvl.baseline,
+  outerKeyline: 0.12,
+  innerKeyline: 0.02,
   wordRatio: LVL_DEF.lvl.wordRatio,
-  wordOutline: LVL_DEF.lvl.wordOutline,
   boxHeight: LVL_DEF.lvl.boxHeight,
-  /** Box past the ink each side, x cap. */
-  padX: 0.64,
-  /** SEED: "Lvl" left edge (textAnchor start). */
-  wordX: 0,
-  /** "T." to "Lvl", x cap. */
-  prefixGap: 0.33,
-  /** SEED: "T." ink left when hung off the word; the box pads left of it so the
-      slant clears the T as it does the L. */
-  prefixInkLeft: -20,
-  /** SEED: right edge the number pins to (past the word by the game's gap). */
-  numberRight: 57,
-  /** The one gap inside "T.", at word scale. */
-  prefixKern: -0.2 * 0.82,
+  /** Box past the ink each side. */
+  padX: 0.8,
+  /** "T." to "Lvl". */
+  prefixGap: 0.23,
+  /** "Lvl" to the number. */
+  numberGap: 0.36,
+  reserveDigits: 2,
+  /** "T."'s advance. */
+  prefixAdvance: 1.06,
+  /** "Lvl"'s advance. Tracks kern1/kern2/wordTrack; recalibrate with them. */
+  wordAdvance: 1.66,
+  /** A tabular digit's advance. */
+  digitAdvance: 0.74,
 } as const;
 
 const NUMBER_SIZE = LVL.cap / CAP_RATIO;
@@ -46,8 +39,7 @@ const WORD_SIZE = NUMBER_SIZE * LVL.wordRatio;
 
 /**
  * A level: the "Lvl" word (or a "T." trait prefix) over the game's figures on a
- * slanted bar. Pure JSX; the browser reflows when the face loads. Used for
- * weapon traits, sigils, and summons.
+ * slanted bar. Pure JSX; the browser reflows when the face loads.
  */
 export function LvlDisplay({
   cap,
@@ -60,21 +52,33 @@ export function LvlDisplay({
   level: number | null;
   traitPrefix?: boolean;
   /** `plain` is the card's own ink, `gold` the game's. */
-  tone?: LabelTone;
+  tone?: Tone;
   className?: string;
 }) {
   const uid = useId();
-  const id: SvgId = (name) => `${uid}-${name}`; //    number ramp (full cap)
-  const wordId: SvgId = (name) => id(`w-${name}`); // word ramp (lighter, word cap)
+  const id: SvgId = (name) => `${uid}-${name}`;
+  const palette = PALETTE[tone];
 
-  const boxHeight = LVL.boxHeight * LVL.cap;
+  const wordCap = WORD_SIZE * CAP_RATIO;
+  const numberCap = NUMBER_SIZE * CAP_RATIO;
   const padX = LVL.padX * LVL.cap;
-  // The bar's top edge lands on the number's middle; the box is centred there.
-  const top = LVL.baseline - LVL.cap / 2 - boxHeight / 2;
-  const left = (traitPrefix ? LVL.prefixInkLeft : LVL.wordX) - padX;
-  const right = LVL.numberRight + padX;
+  const contentWidth =
+    (traitPrefix ? (LVL.prefixAdvance + LVL.prefixGap) * wordCap : 0) +
+    LVL.wordAdvance * wordCap +
+    LVL.numberGap * numberCap +
+    LVL.reserveDigits * LVL.digitAdvance * numberCap;
+
+  const box = labelBox({
+    baseline: LVL.baseline,
+    cap: LVL.cap,
+    boxHeight: LVL.boxHeight,
+    left: -padX,
+    right: contentWidth + padX,
+    // A fade on the right padding.
+    fade: padX,
+  });
   const px = cap / LVL.cap;
-  const size = { width: (right - left) * px, height: boxHeight * px };
+  const size = { width: box.width * px, height: box.height * px };
 
   if (level === null) {
     return (
@@ -93,43 +97,35 @@ export function LvlDisplay({
       role="img"
       aria-label={`Level ${level}`}
     >
-      <SlantedBar />
+      <SlantedBar share={box.barShare} fadeFrom={box.barFade} />
       <svg
-        className="relative block"
-        viewBox={`${left} ${top} ${right - left} ${boxHeight}`}
+        className="relative block overflow-visible"
+        viewBox={`${box.left} ${box.top} ${box.width} ${box.height}`}
         width={size.width}
         height={size.height}
       >
-        <defs>
-          <LabelDefs id={id} tone={tone} />
-          <LabelDefs id={wordId} tone={tone} cap={LVL.wordRatio * LVL.cap} />
-          <LabelShadowFilter id={id} tone={tone} />
-        </defs>
-        {/* One group so the shadow casts once, not per part. */}
-        <g filter={`url(#${id("lblshadow")})`}>
-          {traitPrefix && (
-            <LabelRun
-              ink={wordId}
-              x={LVL.wordX - LVL.prefixGap * LVL.cap}
-              dx={`0 ${LVL.prefixKern}`}
-              textAnchor="end"
-              size={WORD_SIZE}
-              outline={LVL.outline * LVL.wordOutline}
-            >
-              {TRAIT_PREFIX}
-            </LabelRun>
-          )}
-          <LvlWord id={wordId} x={LVL.wordX} />
-          <LabelRun
-            ink={id}
-            x={LVL.numberRight}
-            textAnchor="end"
+        <Label
+          id={id}
+          baseline={LVL.baseline}
+          anchorSize={NUMBER_SIZE}
+          outerKeyline={LVL.outerKeyline}
+          innerKeyline={LVL.innerKeyline}
+        >
+          {traitPrefix && <TraitPrefix size={WORD_SIZE} {...palette} />}
+          <LvlWord
+            size={WORD_SIZE}
+            gap={traitPrefix ? LVL.prefixGap : 0}
+            {...palette}
+          />
+          <Value
             size={NUMBER_SIZE}
-            outline={LVL.outline}
+            gap={LVL.numberGap}
+            ghost={Math.max(0, LVL.reserveDigits - String(level).length)}
+            {...palette}
           >
             {level}
-          </LabelRun>
-        </g>
+          </Value>
+        </Label>
       </svg>
     </span>
   );
