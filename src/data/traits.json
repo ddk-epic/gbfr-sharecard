@@ -2,7 +2,8 @@
   {
     "id": "aegis",
     "name": "Aegis",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "defense"
   },
   {
     "id": "ain",
@@ -12,43 +13,51 @@
   {
     "id": "alpha",
     "name": "Alpha",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "special"
   },
   {
     "id": "atk",
     "name": "ATK",
-    "maxLevel": 50
+    "maxLevel": 50,
+    "category": "basic"
   },
   {
     "id": "atk-resistance",
     "name": "ATK↓ Resistance",
     "short": "ATK↓ Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "auto-potion",
     "name": "Auto Potion",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "special"
   },
   {
     "id": "autorevive",
     "name": "Autorevive",
-    "maxLevel": 20
+    "maxLevel": 20,
+    "category": "special"
   },
   {
     "id": "berserker",
     "name": "Berserker",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "berserker-echo",
     "name": "Berserker Echo",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "beta",
     "name": "Beta",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "special"
   },
   {
     "id": "bladequeens-circuit",
@@ -69,18 +78,21 @@
     "id": "blight-resistance",
     "name": "Blight Resistance",
     "short": "Blight Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "break-assassin",
     "name": "Break Assassin",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "burn-resistance",
     "name": "Burn Resistance",
     "short": "Burn Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "butterflys-grace",
@@ -100,82 +112,98 @@
   {
     "id": "cascade",
     "name": "Cascade",
-    "maxLevel": 20
+    "maxLevel": 20,
+    "category": "support"
   },
   {
     "id": "catastrophe",
     "name": "Catastrophe",
-    "maxLevel": 25
+    "maxLevel": 25,
+    "category": "attack"
   },
   {
     "id": "catastrophe-nova",
     "name": "Catastrophe Nova",
-    "maxLevel": 35
+    "maxLevel": 35,
+    "category": "attack"
   },
   {
     "id": "celestial-aqua",
     "name": "Celestial Aqua",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "celestial-incendo",
     "name": "Celestial Incendo",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "celestial-lumen",
     "name": "Celestial Lumen",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "celestial-nyx",
     "name": "Celestial Nyx",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "celestial-terra",
     "name": "Celestial Terra",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "celestial-ventus",
     "name": "Celestial Ventus",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "charged-attack-dmg",
     "name": "Charged Attack DMG",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "combo-booster",
     "name": "Combo Booster",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "combo-finisher-dmg",
     "name": "Combo Finisher DMG",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "concentrated-fire",
     "name": "Concentrated Fire",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "crabby-resonance",
     "name": "Crabby Resonance",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "special"
   },
   {
     "id": "crabmiration",
     "name": "Crabmiration",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "special"
   },
   {
     "id": "crabvestment-returns",
     "name": "Crabvestment Returns",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "special"
   },
   {
     "id": "crimsons-clout",
@@ -195,12 +223,14 @@
   {
     "id": "critical-hit-dmg",
     "name": "Critical Hit DMG",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "critical-hit-rate",
     "name": "Critical Hit Rate",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "basic"
   },
   {
     "id": "dark-huntresss-surge",
@@ -224,54 +254,64 @@
     "id": "darkflame-resistance",
     "name": "Darkflame Resistance",
     "short": "Darkflame Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "def-resistance",
     "name": "DEF↓ Resistance",
     "short": "DEF↓ Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "divergence",
     "name": "Divergence",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "support"
   },
   {
     "id": "dizzy-resistance",
     "name": "Dizzy Resistance",
     "short": "Dizzy Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "dmg-cap",
     "name": "DMG Cap",
-    "maxLevel": 65
+    "maxLevel": 65,
+    "category": "attack"
   },
   {
     "id": "dmg-cap-cardinal",
     "name": "DMG Cap Cardinal",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "dmg-cap-cobalt",
     "name": "DMG Cap Cobalt",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "dmg-cap-ecru",
     "name": "DMG Cap Ecru",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "dmg-cap-sage",
     "name": "DMG Cap Sage",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "dodge-payback",
     "name": "Dodge Payback",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "dragonslayers-dominance",
@@ -292,7 +332,8 @@
   {
     "id": "drain",
     "name": "Drain",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "support"
   },
   {
     "id": "ebonys-poise",
@@ -327,7 +368,8 @@
   {
     "id": "enmity",
     "name": "Enmity",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "eternal-rages-ethos",
@@ -350,12 +392,14 @@
   {
     "id": "fast-learner",
     "name": "Fast Learner",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "special"
   },
   {
     "id": "fatebreaker",
     "name": "Fatebreaker",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "fearless-drive",
@@ -375,12 +419,14 @@
   {
     "id": "firm-stance",
     "name": "Firm Stance",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "flight-over-fight",
     "name": "Flight over Fight",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "defense"
   },
   {
     "id": "founders-strategy",
@@ -400,18 +446,21 @@
   {
     "id": "gamma",
     "name": "Gamma",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "special"
   },
   {
     "id": "garrison",
     "name": "Garrison",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "defense"
   },
   {
     "id": "glaciate-resistance",
     "name": "Glaciate Resistance",
     "short": "Glaciate Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "gladiators-frenzy",
@@ -431,17 +480,20 @@
   {
     "id": "glass-cannon",
     "name": "Glass Cannon",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "greater-aegis",
     "name": "Greater Aegis",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "guard-payback",
     "name": "Guard Payback",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "guardians-conviction",
@@ -461,18 +513,21 @@
   {
     "id": "guts",
     "name": "Guts",
-    "maxLevel": 20
+    "maxLevel": 20,
+    "category": "special"
   },
   {
     "id": "head-start",
     "name": "Head Start",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "held-under-resistance",
     "name": "Held Under Resistance",
     "short": "Held Under Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "helmsmans-navigation",
@@ -525,52 +580,62 @@
   {
     "id": "hp",
     "name": "HP",
-    "maxLevel": 50
+    "maxLevel": 50,
+    "category": "basic"
   },
   {
     "id": "immortal-shell",
     "name": "Immortal Shell",
-    "maxLevel": 20
+    "maxLevel": 20,
+    "category": "special"
   },
   {
     "id": "improved-dodge",
     "name": "Improved Dodge",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "defense"
   },
   {
     "id": "improved-guard",
     "name": "Improved Guard",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "improved-healing",
     "name": "Improved Healing",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "support"
   },
   {
     "id": "in-a-pinch",
     "name": "In a Pinch",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "special"
   },
   {
     "id": "injury-to-insult",
     "name": "Injury to Insult",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "less-is-more",
     "name": "Less Is More",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "life-on-the-line",
     "name": "Life on the Line",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "linked-together",
     "name": "Linked Together",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "lords-ambition",
@@ -590,12 +655,14 @@
   {
     "id": "low-profile",
     "name": "Low Profile",
-    "maxLevel": 20
+    "maxLevel": 20,
+    "category": "special"
   },
   {
     "id": "lucky-charge",
     "name": "Lucky Charge",
-    "maxLevel": 20
+    "maxLevel": 20,
+    "category": "attack"
   },
   {
     "id": "mages-aspiration",
@@ -615,33 +682,39 @@
   {
     "id": "natural-defenses",
     "name": "Natural Defenses",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "defense"
   },
   {
     "id": "nimble-defense",
     "name": "Nimble Defense",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "nimble-onslaught",
     "name": "Nimble Onslaught",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "support"
   },
   {
     "id": "overdrive-assassin",
     "name": "Overdrive Assassin",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "paralysis-resistance",
     "name": "Paralysis Resistance",
     "short": "Paralysis Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "path-to-mastery",
     "name": "Path to Mastery",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "special"
   },
   {
     "id": "phantasms-concord",
@@ -662,57 +735,68 @@
     "id": "poison-resistance",
     "name": "Poison Resistance",
     "short": "Poison Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "potent-greens",
     "name": "Potent Greens",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "support"
   },
   {
     "id": "potion-hoarder",
     "name": "Potion Hoarder",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "special"
   },
   {
     "id": "power-hungry",
     "name": "Power Hungry",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "precise-resilience",
     "name": "Precise Resilience",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "precise-wrath",
     "name": "Precise Wrath",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "support"
   },
   {
     "id": "provoke",
     "name": "Provoke",
-    "maxLevel": 20
+    "maxLevel": 20,
+    "category": "special"
   },
   {
     "id": "quick-charge",
     "name": "Quick Charge",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "quick-cooldown",
     "name": "Quick Cooldown",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "support"
   },
   {
     "id": "regen",
     "name": "Regen",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "support"
   },
   {
     "id": "roll-of-the-die",
     "name": "Roll of the Die",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "roses-blooming",
@@ -732,24 +816,28 @@
   {
     "id": "rupie-tycoon",
     "name": "Rupie Tycoon",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "special"
   },
   {
     "id": "sandtomb-resistance",
     "name": "Sandtomb Resistance",
     "short": "Sandtomb Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "sba-sealed-resistance",
     "name": "SBA Sealed Resistance",
     "short": "SBA Sealed Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "seven-net",
     "name": "Seven Net",
-    "maxLevel": 6
+    "maxLevel": 6,
+    "category": "special"
   },
   {
     "id": "seven-star-boundary",
@@ -759,29 +847,34 @@
   {
     "id": "sigil-booster",
     "name": "Sigil Booster",
-    "maxLevel": 2
+    "maxLevel": 2,
+    "category": "special"
   },
   {
     "id": "skill-sealed-resistance",
     "name": "Skill Sealed Resistance",
     "short": "Skill Sealed Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "skilled-assault",
     "name": "Skilled Assault",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "slow-resistance",
     "name": "Slow Resistance",
     "short": "Slow Res.",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "spartan-echo",
     "name": "Spartan Echo",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "spirit-edges-fury",
@@ -804,53 +897,63 @@
   {
     "id": "stamina",
     "name": "Stamina",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "steady-focus",
     "name": "Steady Focus",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "special"
   },
   {
     "id": "steel-nerves",
     "name": "Steel Nerves",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "defense"
   },
   {
     "id": "stout-heart",
     "name": "Stout Heart",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "special"
   },
   {
     "id": "stronghold",
     "name": "Stronghold",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "defense"
   },
   {
     "id": "stun-power",
     "name": "Stun Power",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "basic"
   },
   {
     "id": "sumo-force",
     "name": "Sumo Force",
-    "maxLevel": 5
+    "maxLevel": 5,
+    "category": "special"
   },
   {
     "id": "super-ultimate-perfect-dodge",
     "name": "Super Ultimate Perfect Dodge",
     "short": "S. Ult. Perfect Dodge",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "supernova",
     "name": "Supernova",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "supplementary-dmg",
     "name": "Supplementary DMG",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "attack"
   },
   {
     "id": "supreme-primarchs-awe",
@@ -903,7 +1006,8 @@
   {
     "id": "throw-dmg",
     "name": "Throw DMG",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "thunderwolfs-acuity",
@@ -928,7 +1032,8 @@
   {
     "id": "tyranny",
     "name": "Tyranny",
-    "maxLevel": 30
+    "maxLevel": 30,
+    "category": "attack"
   },
   {
     "id": "ultramarines-adversity",
@@ -948,32 +1053,38 @@
   {
     "id": "unbound-exertion",
     "name": "Unbound Exertion",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "unbound-master",
     "name": "Unbound Master",
-    "maxLevel": 55
+    "maxLevel": 55,
+    "category": "attack"
   },
   {
     "id": "unbound-strike",
     "name": "Unbound Strike",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "unbound-technique",
     "name": "Unbound Technique",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "untouchable",
     "name": "Untouchable",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "defense"
   },
   {
     "id": "uplift",
     "name": "Uplift",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "support"
   },
   {
     "id": "versalis-foundation",
@@ -1008,12 +1119,14 @@
   {
     "id": "war-elemental",
     "name": "War Elemental",
-    "maxLevel": 15
+    "maxLevel": 15,
+    "category": "attack"
   },
   {
     "id": "weak-point-dmg",
     "name": "Weak Point DMG",
-    "maxLevel": 45
+    "maxLevel": 45,
+    "category": "attack"
   },
   {
     "id": "white-dragons-glory",

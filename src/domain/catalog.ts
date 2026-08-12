@@ -26,12 +26,16 @@ export type Character = {
   enabled: boolean;
 };
 
+export type TraitCategory =
+  "basic" | "attack" | "defense" | "special" | "support";
+
 export type TraitDef = {
   id: TraitId;
   name: string;
   /** Abbreviated display name override. */
   short?: string;
   maxLevel: number;
+  category?: TraitCategory;
 };
 
 export type BonusTypeDef = {
