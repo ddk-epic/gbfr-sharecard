@@ -26,8 +26,10 @@ const WINDOW_WIDTH = ["w-[40%]", "w-[46%]", "w-[60%]"];
 const TAB =
   "cursor-pointer rounded-[5px] px-6.5 py-2.25 text-[14.5px] font-bold tracking-[0.09em] uppercase";
 
+/* flex, not text-align: preflight makes the chevron svg a block, so each arrow
+   would otherwise pin to the left of its own track and drift with the window. */
 const ARROW_BUTTON =
-  "text-ink-strong/35 hover:text-ink-strong flex-1 cursor-pointer leading-none";
+  "text-ink-strong/35 hover:text-ink-strong flex flex-1 cursor-pointer items-center leading-none";
 
 /**
  * Windowed 3-page carousel. A page flip rolls the whole window off one side
@@ -107,7 +109,7 @@ export function Editor({
         <div className="flex h-[76%] w-full items-stretch">
           {/* flex-1 so the whole area flanking the window is a hit target */}
           <button
-            className={`${ARROW_BUTTON} pl-27.5 text-left hover:bg-linear-90 hover:from-white/40 hover:to-white/0`}
+            className={`${ARROW_BUTTON} justify-start pl-27.5 hover:bg-linear-90 hover:from-white/40 hover:to-white/0`}
             aria-label="previous page"
             onClick={() => flipTo(page - 1, -1)}
           >
@@ -138,7 +140,7 @@ export function Editor({
               ))}
           </div>
           <button
-            className={`${ARROW_BUTTON} pr-27.5 text-right hover:bg-linear-270 hover:from-white/40 hover:to-white/0`}
+            className={`${ARROW_BUTTON} justify-end pr-27.5 hover:bg-linear-270 hover:from-white/40 hover:to-white/0`}
             aria-label="next page"
             onClick={() => flipTo(page + 1, 1)}
           >
