@@ -173,8 +173,11 @@ function TraitChecklist({
   );
   return (
     // Positioned at 1:1, zoomed inside: offset is on-screen px, panel size
-    // matches the pages'.
-    <div className="font-med absolute top-0 left-[calc(100%+12px)] z-3">
+    // matches the pages'. Marked lit, so a popover's scrim leaves it readable.
+    <div
+      data-popover-lit
+      className="font-med absolute top-0 left-[calc(100%+4px)] z-3"
+    >
       <div
         className="border-line w-85 rounded-lg border bg-white/90 px-3.5 py-3.5 shadow-[0_10px_34px_rgba(23,60,90,0.3)]"
         style={{ zoom: EDITOR_ZOOM }}
