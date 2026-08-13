@@ -6,7 +6,7 @@ import type {
   SummonSlot,
   TraitId,
 } from "../../../domain/build";
-import type { TraitCategory } from "../../../domain/catalog";
+import { SIGIL_LEVELS } from "../../../domain/build";
 import {
   BONUS_TYPES,
   bonusIconUrl,
@@ -15,24 +15,16 @@ import {
   summonIconUrl,
   summonsWithTrait,
   SUMMON_TRAIT_POOL,
-  traitIconUrl,
   traitName,
 } from "../../../data";
 import { IconTile, Stepper } from "../controls";
 import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
+import { TraitGlyph, TraitPicker } from "./TraitPicker";
 
 const WIDTH = 28 * POPOVER_BASE;
 
-const TRAIT_LEVELS = [11, 12, 13, 14, 15];
-
-const CATEGORY_LABEL: Record<TraitCategory, string> = {
-  basic: "Basic",
-  attack: "Attack",
-  defense: "Defense",
-  special: "Special",
-  support: "Support",
-};
-const CATEGORY_ORDER = Object.keys(CATEGORY_LABEL) as TraitCategory[];
+/** A summon's trait ladder is the sigil ladder. */
+const TRAIT_LEVELS = SIGIL_LEVELS;
 
 type EquipBonus = NonNullable<SummonSlot["equipBonus"]>;
 
@@ -57,7 +49,6 @@ export function SummonsPopover({
   const [draftTrait, setDraftTrait] = useState<TraitId | null>(
     slot?.trait || null,
   );
-  const [query, setQuery] = useState("");
 
   const trait = slot?.trait || draftTrait;
 
@@ -86,8 +77,8 @@ export function SummonsPopover({
     });
   };
 
-  /** The trait takes the first summon that rolls it, so a default beats an
-      empty step and the slot exists at once. */
+  /** Picking a trait also picks the first summon that rolls it, so the slot is
+      filled without a second click. */
   const pickTrait = (next: TraitId) => {
     setDraftTrait(next);
     const first = summonsWithTrait(next)[0];
@@ -97,7 +88,7 @@ export function SummonsPopover({
   return (
     <Popover anchor={anchor} width={WIDTH} label="Summon" onClose={onClose}>
       {!trait ? (
-        <TraitStep query={query} onQuery={setQuery} onPick={pickTrait} />
+        <TraitPicker pool={SUMMON_TRAIT_POOL} onPick={pickTrait} />
       ) : (
         <>
           <div className="mb-3 flex items-center gap-1.5">
@@ -108,7 +99,6 @@ export function SummonsPopover({
               aria-label="change trait"
               onClick={() => {
                 setDraftTrait(null);
-                setQuery("");
                 if (slot) onChange({ ...slot, trait: "" });
               }}
             >
@@ -124,7 +114,10 @@ export function SummonsPopover({
                 className="text-dim hover:text-ink-strong cursor-pointer"
                 title="clear slot"
                 aria-label="clear slot"
-                onClick={() => onChange(null)}
+                onClick={() => {
+                  setDraftTrait(null);
+                  onChange(null);
+                }}
               >
                 <X size={17} aria-hidden />
               </button>
@@ -181,71 +174,4 @@ export function SummonsPopover({
       )}
     </Popover>
   );
-}
-
-function TraitStep({
-  query,
-  onQuery,
-  onPick,
-}: {
-  query: string;
-  onQuery: (q: string) => void;
-  onPick: (trait: TraitId) => void;
-}) {
-  const needle = query.trim().toLowerCase();
-  const matches = SUMMON_TRAIT_POOL.filter((trait) =>
-    trait.name.toLowerCase().includes(needle),
-  );
-
-  return (
-    <>
-      <PopoverHeading>Trait</PopoverHeading>
-      <input
-        autoFocus
-        type="search"
-        value={query}
-        placeholder="filter traits"
-        aria-label="filter traits"
-        className="border-line mb-2 w-full rounded-sm border bg-white/92 px-2 py-1 text-[1em]"
-        onChange={(e) => onQuery(e.target.value)}
-      />
-      {/* Fixed height so the panel doesn't collapse. */}
-      <div className="h-[31em] overflow-y-auto pt-0.5">
-        {matches.length === 0 && (
-          <p className="text-dim flex h-full items-center justify-center text-[0.85em]">
-            no match
-          </p>
-        )}
-        {CATEGORY_ORDER.map((category) => {
-          const group = matches.filter((trait) => trait.category === category);
-          if (group.length === 0) return null;
-          return (
-            <div key={category}>
-              <PopoverHeading>{CATEGORY_LABEL[category]}</PopoverHeading>
-              <div className="mb-1.5">
-                {group.map((trait) => (
-                  <button
-                    key={trait.id}
-                    type="button"
-                    className="hover:bg-band/35 flex w-full cursor-pointer items-center gap-1.5 rounded px-1 py-0.5 text-left text-[1em]"
-                    onClick={() => onPick(trait.id)}
-                  >
-                    <TraitGlyph trait={trait.id} />
-                    <span className="min-w-0 flex-1">{trait.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  );
-}
-
-function TraitGlyph({ trait }: { trait: TraitId }) {
-  const url = traitIconUrl(trait);
-  return url ? (
-    <img src={url} alt="" className="size-[1.55em] flex-none" />
-  ) : null;
 }

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { ArrowLeftRight } from "lucide-react";
 import type { Build, TraitId } from "../domain/build";
-import { WEAPON_LEVEL_MAX, WEAPON_TRAIT_ROWS } from "../domain/build";
+import { WEAPON_LEVEL_MAX } from "../domain/build";
 import { resolveWeapon, weaponArtUrl, wrightstoneName } from "../data";
 import { BaseStat, Heading } from "../ui";
 import { LvlDisplay } from "./LvlDisplay";
@@ -84,9 +84,7 @@ function WeaponTraitRow({
 
 export function WeaponSection({ build }: { build: Build }) {
   const weapon = build.weapon;
-  const resolvedWeapon = weapon
-    ? resolveWeapon(build.characterId, weapon)
-    : null;
+  const resolvedWeapon = resolveWeapon(build.characterId, weapon);
   const wrightstoneRows = [
     build.wrightstone?.main ?? null,
     build.wrightstone?.sub1 ?? null,
@@ -100,38 +98,30 @@ export function WeaponSection({ build }: { build: Build }) {
       </div>
       <div className="flex-none pb-3">
         <div className="flex items-baseline justify-center px-2.5 text-2xl font-bold">
-          <span className={resolvedWeapon ? "" : "text-dim"}>
-            {resolvedWeapon?.name ?? "No Weapon"}
-          </span>
+          <span>{resolvedWeapon.name}</span>
           {/* Hardcoded max bonus for now. */}
-          {resolvedWeapon && (
-            <span className="pl-1.5 font-normal text-[#ffff5f] [-webkit-text-stroke:4px_var(--ui)] [paint-order:stroke]">
-              +99
-            </span>
-          )}
+          <span className="pl-1.5 font-normal text-[#ffff5f] [-webkit-text-stroke:4px_var(--ui)] [paint-order:stroke]">
+            +99
+          </span>
         </div>
         <div
           className="relative mt-0.75 mb-1.25 flex items-center justify-center px-2.5"
           style={{ height: WEAPON_ART_HEIGHT, paddingLeft: ROW_INDENT }}
         >
-          {resolvedWeapon && (
-            <img
-              src={weaponArtUrl(build.characterId, resolvedWeapon.name)}
-              alt=""
-              className="max-h-full max-w-full object-contain"
-            />
-          )}
-          {resolvedWeapon && (
-            // Series at the bottom-right; the fraction is dropped.
-            <div
-              className="absolute inset-x-0 bottom-1 flex items-end justify-end px-2.5"
-              style={{ paddingLeft: ROW_INDENT }}
-            >
-              <span className="text-dim text-base whitespace-nowrap">
-                {resolvedWeapon.seriesName}
-              </span>
-            </div>
-          )}
+          <img
+            src={weaponArtUrl(build.characterId, resolvedWeapon.name)}
+            alt=""
+            className="max-h-full max-w-full object-contain"
+          />
+          {/* Series at the bottom-right. */}
+          <div
+            className="absolute inset-x-0 bottom-1 flex items-end justify-end px-2.5"
+            style={{ paddingLeft: ROW_INDENT }}
+          >
+            <span className="text-dim text-base whitespace-nowrap">
+              {resolvedWeapon.seriesName}
+            </span>
+          </div>
         </div>
         <div
           className="mr-2 mb-2 flex items-baseline text-xl"
@@ -144,52 +134,40 @@ export function WeaponSection({ build }: { build: Build }) {
           />
           <div className="flex flex-1 items-baseline justify-end gap-2">
             <BaseStat {...statPlate("hp")}>
-              <WeaponStat
-                tone="hp"
-                value={resolvedWeapon?.hp ?? null}
-                reserve={5}
-              />
+              <WeaponStat tone="hp" value={resolvedWeapon.hp} reserve={5} />
             </BaseStat>
             <BaseStat {...statPlate("atk")}>
-              <WeaponStat
-                tone="atk"
-                value={resolvedWeapon?.atk ?? null}
-                reserve={5}
-              />
+              <WeaponStat tone="atk" value={resolvedWeapon.atk} reserve={5} />
             </BaseStat>
             <BaseStat {...statPlate("crit")}>
               <WeaponStat
                 tone="ui"
-                value={weapon?.critRate ?? null}
+                value={weapon.critRate}
                 unit="%"
                 reserve={4}
               />
             </BaseStat>
             <BaseStat {...statPlate("stun")}>
-              <WeaponStat tone="ui" value={weapon?.stun ?? null} reserve={4} />
+              <WeaponStat tone="ui" value={weapon.stun} reserve={4} />
             </BaseStat>
           </div>
         </div>
-        {resolvedWeapon
-          ? resolvedWeapon.slots.map((slot, i) => (
-              <WeaponTraitRow
-                trait={slot.trait}
-                level={slot.level}
-                key={i}
-                marker={
-                  slot.kind === "pool" && (
-                    <ArrowLeftRight
-                      className="text-ui flex-none"
-                      size="0.95em"
-                      strokeWidth={3}
-                    />
-                  )
-                }
-              />
-            ))
-          : Array.from({ length: WEAPON_TRAIT_ROWS }, (_, i) => (
-              <WeaponTraitRow trait={null} level={null} key={i} />
-            ))}
+        {resolvedWeapon.slots.map((slot, i) => (
+          <WeaponTraitRow
+            trait={slot.trait}
+            level={slot.level}
+            key={i}
+            marker={
+              slot.kind === "pool" && (
+                <ArrowLeftRight
+                  className="text-ui flex-none"
+                  size="0.95em"
+                  strokeWidth={3}
+                />
+              )
+            }
+          />
+        ))}
         <div className="font-med text-dim mt-3 flex justify-between px-2.5 tracking-[0.07em]">
           <span>Imbued Traits</span>
           <span>{wrightstoneName(build.wrightstone?.main.trait)}</span>
@@ -213,24 +191,17 @@ function WeaponStat({
   reserve,
 }: {
   tone: "plain" | "hp" | "atk" | "ui";
-  value: number | null;
+  value: number;
   unit?: string;
   reserve: number;
 }) {
   return (
-    <span className="relative inline-flex">
-      <StatDisplay
-        cap={WEAPON_STAT_CAP_HEIGHT}
-        value={value}
-        unit={unit}
-        tone={tone}
-        reserveDigits={reserve}
-      />
-      {value === null && (
-        <span className="text-dim absolute inset-0 grid place-items-center text-2xl">
-          -
-        </span>
-      )}
-    </span>
+    <StatDisplay
+      cap={WEAPON_STAT_CAP_HEIGHT}
+      value={value}
+      unit={unit}
+      tone={tone}
+      reserveDigits={reserve}
+    />
   );
 }

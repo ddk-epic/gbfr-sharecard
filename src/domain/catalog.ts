@@ -86,9 +86,10 @@ export type WeaponLevels = Record<string, number[]>;
 
 export type WeaponEntry = { name: string; awakened?: string }; // awakened: name once awakened
 
+/** A pool slot always carries its picked trait, so no resolved row is empty. */
 export type ResolvedWeaponSlot = {
   kind: "fixed" | "pool";
-  trait: TraitId | null;
+  trait: TraitId;
   pool: TraitId[]; // pool: options with @signature resolved; fixed: []
   level: number;
 };

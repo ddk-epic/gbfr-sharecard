@@ -9,6 +9,7 @@ import type {
   TraitDef,
   WeaponLevels,
   WeaponSeries,
+  WeaponSlot,
   WrightstonePrefixMap,
 } from "../domain/catalog";
 import type {
@@ -37,8 +38,7 @@ import charlottaJson from "./characters/charlotta.json";
 
 /** The maxed transcendence rung, as an index into a slot's level sequence. */
 const MAX_RUNG = 7;
-/** Terminus HP does not take the character offset - it is flat for everyone. */
-const HP_FLAT_SERIES = "terminus";
+const TERMINUS_SERIES = "terminus";
 
 export const CHARACTERS = charactersJson as Character[];
 export const TRAITS = traitsJson as TraitDef[];
@@ -239,28 +239,64 @@ export function characterWeaponOptions(
   });
 }
 
-/** HP is series.hp + weaponHpOffset, except Terminus. Null if unowned. */
+/** A pool slot's options, with @signature resolved to the character's own. */
+const slotPool = (cat: CharacterCatalog, slot: WeaponSlot): TraitId[] =>
+  (slot.pool ?? [])
+    .map((t) => (t === "@signature" ? cat.weaponSignatureTrait : t))
+    .filter((t): t is TraitId => t !== undefined);
+
+/** The trait each pool slot starts on, in pool order - a freshly picked
+    weapon's `poolTraits`. */
+export function weaponPoolDefaults(
+  id: CharacterId,
+  series: string,
+): TraitId[] {
+  const cat = characterCatalog(id);
+  const def = weaponSeriesById.get(series);
+  if (!def) return [];
+  return def.slots
+    .filter((slot) => !slot.trait)
+    .map((slot) => slotPool(cat, slot)[0])
+    .filter((trait): trait is TraitId => trait !== undefined);
+}
+
+/** A build's default weapon is the character's Terminus weapon. */
+export function defaultWeapon(id: CharacterId): Weapon {
+  const owned = characterWeaponOptions(id);
+  const series =
+    owned.find((o) => o.series === TERMINUS_SERIES)?.series ?? owned[0]?.series;
+  if (!series) throw new Error(`no weapons for character: ${id}`);
+  return {
+    series,
+    critRate: 0,
+    stun: 0,
+    poolTraits: weaponPoolDefaults(id, series),
+  };
+}
+
+/** HP is series.hp + weaponHpOffset, except Terminus. Throws on a series the
+    character does not own - a build always holds one of their own. */
 export function resolveWeapon(
   id: CharacterId,
   weapon: Weapon,
-): ResolvedWeapon | null {
+): ResolvedWeapon {
   const cat = characterCatalog(id);
   const series = weaponSeriesById.get(weapon.series);
   const entry = cat.weapons[weapon.series];
-  if (!series || !entry) return null;
+  if (!series || !entry)
+    throw new Error(`no weapon series ${weapon.series} for character: ${id}`);
 
-  const slots = series.slots.map((slot, i) => {
+  // `poolTraits` counts pool slots, not rows, so it advances only on a pool slot.
+  let picked = 0;
+  const slots = series.slots.map((slot) => {
     const level = WEAPON_LEVELS[slot.levels]?.[MAX_RUNG] ?? 0;
     if (slot.trait) {
       return { kind: "fixed" as const, trait: slot.trait, pool: [], level };
     }
-    const pool = (slot.pool ?? [])
-      .map((t) => (t === "@signature" ? cat.weaponSignatureTrait : t))
-      .filter((t): t is TraitId => t !== undefined);
     return {
       kind: "pool" as const,
-      trait: weapon.rotations[i] ?? null,
-      pool,
+      trait: weapon.poolTraits[picked++],
+      pool: slotPool(cat, slot),
       level,
     };
   });
@@ -270,7 +306,7 @@ export function resolveWeapon(
     seriesName: series.name,
     atk: series.atk,
     hp:
-      weapon.series === HP_FLAT_SERIES
+      weapon.series === TERMINUS_SERIES
         ? series.hp
         : series.hp + cat.weaponHpOffset,
     slots,

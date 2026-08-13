@@ -1,5 +1,3 @@
-// localStorage persistence - one Build per character.
-
 import type { Build, CharacterId } from "./build";
 
 const SAVE_DEBOUNCE_MS = 300;
@@ -9,7 +7,7 @@ const storageKey = (characterId: CharacterId) =>
 
 /** Source of truth while the tab lives; localStorage is a subscriber. */
 const builds = new Map<CharacterId, Build | null>();
-/** Characters whose in-memory build the timer still owes localStorage. */
+/** Characters whose build has changed in memory but is not yet written out. */
 const dirty = new Set<CharacterId>();
 let saveTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -33,13 +31,13 @@ export function writeBuild(build: Build): void {
   armFlushOnExit();
 }
 
-/** Discard-and-start-fresh on schemaVersion mismatch or parse failure. No migration in v1. */
+/** Discard-and-start-fresh on schemaVersion mismatch or parse failure. No migration. */
 function hydrate(characterId: CharacterId): Build | null {
   try {
     const raw = localStorage.getItem(storageKey(characterId));
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Build;
-    if (parsed.schemaVersion !== 1 || parsed.characterId !== characterId)
+    if (parsed.schemaVersion !== 3 || parsed.characterId !== characterId)
       return null;
     return parsed;
   } catch {
