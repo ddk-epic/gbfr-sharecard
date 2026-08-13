@@ -26,6 +26,10 @@ export const WEAPON_LEVEL_MAX = 150;
 /** Every weapon rolls this many trait rows, so an empty slot can stand in. */
 export const WEAPON_TRAIT_ROWS = 5;
 
+/** A sigil's own level ladder - rarity V only, so it never leaves this range. */
+export const SIGIL_LEVELS = [11, 12, 13, 14, 15];
+export const SIGIL_DEFAULT_LEVEL = 15;
+
 export type Build = {
   schemaVersion: 1;
   characterId: CharacterId; // slug, e.g. "io"
