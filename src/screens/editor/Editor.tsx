@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Build } from "../../domain/build";
 import { traitLevelTotals } from "../../domain/derive";
-import { traitName } from "../../data";
-import type { PageProps } from "./controls";
+import { traitById, traitName } from "../../data";
+import { EDITOR_ZOOM, type PageProps } from "./controls";
 import { SkillsPage } from "./SkillsPage";
 import { GearPage } from "./GearPage";
 import { MasterTraitsPage } from "./MasterTraitsPage";
-import { BackButton, Cta, Heading, Lvl, Panel, TraitRow } from "../../ui";
+import { BackButton, Cta, Heading } from "../../ui";
 
 const PAGE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
 
@@ -19,15 +19,12 @@ const ARROW_SIZE = 150;
 const FLIP_OFFSET_PX = 1900;
 const FLIP_MS = 120;
 
-/* 60% = 3 column units, 40% = 2, 46% = unit + 1.3-unit sigils. The unit width
-   is constant, so only the window resizes between pages. */
-const WINDOW_WIDTH = ["w-[40%]", "w-[46%]", "w-[60%]"];
+/* Per window floors of the pages. */
+const WINDOW_MIN_WIDTH = ["w-auto", "w-[46%]", "w-[60%]"];
 
 const TAB =
   "cursor-pointer rounded-[5px] px-6.5 py-2.25 text-[14.5px] font-bold tracking-[0.09em] uppercase";
 
-/* flex, not text-align: preflight makes the chevron svg a block, so each arrow
-   would otherwise pin to the left of its own track and drift with the window. */
 const ARROW_BUTTON =
   "text-ink-strong/35 hover:text-ink-strong flex flex-1 cursor-pointer items-center leading-none";
 
@@ -86,28 +83,34 @@ export function Editor({
   const pageProps = { build, onChange };
   return (
     <div>
-      <BackButton onClick={onBack}>
-        <ChevronLeft size={16} aria-hidden />
-        Character
-      </BackButton>
-      <div className="absolute inset-0 z-1 flex flex-col items-center justify-center gap-3.5">
-        <div className="flex items-center justify-center gap-2">
-          {PAGE_LABELS.map((label, i) => (
-            <button
-              key={label}
-              className={`${TAB} ${
-                i === page
-                  ? "from-band via-band-soft text-ink-strong bg-linear-90 from-0% via-60% to-[#b9d7e8] to-100%"
-                  : "text-dim bg-white/55 shadow-[inset_0_0_0_1px_var(--line-soft)] hover:bg-white/90"
-              }`}
-              onClick={() => flipTo(i)}
-            >
-              {label}
-            </button>
-          ))}
+      <div className="absolute inset-0 z-1 flex flex-col items-center justify-center gap-2.5">
+        {/* Header: back button + centered tabs. */}
+        <div className="flex w-full items-center px-10">
+          <div className="flex flex-1 justify-start">
+            <BackButton inline onClick={onBack}>
+              <ChevronLeft size={16} aria-hidden />
+              Character
+            </BackButton>
+          </div>
+          <div className="flex items-center justify-center gap-2">
+            {PAGE_LABELS.map((label, i) => (
+              <button
+                key={label}
+                className={`${TAB} ${
+                  i === page
+                    ? "from-band via-band-soft text-ink-strong bg-linear-90 from-0% via-60% to-[#b9d7e8] to-100%"
+                    : "text-dim bg-white/55 shadow-[inset_0_0_0_1px_var(--line-soft)] hover:bg-white/90"
+                }`}
+                onClick={() => flipTo(i)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="flex-1" aria-hidden />
         </div>
-        <div className="flex h-[76%] w-full items-stretch">
-          {/* flex-1 so the whole area flanking the window is a hit target */}
+        {/* Body */}
+        <div className="flex h-[76%] w-full items-stretch" data-popover-bounds>
           <button
             className={`${ARROW_BUTTON} justify-start pl-27.5 hover:bg-linear-90 hover:from-white/40 hover:to-white/0`}
             aria-label="previous page"
@@ -117,13 +120,11 @@ export function Editor({
           </button>
           <div
             ref={windowRef}
-            className={`relative h-full flex-none ${WINDOW_WIDTH[page]}`}
+            className={`relative h-full flex-none ${WINDOW_MIN_WIDTH[page]}`}
           >
-            <Panel pad="none" className="h-full w-full overflow-hidden">
-              {page === 0 && <SkillsPage {...pageProps} />}
-              {page === 1 && <GearPage {...pageProps} />}
-              {page === 2 && <MasterTraitsPage {...pageProps} />}
-            </Panel>
+            {page === 0 && <SkillsPage {...pageProps} />}
+            {page === 1 && <GearPage {...pageProps} />}
+            {page === 2 && <MasterTraitsPage {...pageProps} />}
             {page !== 2 &&
               (checklistOpen ? (
                 <TraitChecklist
@@ -156,7 +157,10 @@ export function Editor({
   );
 }
 
-/** Sigil + wrightstone trait level sums. Editor-only, never on the card. */
+const CHECKLIST_ROW =
+  "border-line-soft text-ui flex items-center justify-between gap-2.5 border-b py-2 text-xl last:border-b-0";
+
+/** Sigil + wrightstone trait level sums. Editor-only. */
 function TraitChecklist({
   build,
   onClose,
@@ -168,32 +172,42 @@ function TraitChecklist({
     (a, b) => b[1] - a[1],
   );
   return (
-    <div className="border-line absolute top-0 left-[calc(100%+14px)] z-3 w-70 rounded-[10px] border bg-white/94 px-3.5 py-3 shadow-[0_10px_34px_rgba(23,60,90,0.3)] backdrop-blur-xs">
-      <Heading className="flex items-center justify-between">
-        Trait Checklist
-        <button
-          className="text-dim hover:text-ink-strong cursor-pointer px-0.5"
-          title="close"
-          aria-label="close"
-          onClick={onClose}
-        >
-          <X size={16} aria-hidden />
-        </button>
-      </Heading>
-      <div className="text-dim mt-1 mb-0.5 flex items-center justify-between gap-2 text-[12px] tracking-[0.07em] uppercase">
-        <span>sigils + wrightstone</span>
+    // Positioned at 1:1, zoomed inside: offset is on-screen px, panel size
+    // matches the pages'.
+    <div className="font-med absolute top-0 left-[calc(100%+12px)] z-3">
+      <div
+        className="border-line w-85 rounded-lg border bg-white/90 px-3.5 py-3.5 shadow-[0_10px_34px_rgba(23,60,90,0.3)]"
+        style={{ zoom: EDITOR_ZOOM }}
+      >
+        <Heading size="lg" className="mb-2 flex items-center justify-between">
+          Trait Checklist
+          <button
+            className="text-dim hover:text-ink-strong -mr-4 cursor-pointer"
+            title="close"
+            aria-label="close"
+            onClick={onClose}
+          >
+            <X size={20} aria-hidden />
+          </button>
+        </Heading>
+        {totals.length === 0 && (
+          <div className={`${CHECKLIST_ROW} text-dim`}>no traits yet</div>
+        )}
+        {totals.map(([trait, level]) => (
+          <div className={CHECKLIST_ROW} key={trait}>
+            <span>{traitName(trait)}</span>
+            <span className="flex flex-none items-baseline gap-1">
+              <span className="font-sans text-base">Lvl</span>
+              <div>
+                <span>{level}</span>
+                <span className="font-sans text-base">
+                  /{traitById.get(trait)?.maxLevel}
+                </span>
+              </div>
+            </span>
+          </div>
+        ))}
       </div>
-      {totals.length === 0 && (
-        <TraitRow size="sm">
-          <span className="text-dim">no traits yet</span>
-        </TraitRow>
-      )}
-      {totals.map(([trait, level]) => (
-        <TraitRow size="sm" key={trait}>
-          <span>{traitName(trait)}</span>
-          <Lvl>{level}</Lvl>
-        </TraitRow>
-      ))}
     </div>
   );
 }

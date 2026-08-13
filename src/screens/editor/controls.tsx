@@ -1,6 +1,9 @@
+import { Plus } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Build, TraitId } from "../../domain/build";
 import type { TraitDef } from "../../domain/catalog";
+
+export const EDITOR_ZOOM = 0.64;
 
 /** Every editor page edits the whole Build and hands back a new one. */
 export type PageProps = {
@@ -121,10 +124,123 @@ export function TraitSelect({
   );
 }
 
-/**
- * Summon equip bonuses roll from a fixed set of values, so the field offers
- * exactly those - a value the summon cannot roll stays unrepresentable.
- */
+/* One step's box; the empty label wears it too, so a ladderless stepper
+   stands as tall as a filled one. */
+const STEP =
+  "min-w-0 flex-1 py-0.75 text-center text-[0.85em] font-semibold tabular-nums";
+
+/** The whole ladder toggle bar. */
+export function Stepper({
+  values,
+  value,
+  onChange,
+  format = String,
+  empty = "-",
+}: {
+  values: number[];
+  value: number | null;
+  onChange: (v: number) => void;
+  format?: (v: number) => string;
+  /** Stands in when there is no ladder to offer yet. */
+  empty?: string;
+}) {
+  return (
+    <div className="border-line flex overflow-hidden rounded-[5px] border">
+      {values.length === 0 ? (
+        <span
+          className={`${STEP} text-dim/70 bg-white/70 tracking-[0.08em] uppercase`}
+        >
+          {empty}
+        </span>
+      ) : (
+        values.map((step, i) => (
+          <button
+            key={step}
+            type="button"
+            aria-pressed={step === value}
+            className={`border-line cursor-pointer ${STEP} ${
+              i > 0 ? "border-l" : ""
+            } ${
+              step === value
+                ? "from-band via-band-soft text-ink-strong bg-linear-160 to-[#b9d7e8]"
+                : "text-dim bg-white/70 hover:bg-white"
+            }`}
+            onClick={() => onChange(step)}
+          >
+            {format(step)}
+          </button>
+        ))
+      )}
+    </div>
+  );
+}
+
+/** Picker tile: an icon over its name. */
+export function IconTile({
+  icon,
+  name,
+  selected = false,
+  disabled = false,
+  badge,
+  onClick,
+}: {
+  icon: string;
+  name: string;
+  selected?: boolean;
+  disabled?: boolean;
+  /** Slot number once picked, so order is readable from the grid. */
+  badge?: ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      title={name}
+      disabled={disabled}
+      aria-pressed={selected}
+      className={`relative flex cursor-pointer flex-col items-center gap-1 rounded-md px-1 py-1.5 text-center ${
+        selected
+          ? "bg-band/70"
+          : "hover:bg-band/35 disabled:cursor-default disabled:opacity-35 disabled:hover:bg-transparent"
+      }`}
+      onClick={onClick}
+    >
+      {/* Skill/bonus art is square, summon art a tall portrait: cover scales
+          to the tile's width and crops the height, rather than squashing. */}
+      <img
+        src={icon}
+        alt=""
+        className="size-[3.5em] flex-none object-cover object-center"
+      />
+      <span className="text-ui text-[0.85em]">{name}</span>
+      {badge !== undefined && (
+        <span className="absolute top-0.5 right-0.75 grid size-[1.25em] place-items-center rounded-full bg-gray-600/80 pt-0.75 text-[0.85em] font-bold text-white">
+          {badge}
+        </span>
+      )}
+    </button>
+  );
+}
+
+/** The editor's empty slot placeholder. */
+export function EmptySlot({
+  className = "",
+  label = "add",
+}: {
+  className?: string;
+  label?: string;
+}) {
+  return (
+    <span
+      className={`text-dim/70 flex items-center justify-center gap-2 rounded-lg ${className}`}
+    >
+      <Plus className="size-[1.6em]" strokeWidth={2.5} aria-hidden />
+      <span className="text-[1em] tracking-[0.08em] uppercase">{label}</span>
+    </span>
+  );
+}
+
+/** Summon equip bonuses roll from a fixed set of values. */
 export function TierSelect({
   value,
   onChange,
