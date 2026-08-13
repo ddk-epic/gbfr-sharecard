@@ -150,6 +150,24 @@ export const traitIconUrl = (trait: TraitId): string | null => {
     : null;
 };
 
+export const SUMMON_TRAIT_POOL: TraitDef[] = [
+  ...new Set(SUMMONS.flatMap((summon) => summon.traits)),
+]
+  .map((id) => traitById.get(id))
+  .filter((trait): trait is TraitDef => trait !== undefined)
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+/** Filter by trait for summons. */
+const SUMMONS_BY_TRAIT = SUMMONS.reduce((byTrait, summon) => {
+  for (const trait of summon.traits)
+    byTrait.set(trait, [...(byTrait.get(trait) ?? []), summon]);
+  return byTrait;
+}, new Map<TraitId, SummonDef[]>());
+
+/** The number of summons with the same trait. */
+export const summonsWithTrait = (trait: TraitId | null | undefined) =>
+  (trait ? SUMMONS_BY_TRAIT.get(trait) : undefined) ?? [];
+
 /** The traits in catalog order. */
 export const summonTraits = (summonId: SummonId | null | undefined) =>
   (summonId ? (summonById.get(summonId)?.traits ?? []) : [])
