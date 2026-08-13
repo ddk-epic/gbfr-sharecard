@@ -1,6 +1,3 @@
-// Catalog types. Catalogs are static JSON shipped with the app; the Build
-// references them by id.
-
 import type {
   BonusTypeId,
   CellId,
@@ -19,6 +16,9 @@ export type Character = {
   id: CharacterId; // slug, e.g. "io"
   name: string;
   artId: string;
+  /** `gem.PlayerReq`, which gates the character's own sigils. Gran and Djeeta
+      share The Captain's `PL0000`, and Id's differs from its artId. */
+  playerId: string;
   portrait: string; // path
   portraitX: number; // framing x-offset (px off centre)
   portraitY: number; // framing y-offset (px off centre)
@@ -36,6 +36,15 @@ export type TraitDef = {
   short?: string;
   maxLevel: number;
   category?: TraitCategory;
+  /** A sigil grants it - 188 of the 200 do. The rest are weapon traits. */
+  sigil?: true;
+  /** In the archive's one random-trait pool: a `+` sigil's second trait and a
+      wrightstone's subs both draw from it. 72 traits. */
+  roll?: true;
+  /** Every sigil granting it is single-trait, so it never takes a second. */
+  soloSigil?: true;
+  /** Character-locked sigil, by `Character.playerId`. */
+  character?: string;
 };
 
 export type BonusTypeDef = {

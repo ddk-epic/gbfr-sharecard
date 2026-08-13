@@ -1,5 +1,3 @@
-// Typed access to the committed catalog JSON.
-
 import type {
   BonusTypeDef,
   Character,
@@ -108,10 +106,8 @@ export const bonusIconUrl = (bonusType: BonusTypeId) =>
 export const summonIconUrl = (summonId: SummonId) =>
   `${import.meta.env.BASE_URL}icons/summon/${summonId}.webp`;
 
-/**
- * Weapon art carries no index; the exporter names each file after the weapon's
- * display name, and this rule is the join.
- */
+/** Weapon art carries no index: the exporter names each file after the weapon's
+    display name, so the slugged name is the filename. */
 const slug = (name: string) =>
   name
     .normalize("NFD")
@@ -150,6 +146,40 @@ export const traitIconUrl = (trait: TraitId): string | null => {
     : null;
 };
 
+export const WRIGHTSTONE_MAIN_POOL: TraitDef[] = Object.keys(
+  WRIGHTSTONE_PREFIXES,
+)
+  .map((id) => traitById.get(id))
+  .filter((trait): trait is TraitDef => trait !== undefined);
+
+/** The archive's one random-trait pool, 72 traits. */
+export const ROLL_POOL: TraitDef[] = TRAITS.filter((trait) => trait.roll);
+
+/** A wrightstone rolls its two subs from the one pool. */
+export const WRIGHTSTONE_SUB_POOL = ROLL_POOL;
+/** A `+` sigil's second trait rolls from the same pool. */
+export const SIGIL_SECOND_TRAIT_POOL = ROLL_POOL;
+
+/** Sigil traits that are not locked to a character - the same for every build. */
+const SIGIL_OPEN_POOL: TraitDef[] = TRAITS.filter(
+  (trait) => trait.sigil && !trait.character,
+);
+
+/** The character's pool for a sigil's own trait. Character sigils are gated by
+    `gem.PlayerReq`, so another character's are not offerable. */
+export function sigilTraitPool(characterId: CharacterId): TraitDef[] {
+  const playerId = characterById.get(characterId)?.playerId;
+  if (!playerId) return SIGIL_OPEN_POOL;
+  return [
+    ...SIGIL_OPEN_POOL,
+    ...TRAITS.filter((trait) => trait.character === playerId),
+  ];
+}
+
+/** True when a sigil carrying this trait can take a second one. */
+export const takesSecondTrait = (trait: TraitId): boolean =>
+  !traitById.get(trait)?.soloSigil;
+
 export const SUMMON_TRAIT_POOL: TraitDef[] = [
   ...new Set(SUMMONS.flatMap((summon) => summon.traits)),
 ]
@@ -174,7 +204,6 @@ export const summonTraits = (summonId: SummonId | null | undefined) =>
     .map((id) => traitById.get(id))
     .filter((trait): trait is TraitDef => trait !== undefined);
 
-/** The equip bonus values this summon's tier table allows, ascending. */
 export const summonEquipTiers = (
   summonId: SummonId | null | undefined,
   bonusType: BonusTypeId | null | undefined,

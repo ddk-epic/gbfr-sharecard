@@ -15,8 +15,12 @@
 //
 // NOT generated here:
 //   weapons.json              - rebuilt from the archive on series; see docs/weapons.md
-//   wrightstone-prefixes.json - four hand-authored prefix pairs, no source
-//   characters.json           - hand-authored; elements are already committed
+//   wrightstone-prefixes.json - four hand-authored prefix pairs; the source is
+//                               item_pendulum joined to item, one named stone
+//                               per main trait. See docs/wrightstones.md
+//   characters.json           - hand-authored; elements and playerId are
+//                               already committed. This script only checks that
+//                               every playerId still matches a gem.PlayerReq
 //   master traits             - hand-authored per character in src/data/characters/
 //
 // Game data © Cygames.
@@ -140,20 +144,89 @@ const maxLevelByKey = new Map(
     .map((row) => [row.Key, row.maxLevel]),
 );
 
+// The glyph's first two digits are the trait's group. `05_pl*` is a character
+// sigil rather than a group, so those take no category.
+const TRAIT_CATEGORIES = {
+  "01": "basic",
+  "02": "attack",
+  "03": "defense",
+  "04": "support",
+  "05": "special",
+};
+const categoryOf = (icon) =>
+  icon.startsWith("05_pl") ? undefined : TRAIT_CATEGORIES[icon.slice(0, 2)];
+
+// The sigil trait flags, from the gem table: which traits sigils grant, which
+// are character-locked, and which sigils never take a second trait.
+// See docs/sigils.md.
+const gems = database.prepare("select * from gem").all();
+const sigilKeys = new Set();
+const mainKeys = new Set(); // granted as a sigil's own trait, not as a second
+const characterByKey = new Map();
+const pairedKeys = new Set(); // grants a second trait, fixed or rolled
+for (const gem of gems) {
+  if (!gem.SkillId1) continue;
+  sigilKeys.add(gem.SkillId1);
+  mainKeys.add(gem.SkillId1);
+  if (gem.SkillId2) sigilKeys.add(gem.SkillId2);
+  if (gem.PlayerReq) characterByKey.set(gem.SkillId1, gem.PlayerReq);
+  if (gem.SkillId2 || gem.SkillTypeLotIdForRandom2ndSkill !== -1)
+    pairedKeys.add(gem.SkillId1);
+}
+// One pool, cut into groups; every lot draws a subset of the same 72.
+const rollKeys = new Set(
+  database
+    .prepare("select SkillId from skill_lot")
+    .all()
+    .map((row) => row.SkillId),
+);
+
 const missingMaxLevel = [];
 const traits = database
-  .prepare("select Key, Name from skill where IconId1 != ''")
+  .prepare("select Key, Name, IconId1 from skill where IconId1 != ''")
   .all()
-  .map((row) => ({ key: row.Key, name: english(row.Name) }))
+  .map((row) => ({ key: row.Key, name: english(row.Name), icon: row.IconId1 }))
   .filter((row) => row.name)
-  .map(({ key, name }) => {
+  .map(({ key, name, icon }) => {
     const maxLevel = maxLevelByKey.get(key);
     if (maxLevel == null) missingMaxLevel.push(`${name} (${key})`);
-    return { id: slug(name), name, maxLevel: maxLevel ?? null };
+    const sigil = sigilKeys.has(key);
+    return {
+      id: slug(name),
+      name,
+      maxLevel: maxLevel ?? null,
+      category: categoryOf(icon),
+      ...(sigil && { sigil: true }),
+      ...(rollKeys.has(key) && { roll: true }),
+      ...(mainKeys.has(key) && !pairedKeys.has(key) && { soloSigil: true }),
+      ...(characterByKey.has(key) && { character: characterByKey.get(key) }),
+    };
   })
   .sort((a, b) => a.name.localeCompare(b.name));
 if (missingMaxLevel.length)
   throw new Error(`no skill_status rows for: ${missingMaxLevel.join(", ")}`);
+
+// `short` has no archive source - it is a display override, kept across runs.
+const shortByTrait = new Map(
+  JSON.parse(await readFile(new URL("traits.json", OUT_DIR), "utf8"))
+    .filter((trait) => trait.short)
+    .map((trait) => [trait.id, trait.short]),
+);
+for (const trait of traits) {
+  const short = shortByTrait.get(trait.id);
+  if (short) trait.short = short;
+}
+
+// Every playable character must match a gem.PlayerReq, or the editor offers
+// them no character sigils.
+const characterLocks = new Set(characterByKey.values());
+const unlockedCharacters = JSON.parse(
+  await readFile(new URL("characters.json", OUT_DIR), "utf8"),
+)
+  .filter((character) => !characterLocks.has(character.playerId))
+  .map((character) => `${character.name} (${character.playerId})`);
+if (unlockedCharacters.length)
+  throw new Error(`no gem.PlayerReq matches: ${unlockedCharacters.join(", ")}`);
 
 // Summon traits arrive as display names from a third-party page; the archive
 // decides what they resolve to. Normalising past punctuation is enough - the
