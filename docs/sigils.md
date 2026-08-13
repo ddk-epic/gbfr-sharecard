@@ -51,6 +51,45 @@ carry `-1` and roll nothing.
 So a `+` sigil's second trait is a property of the individual sigil a player
 owns, not of the sigil type.
 
+### The roll pool
+
+`skill_lot` is 439 rows in **36 groups**, and the groups repeat one shape - a
+basic group of 3-4, an offense group of 21, a defense group of 21-22, a sustain
+group of 8 and a special group of 8. Seven near-identical generations of that
+five-group set, plus one group of 9 (_Stronghold_, _Power Hungry_, _Path to
+Mastery_, _Supplementary DMG_, _Less Is More_, _Head Start_, ...) that only the
+widest lot draws from.
+
+The 285 sigils that roll use **ten** of the 21 `skill_type_lot` rows:
+
+| Lot | Sigils | Groups                                    | Traits |
+| --- | ------ | ----------------------------------------- | ------ |
+| 2   | 8      | offense · defense · sustain · special @25 | 58     |
+| 3   | 70     | defense @33 · sustain @33 · special @34   | 37     |
+| 4   | 11     | sustain @50 · special @50                 | 16     |
+| 5   | 4      | offense · defense · sustain · special @25 | 59     |
+| 6   | 38     | defense @33 · sustain @33 · special @34   | 38     |
+| 7   | 25     | sustain @50 · special @50                 | 16     |
+| 15  | 101    | five groups @20                           | 63     |
+| 16  | 9      | six groups @20                            | 72     |
+| 26  | 9      | four groups @25                           | 55     |
+| 27  | 10     | four groups @25                           | 55     |
+
+Lots 2-4 and 5-7 are the same three shapes over two generations of the groups.
+Lot 16 is the widest - it is the only one that reaches the 9-group - and it is
+what the curio `+` sigils roll on (_War Elemental+_, _Untouchable+_, _Potent
+Greens+_, _Roll of the Die+_, _Flight over Fight+_, _Auto Potion+_).
+
+**The union of all 36 groups is 72 traits, and lot 16 is all 72.** Every other
+lot is a slice of the same pool: there is one random-trait pool in the archive,
+not one per lot, and the rolled wrightstones draw on it as well - see
+[wrightstones.md](wrightstones.md). So the second trait is not free. 72 of the
+200 catalog traits can land there, and **no character sigil trait is among
+them**.
+
+Which of the 72 a given sigil rolled is not in the archive - it is per owned
+sigil - so this project stores it on the build rather than looking it up.
+
 ## Categories are the colour groups
 
 `Category` runs 1 to 5 and, with rarity, picks the frame art -
@@ -141,7 +180,64 @@ of them are `GEEN_<style>_90`, one per style - _Mage's Awakening+_, _Guardian's
 Awakening+_. The rest are curio one-offs (_Crabby Resonance_, _Crabvestment
 Returns_, _Sumo Force_).
 
-Only three sigils carry `IsLuciliusGem`: _Alpha+_, _Beta+_, _Gamma+_.
+`IsLuciliusGem` is not a flag but a three-value column: **1 on exactly three
+sigils** - _Alpha+_, _Beta+_, _Gamma+_ - and **2 on 199**, every character
+sigil and every `_90` awakening. Reading it as a boolean pulls in all 202.
+
+## Which traits a sigil can carry
+
+**188 of the 200 catalog traits have a `gem` row.** Twelve have none, and those
+twelve are weapon traits. Every other trait a sigil grants is a sigil trait,
+character traits included.
+
+`SkillId1` holds 193 distinct keys rather than 188 because five of them carry a
+glyph but no English name, so they never become catalog traits.
+
+### Twelve are weapon traits, not sigil traits
+
+Twelve traits have **no `gem` row anywhere** - not as a first trait, not as a
+second, not in a roll pool:
+
+| Trait                                          | Where it does live                        |
+| ---------------------------------------------- | ----------------------------------------- |
+| Catastrophe                                    | `weapon.WeaponSkillId1` on 118 weapons    |
+| Sigil Booster                                  | `weapon.WeaponSkillId6ForAwakening` on 61 |
+| Catastrophe Nova · Supernova                   | `weapon_skill_level_rebuild` only         |
+| DMG Cap Cardinal · Cobalt · Ecru · Sage        | `weapon_skill_level_rebuild` only         |
+| Unbound Exertion · Master · Strike · Technique | `weapon_skill_level_rebuild` only         |
+
+`weapon_skill_level_rebuild` is the transcendence ladder - 3016 rows, reached
+through `weapon.WeaponSkillLevelRebuildId1-5`, with the trait key in the column
+the schema calls `Unk12` and eight `TranscensionNSkillLevel` columns beside it.
+**73 distinct traits appear there**, and these twelve are exactly the ones that
+appear there and nowhere in `gem`. They are weapon traits, so a sigil never
+carries them.
+
+Ten of the twelve are not on `weapon` either; they arrive only when a weapon is
+transcended. Only _Catastrophe_ and _Sigil Booster_ sit on the weapon row
+itself.
+
+### Six traits have only single-trait sigils
+
+Carrying a trait and taking a second trait are separate questions. For six
+traits **every** `gem` row that grants them has an empty `SkillId2` and a `-1`
+roll lot, so no sigil of theirs is ever a `+`:
+
+_Crabmiration_ · _Crabvestment Returns_ · _Natural Defenses_ · _Seven Net_ ·
+_Stout Heart_ · _Sumo Force_
+
+The set is narrower than the names suggest. _Auto Potion_ and _Immortal Shell_
+are the same kind of curio and are not in it: _Auto Potion+_ rolls on lot 16,
+and _Immortal Shell+_ carries _Crabvestment Returns_ fixed.
+
+_Stout Heart_ is the extreme case - a single-trait sigil, never a second trait,
+and absent from all 36 `skill_lot` groups. Nothing random in the game hands it
+out.
+
+At the other end, _Ain_, _Seven-Star Boundary_ and _Two-Crown Boundary_ have
+exactly one sigil each, the Lucilius `+` (`GEEN_170/171/172_74`), and it carries
+_Regen_ as a fixed second trait. Their second trait is neither free nor absent;
+it is always _Regen_.
 
 ## Not resolved
 
@@ -152,5 +248,26 @@ Only three sigils carry `IsLuciliusGem`: _Alpha+_, _Beta+_, _Gamma+_.
 
 Only **rarity V** - a sharecard shows an endgame build, so `gem_rare` is not
 generated and the sigil level range in play is always 11-15. Sigil synthesis is
-not modelled. Because a `+` sigil's second trait is rolled per owned sigil, it
-is stored on the equipped sigil rather than looked up from a catalog.
+not modelled.
+
+A `+` sigil's second trait is rolled per owned sigil, so it is stored on the
+equipped sigil rather than looked up from a catalog.
+
+The three pools ride on `traits.json` as flags - `sigil`, `roll`, `soloSigil` -
+written by `scripts/extract.mjs`, with `character` holding the `PlayerReq` of a
+character-locked trait. `src/data/index.ts` turns them into what the editor
+offers:
+
+| Export                    | Pool                                                 |
+| ------------------------- | ---------------------------------------------------- |
+| `sigilTraitPool(id)`      | a sigil's own trait: the 101 open + that character's |
+| `SIGIL_SECOND_TRAIT_POOL` | the 72                                               |
+| `takesSecondTrait(id)`    | false for the six                                    |
+
+A character sigil belongs to one character, so `SigilsPopover` offers ~104
+traits rather than 200 and a build can only hold sigils its character could
+equip. A build is bound to its character - `storage.ts` keys on it - so the pool
+never changes under a build.
+
+Picking a single-trait trait moves the cursor straight to the next sigil: the
+second cell is not offered, and the cell count drops to match.
