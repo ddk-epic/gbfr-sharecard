@@ -33,7 +33,7 @@ export function OverMasterySection({
                 </span>
               </>
             ) : (
-              <OverMasteryGhost index={i} />
+              <OverMasteryPlaceholder index={i} />
             )}
           </div>
         ))}
@@ -47,7 +47,7 @@ export function OverMasterySection({
 const GHOST_WIDTHS = ["w-44", "w-32", "w-38", "w-28", "w-40", "w-34"];
 
 // Strut carries the real row's BonusIcon height so filled and empty rows match.
-function OverMasteryGhost({ index }: { index: number }) {
+function OverMasteryPlaceholder({ index }: { index: number }) {
   return (
     <>
       <span

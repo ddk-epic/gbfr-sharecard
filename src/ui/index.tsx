@@ -356,14 +356,19 @@ export function Cta({
 
 export function BackButton({
   children,
+  inline = false,
   onClick,
 }: {
   children: ReactNode;
+  /** Sits in a header row rather than floating over the stage. */
+  inline?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 }) {
   return (
     <button
-      className="text-ink-strong absolute top-19 left-10 z-2 flex cursor-pointer items-center gap-1.25 rounded-md bg-white/80 px-4.5 py-2 text-[15px] font-bold shadow-[inset_0_0_0_1px_var(--line)] hover:bg-white"
+      className={`text-ink-strong flex cursor-pointer items-center gap-1.25 rounded-md bg-white/80 px-4.5 py-2 text-[15px] font-bold shadow-[inset_0_0_0_1px_var(--line)] hover:bg-white ${
+        inline ? "" : "absolute top-19 left-10 z-2"
+      }`}
       onClick={onClick}
     >
       {children}

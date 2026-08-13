@@ -1,4 +1,4 @@
-import type { Build, SummonSlot } from "../domain/build";
+import type { Build, SummonId, SummonSlot } from "../domain/build";
 import {
   bonusTypeById,
   bonusValueText,
@@ -17,6 +17,27 @@ const bonusName = (slot: SummonSlot) =>
 
 // Trait glyph/Lvl are preset to 16/18/22.
 const TRAIT_ICON = 18;
+
+/* Portrait framing, shared with the editor's copy of this cell. */
+const PORTRAIT_SCALE = "scale-130";
+/** Slides the frame down the art - 0% is the top - since the face sits high. */
+const PORTRAIT_CROP = "object-[50%_10%]";
+const PORTRAIT_FADE =
+  "mask-[linear-gradient(to_left,rgba(0,0,0,0)_0%,#000_14%,#000_60%,rgba(0,0,0,0)_100%)]";
+
+export function SummonPortrait({ summonId }: { summonId: SummonId }) {
+  return (
+    <div
+      className={`pointer-events-none absolute inset-y-0 right-0 w-1/3 ${PORTRAIT_FADE}`}
+    >
+      <img
+        src={summonIconUrl(summonId)}
+        alt=""
+        className={`h-full w-full object-cover ${PORTRAIT_CROP} ${PORTRAIT_SCALE}`}
+      />
+    </div>
+  );
+}
 
 export function SummonsSection({ summons }: { summons: Build["summons"] }) {
   return (
@@ -41,16 +62,7 @@ export function SummonsSection({ summons }: { summons: Build["summons"] }) {
 function SummonCell({ slot }: { slot: SummonSlot | null }) {
   return (
     <div className="relative -mb-1 -ml-1 flex min-h-0 items-center overflow-hidden">
-      {/* Zoomed portrait */}
-      {slot && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 mask-[linear-gradient(to_left,rgba(0,0,0,0)_0%,#000_14%,#000_60%,rgba(0,0,0,0)_100%)]">
-          <img
-            src={summonIconUrl(slot.summonId)}
-            alt=""
-            className="h-full w-full origin-top -translate-y-9 scale-130 object-cover object-top"
-          />
-        </div>
-      )}
+      {slot && <SummonPortrait summonId={slot.summonId} />}
 
       <div className="relative z-1 mb-px flex min-w-0 flex-col gap-1.25 px-4.5 py-3.25">
         {slot ? <SummonNameBand slot={slot} /> : <SummonNameGhost />}
