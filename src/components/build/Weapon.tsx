@@ -34,6 +34,7 @@ const WEAPON_LAYOUT: Record<
   {
     artHeight: number;
     padStyle: CSSProperties;
+    headingClass: string;
     statRowClass: string;
     contentClass: string;
   }
@@ -41,12 +42,15 @@ const WEAPON_LAYOUT: Record<
   compact: {
     artHeight: 186,
     padStyle: { paddingLeft: ROW_INDENT },
+    // Owns the gap to its own body, since the card stacks the pair flush.
+    headingClass: "flex-none mb-3.75",
     statRowClass: "",
     contentClass: "flex-none",
   },
   loose: {
     artHeight: 150,
     padStyle: {},
+    headingClass: "flex-none",
     statRowClass: "pl-2.5",
     contentClass: "relative flex-none pt-1",
   },
@@ -135,7 +139,7 @@ export function Weapon({
 
   return (
     <>
-      <div className="flex-none" style={layout.padStyle}>
+      <div className={layout.headingClass} style={layout.padStyle}>
         <Heading size="lg">Weapon</Heading>
       </div>
       <div className={layout.contentClass}>

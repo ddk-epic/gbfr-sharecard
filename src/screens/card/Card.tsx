@@ -126,8 +126,12 @@ export function Card({ build }: { build: Build }) {
           className="relative z-1 flex flex-col gap-3.75 overflow-hidden"
           style={{ gridColumn: 3, gridRow: "1 / 3" }}
         >
-          <Weapon build={build} />
-          <Wrightstone build={build} />
+          {/* One unit: the imbued traits sit flush under the weapon rows, so
+              the column's gap must not fall between them. */}
+          <div className="flex flex-none flex-col">
+            <Weapon build={build} />
+            <Wrightstone build={build} />
+          </div>
           <SigilsGrid sigils={build.sigils} />
         </div>
 
