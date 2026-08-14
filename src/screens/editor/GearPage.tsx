@@ -3,8 +3,9 @@ import type { TraitId } from "../../domain/build";
 import { IdentityCol } from "./sections/IdentityCol";
 import { EDITOR_ZOOM, GEAR_ZOOM, type PageProps } from "./controls";
 import { anchorOf, type Anchor } from "./Popover";
-import { WeaponSection } from "./sections/WeaponSection";
+import { Weapon, Wrightstone } from "../../components/build/Weapon";
 import { SigilsSection } from "./sections/SigilsSection";
+import { SectionPanel } from "../../components/ui";
 import { WeaponPopover } from "./sections/WeaponPopover";
 import { WrightstonePopover } from "./sections/WrightstonePopover";
 import { SigilsPopover } from "./sections/SigilsPopover";
@@ -77,15 +78,20 @@ export function GearPage({ build, onChange }: PageProps) {
         className="flex flex-none flex-col gap-3"
         style={{ width: DESIGN_WIDTH, zoom: GEAR_ZOOM }}
       >
-        <WeaponSection
-          build={build}
-          onOpenWeapon={(el) =>
-            setOpen({ kind: "weapon", anchor: anchorOf(el) })
-          }
-          onOpenWrightstone={(el) =>
-            setOpen({ kind: "wrightstone", anchor: anchorOf(el) })
-          }
-        />
+        <SectionPanel shadow className="flex flex-col overflow-hidden">
+          <Weapon
+            build={build}
+            density="loose"
+            onOpen={(el) => setOpen({ kind: "weapon", anchor: anchorOf(el) })}
+          />
+          <Wrightstone
+            build={build}
+            density="loose"
+            onOpen={(el) =>
+              setOpen({ kind: "wrightstone", anchor: anchorOf(el) })
+            }
+          />
+        </SectionPanel>
         <SigilsSection
           sigils={build.sigils}
           board={open?.kind === "sigils" ? board : undefined}

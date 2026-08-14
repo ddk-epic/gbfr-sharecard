@@ -5,7 +5,7 @@ import { OverMasterySection } from "../../components/build/OverMasterySection";
 import { SigilsSection } from "./sections/SigilsSection";
 import { SkillsSection } from "./sections/SkillsSection";
 import { SummonsSection } from "./sections/SummonsSection";
-import { WeaponSection } from "./sections/WeaponSection";
+import { Weapon, Wrightstone } from "../../components/build/Weapon";
 import { Portrait } from "../../components/build/Portrait";
 import { NameBadge } from "../../components/build/NameBadge";
 import { LvlBadge } from "../../components/build/LvlBadge";
@@ -126,7 +126,8 @@ export function Card({ build }: { build: Build }) {
           className="relative z-1 flex flex-col gap-3.75 overflow-hidden"
           style={{ gridColumn: 3, gridRow: "1 / 3" }}
         >
-          <WeaponSection build={build} />
+          <Weapon build={build} />
+          <Wrightstone build={build} />
           <SigilsSection sigils={build.sigils} />
         </div>
 
