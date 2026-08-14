@@ -56,7 +56,6 @@ export const bonusTypeById = new Map(BONUS_TYPES.map((b) => [b.id, b]));
 export const summonById = new Map(SUMMONS.map((s) => [s.id, s]));
 export const weaponSeriesById = new Map(WEAPON_SERIES.map((s) => [s.id, s]));
 
-/** Display name */
 export const traitName = (id: TraitId | null | undefined) => {
   if (!id) return "";
   const trait = traitById.get(id);
@@ -72,7 +71,7 @@ export const wrightstoneName = (mainTrait: TraitId | null | undefined) => {
 export const bonusValueText = (bonusType: BonusTypeId, value: number) =>
   bonusTypeById.get(bonusType)?.unit === "percent" ? `+${value}%` : `+${value}`;
 
-/** The only way to mint a CharacterId; not-yet-added characters are rejected too. */
+/** The only way to mint a CharacterId; rejects characters not yet enabled. */
 export const asCharacterId = (value: unknown): CharacterId | null =>
   typeof value === "string" && characterById.get(value as CharacterId)?.enabled
     ? (value as CharacterId)
@@ -106,8 +105,8 @@ export const bonusIconUrl = (bonusType: BonusTypeId) =>
 export const summonIconUrl = (summonId: SummonId) =>
   `${import.meta.env.BASE_URL}icons/summon/${summonId}.webp`;
 
-/** Weapon art carries no index: the exporter names each file after the weapon's
-    display name, so the slugged name is the filename. */
+/** Weapon art carries no index: the exporter names each file after the
+    weapon's display name, so the slugged name is the filename. */
 const slug = (name: string) =>
   name
     .normalize("NFD")
@@ -165,8 +164,7 @@ const FIRST_OPEN_POOL: TraitDef[] = TRAITS.filter(
 const SECOND_OPEN_POOL: TraitDef[] = TRAITS.filter((trait) => trait.secondTrait);
 
 /** The character's pool for a sigil's own trait: the open traits plus their
-    own. Character sigils are gated by `gem.PlayerReq`, so one character's are
-    never offerable to another. */
+    own. `gem.PlayerReq` keeps one character's out of another's pool. */
 export function sigilTraitPool(characterId: CharacterId): TraitDef[] {
   const playerId = characterById.get(characterId)?.playerId;
   if (!playerId) return FIRST_OPEN_POOL;
@@ -176,12 +174,7 @@ export function sigilTraitPool(characterId: CharacterId): TraitDef[] {
   ];
 }
 
-/** The pool for a sigil's second trait, which depends on its first.
-
-    Wider than the 72 that roll - synthesis can move any trait off an eligible
-    sigil into this slot - but character traits are not free: one of a style's
-    two paired traits may follow the other, and nothing else character-locked
-    ever follows anything. So a Warpath, Ain or a Boundary leads only. */
+/** The pool for a sigil's second trait (depends on its first). */
 export function sigilSecondTraitPool(
   firstTrait: TraitId | null | undefined,
 ): TraitDef[] {
@@ -190,13 +183,12 @@ export function sigilSecondTraitPool(
   return partner ? [partner, ...SECOND_OPEN_POOL] : SECOND_OPEN_POOL;
 }
 
-/** Whether `second` may sit behind `first` on one sigil. Duplicates are legal -
-    synthesis can land the same trait in both slots. */
+/** Whether `second` may sit behind `first` on one sigil. Duplicates are legal. */
 export const canFollow = (first: TraitId, second: TraitId): boolean =>
   !!traitById.get(second)?.secondTrait ||
   traitById.get(first)?.pairsWith === second;
 
-/** True when a sigil carrying this trait can take a second one. */
+/** Whether a sigil built on this trait has a second slot. */
 export const takesSecondTrait = (trait: TraitId): boolean =>
   !traitById.get(trait)?.noSecondSlot;
 
@@ -207,18 +199,16 @@ export const SUMMON_TRAIT_POOL: TraitDef[] = [
   .filter((trait): trait is TraitDef => trait !== undefined)
   .sort((a, b) => a.name.localeCompare(b.name));
 
-/** Filter by trait for summons. */
 const SUMMONS_BY_TRAIT = SUMMONS.reduce((byTrait, summon) => {
   for (const trait of summon.traits)
     byTrait.set(trait, [...(byTrait.get(trait) ?? []), summon]);
   return byTrait;
 }, new Map<TraitId, SummonDef[]>());
 
-/** The number of summons with the same trait. */
 export const summonsWithTrait = (trait: TraitId | null | undefined) =>
   (trait ? SUMMONS_BY_TRAIT.get(trait) : undefined) ?? [];
 
-/** The traits in catalog order. */
+/** The summon's main traits, in catalog order. */
 export const summonTraits = (summonId: SummonId | null | undefined) =>
   (summonId ? (summonById.get(summonId)?.traits ?? []) : [])
     .map((id) => traitById.get(id))
@@ -265,8 +255,7 @@ const slotPool = (cat: CharacterCatalog, slot: WeaponSlot): TraitId[] =>
     .map((t) => (t === "@signature" ? cat.weaponSignatureTrait : t))
     .filter((t): t is TraitId => t !== undefined);
 
-/** The trait each pool slot starts on, in pool order - a freshly picked
-    weapon's `poolTraits`. */
+/** The trait each pool slot starts on, in pool order. */
 export function weaponPoolDefaults(
   id: CharacterId,
   series: string,
@@ -294,8 +283,7 @@ export function defaultWeapon(id: CharacterId): Weapon {
   };
 }
 
-/** HP is series.hp + weaponHpOffset, except Terminus. Throws on a series the
-    character does not own - a build always holds one of their own. */
+/** HP is series.hp + weaponHpOffset, except Terminus. */
 export function resolveWeapon(
   id: CharacterId,
   weapon: Weapon,

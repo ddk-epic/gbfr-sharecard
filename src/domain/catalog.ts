@@ -16,8 +16,8 @@ export type Character = {
   id: CharacterId; // slug, e.g. "io"
   name: string;
   artId: string;
-  /** `gem.PlayerReq`, which gates the character's own sigils. Gran and Djeeta
-      share The Captain's `PL0000`, and Id's differs from its artId. */
+  /** `gem.PlayerReq`, gating the character's own sigils. Gran and Djeeta share
+      The Captain's `PL0000`; Id's differs from its artId. */
   playerId: string;
   portrait: string; // path
   portraitX: number; // framing x-offset (px off centre)
@@ -36,29 +36,21 @@ export type TraitDef = {
   short?: string;
   maxLevel: number;
   category?: TraitCategory;
-  /** Can be a sigil's own trait - 188 of the 200. The rest are weapon traits.
-      From `gem.SkillId1` alone, so the first slot never inherits a trait that
-      only ever appears as somebody else's second. */
+  /** Can be a sigil's own trait - 188 of the 200, the rest weapon traits. */
   firstTrait?: true;
-  /** Can sit in a sigil's second slot behind any first trait - 90, all of them
-      open. Wider than `wrightstoneSub` because sigil synthesis draws the
-      output's traits from all four input traits, so anything an eligible sigil
-      carries can land here. A superset of `wrightstoneSub`.
-
-      Character-locked traits are deliberately excluded: they follow only their
-      own partner, which `pairsWith` carries. */
+  /** Can sit in a sigil's second slot behind any first trait - 90 traits, a
+      superset of `wrightstoneSub`. */
   secondTrait?: true;
   /** The style's other character trait, by id. A character trait may sit second
-      only behind this one, in either order - no Warpath, Ain or Boundary ever
-      follows anything. Set on the 56 paired traits, two per style. */
+      only behind this one, in either order. Set on the 56 paired traits, two
+      per style. */
   pairsWith?: TraitId;
   /** In the archive's one random-trait pool, which a wrightstone's two subs
       draw from. 72 traits. */
   wrightstoneSub?: true;
-  /** A sigil built on this trait has no second slot at all - every gem granting
-      it first is single-trait. About the sigil, not the trait: a trait can be
-      `noSecondSlot` and still be a fine `secondTrait` on someone else's sigil,
-      as Crabmiration is. */
+  /** Every gem granting this trait first is single-trait. A property of those
+      sigils, not the trait: it can still be a `secondTrait` on someone else's
+      sigil, as Crabmiration is. */
   noSecondSlot?: true;
   /** Character-locked sigil, by `Character.playerId`. */
   character?: string;
@@ -86,7 +78,9 @@ export type SummonDef = {
   equipTier: EquipTierGroup;
 };
 
-/** Fixed carries `trait`; `pool` lets the player pick, `pool[0]` default. `levels` keys a sequence in weapon-levels.json; card renders its T7 rung. `@signature` marks the per-character trait. */
+/** Fixed carries `trait`; `pool` lets the player pick, `pool[0]` default, with
+ *  `@signature` standing for the per-character trait. `levels` keys a sequence
+ *  in weapon-levels.json. */
 export type WeaponSlot = { levels: string; trait?: TraitId; pool?: TraitId[] };
 
 /** `atk` is the maxed series constant; `hp` is the maxed value at zero hp-offset. */
@@ -101,7 +95,7 @@ export type WeaponSeries = {
 /** Named T0-T7 level sequences shared by the series' slots. */
 export type WeaponLevels = Record<string, number[]>;
 
-export type WeaponEntry = { name: string; awakened?: string }; // awakened: name once awakened
+export type WeaponEntry = { name: string; awakened?: string };
 
 /** A pool slot always carries its picked trait, so no resolved row is empty. */
 export type ResolvedWeaponSlot = {
@@ -122,8 +116,8 @@ export type ResolvedWeapon = {
 export type WrightstonePrefixMap = Record<TraitId, string>; // main trait -> display prefix
 
 /** `label` is the short UI string, `description` the full in-game text.
- *  `perkRank` is the style-rank perk tier (I-III) a cell is gated behind, read
- *  off the description's "<Style> Rank I/II/III:" prefix; absent when ungated. */
+ *  `perkRank` is the perk tier (I-III) the cell is gated behind, read off the
+ *  description's "<Style> Rank I/II/III:" prefix; absent when ungated. */
 export type MasterTraitCell = {
   id: CellId;
   label: string;

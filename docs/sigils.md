@@ -43,13 +43,28 @@ because it is where the `+` variants live.
 **522 sigils carry a `+` in their name. 234 of them have a `SkillId2`. Exactly
 one non-`+` sigil does.** The `+` suffix is the second-trait marker.
 
-The second trait is **rolled, not fixed**. `SkillTypeLotIdForRandom2ndSkill`
-points into `skill_type_lot` (21 rows), which fans out to weighted `skill_lot`
-pools - `Key 3` is three pools at 33/33/34, `Key 4` is two at 50/50. 749 sigils
-carry `-1` and roll nothing.
+A second trait arrives one of two ways, and **the two are mutually exclusive** -
+no gem row has both:
+
+| How     | Column                            | `+` sigils |
+| ------- | --------------------------------- | ---------- |
+| fixed   | `SkillId2` on the row             | 234        |
+| rolled  | `SkillTypeLotIdForRandom2ndSkill` | 285        |
+| neither | both empty                        | 3          |
+
+The rolled half points into `skill_type_lot` (21 rows), which fans out to
+weighted `skill_lot` pools - `Key 3` is three pools at 33/33/34, `Key 4` is two
+at 50/50. 749 sigils carry `-1` and roll nothing.
+
+The fixed half is the part that is easy to miss: **the game spells out a
+specific pairing as its own `gem` row**, so one display name covers many rows.
+_Damage Cap V+_ is eight rows - one each for `ATK`, `HP`, `Drain`, `Uplift`,
+`Nimble Onslaught`, `Aegis` and `Supplementary DMG` as the second trait. A
+sigil's identity is the row, not the name.
 
 So a `+` sigil's second trait is a property of the individual sigil a player
-owns, not of the sigil type.
+owns, not of the sigil name - either rolled at drop time or baked into the row
+the drop picked.
 
 ### The roll pool
 
@@ -83,9 +98,15 @@ Greens+_, _Roll of the Die+_, _Flight over Fight+_, _Auto Potion+_).
 **The union of all 36 groups is 72 traits, and lot 16 is all 72.** Every other
 lot is a slice of the same pool: there is one random-trait pool in the archive,
 not one per lot, and the rolled wrightstones draw on it as well - see
-[wrightstones.md](wrightstones.md). So the second trait is not free. 72 of the
-200 catalog traits can land there, and **no character sigil trait is among
-them**.
+[wrightstones.md](wrightstones.md). So the rolled second trait is not free. 72
+of the 200 catalog traits can land there, and **no character sigil trait is
+among them**.
+
+That last sentence is about the roll pool only. It is not a statement about
+second traits in general - once the fixed rows and synthesis are counted, the
+second slot reaches 90 open traits, and a character trait can follow its own
+partner besides. See
+[the second-trait pool](#the-second-trait-pool-is-90-open-plus-one-paired).
 
 Which of the 72 a given sigil rolled is not in the archive - it is per owned
 sigil - so this project stores it on the build rather than looking it up.
@@ -162,16 +183,23 @@ ordinary traits - _Catastrophe_, _Berserker_, _Greater Aegis_,
 _Alpha_/_Beta_/_Gamma_. A style resolves through the icon's `pl` id, never
 through arithmetic on the style number.
 
-### The DLC six are text-only
+### The DLC six carry hashed keys
 
 Styles **173-178** - Gallanza, Maglielle, Beatrix, Eustace, Fraux, Fediel - have
-all three trait names in `text/en`, but the `skill` table carries **one row
-each** (`_01`), not three. Their `gem` rows number 2 rather than 3.
+all three traits in `skill`, but only `_01` carries a resolved `SKILL_<style>_01`
+key. Their `_00` and `_02` rows are keyed by **unresolved hash** instead:
 
-For these six the names are present and the trait rows are not. Walking `skill`
-to enumerate character sigils comes up short here; walking
-`TXT_SKILL_<style>_00..02` does not. The text and the table genuinely disagree
-at version 2.0.2.
+| Style | `_00`                            | `_01`                               | `_02`                           |
+| ----- | -------------------------------- | ----------------------------------- | ------------------------------- |
+| 174   | `7B5B081D` Bladequeen's Serenade | `SKILL_174_01` Bladequeen's Circuit | `79266456` Bladequeen's Warpath |
+
+So the rows are present and complete - names, glyphs and all - and only the key
+strings are missing from the hash list. A query filtering on
+`Key LIKE 'SKILL_174_%'` finds one row of three and looks like missing data; the
+`IconId1` of `05_pl<charid>` finds all three.
+
+**Never enumerate a style's traits by key arithmetic.** Match on the glyph, or
+read the pairs off the `_90` awakening gems.
 
 ## Awakening sigils
 
@@ -235,39 +263,212 @@ and absent from all 36 `skill_lot` groups. Nothing random in the game hands it
 out.
 
 At the other end, _Ain_, _Seven-Star Boundary_ and _Two-Crown Boundary_ have
-exactly one sigil each, the Lucilius `+` (`GEEN_170/171/172_74`), and it carries
-_Regen_ as a fixed second trait. Their second trait is neither free nor absent;
-it is always _Regen_.
+exactly one sigil each - `GEEN_172_74`, `GEEN_170_74`, `GEEN_171_74` - and it
+carries _Regen_ as a fixed second trait. Their second trait is neither free nor
+absent; it is always _Regen_.
+
+These are **not** the Lucilius sigils, and their fixed trait is not the
+Lucilius one. `IsLuciliusGem = 1` is _Alpha+_, _Beta+_ and _Gamma+_
+(`GEEN_160/161/162_04`), and all three carry **_DMG Cap_** (`SKILL_020_00`)
+fixed - never _Regen_. The three Boundary/_Ain_ sigils carry
+`IsLuciliusGem = 2`, the same value as every character sigil, and their fixed
+trait is _Regen_ (`SKILL_066_00`). Two different sets, two different fixed
+traits.
+
+## The second-trait pool is 90 open, plus one paired
+
+Counting only the roll pool badly undercounts what a legal `+` sigil can hold.
+Take the rarity-5 `+` sigils - the "legendary (+) mark" sigils the synthesis
+screen asks for - and the second trait already splits three ways **before**
+synthesis enters:
+
+| Source            | Rows | Distinct traits |
+| ----------------- | ---- | --------------- |
+| fixed `SkillId2`  | 154  | 59              |
+| rolled from a lot | 197  | 72              |
+| neither           | 3    | -               |
+
+That union alone is 103. The fixed side contributes **31 the roll pool never
+reaches** - 28 character traits (every style's `_01`, paired by the awakening
+sigils: _Guardian's Awakening+_ is _Conviction_ + _Honor_), plus _Divergence_
+from _War Elemental+_ and _Crabmiration_ / _Crabvestment Returns_ from the
+crab curios.
+
+Synthesis then widens the open half the rest of the way. Because the output's
+first trait is drawn from all four input traits and its second from the
+remaining three, any **open** trait an eligible sigil carries can land in the
+second slot. Resolving the eligible sigils' own traits, their fixed seconds and
+their roll lots, then dropping the character-locked ones, gives **90**.
+
+The 72 that roll are a strict subset of those 90.
+
+### Character traits do not join that pool
+
+A character trait is never freely offerable behind an arbitrary first trait.
+Each style owns **two paired traits and a Warpath**, and the pair is the only
+character combination that exists:
+
+- one of the two paired traits may follow the other, **in either order**;
+- a **Warpath leads only** - it never follows anything;
+- so do _Ain_ and the two Boundaries.
+
+That is 56 paired traits (two per style), 28 Warpaths and 3 loners - the 87
+character-locked traits. Only the 56 can ever sit second, and only behind their
+own partner.
+
+The pairing is read off the gems carrying **two** character traits at once - the
+`_90` awakenings - which is exactly 28, one per style. Deriving it from the
+`SKILL_<style>_00/_01` key order instead would miss the six DLC styles, whose
+`_00` and `_02` rows carry unresolved key hashes rather than `SKILL_` keys.
+
+Duplicates, on the other hand, are entirely legal: synthesis can land the same
+trait in both slots, so nothing rejects a sigil carrying a trait twice.
+
+_Crabmiration_ and _Crabvestment Returns_ are worth pausing on: both are in the
+90 **and** carry `noSecondSlot`. That is consistent - no sigil whose _first_
+trait is _Crabmiration_ takes a second. Being a second trait and taking one are
+separate questions.
+
+## Sigil synthesis
+
+`TXT_YOROZU_TTL_GN_COMP` is **Sigil Synthesis**, at the Knickknack Shack. The
+game's own strings give the input rule exactly:
+
+- _"You must own at least 2 legendary (+) mark sigils."_
+- _"Choose 2 sigils to combine."_
+- `TXT_YOROZU_LOTTERY_SKILL` - **Trait Pool**
+- `TXT_YOROZU_COMP_PREDICTION` - **Prospect {0}**
+
+So the screen takes two rarity-5 `+` sigils, shows a trait pool and a set of
+prospects, and returns one sigil. The economy is in the tables: `gem_mix` maps
+rarity to an `item_tier_map` material set, `gem_mix_rupi` and `gem_mix_ticket`
+give cost by combined level, and `gem_mix_success` gives great/grand success
+weights - zero below combined level 44, then rising from 55/45 to 15/85 at 60.
+
+### The outcome rule
+
+No table maps two inputs to an output pair - that selection is in the
+executable - but the rule is known from play:
+
+> The two inputs put **four traits** in the pot. The output's **first** trait is
+> rolled uniformly from all four (25% each); its **second** is rolled from the
+> remaining three (33% each).
+
+Both slots draw from the same four, so nothing stops the same trait landing
+twice - **a duplicate pair is legal**. For open traits it also means anything
+that can lead a synthesised sigil can follow one, which is what makes
+`secondTrait` a property of the eligible sigils rather than of any lot table.
+
+Character traits are the exception the draw alone does not predict: they obey
+the pairing rule above, so a Warpath never comes out second however the four
+inputs fall.
+
+### `CanGemMix` is the eligibility flag
+
+Not every sigil can go in the pot, and `CanGemMix` is how the archive says so.
+It is set on 264 of 1034 rows; restricted to the legendary `+` tier it selects
+**151 of 354**, and the split is clean:
+
+| `CanGemMix` | What it covers                                                                                                                                                                                                                                                                                                                                                    |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1           | every character sigil - trait, Warpath, Awakening - plus the curios: _Ain+_, _Alpha+_/_Beta+_/_Gamma+_, the Boundaries, _War Elemental+_, _Untouchable+_, _Roll of the Die+_, _Auto Potion+_, _Flight over Fight+_, _Potent Greens+_, _Immortal Shell+_, _In a Pinch+_, _Spartan Echo+_, _Berserker Echo+_, _Crabs Are Forever+_, _Super Ultimate Perfect Dodge+_ |
+| 0           | every generic `<Trait> V+` - _Damage Cap V+_, _Tyranny V+_, _Attack Power V+_, all resistances                                                                                                                                                                                                                                                                    |
+
+The rule reads as a design decision: synthesis exists to recombine the sigils
+you **cannot** farm on demand. A generic _Damage Cap V+_ you simply re-farm, so
+it is not an input - but _DMG Cap_ still reaches the second slot, because
+_Alpha+_ carries it fixed and _Alpha+_ **is** eligible.
+
+Note the direction: `CanGemMix` gates which sigils are **inputs**. It does not
+gate what the editor may offer, and the traits it unlocks are mostly not on
+eligible sigils themselves.
+
+One ambiguity is left open deliberately. The screen has two different prompts -
+`TXT_YOROZU_CHOICE_LEGPLUS_GN` ("Select a **(+) mark** legendary sigil") and
+`TXT_YOROZU_CHOICE_LEG_GN` ("Select a legendary sigil") - which might mean the
+second input need not be `+`. This project takes **both inputs as `+`**, which
+is the only path players use. If that is ever wrong, the 104 rarity-5 non-`+`
+rows join the pot and _Stout Heart_, _Natural Defenses_, _Seven Net_ and
+_Sumo Force_ gain `secondTrait`.
 
 ## Not resolved
 
-`gem_type` is ten unnamed integer columns and nothing has been matched to it.
-`gem_mix*` covers sigil synthesis - grand-success rates, rupie costs.
+`gem_type` is **resolved**: five rows, one per `Category`, holding nine RGBA
+colours each - the per-category UI palette, not gameplay data.
+
+Synthesis' 25%/33% draw is known from play, not from the tables. The odds are
+not modelled here - only which pairs are reachable - so the exact weights would
+matter only if this project ever simulated a synthesis.
 
 ## What this project uses
 
 Only **rarity V** - a sharecard shows an endgame build, so `gem_rare` is not
-generated and the sigil level range in play is always 11-15. Sigil synthesis is
-not modelled.
+generated and the sigil level range in play is always 11-15.
 
-A `+` sigil's second trait is rolled per owned sigil, so it is stored on the
-equipped sigil rather than looked up from a catalog.
+A `+` sigil's second trait is a property of the owned sigil, so it is stored on
+the equipped sigil rather than looked up from a catalog.
 
-The three pools ride on `traits.json` as flags - `sigil`, `roll`, `soloSigil` -
-written by `scripts/extract.mjs`, with `character` holding the `PlayerReq` of a
-character-locked trait. `src/data/index.ts` turns them into what the editor
-offers:
+Synthesis is not simulated - no costs, no success rates - but it **is** what
+sets the second slot's pool, because it is the only route by which a trait that
+never rolls can end up there.
 
-| Export                    | Pool                                                 |
-| ------------------------- | ---------------------------------------------------- |
-| `sigilTraitPool(id)`      | a sigil's own trait: the 101 open + that character's |
-| `SIGIL_SECOND_TRAIT_POOL` | the 72                                               |
-| `takesSecondTrait(id)`    | false for the six                                    |
+### The flags
 
-A character sigil belongs to one character, so `SigilsPopover` offers ~104
-traits rather than 200 and a build can only hold sigils its character could
-equip. A build is bound to its character - `storage.ts` keys on it - so the pool
-never changes under a build.
+`scripts/extract.mjs` writes four booleans and one reference onto `traits.json`,
+plus `character` holding the `PlayerReq` of a character-locked trait. Each
+answers a **different** question, so each is built from its own column:
+
+| Flag             | Count | Question it answers                          | Built from                               |
+| ---------------- | ----- | -------------------------------------------- | ---------------------------------------- |
+| `firstTrait`     | 188   | can it be a sigil's own trait?               | `gem.SkillId1`                           |
+| `secondTrait`    | 90    | can it follow **any** first trait?           | synthesis-eligible legendary+, open only |
+| `pairsWith`      | 56    | which single trait may it follow?            | gems carrying two character traits       |
+| `wrightstoneSub` | 72    | can it be a wrightstone sub?                 | `skill_lot`                              |
+| `noSecondSlot`   | 6     | does a sigil built on it lack a second slot? | `SkillId1` with no pair, ever            |
+
+Three traps these names are shaped to avoid:
+
+- `firstTrait` reads **`SkillId1` only**. Reading `SkillId2` as well happens to
+  give the same 188 today - no trait is second-only - but it would offer a
+  second-only trait as a first trait the moment the game adds one.
+- `noSecondSlot` is about **the sigil**, the others about **the trait**. They
+  are independent, and _Crabmiration_ sets both it and `secondTrait`: _Crabs Are
+  Forever+_ carries Crabmiration second, yet no Crabmiration sigil ever gets a
+  second trait of its own. That is not a contradiction.
+- `secondTrait` means "follows _anything_", so no character trait carries it.
+  A character trait's eligibility is conditional, and `pairsWith` is where that
+  condition lives.
+
+`secondTrait` is a strict superset of `wrightstoneSub`; `extract.mjs` throws if
+that ever stops holding, and again if the pairings do not cover exactly 28
+styles.
+
+### What the editor offers
+
+`src/data/index.ts` turns the flags into the pools:
+
+| Export                             | Pool                                    |
+| ---------------------------------- | --------------------------------------- |
+| `sigilTraitPool(characterId)`      | first slot: 101 open + that character's |
+| `sigilSecondTraitPool(firstTrait)` | second slot: the 90, plus the partner   |
+| `canFollow(first, second)`         | the pair rule as a predicate            |
+| `WRIGHTSTONE_SUB_POOL`             | the 72                                  |
+| `takesSecondTrait(id)`             | false for the six                       |
+
+The second pool keys off the **first trait**, not the character: every trait in
+it is either open or that first trait's own partner, so it cannot leak another
+character's traits. The first pool is still `PlayerReq`-gated, and a build is
+bound to its character - `storage.ts` keys on it - so it never changes under a
+build.
+
+Changing a first trait re-checks the second and drops it if the pair is no
+longer legal, so swapping away from a character trait clears its partner.
+
+The second slot is **narrower** than the first: 90 open traits against 101.
+Exactly eleven traits can lead a sigil and never follow it - the six
+_Celestial_ elements, _Fatebreaker_, and the four single-trait curios _Natural
+Defenses_, _Seven Net_, _Stout Heart_ and _Sumo Force_. None of them rolls, and
+none sits on a synthesis-eligible sigil.
 
 Picking a single-trait trait moves the cursor straight to the next sigil: the
 second cell is not offered, and the cell count drops to match.
