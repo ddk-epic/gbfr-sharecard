@@ -1,4 +1,4 @@
-import type { Build } from "./build";
+import type { Build } from "@/domain/build";
 import type { CharacterId } from "@/catalog/ids";
 
 const SAVE_DEBOUNCE_MS = 300;

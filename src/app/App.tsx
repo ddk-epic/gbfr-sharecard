@@ -20,7 +20,7 @@ import { Editor } from "../screens/editor/Editor";
 import { CardScreen } from "../screens/CardScreen";
 import { emptyBuild, type Build } from "../domain/build";
 import { type CharacterId } from "@/catalog/ids";
-import { readBuild, writeBuild } from "../domain/storage";
+import { readBuild, writeBuild } from "@/infra/storage";
 import { defaultWeapon } from "@/domain/weapons";
 import { ParchmentBackdrop } from "../components/ui";
 

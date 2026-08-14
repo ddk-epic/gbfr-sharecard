@@ -2,7 +2,7 @@ import type { CharacterId } from "@/catalog/ids";
 import type { Character } from "@/catalog/types";
 import { thumbUrl } from "@/assets/urls";
 import { CHARACTERS } from "@/catalog";
-import { hasBuild } from "../domain/storage";
+import { hasBuild } from "@/infra/storage";
 import { Heading, Panel } from "../components/ui";
 
 const UNREVEALED_SLOTS = 6;
