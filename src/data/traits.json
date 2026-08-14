@@ -5,6 +5,7 @@
     "maxLevel": 45,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -19,7 +20,8 @@
     "name": "Alpha",
     "maxLevel": 30,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "atk",
@@ -27,6 +29,7 @@
     "maxLevel": 50,
     "category": "basic",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -35,6 +38,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "ATK↓ Res."
   },
@@ -43,7 +47,8 @@
     "name": "Auto Potion",
     "maxLevel": 15,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "autorevive",
@@ -51,6 +56,7 @@
     "maxLevel": 20,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -59,6 +65,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -66,28 +73,32 @@
     "name": "Berserker Echo",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "beta",
     "name": "Beta",
     "maxLevel": 30,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "bladequeens-circuit",
     "name": "Bladequeen's Circuit",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2500"
+    "character": "PL2500",
+    "pairsWith": "bladequeens-serenade"
   },
   {
     "id": "bladequeens-serenade",
     "name": "Bladequeen's Serenade",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2500"
+    "character": "PL2500",
+    "pairsWith": "bladequeens-circuit"
   },
   {
     "id": "bladequeens-warpath",
@@ -102,6 +113,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Blight Res."
   },
@@ -111,6 +123,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -119,6 +132,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Burn Res."
   },
@@ -127,14 +141,16 @@
     "name": "Butterfly's Grace",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1400"
+    "character": "PL1400",
+    "pairsWith": "butterflys-valor"
   },
   {
     "id": "butterflys-valor",
     "name": "Butterfly's Valor",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1400"
+    "character": "PL1400",
+    "pairsWith": "butterflys-grace"
   },
   {
     "id": "butterflys-warpath",
@@ -149,6 +165,7 @@
     "maxLevel": 20,
     "category": "support",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -211,6 +228,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -219,6 +237,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -227,6 +246,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -235,6 +255,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -242,7 +263,8 @@
     "name": "Crabby Resonance",
     "maxLevel": 45,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "crabmiration",
@@ -250,6 +272,7 @@
     "maxLevel": 45,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "noSecondSlot": true
   },
   {
@@ -258,6 +281,7 @@
     "maxLevel": 15,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "noSecondSlot": true
   },
   {
@@ -265,14 +289,16 @@
     "name": "Crimson's Clout",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1600"
+    "character": "PL1600",
+    "pairsWith": "crimsons-flight"
   },
   {
     "id": "crimsons-flight",
     "name": "Crimson's Flight",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1600"
+    "character": "PL1600",
+    "pairsWith": "crimsons-clout"
   },
   {
     "id": "crimsons-warpath",
@@ -287,6 +313,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -295,6 +322,7 @@
     "maxLevel": 45,
     "category": "basic",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -303,6 +331,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL2300",
+    "pairsWith": "dark-huntresss-volley",
     "short": "D. Huntress's Surge"
   },
   {
@@ -311,6 +340,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL2300",
+    "pairsWith": "dark-huntresss-surge",
     "short": "D. Huntress's Volley"
   },
   {
@@ -327,6 +357,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Darkflame Res."
   },
@@ -336,6 +367,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "DEF↓ Res."
   },
@@ -344,7 +376,8 @@
     "name": "Divergence",
     "maxLevel": 15,
     "category": "support",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "dizzy-resistance",
@@ -352,6 +385,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Dizzy Res."
   },
@@ -361,6 +395,7 @@
     "maxLevel": 65,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -393,6 +428,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -401,6 +437,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL1100",
+    "pairsWith": "dragonslayers-ingenuity",
     "short": "Dragonslayer's Dom."
   },
   {
@@ -408,7 +445,8 @@
     "name": "Dragonslayer's Ingenuity",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1100"
+    "character": "PL1100",
+    "pairsWith": "dragonslayers-dominance"
   },
   {
     "id": "dragonslayers-warpath",
@@ -423,6 +461,7 @@
     "maxLevel": 45,
     "category": "support",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -430,14 +469,16 @@
     "name": "Ebony's Poise",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1700"
+    "character": "PL1700",
+    "pairsWith": "ebonys-presence"
   },
   {
     "id": "ebonys-presence",
     "name": "Ebony's Presence",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1700"
+    "character": "PL1700",
+    "pairsWith": "ebonys-poise"
   },
   {
     "id": "ebonys-warpath",
@@ -451,14 +492,16 @@
     "name": "Enchantress's Blessing",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2800"
+    "character": "PL2800",
+    "pairsWith": "enchantresss-rhythm"
   },
   {
     "id": "enchantresss-rhythm",
     "name": "Enchantress's Rhythm",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2800"
+    "character": "PL2800",
+    "pairsWith": "enchantresss-blessing"
   },
   {
     "id": "enchantresss-warpath",
@@ -473,6 +516,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -481,6 +525,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL1500",
+    "pairsWith": "eternal-rages-mettle",
     "short": "E. Rage's Ethos"
   },
   {
@@ -489,6 +534,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL1500",
+    "pairsWith": "eternal-rages-ethos",
     "short": "E. Rage's Mettle"
   },
   {
@@ -505,6 +551,7 @@
     "maxLevel": 45,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -519,7 +566,8 @@
     "name": "Fearless Drive",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0000"
+    "character": "PL0000",
+    "pairsWith": "fearless-spirit"
   },
   {
     "id": "fearless-heart",
@@ -533,7 +581,8 @@
     "name": "Fearless Spirit",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0000"
+    "character": "PL0000",
+    "pairsWith": "fearless-drive"
   },
   {
     "id": "firm-stance",
@@ -541,6 +590,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -548,21 +598,24 @@
     "name": "Flight over Fight",
     "maxLevel": 15,
     "category": "defense",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "founders-strategy",
     "name": "Founder's Strategy",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1800"
+    "character": "PL1800",
+    "pairsWith": "founders-truth"
   },
   {
     "id": "founders-truth",
     "name": "Founder's Truth",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1800"
+    "character": "PL1800",
+    "pairsWith": "founders-strategy"
   },
   {
     "id": "founders-warpath",
@@ -576,7 +629,8 @@
     "name": "Gamma",
     "maxLevel": 30,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "garrison",
@@ -584,6 +638,7 @@
     "maxLevel": 45,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -592,6 +647,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Glaciate Res."
   },
@@ -600,14 +656,16 @@
     "name": "Gladiator's Frenzy",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2400"
+    "character": "PL2400",
+    "pairsWith": "gladiators-top"
   },
   {
     "id": "gladiators-top",
     "name": "Gladiator's Top",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2400"
+    "character": "PL2400",
+    "pairsWith": "gladiators-frenzy"
   },
   {
     "id": "gladiators-warpath",
@@ -622,6 +680,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -630,6 +689,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -638,6 +698,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -645,14 +706,16 @@
     "name": "Guardian's Conviction",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0200"
+    "character": "PL0200",
+    "pairsWith": "guardians-honor"
   },
   {
     "id": "guardians-honor",
     "name": "Guardian's Honor",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0200"
+    "character": "PL0200",
+    "pairsWith": "guardians-conviction"
   },
   {
     "id": "guardians-warpath",
@@ -667,6 +730,7 @@
     "maxLevel": 20,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -675,6 +739,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -683,6 +748,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Held Under Res."
   },
@@ -691,14 +757,16 @@
     "name": "Helmsman's Navigation",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0300"
+    "character": "PL0300",
+    "pairsWith": "helmsmans-tenacity"
   },
   {
     "id": "helmsmans-tenacity",
     "name": "Helmsman's Tenacity",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0300"
+    "character": "PL0300",
+    "pairsWith": "helmsmans-navigation"
   },
   {
     "id": "helmsmans-warpath",
@@ -712,7 +780,8 @@
     "name": "Hero's Creed",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0900"
+    "character": "PL0900",
+    "pairsWith": "heros-will"
   },
   {
     "id": "heros-warpath",
@@ -726,7 +795,8 @@
     "name": "Hero's Will",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0900"
+    "character": "PL0900",
+    "pairsWith": "heros-creed"
   },
   {
     "id": "holy-knights-grandeur",
@@ -734,6 +804,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL1200",
+    "pairsWith": "holy-knights-luster",
     "short": "H. Knight's Grandeur"
   },
   {
@@ -742,6 +813,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL1200",
+    "pairsWith": "holy-knights-grandeur",
     "short": "H. Knight's Luster"
   },
   {
@@ -758,6 +830,7 @@
     "maxLevel": 50,
     "category": "basic",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -765,7 +838,8 @@
     "name": "Immortal Shell",
     "maxLevel": 20,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "improved-dodge",
@@ -773,6 +847,7 @@
     "maxLevel": 15,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -781,6 +856,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -789,6 +865,7 @@
     "maxLevel": 30,
     "category": "support",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -796,7 +873,8 @@
     "name": "In a Pinch",
     "maxLevel": 15,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "injury-to-insult",
@@ -804,6 +882,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -812,6 +891,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -820,6 +900,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -828,6 +909,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -835,14 +917,16 @@
     "name": "Lord's Ambition",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1000"
+    "character": "PL1000",
+    "pairsWith": "lords-procession"
   },
   {
     "id": "lords-procession",
     "name": "Lord's Procession",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1000"
+    "character": "PL1000",
+    "pairsWith": "lords-ambition"
   },
   {
     "id": "lords-warpath",
@@ -857,6 +941,7 @@
     "maxLevel": 20,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -865,6 +950,7 @@
     "maxLevel": 20,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -872,14 +958,16 @@
     "name": "Mage's Aspiration",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0400"
+    "character": "PL0400",
+    "pairsWith": "mages-savvy"
   },
   {
     "id": "mages-savvy",
     "name": "Mage's Savvy",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0400"
+    "character": "PL0400",
+    "pairsWith": "mages-aspiration"
   },
   {
     "id": "mages-warpath",
@@ -902,6 +990,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -910,6 +999,7 @@
     "maxLevel": 30,
     "category": "support",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -918,6 +1008,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -926,6 +1017,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Paralysis Res."
   },
@@ -935,6 +1027,7 @@
     "maxLevel": 45,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -942,14 +1035,16 @@
     "name": "Phantasm's Concord",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0700"
+    "character": "PL0700",
+    "pairsWith": "phantasms-harmony"
   },
   {
     "id": "phantasms-harmony",
     "name": "Phantasm's Harmony",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0700"
+    "character": "PL0700",
+    "pairsWith": "phantasms-concord"
   },
   {
     "id": "phantasms-warpath",
@@ -964,6 +1059,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Poison Res."
   },
@@ -972,7 +1068,8 @@
     "name": "Potent Greens",
     "maxLevel": 30,
     "category": "support",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "potion-hoarder",
@@ -980,6 +1077,7 @@
     "maxLevel": 15,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -988,6 +1086,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -996,6 +1095,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1004,6 +1104,7 @@
     "maxLevel": 30,
     "category": "support",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1012,6 +1113,7 @@
     "maxLevel": 20,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1020,6 +1122,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1028,6 +1131,7 @@
     "maxLevel": 45,
     "category": "support",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1036,6 +1140,7 @@
     "maxLevel": 45,
     "category": "support",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1043,21 +1148,24 @@
     "name": "Roll of the Die",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "roses-blooming",
     "name": "Rose's Blooming",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0600"
+    "character": "PL0600",
+    "pairsWith": "roses-profusion"
   },
   {
     "id": "roses-profusion",
     "name": "Rose's Profusion",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0600"
+    "character": "PL0600",
+    "pairsWith": "roses-blooming"
   },
   {
     "id": "roses-warpath",
@@ -1072,6 +1180,7 @@
     "maxLevel": 45,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1080,6 +1189,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Sandtomb Res."
   },
@@ -1089,6 +1199,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "SBA Sealed Res."
   },
@@ -1119,6 +1230,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Skill Sealed Res."
   },
@@ -1128,6 +1240,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1136,6 +1249,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true,
     "short": "Slow Res."
   },
@@ -1144,7 +1258,8 @@
     "name": "Spartan Echo",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "spirit-edges-fury",
@@ -1152,6 +1267,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL2200",
+    "pairsWith": "spirit-edges-rally",
     "short": "S. Edge's Fury"
   },
   {
@@ -1160,6 +1276,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL2200",
+    "pairsWith": "spirit-edges-fury",
     "short": "S. Edge's Rally"
   },
   {
@@ -1176,6 +1293,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1184,6 +1302,7 @@
     "maxLevel": 15,
     "category": "special",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1192,6 +1311,7 @@
     "maxLevel": 15,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1208,6 +1328,7 @@
     "maxLevel": 30,
     "category": "defense",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1216,6 +1337,7 @@
     "maxLevel": 45,
     "category": "basic",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1232,6 +1354,7 @@
     "maxLevel": 15,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "short": "S. Ult. Perfect Dodge"
   },
   {
@@ -1246,6 +1369,7 @@
     "maxLevel": 45,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1254,6 +1378,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL2100",
+    "pairsWith": "supreme-primarchs-nimbus",
     "short": "S. Primarch's Awe"
   },
   {
@@ -1262,6 +1387,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL2100",
+    "pairsWith": "supreme-primarchs-awe",
     "short": "S. Primarch's Nimbus"
   },
   {
@@ -1277,14 +1403,16 @@
     "name": "Swordmaster's Art",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1300"
+    "character": "PL1300",
+    "pairsWith": "swordmasters-prowess"
   },
   {
     "id": "swordmasters-prowess",
     "name": "Swordmaster's Prowess",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1300"
+    "character": "PL1300",
+    "pairsWith": "swordmasters-art"
   },
   {
     "id": "swordmasters-warpath",
@@ -1298,14 +1426,16 @@
     "name": "The Black's Impulse",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2900"
+    "character": "PL2900",
+    "pairsWith": "the-blacks-mark"
   },
   {
     "id": "the-blacks-mark",
     "name": "The Black's Mark",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2900"
+    "character": "PL2900",
+    "pairsWith": "the-blacks-impulse"
   },
   {
     "id": "the-blacks-warpath",
@@ -1320,6 +1450,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1327,14 +1458,16 @@
     "name": "Thunderwolf's Acuity",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2700"
+    "character": "PL2700",
+    "pairsWith": "thunderwolfs-recharge"
   },
   {
     "id": "thunderwolfs-recharge",
     "name": "Thunderwolf's Recharge",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2700"
+    "character": "PL2700",
+    "pairsWith": "thunderwolfs-acuity"
   },
   {
     "id": "thunderwolfs-warpath",
@@ -1356,6 +1489,7 @@
     "maxLevel": 30,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1363,14 +1497,16 @@
     "name": "Ultramarine's Adversity",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2600"
+    "character": "PL2600",
+    "pairsWith": "ultramarines-flash"
   },
   {
     "id": "ultramarines-flash",
     "name": "Ultramarine's Flash",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL2600"
+    "character": "PL2600",
+    "pairsWith": "ultramarines-adversity"
   },
   {
     "id": "ultramarines-warpath",
@@ -1408,7 +1544,8 @@
     "name": "Untouchable",
     "maxLevel": 15,
     "category": "defense",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "uplift",
@@ -1416,6 +1553,7 @@
     "maxLevel": 45,
     "category": "support",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1423,7 +1561,8 @@
     "name": "Versalis Foundation",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1900"
+    "character": "PL1900",
+    "pairsWith": "versalis-ignition"
   },
   {
     "id": "versalis-heart",
@@ -1437,21 +1576,24 @@
     "name": "Versalis Ignition",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL1900"
+    "character": "PL1900",
+    "pairsWith": "versalis-foundation"
   },
   {
     "id": "veterans-insight",
     "name": "Veteran's Insight",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0500"
+    "character": "PL0500",
+    "pairsWith": "veterans-vision"
   },
   {
     "id": "veterans-vision",
     "name": "Veteran's Vision",
     "maxLevel": 15,
     "firstTrait": true,
-    "character": "PL0500"
+    "character": "PL0500",
+    "pairsWith": "veterans-insight"
   },
   {
     "id": "veterans-warpath",
@@ -1465,7 +1607,8 @@
     "name": "War Elemental",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "weak-point-dmg",
@@ -1473,6 +1616,7 @@
     "maxLevel": 45,
     "category": "attack",
     "firstTrait": true,
+    "secondTrait": true,
     "wrightstoneSub": true
   },
   {
@@ -1481,6 +1625,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL0800",
+    "pairsWith": "white-dragons-oath",
     "short": "W. Dragon's Glory"
   },
   {
@@ -1489,6 +1634,7 @@
     "maxLevel": 15,
     "firstTrait": true,
     "character": "PL0800",
+    "pairsWith": "white-dragons-glory",
     "short": "W. Dragon's Oath"
   },
   {

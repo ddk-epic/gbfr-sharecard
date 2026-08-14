@@ -40,11 +40,25 @@ export type TraitDef = {
       From `gem.SkillId1` alone, so the first slot never inherits a trait that
       only ever appears as somebody else's second. */
   firstTrait?: true;
-  /** In the archive's one random-trait pool: a `+` sigil's second trait and a
-      wrightstone's subs both draw from it. 72 traits. */
+  /** Can sit in a sigil's second slot behind any first trait - 90, all of them
+      open. Wider than `wrightstoneSub` because sigil synthesis draws the
+      output's traits from all four input traits, so anything an eligible sigil
+      carries can land here. A superset of `wrightstoneSub`.
+
+      Character-locked traits are deliberately excluded: they follow only their
+      own partner, which `pairsWith` carries. */
+  secondTrait?: true;
+  /** The style's other character trait, by id. A character trait may sit second
+      only behind this one, in either order - no Warpath, Ain or Boundary ever
+      follows anything. Set on the 56 paired traits, two per style. */
+  pairsWith?: TraitId;
+  /** In the archive's one random-trait pool, which a wrightstone's two subs
+      draw from. 72 traits. */
   wrightstoneSub?: true;
   /** A sigil built on this trait has no second slot at all - every gem granting
-      it first is single-trait. About the sigil, not the trait. */
+      it first is single-trait. About the sigil, not the trait: a trait can be
+      `noSecondSlot` and still be a fine `secondTrait` on someone else's sigil,
+      as Crabmiration is. */
   noSecondSlot?: true;
   /** Character-locked sigil, by `Character.playerId`. */
   character?: string;

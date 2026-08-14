@@ -159,8 +159,8 @@ const categoryOf = (icon) =>
   icon.startsWith("05_pl") ? undefined : TRAIT_CATEGORIES[icon.slice(0, 2)];
 
 // The sigil trait flags, from the gem table. Each answers a different question,
-// so each is built from its own column: `SkillId1` licenses the first slot, and
-// `skill_lot` licenses a wrightstone sub.
+// so each is built from its own column: `SkillId1` licenses the first slot,
+// synthesis licenses the second, and `skill_lot` licenses a wrightstone sub.
 // See docs/sigils.md.
 const gems = database.prepare("select * from gem").all();
 // First slot only. Reading `SkillId2` in here too would happen to give the same
@@ -176,7 +176,8 @@ for (const gem of gems) {
   if (gem.SkillId2 || gem.SkillTypeLotIdForRandom2ndSkill !== -1)
     pairedKeys.add(gem.SkillId1);
 }
-// One pool, cut into groups; every lot draws a subset of the same 72.
+// One pool, cut into groups; every lot draws a subset of the same 72. Only
+// wrightstones still draw on it directly - a sigil's second slot is wider.
 const wrightstoneSubKeys = new Set(
   database
     .prepare("select SkillId from skill_lot")
@@ -184,12 +185,90 @@ const wrightstoneSubKeys = new Set(
     .map((row) => row.SkillId),
 );
 
+// A lot id resolves to every trait its weighted groups can hand out.
+const lotGroups = new Map();
+for (const row of database
+  .prepare("select Key, SkillId from skill_lot")
+  .all()) {
+  if (!lotGroups.has(row.Key)) lotGroups.set(row.Key, []);
+  lotGroups.get(row.Key).push(row.SkillId);
+}
+const lotKeys = new Map();
+for (const row of database.prepare("select * from skill_type_lot").all()) {
+  const keys = new Set();
+  for (let slot = 1; slot <= 6; slot += 1)
+    if (row[`SkillLotId${slot}`] && row[`ChancePercent${slot}`] > 0)
+      for (const key of lotGroups.get(row[`SkillLotId${slot}`]) ?? [])
+        keys.add(key);
+  lotKeys.set(row.Key, keys);
+}
+
+// Sigil synthesis: two eligible sigils go in, one comes out holding two of the
+// four input traits - the first rolled from all four, the second from the
+// remaining three. Either slot can take any of them, so the traits an eligible
+// sigil can carry are exactly the traits a synthesised sigil can hold in its
+// SECOND slot. `CanGemMix` is the eligibility flag: it is set on the character
+// and curio sigils, and clear on every generic `<Trait> V+`. The screen asks
+// for "legendary (+) mark sigils", which is rarity V with a `+` name.
+// See docs/sigils.md.
+const isLegendaryPlus = (gem) =>
+  gem.Rarity === 5 && (english(gem.Name) ?? "").endsWith("+");
+const secondKeys = new Set();
+for (const gem of gems) {
+  if (!gem.CanGemMix || !isLegendaryPlus(gem) || !gem.SkillId1) continue;
+  secondKeys.add(gem.SkillId1);
+  if (gem.SkillId2) secondKeys.add(gem.SkillId2);
+  for (const key of lotKeys.get(gem.SkillTypeLotIdForRandom2ndSkill) ?? [])
+    secondKeys.add(key);
+}
+// The rolled 72 are all reachable this way, so the second slot is a superset of
+// the wrightstone pool. If that ever stops holding, the pools have diverged and
+// the second slot needs to union them rather than stand alone.
+const unreachableRolls = [...wrightstoneSubKeys].filter(
+  (key) => !secondKeys.has(key),
+);
+if (unreachableRolls.length)
+  throw new Error(
+    `roll pool traits outside the synthesis pool: ${unreachableRolls.join(", ")}`,
+  );
+
+// A character trait is never freely offerable as a second trait, however wide
+// synthesis gets. Each style owns two paired traits and a Warpath, and the pair
+// is the only character combination that exists: one of the two can follow the
+// other, in either order. A Warpath leads only - every `Warpath+` rolls its
+// second from lot 15 - and so do Ain and the two Boundaries.
+// The pairing is read off the gems that carry two character traits at once (the
+// `_90` awakenings), which is exactly 28, one per style. Deriving it from the
+// `SKILL_<style>_00/_01` key order would miss the six DLC styles, whose `_00`
+// and `_02` rows carry unresolved key hashes.
+const characterKeys = new Set(characterByKey.keys());
+const pairedWith = new Map();
+for (const gem of gems) {
+  if (!characterKeys.has(gem.SkillId1) || !characterKeys.has(gem.SkillId2))
+    continue;
+  pairedWith.set(gem.SkillId1, gem.SkillId2);
+  pairedWith.set(gem.SkillId2, gem.SkillId1);
+}
+const styles = new Set(
+  [...pairedWith.keys()].map((key) => characterByKey.get(key)),
+);
+if (styles.size !== 28)
+  throw new Error(`expected 28 paired styles, found ${styles.size}`);
+
+// So the free second-trait pool is the character-locked traits taken back out.
+for (const key of characterKeys) secondKeys.delete(key);
+
 const missingMaxLevel = [];
-const traits = database
+const traitRows = database
   .prepare("select Key, Name, IconId1 from skill where IconId1 != ''")
   .all()
   .map((row) => ({ key: row.Key, name: english(row.Name), icon: row.IconId1 }))
-  .filter((row) => row.name)
+  .filter((row) => row.name);
+
+// `pairsWith` names the partner by trait id, so the key has to resolve first.
+const idByKey = new Map(traitRows.map((row) => [row.key, slug(row.name)]));
+
+const traits = traitRows
   .map(({ key, name, icon }) => {
     const maxLevel = maxLevelByKey.get(key);
     if (maxLevel == null) missingMaxLevel.push(`${name} (${key})`);
@@ -200,9 +279,13 @@ const traits = database
       maxLevel: maxLevel ?? null,
       category: categoryOf(icon),
       ...(firstTrait && { firstTrait: true }),
+      ...(secondKeys.has(key) && { secondTrait: true }),
       ...(wrightstoneSubKeys.has(key) && { wrightstoneSub: true }),
       ...(firstTrait && !pairedKeys.has(key) && { noSecondSlot: true }),
       ...(characterByKey.has(key) && { character: characterByKey.get(key) }),
+      ...(pairedWith.has(key) && {
+        pairsWith: idByKey.get(pairedWith.get(key)),
+      }),
     };
   })
   .sort((a, b) => a.name.localeCompare(b.name));

@@ -1,6 +1,6 @@
 import type { Build, TraitId } from "../../../domain/build";
 import { SIGIL_DEFAULT_LEVEL } from "../../../domain/build";
-import { takesSecondTrait } from "../../../data";
+import { canFollow, takesSecondTrait } from "../../../data";
 
 export type Sigils = Build["sigils"];
 
@@ -59,6 +59,11 @@ export function nextEmpty(
 const setAt = (sigils: Sigils, index: number, value: Sigils[number]) =>
   sigils.map((slot, i) => (i === index ? value : slot));
 
+/** A second trait survives a change of first only if it is still legal behind
+    it - swapping away from a character trait drops its partner. */
+const keptSecond = (first: TraitId, second: TraitId | null | undefined) =>
+  second && takesSecondTrait(first) && canFollow(first, second) ? second : null;
+
 export function pick(sigils: Sigils, cell: Cell, trait: TraitId): Sigils {
   const slot = sigils[cell.index];
   if (cell.secondary)
@@ -67,9 +72,7 @@ export function pick(sigils: Sigils, cell: Cell, trait: TraitId): Sigils {
       : sigils;
   return setAt(sigils, cell.index, {
     primaryTrait: trait,
-    secondaryTrait: takesSecondTrait(trait)
-      ? (slot?.secondaryTrait ?? null)
-      : null,
+    secondaryTrait: keptSecond(trait, slot?.secondaryTrait),
     level: slot?.level ?? SIGIL_DEFAULT_LEVEL,
   });
 }

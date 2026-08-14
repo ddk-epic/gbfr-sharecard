@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import type { CharacterId, TraitId } from "../../../domain/build";
-import { SIGIL_SECOND_TRAIT_POOL, sigilTraitPool } from "../../../data";
+import { sigilSecondTraitPool, sigilTraitPool } from "../../../data";
 import { Popover, POPOVER_BASE, type Anchor } from "../Popover";
 import { TraitPicker } from "./TraitPicker";
 import {
@@ -33,10 +33,18 @@ export function SigilsPopover({
   onOrder: (order: FillOrder) => void;
   onClose: () => void;
 }) {
-  // The open sigil traits plus this character's own.
+  // The first slot is the open traits plus this character's own. The second is
+  // narrower and depends on the first, since a character trait may only follow
+  // its own partner.
   const firstTraitPool = useMemo(
     () => sigilTraitPool(characterId),
     [characterId],
+  );
+  const firstOfCursor =
+    cursor && cursor.secondary ? sigils[cursor.index]?.primaryTrait : null;
+  const secondTraitPool = useMemo(
+    () => sigilSecondTraitPool(firstOfCursor),
+    [firstOfCursor],
   );
 
   return (
@@ -60,7 +68,7 @@ export function SigilsPopover({
       </div>
 
       <TraitPicker
-        pool={cursor?.secondary ? SIGIL_SECOND_TRAIT_POOL : firstTraitPool}
+        pool={cursor?.secondary ? secondTraitPool : firstTraitPool}
         disabled={cursor === null}
         onPick={onPick}
       />

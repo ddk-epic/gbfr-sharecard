@@ -152,29 +152,49 @@ export const WRIGHTSTONE_MAIN_POOL: TraitDef[] = Object.keys(
   .map((id) => traitById.get(id))
   .filter((trait): trait is TraitDef => trait !== undefined);
 
-/** The archive's one random-trait pool, 72 traits. A wrightstone rolls its two
-    subs from it. */
+/** A wrightstone rolls its two subs from the archive's one random-trait pool. */
 export const WRIGHTSTONE_SUB_POOL: TraitDef[] = TRAITS.filter(
   (trait) => trait.wrightstoneSub,
 );
-/** A `+` sigil's second trait rolls from the same pool. */
-export const SIGIL_SECOND_TRAIT_POOL = WRIGHTSTONE_SUB_POOL;
 
-/** Sigil traits that are not locked to a character - the same for every build. */
-const SIGIL_OPEN_POOL: TraitDef[] = TRAITS.filter(
+/** Open traits are the same for every build, so each slot's share is built once. */
+const FIRST_OPEN_POOL: TraitDef[] = TRAITS.filter(
   (trait) => trait.firstTrait && !trait.character,
 );
+/** Every `secondTrait` is open already - character traits pair instead. */
+const SECOND_OPEN_POOL: TraitDef[] = TRAITS.filter((trait) => trait.secondTrait);
 
-/** The character's pool for a sigil's own trait. Character sigils are gated by
-    `gem.PlayerReq`, so another character's are not offerable. */
+/** The character's pool for a sigil's own trait: the open traits plus their
+    own. Character sigils are gated by `gem.PlayerReq`, so one character's are
+    never offerable to another. */
 export function sigilTraitPool(characterId: CharacterId): TraitDef[] {
   const playerId = characterById.get(characterId)?.playerId;
-  if (!playerId) return SIGIL_OPEN_POOL;
+  if (!playerId) return FIRST_OPEN_POOL;
   return [
-    ...SIGIL_OPEN_POOL,
+    ...FIRST_OPEN_POOL,
     ...TRAITS.filter((trait) => trait.character === playerId),
   ];
 }
+
+/** The pool for a sigil's second trait, which depends on its first.
+
+    Wider than the 72 that roll - synthesis can move any trait off an eligible
+    sigil into this slot - but character traits are not free: one of a style's
+    two paired traits may follow the other, and nothing else character-locked
+    ever follows anything. So a Warpath, Ain or a Boundary leads only. */
+export function sigilSecondTraitPool(
+  firstTrait: TraitId | null | undefined,
+): TraitDef[] {
+  const partnerId = firstTrait ? traitById.get(firstTrait)?.pairsWith : null;
+  const partner = partnerId ? traitById.get(partnerId) : undefined;
+  return partner ? [partner, ...SECOND_OPEN_POOL] : SECOND_OPEN_POOL;
+}
+
+/** Whether `second` may sit behind `first` on one sigil. Duplicates are legal -
+    synthesis can land the same trait in both slots. */
+export const canFollow = (first: TraitId, second: TraitId): boolean =>
+  !!traitById.get(second)?.secondTrait ||
+  traitById.get(first)?.pairsWith === second;
 
 /** True when a sigil carrying this trait can take a second one. */
 export const takesSecondTrait = (trait: TraitId): boolean =>
