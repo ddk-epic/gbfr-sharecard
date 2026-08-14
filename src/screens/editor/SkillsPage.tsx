@@ -5,11 +5,12 @@ import { EDITOR_ZOOM, type PageProps } from "./controls";
 import { anchorOf, type Anchor } from "./Popover";
 import { SkillsSection } from "./sections/SkillsSection";
 import { OverMasterySection } from "../../components/build/OverMasterySection";
-import { SummonsSection } from "./sections/SummonsSection";
+import { SummonsSection } from "../../components/build/SummonsSection";
 import { SkillsPopover } from "./sections/SkillsPopover";
 import { OverMasteryPopover } from "./sections/OverMasteryPopover";
 import { SummonsPopover } from "./sections/SummonsPopover";
 import { EmptySlot } from "./controls";
+import { traitIconBox } from "../../components/ui";
 
 const DESIGN_WIDTH = 560;
 const ZOOM = EDITOR_ZOOM;
@@ -74,9 +75,53 @@ export function SkillsPage({ build, onChange }: PageProps) {
         </div>
         <SummonsSection
           summons={build.summons}
-          onOpen={(index, el) =>
-            setOpen({ kind: "summon", index, anchor: anchorOf(el) })
-          }
+          arrangement="list"
+          density="loose"
+          renderEmpty={() => ({
+            name: (
+              <div className="mb-2 block w-60">
+                <span className="block px-3 pt-px pb-0.5 text-xl font-bold select-none">
+                  &nbsp;
+                </span>
+              </div>
+            ),
+            trait: (
+              <div className="text-dim/70 flex min-w-0 items-center">
+                <span
+                  aria-hidden
+                  className="w-0 flex-none overflow-hidden pl-1"
+                >
+                  <span className={`block ${traitIconBox(18)}`} />
+                </span>
+                <span className="text-base tracking-[0.08em] uppercase">
+                  no trait
+                </span>
+              </div>
+            ),
+            overlay: (
+              <EmptySlot
+                className="absolute inset-0 text-xl"
+                label="add summon"
+              />
+            ),
+          })}
+          wrapCell={(index, cell) => (
+            <div className="relative py-px">
+              {cell}
+              <button
+                type="button"
+                aria-label={`Edit summon ${index + 1}`}
+                className="hover:bg-band/15 absolute inset-0 z-10 cursor-pointer rounded-md"
+                onClick={(e) =>
+                  setOpen({
+                    kind: "summon",
+                    index,
+                    anchor: anchorOf(e.currentTarget),
+                  })
+                }
+              />
+            </div>
+          )}
         />
       </div>
 
