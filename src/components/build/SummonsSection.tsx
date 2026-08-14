@@ -17,17 +17,24 @@ type Density = "compact" | "loose";
 
 const ARRANGEMENT_LAYOUT: Record<
   Arrangement,
-  { panelClass: string; heading: boolean; listClass: string }
+  {
+    panelClass: string;
+    heading: boolean;
+    listClass: string;
+    showDivider: boolean;
+  }
 > = {
   grid: {
     panelClass: "col-span-2 self-start overflow-hidden !p-0",
     heading: false,
     listClass: "relative grid grid-cols-2 grid-rows-2 pb-px",
+    showDivider: true,
   },
   list: {
     panelClass: "flex flex-col overflow-hidden",
     heading: true,
     listClass: "divide-line-soft grid grid-cols-1 divide-y",
+    showDivider: false,
   },
 };
 
@@ -238,7 +245,7 @@ export function SummonsSection({
         </Heading>
       )}
       <div className={layout.listClass}>
-        {arrangement === "grid" && (
+        {layout.showDivider && (
           <>
             <span
               aria-hidden
