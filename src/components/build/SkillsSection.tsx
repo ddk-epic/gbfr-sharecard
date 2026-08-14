@@ -1,5 +1,6 @@
 import { Fragment, type CSSProperties, type ReactNode } from "react";
-import type { Build, CharacterId } from "../../domain/build";
+import type { Build } from "../../domain/build";
+import type { CharacterId } from "@/catalog/ids";
 import type { ElementId } from "../../domain/catalog";
 import { characterCatalog, elementIconUrl, skillIconUrl } from "../../data";
 import { Heading, ReverseSlantedBar, SectionPanel } from "../ui";

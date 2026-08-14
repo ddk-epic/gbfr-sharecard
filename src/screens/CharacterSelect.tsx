@@ -1,4 +1,4 @@
-import type { CharacterId } from "../domain/build";
+import type { CharacterId } from "@/catalog/ids";
 import type { Character } from "../domain/catalog";
 import { CHARACTERS, thumbUrl } from "../data";
 import { hasBuild } from "../domain/storage";

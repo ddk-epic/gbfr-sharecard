@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { TraitId } from "../../domain/build";
+import type { TraitId } from "@/catalog/ids";
 import { IdentityCol } from "./sections/IdentityCol";
 import { EDITOR_ZOOM, GEAR_ZOOM, type PageProps } from "./controls";
 import { anchorOf, type Anchor } from "./Popover";

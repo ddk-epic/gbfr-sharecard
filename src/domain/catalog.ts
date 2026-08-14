@@ -7,7 +7,7 @@ import type {
   StyleRank,
   SummonId,
   TraitId,
-} from "./build";
+} from "@/catalog/ids";
 
 export type ElementId =
   "fire" | "water" | "earth" | "wind" | "light" | "dark" | "plain";

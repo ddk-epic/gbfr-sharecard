@@ -1,4 +1,5 @@
-import type { Build, TraitId } from "../../../domain/build";
+import type { Build } from "../../../domain/build";
+import type { TraitId } from "@/catalog/ids";
 import { SIGIL_DEFAULT_LEVEL } from "../../../domain/build";
 import { canFollow, takesSecondTrait } from "../../../data";
 

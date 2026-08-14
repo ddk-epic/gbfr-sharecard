@@ -18,7 +18,8 @@ import {
 import { CharacterSelect } from "../screens/CharacterSelect";
 import { Editor } from "../screens/editor/Editor";
 import { CardScreen } from "../screens/CardScreen";
-import { emptyBuild, type Build, type CharacterId } from "../domain/build";
+import { emptyBuild, type Build } from "../domain/build";
+import { type CharacterId } from "@/catalog/ids";
 import { readBuild, writeBuild } from "../domain/storage";
 import { defaultWeapon } from "../data";
 import { ParchmentBackdrop } from "../components/ui";

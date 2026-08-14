@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { ArrowLeftRight } from "lucide-react";
-import type { Build, TraitId } from "../../domain/build";
+import type { Build } from "../../domain/build";
+import type { TraitId } from "@/catalog/ids";
 import { WEAPON_LEVEL_MAX } from "../../domain/build";
 import { resolveWeapon, weaponArtUrl, wrightstoneName } from "../../data";
 import { BaseStat, Heading } from "../ui";

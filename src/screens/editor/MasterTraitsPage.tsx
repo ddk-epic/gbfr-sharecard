@@ -1,4 +1,4 @@
-import type { CellId, StyleId, StyleRank } from "../../domain/build";
+import type { CellId, StyleId, StyleRank } from "@/catalog/ids";
 import { MasterTraitsSection } from "../../components/build/MasterTraitsSection";
 import type { PageProps } from "./controls";
 

@@ -1,5 +1,5 @@
 import { domToBlob } from "modern-screenshot";
-import type { CharacterId } from "../../domain/build";
+import type { CharacterId } from "@/catalog/ids";
 import { CARD_HEIGHT, CARD_WIDTH } from "./Card";
 
 const cardToBlob = async (node: HTMLElement): Promise<Blob> => {

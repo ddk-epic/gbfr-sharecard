@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
-import type { TraitId, Wrightstone } from "../../../domain/build";
+import type { Wrightstone } from "../../../domain/build";
+import type { TraitId } from "@/catalog/ids";
 import { WRIGHTSTONE_LEVELS } from "../../../domain/build";
 import {
   traitIconUrl,

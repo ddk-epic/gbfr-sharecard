@@ -1,4 +1,4 @@
-import type { CharacterId } from "../../domain/build";
+import type { CharacterId } from "@/catalog/ids";
 import { characterById, portraitUrl } from "../../data";
 
 /**

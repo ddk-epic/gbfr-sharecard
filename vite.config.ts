@@ -6,4 +6,9 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   base: "/gbfr-sharecard/",
   plugins: [react(), tailwindcss()],
+  // Root-relative so no node path helpers (and no @types/node) are needed.
+  // Vitest reads this config, so tests resolve @/ without extra setup.
+  resolve: {
+    alias: { "@": "/src" },
+  },
 });

@@ -1,4 +1,5 @@
-import type { Build, CharacterId } from "../../../domain/build";
+import type { Build } from "../../../domain/build";
+import type { CharacterId } from "@/catalog/ids";
 import { characterCatalog, skillIconUrl } from "../../../data";
 import { IconTile } from "../controls";
 import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";

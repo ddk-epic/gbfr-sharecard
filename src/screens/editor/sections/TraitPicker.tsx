@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { TraitId } from "../../../domain/build";
+import type { TraitId } from "@/catalog/ids";
 import type { TraitCategory, TraitDef } from "../../../domain/catalog";
 import { traitIconUrl } from "../../../data";
 import { PopoverHeading } from "../Popover";

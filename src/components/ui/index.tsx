@@ -1,5 +1,5 @@
 import type { MouseEventHandler, ReactNode } from "react";
-import type { TraitId } from "../../domain/build";
+import type { TraitId } from "@/catalog/ids";
 
 export {
   BackdropFrame,

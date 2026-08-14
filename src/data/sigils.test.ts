@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import type { TraitId } from "../domain/build";
+import type { TraitId } from "@/catalog/ids";
 import {
   CHARACTERS,
   TRAITS,

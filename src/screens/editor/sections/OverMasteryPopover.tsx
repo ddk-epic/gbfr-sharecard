@@ -1,4 +1,5 @@
-import type { Build, BonusTypeId } from "../../../domain/build";
+import type { Build } from "../../../domain/build";
+import type { BonusTypeId } from "@/catalog/ids";
 import {
   BONUS_TYPES,
   bonusIconUrl,

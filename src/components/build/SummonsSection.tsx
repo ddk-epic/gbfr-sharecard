@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from "react";
-import type { Build, SummonId, SummonSlot } from "../../domain/build";
+import type { Build, SummonSlot } from "../../domain/build";
+import type { SummonId } from "@/catalog/ids";
 import {
   bonusTypeById,
   bonusValueText,

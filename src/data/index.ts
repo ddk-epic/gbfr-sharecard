@@ -12,14 +12,8 @@ import type {
   WeaponSlot,
   WrightstonePrefixMap,
 } from "../domain/catalog";
-import type {
-  BonusTypeId,
-  CharacterId,
-  StyleRank,
-  SummonId,
-  TraitId,
-  Weapon,
-} from "../domain/build";
+import type { Weapon } from "../domain/build";
+import type { BonusTypeId, CharacterId, StyleRank, SummonId, TraitId } from "@/catalog/ids";
 import charactersJson from "./characters.json";
 import traitsJson from "./traits.json";
 import bonusTypesJson from "./bonus-types.json";

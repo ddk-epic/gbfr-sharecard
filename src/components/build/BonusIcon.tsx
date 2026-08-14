@@ -1,4 +1,4 @@
-import type { BonusTypeId } from "../../domain/build";
+import type { BonusTypeId } from "@/catalog/ids";
 import { bonusIconUrl } from "../../data";
 
 /** Gear-row's trait glyph against its text: size-7 (1.75rem) over text-2xl (1.5rem). */

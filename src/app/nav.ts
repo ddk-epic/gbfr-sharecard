@@ -1,7 +1,7 @@
 // Where the user is, kept in the URL so a reload lands on the same screen.
 
 import { asCharacterId } from "../data";
-import type { CharacterId } from "../domain/build";
+import type { CharacterId } from "@/catalog/ids";
 
 /**
  * The one route's search params. Only the select screen has no character.

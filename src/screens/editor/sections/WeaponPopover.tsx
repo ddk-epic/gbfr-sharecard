@@ -1,4 +1,5 @@
-import type { CharacterId, TraitId, Weapon } from "../../../domain/build";
+import type { Weapon } from "../../../domain/build";
+import type { CharacterId, TraitId } from "@/catalog/ids";
 import {
   characterWeaponOptions,
   resolveWeapon,

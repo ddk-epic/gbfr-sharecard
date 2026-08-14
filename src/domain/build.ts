@@ -1,16 +1,13 @@
-export type CharacterId = string & { readonly brand: unique symbol };
-
-export type SkillId = string;
-export type TraitId = string;
-export type SummonId = string;
-export type BonusTypeId = string;
-export type StyleId = "insight" | "essence" | "crux";
-export type StyleRank = "r1" | "r2" | "r3" | "ex";
-/** Stable master-trait cell id, e.g. "insight.r2.6" - names the cell, not the trait. */
-export type CellId = string;
-
-export const STYLES: StyleId[] = ["insight", "essence", "crux"];
-export const RANKS: StyleRank[] = ["r1", "r2", "r3", "ex"];
+import type {
+  BonusTypeId,
+  CellId,
+  CharacterId,
+  SkillId,
+  StyleId,
+  StyleRank,
+  SummonId,
+  TraitId,
+} from "@/catalog/ids";
 
 // Builds are shown at cap: no half-levelled characters or weapons, and
 // weapons are assumed fully transcended.

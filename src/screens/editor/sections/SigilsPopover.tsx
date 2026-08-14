@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
-import type { CharacterId, TraitId } from "../../../domain/build";
+import type { CharacterId, TraitId } from "@/catalog/ids";
 import { sigilSecondTraitPool, sigilTraitPool } from "../../../data";
 import { Popover, POPOVER_BASE, type Anchor } from "../Popover";
 import { TraitPicker } from "./TraitPicker";

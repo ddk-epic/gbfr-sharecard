@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
-import type {
-  BonusTypeId,
-  SummonId,
-  SummonSlot,
-  TraitId,
-} from "../../../domain/build";
+import type { SummonSlot } from "../../../domain/build";
+import type { BonusTypeId, SummonId, TraitId } from "@/catalog/ids";
 import { SIGIL_LEVELS } from "../../../domain/build";
 import {
   BONUS_TYPES,

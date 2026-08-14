@@ -1,6 +1,7 @@
 import { Fragment } from "react";
-import type { Build, CellId, StyleId, StyleRank } from "../../domain/build";
-import { RANKS, STYLES } from "../../domain/build";
+import type { Build } from "../../domain/build";
+import type { CellId, StyleId, StyleRank } from "@/catalog/ids";
+import { RANKS, STYLES } from "@/catalog/ids";
 import { STYLE_RANK_BUDGETS, stylePerkStates } from "../../domain/derive";
 import { PERK_THRESHOLDS, type MasterTraitCell } from "../../domain/catalog";
 import {

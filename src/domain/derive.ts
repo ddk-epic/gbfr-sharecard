@@ -1,13 +1,8 @@
 // Derived values - computed from a Build, never stored.
 
-import type {
-  Build,
-  MasterTraitSelections,
-  StyleId,
-  StyleRank,
-  TraitId,
-} from "./build";
-import { RANKS, STYLES } from "./build";
+import type { Build, MasterTraitSelections } from "./build";
+import type { StyleId, StyleRank, TraitId } from "@/catalog/ids";
+import { RANKS, STYLES } from "@/catalog/ids";
 
 /**
  * Per-trait level sums over the 12 sigil slots (both traits credit at slot

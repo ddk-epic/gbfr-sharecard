@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from "react";
-import type { CharacterId } from "../../domain/build";
+import type { CharacterId } from "@/catalog/ids";
 import { characterById } from "../../data";
 import { ElementIcon } from "./ElementIcon";
 

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { SigilSlot, TraitId } from "../../domain/build";
+import type { SigilSlot } from "../../domain/build";
+import type { TraitId } from "@/catalog/ids";
 import { Heading } from "../ui";
 import { GearRow, ROW_LVL_CAP_HEIGHT, TraitCell } from "./gear-row";
 import { LvlDisplay } from "./LvlDisplay";
