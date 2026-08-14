@@ -3,7 +3,7 @@ import type { SummonSlot } from "../../domain/build";
 import { IdentityCol } from "./sections/IdentityCol";
 import { EDITOR_ZOOM, type PageProps } from "./controls";
 import { anchorOf, type Anchor } from "./Popover";
-import { SkillsSection } from "./sections/SkillsSection";
+import { SkillsSection } from "../../components/build/SkillsSection";
 import { OverMasterySection } from "../../components/build/OverMasterySection";
 import { SummonsSection } from "../../components/build/SummonsSection";
 import { SkillsPopover } from "./sections/SkillsPopover";
@@ -45,11 +45,27 @@ export function SkillsPage({ build, onChange }: PageProps) {
         className="flex flex-none flex-col gap-3"
         style={{ width: DESIGN_WIDTH, zoom: ZOOM }}
       >
-        <SkillsSection
-          characterId={build.characterId}
-          skills={build.skills}
-          onOpen={(el) => setOpen({ kind: "skills", anchor: anchorOf(el) })}
-        />
+        <div className="relative">
+          <SkillsSection
+            characterId={build.characterId}
+            skills={build.skills}
+            arrangement="list"
+            density="loose"
+            renderEmpty={() => (
+              <div className="flex min-h-0 items-center py-1">
+                <EmptySlot className="h-16 flex-1 text-xl" label="add skill" />
+              </div>
+            )}
+          />
+          <button
+            type="button"
+            aria-label="Edit skills"
+            className="hover:bg-band/15 absolute inset-0 z-10 cursor-pointer rounded-lg"
+            onClick={(e) =>
+              setOpen({ kind: "skills", anchor: anchorOf(e.currentTarget) })
+            }
+          />
+        </div>
         <div className="relative">
           <OverMasterySection
             overMastery={build.overMastery}
