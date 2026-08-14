@@ -4,7 +4,11 @@ import { IdentityCol } from "./sections/IdentityCol";
 import { EDITOR_ZOOM, GEAR_ZOOM, type PageProps } from "./controls";
 import { anchorOf, type Anchor } from "./Popover";
 import { Weapon, Wrightstone } from "../../components/build/Weapon";
-import { SigilsSection } from "./sections/SigilsSection";
+import {
+  SigilsSection,
+  SigilPickerCell,
+  SigilPickerLevel,
+} from "./sections/SigilsSection";
 import { SectionPanel } from "../../components/ui";
 import { WeaponPopover } from "./sections/WeaponPopover";
 import { WrightstonePopover } from "./sections/WrightstonePopover";
@@ -42,18 +46,33 @@ export function GearPage({ build, onChange }: PageProps) {
 
   const setSigils = (sigils: Sigils) => onChange({ ...build, sigils });
 
-  const board = {
-    cursor,
-    onCursor: (cell: Cell) => setCursor(cursorFor(build.sigils, cell)),
-    onClear: (cell: Cell) => {
-      const next = clear(build.sigils, cell);
-      setSigils(next);
-      // The emptied cell is the likeliest next pick.
-      setCursor(cursorFor(next, cell));
-    },
-    onLevel: (index: number, level: number) =>
-      setSigils(setLevel(build.sigils, index, level)),
-  };
+  const sigilsOpen = open?.kind === "sigils";
+  const renderSigilCell = sigilsOpen
+    ? (index: number, secondary: boolean, trait: TraitId | null) => (
+        <SigilPickerCell
+          index={index}
+          secondary={secondary}
+          trait={trait}
+          cursor={cursor}
+          onCursor={(cell) => setCursor(cursorFor(build.sigils, cell))}
+          onClear={(cell) => {
+            const next = clear(build.sigils, cell);
+            setSigils(next);
+            // The emptied cell is the likeliest next pick.
+            setCursor(cursorFor(next, cell));
+          }}
+        />
+      )
+    : undefined;
+  const renderSigilLevel = sigilsOpen
+    ? (index: number, level: number | null) => (
+        <SigilPickerLevel
+          level={level}
+          label={`sigil ${index + 1} level`}
+          onChange={(lvl) => setSigils(setLevel(build.sigils, index, lvl))}
+        />
+      )
+    : undefined;
 
   const pickTrait = (trait: TraitId) => {
     if (!cursor) return;
@@ -94,7 +113,8 @@ export function GearPage({ build, onChange }: PageProps) {
         </SectionPanel>
         <SigilsSection
           sigils={build.sigils}
-          board={open?.kind === "sigils" ? board : undefined}
+          renderCell={renderSigilCell}
+          renderLevel={renderSigilLevel}
           onOpen={(el) => {
             setCursor(nextEmpty(build.sigils, null, order));
             setOpen({ kind: "sigils", anchor: anchorOf(el) });

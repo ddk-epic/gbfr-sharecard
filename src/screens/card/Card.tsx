@@ -2,7 +2,7 @@ import type { Build } from "../../domain/build";
 import { CHARACTER_LEVEL } from "../../domain/build";
 import { MasterTraitsSection } from "../../components/build/MasterTraitsSection";
 import { OverMasterySection } from "../../components/build/OverMasterySection";
-import { SigilsSection } from "./sections/SigilsSection";
+import { SigilsGrid } from "../../components/build/SigilsGrid";
 import { SkillsSection } from "../../components/build/SkillsSection";
 import { SummonsSection } from "../../components/build/SummonsSection";
 import { Weapon, Wrightstone } from "../../components/build/Weapon";
@@ -128,7 +128,7 @@ export function Card({ build }: { build: Build }) {
         >
           <Weapon build={build} />
           <Wrightstone build={build} />
-          <SigilsSection sigils={build.sigils} />
+          <SigilsGrid sigils={build.sigils} />
         </div>
 
         {/* Column 3 */}

@@ -1,70 +1,50 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { ReactNode } from "react";
 import type { TraitId } from "../../../domain/build";
 import { SIGIL_LEVELS } from "../../../domain/build";
 import { traitName } from "../../../data";
-import { Heading, SectionPanel } from "../../../components/ui";
+import { SectionPanel } from "../../../components/ui";
 import {
-  GearRow,
   ROW_LVL_CAP_HEIGHT,
   TraitCell,
 } from "../../../components/build/gear-row";
 import { LvlDisplay } from "../../../components/build/LvlDisplay";
+import { SigilsGrid } from "../../../components/build/SigilsGrid";
 import { EmptySlot } from "../controls";
 import { sameCell, type Cell, type Sigils } from "./sigil-cells";
 
-export type SigilBoard = {
-  cursor: Cell | null;
-  onCursor: (cell: Cell) => void;
-  onClear: (cell: Cell) => void;
-  onLevel: (index: number, level: number) => void;
-};
-
 export function SigilsSection({
   sigils,
-  board,
+  renderCell,
+  renderLevel,
   onOpen,
 }: {
   sigils: Sigils;
-  board?: SigilBoard;
+  renderCell?: (
+    index: number,
+    secondary: boolean,
+    trait: TraitId | null,
+  ) => ReactNode;
+  renderLevel?: (index: number, level: number | null) => ReactNode;
   onOpen: (el: Element) => void;
 }) {
   const filled = sigils.filter(Boolean).length;
+  const interactive = !!renderCell;
 
   return (
     <SectionPanel shadow className="relative flex flex-col overflow-hidden">
-      <Heading size="lg" className="flex-none">
-        Sigils
-      </Heading>
-      <div className="flex flex-none flex-col">
-        {sigils.map((slot, i) => (
-          <GearRow cols="1fr 1fr" key={i}>
-            <SigilBoardCell
-              index={i}
-              secondary={false}
-              trait={slot?.primaryTrait ?? null}
-              board={board}
-            />
-            <SigilBoardCell
-              index={i}
-              secondary
-              trait={slot?.secondaryTrait ?? null}
-              board={board}
-            />
-            <SigilBoardLevel
-              level={slot ? slot.level : null}
-              label={`sigil ${i + 1} level`}
-              onChange={board ? (level) => board.onLevel(i, level) : undefined}
-            />
-          </GearRow>
-        ))}
-      </div>
-      {filled === 0 && !board && (
+      <SigilsGrid
+        sigils={sigils}
+        renderCell={renderCell}
+        renderLevel={renderLevel}
+      />
+      {filled === 0 && !interactive && (
         <EmptySlot
           className="pointer-events-none absolute inset-0 text-xl"
           label="add sigils"
         />
       )}
-      {!board && (
+      {!interactive && (
         <button
           type="button"
           aria-label="Edit sigils"
@@ -79,21 +59,24 @@ export function SigilsSection({
 /** Cell overlay box. */
 const OVERLAY = "absolute inset-x-0 -inset-y-0.5 rounded";
 
-function SigilBoardCell({
+/** Interactive sigil cell, live only while the sigils popover is open. */
+export function SigilPickerCell({
   index,
   secondary,
   trait,
-  board,
+  cursor,
+  onCursor,
+  onClear,
 }: {
   index: number;
   secondary: boolean;
   trait: TraitId | null;
-  board?: SigilBoard;
+  cursor: Cell | null;
+  onCursor: (cell: Cell) => void;
+  onClear: (cell: Cell) => void;
 }) {
-  if (!board) return <TraitCell trait={trait} />;
-
   const cell = { index, secondary };
-  const aimed = sameCell(board.cursor, cell);
+  const aimed = sameCell(cursor, cell);
   const which = secondary ? "second" : "first";
 
   return (
@@ -117,7 +100,7 @@ function SigilBoardCell({
             ? `remove ${traitName(trait)} from sigil ${index + 1}`
             : `pick sigil ${index + 1} ${which} trait`
         }
-        onClick={() => (trait ? board.onClear(cell) : board.onCursor(cell))}
+        onClick={() => (trait ? onClear(cell) : onCursor(cell))}
       />
     </div>
   );
@@ -127,26 +110,16 @@ function SigilBoardCell({
 const STEP_HALF =
   "absolute inset-y-0 flex w-1/2 cursor-pointer items-center text-ui/70 hover:text-ink-strong disabled:cursor-default disabled:opacity-0";
 
-function SigilBoardLevel({
+/** Interactive level stepper, live only while the sigils popover is open. */
+export function SigilPickerLevel({
   level,
   label,
   onChange,
 }: {
   level: number | null;
   label: string;
-  onChange?: (level: number) => void;
+  onChange: (level: number) => void;
 }) {
-  // The read-only chip is the grid item itself.
-  if (!onChange)
-    return (
-      <LvlDisplay
-        cap={ROW_LVL_CAP_HEIGHT}
-        level={level}
-        tone="gold"
-        className="-translate-y-0.5"
-      />
-    );
-
   const at = level === null ? -1 : SIGIL_LEVELS.indexOf(level);
   const step = (delta: number) => {
     const next = SIGIL_LEVELS[at + delta];
