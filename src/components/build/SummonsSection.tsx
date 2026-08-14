@@ -65,14 +65,14 @@ const TRAIT_ICON = 18;
 
 const BONUS_ROW = "flex min-w-0 items-center gap-1.25 pl-1 text-[18px]";
 
-/* Portrait framing, shared with the editor's copy of this cell. */
+/* Portrait framing. */
 const PORTRAIT_SCALE = "scale-130";
 /** Slides the frame down the art - 0% is the top - since the face sits high. */
 const PORTRAIT_CROP = "object-[50%_10%]";
 const PORTRAIT_FADE =
   "mask-[linear-gradient(to_left,rgba(0,0,0,0)_0%,#000_14%,#000_60%,rgba(0,0,0,0)_100%)]";
 
-export function SummonPortrait({ summonId }: { summonId: SummonId }) {
+function SummonPortrait({ summonId }: { summonId: SummonId }) {
   return (
     <div
       className={`pointer-events-none absolute inset-y-0 right-0 w-1/3 ${PORTRAIT_FADE}`}
