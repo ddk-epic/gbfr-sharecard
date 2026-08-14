@@ -15,11 +15,14 @@ import { sameCell, type Cell, type Sigils } from "./sigil-cells";
 
 export function SigilsSection({
   sigils,
+  picking,
   renderCell,
   renderLevel,
   onOpen,
 }: {
   sigils: Sigils;
+  /** The sigils popover is open, so the cells take the clicks themselves. */
+  picking: boolean;
   renderCell?: (
     index: number,
     secondary: boolean,
@@ -29,7 +32,6 @@ export function SigilsSection({
   onOpen: (el: Element) => void;
 }) {
   const filled = sigils.filter(Boolean).length;
-  const interactive = !!renderCell;
 
   return (
     <SectionPanel shadow className="relative flex flex-col overflow-hidden">
@@ -38,13 +40,13 @@ export function SigilsSection({
         renderCell={renderCell}
         renderLevel={renderLevel}
       />
-      {filled === 0 && !interactive && (
+      {filled === 0 && !picking && (
         <EmptySlot
           className="pointer-events-none absolute inset-0 text-xl"
           label="add sigils"
         />
       )}
-      {!interactive && (
+      {!picking && (
         <button
           type="button"
           aria-label="Edit sigils"

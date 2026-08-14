@@ -113,6 +113,7 @@ export function GearPage({ build, onChange }: PageProps) {
         </SectionPanel>
         <SigilsSection
           sigils={build.sigils}
+          picking={sigilsOpen}
           renderCell={renderSigilCell}
           renderLevel={renderSigilLevel}
           onOpen={(el) => {
