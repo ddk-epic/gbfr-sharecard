@@ -4,11 +4,12 @@ import { IdentityCol } from "./sections/IdentityCol";
 import { EDITOR_ZOOM, type PageProps } from "./controls";
 import { anchorOf, type Anchor } from "./Popover";
 import { SkillsSection } from "./sections/SkillsSection";
-import { OverMasterySection } from "./sections/OverMasterySection";
+import { OverMasterySection } from "../../components/build/OverMasterySection";
 import { SummonsSection } from "./sections/SummonsSection";
 import { SkillsPopover } from "./sections/SkillsPopover";
 import { OverMasteryPopover } from "./sections/OverMasteryPopover";
 import { SummonsPopover } from "./sections/SummonsPopover";
+import { EmptySlot } from "./controls";
 
 const DESIGN_WIDTH = 560;
 const ZOOM = EDITOR_ZOOM;
@@ -48,12 +49,29 @@ export function SkillsPage({ build, onChange }: PageProps) {
           skills={build.skills}
           onOpen={(el) => setOpen({ kind: "skills", anchor: anchorOf(el) })}
         />
-        <OverMasterySection
-          overMastery={build.overMastery}
-          onOpen={(el) =>
-            setOpen({ kind: "overMastery", anchor: anchorOf(el) })
-          }
-        />
+        <div className="relative">
+          <OverMasterySection
+            overMastery={build.overMastery}
+            density="loose"
+            renderEmpty={() => (
+              <EmptySlot
+                className="flex-1 py-0.75 text-base"
+                label="add bonus"
+              />
+            )}
+          />
+          <button
+            type="button"
+            aria-label="Edit over mastery"
+            className="hover:bg-band/15 absolute inset-0 z-10 cursor-pointer rounded-lg"
+            onClick={(e) =>
+              setOpen({
+                kind: "overMastery",
+                anchor: anchorOf(e.currentTarget),
+              })
+            }
+          />
+        </div>
         <SummonsSection
           summons={build.summons}
           onOpen={(index, el) =>

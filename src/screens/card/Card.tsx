@@ -1,7 +1,7 @@
 import type { Build } from "../../domain/build";
 import { CHARACTER_LEVEL } from "../../domain/build";
 import { MasterTraitsSection } from "../../components/build/MasterTraitsSection";
-import { OverMasterySection } from "./sections/OverMasterySection";
+import { OverMasterySection } from "../../components/build/OverMasterySection";
 import { SigilsSection } from "./sections/SigilsSection";
 import { SkillsSection } from "./sections/SkillsSection";
 import { SummonsSection } from "./sections/SummonsSection";
