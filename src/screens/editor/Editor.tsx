@@ -19,8 +19,8 @@ const ARROW_SIZE = 150;
 const FLIP_OFFSET_PX = 1900;
 const FLIP_MS = 120;
 
-/* Per window floors of the pages. */
-const WINDOW_MIN_WIDTH = ["w-auto", "w-[46%]", "w-[60%]"];
+/* Per window floors of the pages. Master Traits sizes to its own zoomed block. */
+const WINDOW_MIN_WIDTH = ["w-auto", "w-[46%]", "w-auto"];
 
 const TAB =
   "cursor-pointer rounded-[5px] px-6.5 py-2.25 text-[14.5px] font-bold tracking-[0.09em] uppercase";

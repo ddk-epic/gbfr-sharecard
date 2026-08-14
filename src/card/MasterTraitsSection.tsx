@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import type { Build, CellId, StyleId, StyleRank } from "../domain/build";
 import { RANKS, STYLES } from "../domain/build";
-import { STYLE_RANK_BUDGETS } from "../domain/derive";
+import { STYLE_RANK_BUDGETS, stylePerkStates } from "../domain/derive";
 import { PERK_THRESHOLDS, type MasterTraitCell } from "../domain/catalog";
 import {
   characterCatalog,
@@ -73,17 +73,31 @@ function RankIcon({ rank }: { rank: StyleRank }) {
   );
 }
 
+export type CellInteraction = (
+  cell: MasterTraitCell,
+  style: StyleId,
+  rank: StyleRank,
+) => {
+  onClick?: () => void;
+  title?: string;
+  className?: string;
+};
+
 /** One Style Rank section. */
 function MasterTraitStyleRank({
+  style,
   rank,
   cells,
   selected,
   perkHit,
+  cellInteraction,
 }: {
+  style: StyleId;
   rank: StyleRank;
   cells: MasterTraitCell[];
   selected: CellId[];
   perkHit: boolean;
+  cellInteraction?: CellInteraction;
 }) {
   return (
     <div className="relative flex flex-col">
@@ -108,14 +122,17 @@ function MasterTraitStyleRank({
         {cells.map((cell) => {
           // wrap when text length + star (2 weight each) larger than 18
           const wrapRule = cell.label.length + (cell.perkRank ?? 0) * 2 >= 19;
+          const interaction = cellInteraction?.(cell, style, rank);
           return (
             <div
               key={cell.id}
+              onClick={interaction?.onClick}
+              title={interaction?.title}
               className={`flex h-[46px] items-center overflow-hidden rounded-sm px-2.25 py-1 text-lg ${wrapRule && "px-1.75 text-[20px] leading-[1.02]"} ${
                 selected.includes(cell.id)
                   ? `bg-linear-135 from-white/18 text-white ${perkHit ? "to-purple-400/50 shadow-[inset_0_0_0_1px_var(--color-purple-300)]" : "to-deep-3/30 shadow-[inset_0_0_0_1px_var(--deep-ring)]"}`
                   : "bg-deep-cell text-deep-mute"
-              }`}
+              } ${interaction?.className ?? ""}`}
             >
               <span className="[-webkit-text-stroke:3px_var(--deep-5)] [paint-order:stroke]">
                 {cell.perkRank && (
@@ -135,23 +152,53 @@ function MasterTraitStyleRank({
   );
 }
 
-export function MasterTraitsSection({ build }: { build: Build }) {
+function MasterTraitStyleColumn({
+  style,
+  title,
+  cellsByRank,
+  selectedByRank,
+  perks,
+  cellInteraction,
+}: {
+  style: StyleId;
+  title: string;
+  cellsByRank: Record<StyleRank, MasterTraitCell[]>;
+  selectedByRank: Record<StyleRank, CellId[]>;
+  perks: boolean[];
+  cellInteraction?: CellInteraction;
+}) {
+  return (
+    <div
+      className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
+    >
+      <h4 className="flex-none pb-4 text-2xl font-bold text-white [text-shadow:0_1px_5px_rgba(10,50,70,0.55)]">
+        {STYLE_LABEL[style]}: {title}
+      </h4>
+      {RANKS.map((rank, i) => (
+        <MasterTraitStyleRank
+          key={rank}
+          style={style}
+          rank={rank}
+          cells={cellsByRank[rank]}
+          selected={selectedByRank[rank]}
+          perkHit={perks[i] ?? false}
+          cellInteraction={cellInteraction}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function MasterTraitsSection({
+  build,
+  cellInteraction,
+}: {
+  build: Build;
+  cellInteraction?: CellInteraction;
+}) {
   const catalog = characterCatalog(build.characterId);
-  // A rank's perk activates only when its own threshold and every
-  // earlier rank's perk is active too (dependent chain).
-  const activePerks = (style: StyleId) => {
-    let prev = true;
-    return RANKS.map((rank, i) => {
-      const threshold = PERK_THRESHOLDS[i];
-      prev =
-        prev &&
-        threshold !== undefined &&
-        build.masterTraits[style][rank].length >= threshold;
-      return prev;
-    });
-  };
-  const perkStars = (style: StyleId) =>
-    activePerks(style).filter(Boolean).length;
+  const perks = stylePerkStates(build.masterTraits, PERK_THRESHOLDS);
+  const perkStars = (style: StyleId) => perks[style].filter(Boolean).length;
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-3.75">
@@ -174,28 +221,17 @@ export function MasterTraitsSection({ build }: { build: Build }) {
         </div>
       </Heading>
       <div className="grid min-h-0 flex-1 grid-cols-3 gap-1.25">
-        {STYLES.map((style) => {
-          const perks = activePerks(style);
-          return (
-            <div
-              className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
-              key={style}
-            >
-              <h4 className="flex-none pb-4 text-2xl font-bold text-white [text-shadow:0_1px_5px_rgba(10,50,70,0.55)]">
-                {STYLE_LABEL[style]}: {catalog.masterTraits[style].title}
-              </h4>
-              {RANKS.map((rank, i) => (
-                <MasterTraitStyleRank
-                  key={rank}
-                  rank={rank}
-                  cells={catalog.masterTraits[style][rank]}
-                  selected={build.masterTraits[style][rank]}
-                  perkHit={perks[i]}
-                />
-              ))}
-            </div>
-          );
-        })}
+        {STYLES.map((style) => (
+          <MasterTraitStyleColumn
+            key={style}
+            style={style}
+            title={catalog.masterTraits[style].title}
+            cellsByRank={catalog.masterTraits[style]}
+            selectedByRank={build.masterTraits[style]}
+            perks={perks[style]}
+            cellInteraction={cellInteraction}
+          />
+        ))}
       </div>
     </div>
   );

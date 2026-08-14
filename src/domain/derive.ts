@@ -59,16 +59,6 @@ export function stylePerkStates(
   return states;
 }
 
-/** Per-rank points spent across all three styles, vs the shared budgets. */
-export function styleRankBudgetSpent(
-  selections: MasterTraitSelections,
-): Record<StyleRank, number> {
-  const spent: Record<StyleRank, number> = { r1: 0, r2: 0, r3: 0, ex: 0 };
-  for (const style of STYLES)
-    for (const rank of RANKS) spent[rank] += selections[style][rank].length;
-  return spent;
-}
-
 export const STYLE_RANK_BUDGETS: Record<StyleRank, number> = {
   r1: 10,
   r2: 10,
