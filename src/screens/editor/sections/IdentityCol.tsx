@@ -1,10 +1,10 @@
 import { CHARACTER_LEVEL, type Build } from "../../../domain/build";
-import { Portrait } from "../../../card/Portrait";
-import { LvlBadge } from "../../../card/LvlBadge";
-import { MasterlevelBadge } from "../../../card/MasterLvlBadge";
-import { NameBadge } from "../../../card/NameBadge";
-import { PwrBadge } from "../../../card/PwrBadge";
-import { StatusPanel } from "../../../card/StatusPanel";
+import { Portrait } from "../../../components/build/Portrait";
+import { LvlBadge } from "../../../components/build/LvlBadge";
+import { MasterlevelBadge } from "../../../components/build/MasterLvlBadge";
+import { NameBadge } from "../../../components/build/NameBadge";
+import { PwrBadge } from "../../../components/build/PwrBadge";
+import { StatusPanel } from "../../../components/build/StatusPanel";
 
 /** Mirrors Portrait's own PORTRAIT_BLEED_RIGHT, which it keeps private. */
 const PORTRAIT_BLEED_RIGHT = 130;
@@ -19,7 +19,7 @@ const PWR_TOP = -150;
 const LAYER_FADE = "linear-gradient(to bottom, #000 20%, transparent)";
 
 /** Card column 1 - portrait, badges, name and the Status panel. */
-export function EditorIdentityCol({
+export function IdentityCol({
   build,
   width,
   onChangeStatus,

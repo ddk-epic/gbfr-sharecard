@@ -7,7 +7,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { Fullscreen, Minus, Plus, Scan, X } from "lucide-react";
-import type { Build } from "../domain/build";
+import type { Build } from "../../domain/build";
 import { Card, CARD_HEIGHT, CARD_WIDTH } from "./Card";
 
 /* Full-resolution inspector. */

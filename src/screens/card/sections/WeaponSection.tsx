@@ -1,13 +1,20 @@
 import type { ReactNode } from "react";
 import { ArrowLeftRight } from "lucide-react";
-import type { Build, TraitId } from "../domain/build";
-import { WEAPON_LEVEL_MAX } from "../domain/build";
-import { resolveWeapon, weaponArtUrl, wrightstoneName } from "../data";
-import { BaseStat, Heading } from "../ui";
-import { LvlDisplay } from "./LvlDisplay";
-import { StatDisplay, STAT_BOX_HEIGHT } from "./StatDisplay";
-import { LvlWeapon } from "./LvlWeapon";
-import { GearRow, TraitCell, ROW_LVL_CAP_HEIGHT } from "./gear-row";
+import type { Build, TraitId } from "../../../domain/build";
+import { WEAPON_LEVEL_MAX } from "../../../domain/build";
+import { resolveWeapon, weaponArtUrl, wrightstoneName } from "../../../data";
+import { BaseStat, Heading } from "../../../components/ui";
+import { LvlDisplay } from "../../../components/build/LvlDisplay";
+import {
+  StatDisplay,
+  STAT_BOX_HEIGHT,
+} from "../../../components/build/StatDisplay";
+import { LvlWeapon } from "../../../components/build/LvlWeapon";
+import {
+  GearRow,
+  TraitCell,
+  ROW_LVL_CAP_HEIGHT,
+} from "../../../components/build/gear-row";
 
 const WEAPON_ART_HEIGHT = 186;
 

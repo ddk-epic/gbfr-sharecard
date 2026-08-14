@@ -7,7 +7,7 @@ import { EDITOR_ZOOM, type PageProps } from "./controls";
 import { SkillsPage } from "./SkillsPage";
 import { GearPage } from "./GearPage";
 import { MasterTraitsPage } from "./MasterTraitsPage";
-import { BackButton, Cta, Heading } from "../../ui";
+import { BackButton, Cta, Heading } from "../../components/ui";
 
 const PAGE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
 

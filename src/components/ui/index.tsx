@@ -1,5 +1,5 @@
 import type { MouseEventHandler, ReactNode } from "react";
-import type { TraitId } from "../domain/build";
+import type { TraitId } from "../../domain/build";
 
 export {
   BackdropFrame,
@@ -11,7 +11,7 @@ import {
   statIconUrl,
   traitIconUrl,
   type StatIconId,
-} from "../data";
+} from "../../data";
 
 /* Leaf primitives the card and the editor both render. */
 

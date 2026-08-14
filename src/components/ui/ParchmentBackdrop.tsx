@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { parchmentUrl } from "../data";
+import { parchmentUrl } from "../../data";
 
 /**
  * Parchment backdrop and its diagonal cut, shared by the card and the page

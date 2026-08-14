@@ -1,7 +1,11 @@
 import type { Build, CharacterId } from "../../../domain/build";
 import type { ElementId } from "../../../domain/catalog";
 import { characterCatalog, elementIconUrl, skillIconUrl } from "../../../data";
-import { Heading, ReverseSlantedBar, SectionPanel } from "../../../ui";
+import {
+  Heading,
+  ReverseSlantedBar,
+  SectionPanel,
+} from "../../../components/ui";
 import { EmptySlot } from "../controls";
 
 type SkillDef = ReturnType<typeof characterCatalog>["skills"][number];
@@ -18,7 +22,7 @@ const ELEMENT_COLOR: Record<ElementId, string> = {
   plain: "#e2e2e2",
 };
 
-export function EditorSkillsSection({
+export function SkillsSection({
   characterId,
   skills,
   onOpen,

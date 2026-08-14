@@ -5,11 +5,16 @@ import {
   summonById,
   traitName,
 } from "../../../data";
-import { SummonPortrait } from "../../../card/SummonsSection";
-import { Heading, SectionPanel, TraitIcon, traitIconBox } from "../../../ui";
-import { BonusIcon, BONUS_ICON_EM } from "../../../card/BonusIcon";
-import { LvlDisplay } from "../../../card/LvlDisplay";
-import { nameTracking } from "../../../card/name-tracking";
+import { SummonPortrait } from "../../card/sections/SummonsSection";
+import {
+  Heading,
+  SectionPanel,
+  TraitIcon,
+  traitIconBox,
+} from "../../../components/ui";
+import { BonusIcon, BONUS_ICON_EM } from "../../../components/build/BonusIcon";
+import { LvlDisplay } from "../../../components/build/LvlDisplay";
+import { nameTracking } from "../../../components/build/name-tracking";
 import { EmptySlot } from "../controls";
 
 const summonName = (slot: SummonSlot) => summonById.get(slot.summonId)?.name;
@@ -26,7 +31,7 @@ const CELL_PAD = "px-2.5 py-2";
 const BONUS_ROW = "flex min-w-0 items-center gap-1.25 pl-1 text-[18px]";
 const BONUS_ROW_HEIGHT = { height: BONUS_ICON_EM };
 
-export function EditorSummonsSection({
+export function SummonsSection({
   summons,
   onOpen,
 }: {

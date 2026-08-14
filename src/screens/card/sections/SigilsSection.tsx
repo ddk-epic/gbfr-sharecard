@@ -1,7 +1,11 @@
-import type { SigilSlot } from "../domain/build";
-import { Heading } from "../ui";
-import { GearRow, ROW_LVL_CAP_HEIGHT, TraitCell } from "./gear-row";
-import { LvlDisplay } from "./LvlDisplay";
+import type { SigilSlot } from "../../../domain/build";
+import { Heading } from "../../../components/ui";
+import {
+  GearRow,
+  ROW_LVL_CAP_HEIGHT,
+  TraitCell,
+} from "../../../components/build/gear-row";
+import { LvlDisplay } from "../../../components/build/LvlDisplay";
 
 export function SigilsSection({ sigils }: { sigils: (SigilSlot | null)[] }) {
   return (

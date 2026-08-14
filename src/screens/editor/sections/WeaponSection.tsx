@@ -3,11 +3,18 @@ import type { ReactNode } from "react";
 import type { Build, TraitId } from "../../../domain/build";
 import { WEAPON_LEVEL_MAX, WRIGHTSTONE_LEVELS } from "../../../domain/build";
 import { resolveWeapon, weaponArtUrl, wrightstoneName } from "../../../data";
-import { BaseStat, Heading, SectionPanel } from "../../../ui";
-import { LvlDisplay } from "../../../card/LvlDisplay";
-import { StatDisplay, STAT_BOX_HEIGHT } from "../../../card/StatDisplay";
-import { LvlWeapon } from "../../../card/LvlWeapon";
-import { GearRow, TraitCell, ROW_LVL_CAP_HEIGHT } from "../../../card/gear-row";
+import { BaseStat, Heading, SectionPanel } from "../../../components/ui";
+import { LvlDisplay } from "../../../components/build/LvlDisplay";
+import {
+  StatDisplay,
+  STAT_BOX_HEIGHT,
+} from "../../../components/build/StatDisplay";
+import { LvlWeapon } from "../../../components/build/LvlWeapon";
+import {
+  GearRow,
+  TraitCell,
+  ROW_LVL_CAP_HEIGHT,
+} from "../../../components/build/gear-row";
 
 const WEAPON_ART_HEIGHT = 150;
 
@@ -28,7 +35,7 @@ const statPlate = (stat: "hp" | "atk" | "crit" | "stun") => ({
   height: WEAPON_STAT_CAP_HEIGHT * STAT_BOX_HEIGHT,
 });
 
-export function EditorWeaponSection({
+export function WeaponSection({
   build,
   onOpenWeapon,
   onOpenWrightstone,

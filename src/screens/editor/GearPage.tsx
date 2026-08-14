@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { TraitId } from "../../domain/build";
-import { EditorIdentityCol } from "./sections/EditorIdentityCol";
+import { IdentityCol } from "./sections/IdentityCol";
 import { EDITOR_ZOOM, GEAR_ZOOM, type PageProps } from "./controls";
 import { anchorOf, type Anchor } from "./Popover";
-import { EditorWeaponSection } from "./sections/EditorWeaponSection";
-import { EditorSigilsSection } from "./sections/EditorSigilsSection";
+import { WeaponSection } from "./sections/WeaponSection";
+import { SigilsSection } from "./sections/SigilsSection";
 import { WeaponPopover } from "./sections/WeaponPopover";
 import { WrightstonePopover } from "./sections/WrightstonePopover";
 import { SigilsPopover } from "./sections/SigilsPopover";
@@ -67,7 +67,7 @@ export function GearPage({ build, onChange }: PageProps) {
         className="flex-none"
         style={{ width: IDENTITY_WIDTH, zoom: EDITOR_ZOOM }}
       >
-        <EditorIdentityCol
+        <IdentityCol
           build={build}
           width={IDENTITY_WIDTH}
           onChangeStatus={(status) => onChange({ ...build, status })}
@@ -77,7 +77,7 @@ export function GearPage({ build, onChange }: PageProps) {
         className="flex flex-none flex-col gap-3"
         style={{ width: DESIGN_WIDTH, zoom: GEAR_ZOOM }}
       >
-        <EditorWeaponSection
+        <WeaponSection
           build={build}
           onOpenWeapon={(el) =>
             setOpen({ kind: "weapon", anchor: anchorOf(el) })
@@ -86,7 +86,7 @@ export function GearPage({ build, onChange }: PageProps) {
             setOpen({ kind: "wrightstone", anchor: anchorOf(el) })
           }
         />
-        <EditorSigilsSection
+        <SigilsSection
           sigils={build.sigils}
           board={open?.kind === "sigils" ? board : undefined}
           onOpen={(el) => {

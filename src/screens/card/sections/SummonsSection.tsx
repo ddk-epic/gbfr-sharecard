@@ -1,15 +1,15 @@
-import type { Build, SummonId, SummonSlot } from "../domain/build";
+import type { Build, SummonId, SummonSlot } from "../../../domain/build";
 import {
   bonusTypeById,
   bonusValueText,
   summonById,
   summonIconUrl,
   traitName,
-} from "../data";
-import { SectionPanel, TraitIcon, traitIconBox } from "../ui";
-import { BONUS_ICON_EM, BonusIcon } from "./BonusIcon";
-import { LvlDisplay } from "./LvlDisplay";
-import { nameTracking } from "./name-tracking";
+} from "../../../data";
+import { SectionPanel, TraitIcon, traitIconBox } from "../../../components/ui";
+import { BONUS_ICON_EM, BonusIcon } from "../../../components/build/BonusIcon";
+import { LvlDisplay } from "../../../components/build/LvlDisplay";
+import { nameTracking } from "../../../components/build/name-tracking";
 
 const summonName = (slot: SummonSlot) => summonById.get(slot.summonId)?.name;
 const bonusName = (slot: SummonSlot) =>

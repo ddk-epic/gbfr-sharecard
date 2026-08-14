@@ -2,9 +2,13 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { TraitId } from "../../../domain/build";
 import { SIGIL_LEVELS } from "../../../domain/build";
 import { traitName } from "../../../data";
-import { Heading, SectionPanel } from "../../../ui";
-import { GearRow, ROW_LVL_CAP_HEIGHT, TraitCell } from "../../../card/gear-row";
-import { LvlDisplay } from "../../../card/LvlDisplay";
+import { Heading, SectionPanel } from "../../../components/ui";
+import {
+  GearRow,
+  ROW_LVL_CAP_HEIGHT,
+  TraitCell,
+} from "../../../components/build/gear-row";
+import { LvlDisplay } from "../../../components/build/LvlDisplay";
 import { EmptySlot } from "../controls";
 import { sameCell, type Cell, type Sigils } from "./sigil-cells";
 
@@ -15,7 +19,7 @@ export type SigilBoard = {
   onLevel: (index: number, level: number) => void;
 };
 
-export function EditorSigilsSection({
+export function SigilsSection({
   sigils,
   board,
   onOpen,

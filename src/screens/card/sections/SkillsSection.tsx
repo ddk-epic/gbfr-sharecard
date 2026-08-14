@@ -1,8 +1,12 @@
-import type { Build, CharacterId } from "../domain/build";
-import type { ElementId } from "../domain/catalog";
-import { characterCatalog, elementIconUrl, skillIconUrl } from "../data";
-import { Heading, ReverseSlantedBar, SectionPanel } from "../ui";
-import { nameTracking } from "./name-tracking";
+import type { Build, CharacterId } from "../../../domain/build";
+import type { ElementId } from "../../../domain/catalog";
+import { characterCatalog, elementIconUrl, skillIconUrl } from "../../../data";
+import {
+  Heading,
+  ReverseSlantedBar,
+  SectionPanel,
+} from "../../../components/ui";
+import { nameTracking } from "../../../components/build/name-tracking";
 
 type SkillDef = ReturnType<typeof characterCatalog>["skills"][number];
 

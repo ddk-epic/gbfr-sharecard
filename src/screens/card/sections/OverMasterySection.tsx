@@ -1,7 +1,7 @@
-import type { Build } from "../domain/build";
-import { bonusTypeById, bonusValueText } from "../data";
-import { Heading, SectionPanel } from "../ui";
-import { BONUS_ICON_EM, BonusIcon } from "./BonusIcon";
+import type { Build } from "../../../domain/build";
+import { bonusTypeById, bonusValueText } from "../../../data";
+import { Heading, SectionPanel } from "../../../components/ui";
+import { BONUS_ICON_EM, BonusIcon } from "../../../components/build/BonusIcon";
 
 export function OverMasterySection({
   overMastery,

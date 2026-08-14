@@ -1,14 +1,14 @@
 import { Fragment } from "react";
-import type { Build, CellId, StyleId, StyleRank } from "../domain/build";
-import { RANKS, STYLES } from "../domain/build";
-import { STYLE_RANK_BUDGETS, stylePerkStates } from "../domain/derive";
-import { PERK_THRESHOLDS, type MasterTraitCell } from "../domain/catalog";
+import type { Build, CellId, StyleId, StyleRank } from "../../domain/build";
+import { RANKS, STYLES } from "../../domain/build";
+import { STYLE_RANK_BUDGETS, stylePerkStates } from "../../domain/derive";
+import { PERK_THRESHOLDS, type MasterTraitCell } from "../../domain/catalog";
 import {
   characterCatalog,
   sboardRankIconUrl,
   starBgUrl,
   starIconUrl,
-} from "../data";
+} from "../../data";
 import { Heading } from "../ui";
 
 const STYLE_BORDER: Record<StyleId, string> = {

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { pwrArtUrl, statIconUrl, STAT_ICON_ART } from "../data";
+import { pwrArtUrl, statIconUrl, STAT_ICON_ART } from "../../data";
 import { CAP_RATIO, Label, PALETTE, Value } from "./label";
 
 /** Diamond body nearly fills its own 182x182 canvas. */

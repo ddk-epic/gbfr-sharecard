@@ -1,5 +1,5 @@
-import type { CharacterId } from "../domain/build";
-import { characterById, portraitUrl } from "../data";
+import type { CharacterId } from "../../domain/build";
+import { characterById, portraitUrl } from "../../data";
 
 /**
  * The full-height backdrop layer: the character art, spanning column 1 top to

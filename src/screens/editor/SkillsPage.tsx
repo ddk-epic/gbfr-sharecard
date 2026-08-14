@@ -1,11 +1,11 @@
 import { useState } from "react";
 import type { SummonSlot } from "../../domain/build";
-import { EditorIdentityCol } from "./sections/EditorIdentityCol";
+import { IdentityCol } from "./sections/IdentityCol";
 import { EDITOR_ZOOM, type PageProps } from "./controls";
 import { anchorOf, type Anchor } from "./Popover";
-import { EditorSkillsSection } from "./sections/EditorSkillsSection";
-import { EditorOverMasterySection } from "./sections/EditorOverMasterySection";
-import { EditorSummonsSection } from "./sections/EditorSummonsSection";
+import { SkillsSection } from "./sections/SkillsSection";
+import { OverMasterySection } from "./sections/OverMasterySection";
+import { SummonsSection } from "./sections/SummonsSection";
 import { SkillsPopover } from "./sections/SkillsPopover";
 import { OverMasteryPopover } from "./sections/OverMasteryPopover";
 import { SummonsPopover } from "./sections/SummonsPopover";
@@ -32,7 +32,7 @@ export function SkillsPage({ build, onChange }: PageProps) {
   return (
     <div className="flex h-full gap-2.5">
       <div className="flex-none" style={{ width: IDENTITY_WIDTH, zoom: ZOOM }}>
-        <EditorIdentityCol
+        <IdentityCol
           build={build}
           width={IDENTITY_WIDTH}
           onChangeStatus={(status) => onChange({ ...build, status })}
@@ -43,18 +43,18 @@ export function SkillsPage({ build, onChange }: PageProps) {
         className="flex flex-none flex-col gap-3"
         style={{ width: DESIGN_WIDTH, zoom: ZOOM }}
       >
-        <EditorSkillsSection
+        <SkillsSection
           characterId={build.characterId}
           skills={build.skills}
           onOpen={(el) => setOpen({ kind: "skills", anchor: anchorOf(el) })}
         />
-        <EditorOverMasterySection
+        <OverMasterySection
           overMastery={build.overMastery}
           onOpen={(el) =>
             setOpen({ kind: "overMastery", anchor: anchorOf(el) })
           }
         />
-        <EditorSummonsSection
+        <SummonsSection
           summons={build.summons}
           onOpen={(index, el) =>
             setOpen({ kind: "summon", index, anchor: anchorOf(el) })

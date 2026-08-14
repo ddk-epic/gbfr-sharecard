@@ -1,5 +1,5 @@
 import type { CellId, StyleId, StyleRank } from "../../domain/build";
-import { MasterTraitsSection } from "../../card/MasterTraitsSection";
+import { MasterTraitsSection } from "../../components/build/MasterTraitsSection";
 import type { PageProps } from "./controls";
 
 /** The card's Master Traits block: col 3 of Card.tsx's upper row. */

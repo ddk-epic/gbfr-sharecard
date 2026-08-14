@@ -5,7 +5,7 @@ import {
   bonusTypeById,
   bonusValueText,
 } from "../../../data";
-import { BonusIcon } from "../../../card/BonusIcon";
+import { BonusIcon } from "../../../components/build/BonusIcon";
 import { IconTile, Stepper } from "../controls";
 import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
 

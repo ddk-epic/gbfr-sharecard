@@ -1,13 +1,13 @@
 import type { Build } from "../../../domain/build";
 import { bonusTypeById, bonusValueText } from "../../../data";
-import { Heading, SectionPanel } from "../../../ui";
-import { BonusIcon } from "../../../card/BonusIcon";
+import { Heading, SectionPanel } from "../../../components/ui";
+import { BonusIcon } from "../../../components/build/BonusIcon";
 import { EmptySlot } from "../controls";
 
 /** Clears the bonus glyph, so an empty row stands as tall as a filled one. */
 const ROW_HEIGHT = "h-8.5";
 
-export function EditorOverMasterySection({
+export function OverMasterySection({
   overMastery,
   onOpen,
 }: {

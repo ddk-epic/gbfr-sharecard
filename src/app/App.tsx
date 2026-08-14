@@ -21,7 +21,7 @@ import { CardScreen } from "../screens/CardScreen";
 import { emptyBuild, type Build, type CharacterId } from "../domain/build";
 import { readBuild, writeBuild } from "../domain/storage";
 import { defaultWeapon } from "../data";
-import { ParchmentBackdrop } from "../ui";
+import { ParchmentBackdrop } from "../components/ui";
 
 /**
  * No `validateSearch` on the route: on read the router merges its result over
