@@ -21,7 +21,7 @@ import { CardScreen } from "../screens/CardScreen";
 import { emptyBuild, type Build } from "../domain/build";
 import { type CharacterId } from "@/catalog/ids";
 import { readBuild, writeBuild } from "../domain/storage";
-import { defaultWeapon } from "../data";
+import { defaultWeapon } from "@/domain/weapons";
 import { ParchmentBackdrop } from "../components/ui";
 
 /**

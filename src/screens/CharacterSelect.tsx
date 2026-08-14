@@ -1,6 +1,7 @@
 import type { CharacterId } from "@/catalog/ids";
-import type { Character } from "../domain/catalog";
-import { CHARACTERS, thumbUrl } from "../data";
+import type { Character } from "@/catalog/types";
+import { thumbUrl } from "@/assets/urls";
+import { CHARACTERS } from "@/catalog";
 import { hasBuild } from "../domain/storage";
 import { Heading, Panel } from "../components/ui";
 

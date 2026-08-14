@@ -1,15 +1,13 @@
 import { describe, expect, test } from "vitest";
 import type { TraitId } from "@/catalog/ids";
+import { CHARACTERS, TRAITS, asCharacterId } from "@/catalog";
+import { WRIGHTSTONE_SUB_POOL } from "./wrightstone";
 import {
-  CHARACTERS,
-  TRAITS,
-  WRIGHTSTONE_SUB_POOL,
-  asCharacterId,
   canFollow,
   sigilSecondTraitPool,
   sigilTraitPool,
   takesSecondTrait,
-} from ".";
+} from "./sigils";
 
 const character = (id: string) => {
   const minted = asCharacterId(id);
@@ -129,8 +127,9 @@ describe("second trait pool", () => {
     sigilSecondTraitPool(first).map((trait) => trait.id);
 
   test("no character trait is ever freely offered", () => {
-    expect(TRAITS.filter((trait) => trait.secondTrait && trait.character))
-      .toEqual([]);
+    expect(
+      TRAITS.filter((trait) => trait.secondTrait && trait.character),
+    ).toEqual([]);
   });
 
   test("it is wider than the 72 that roll", () => {

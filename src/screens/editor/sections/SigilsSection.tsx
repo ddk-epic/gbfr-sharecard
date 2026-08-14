@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 import type { TraitId } from "@/catalog/ids";
 import { SIGIL_LEVELS } from "../../../domain/build";
-import { traitName } from "../../../data";
+import { traitName } from "@/domain/naming";
 import { SectionPanel } from "../../../components/ui";
 import {
   ROW_LVL_CAP_HEIGHT,

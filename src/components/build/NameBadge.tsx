@@ -1,6 +1,6 @@
 import { useId, type ReactNode } from "react";
 import type { CharacterId } from "@/catalog/ids";
-import { characterById } from "../../data";
+import { characterById } from "@/catalog";
 import { ElementIcon } from "./ElementIcon";
 
 /** Element orb + character name on a deep-blue banner. */

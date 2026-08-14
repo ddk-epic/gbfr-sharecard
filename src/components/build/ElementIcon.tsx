@@ -1,5 +1,5 @@
-import type { ElementId } from "../../domain/catalog";
-import { elementIconUrl } from "../../data";
+import type { ElementId } from "@/catalog/types";
+import { elementIconUrl } from "@/assets/urls";
 
 /** Element icon, case-insensitive. */
 export function ElementIcon({

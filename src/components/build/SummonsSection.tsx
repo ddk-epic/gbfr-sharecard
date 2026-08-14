@@ -1,13 +1,9 @@
 import { Fragment, type ReactNode } from "react";
 import type { Build, SummonSlot } from "../../domain/build";
 import type { SummonId } from "@/catalog/ids";
-import {
-  bonusTypeById,
-  bonusValueText,
-  summonById,
-  summonIconUrl,
-  traitName,
-} from "../../data";
+import { summonIconUrl } from "@/assets/urls";
+import { bonusTypeById, summonById } from "@/catalog";
+import { bonusValueText, traitName } from "@/domain/naming";
 import { Heading, SectionPanel, TraitIcon, traitIconBox } from "../ui";
 import { BONUS_ICON_EM, BonusIcon } from "./BonusIcon";
 import { LvlDisplay } from "./LvlDisplay";

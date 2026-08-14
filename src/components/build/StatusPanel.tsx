@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import type { Build } from "../../domain/build";
-import type { StatIconId } from "../../data";
+import type { StatIconId } from "@/assets/urls";
 import { StatIcon, SectionPanel } from "../ui";
 
 const LABEL_FONT = "font-med";

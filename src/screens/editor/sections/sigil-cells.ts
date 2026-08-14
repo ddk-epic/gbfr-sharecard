@@ -1,7 +1,7 @@
 import type { Build } from "../../../domain/build";
 import type { TraitId } from "@/catalog/ids";
 import { SIGIL_DEFAULT_LEVEL } from "../../../domain/build";
-import { canFollow, takesSecondTrait } from "../../../data";
+import { canFollow, takesSecondTrait } from "@/domain/sigils";
 
 export type Sigils = Build["sigils"];
 

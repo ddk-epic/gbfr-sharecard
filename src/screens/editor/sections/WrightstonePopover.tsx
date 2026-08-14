@@ -3,13 +3,13 @@ import { ChevronLeft, X } from "lucide-react";
 import type { Wrightstone } from "../../../domain/build";
 import type { TraitId } from "@/catalog/ids";
 import { WRIGHTSTONE_LEVELS } from "../../../domain/build";
+import { traitIconUrl } from "@/assets/urls";
+import { traitName } from "@/domain/naming";
 import {
-  traitIconUrl,
-  traitName,
   WRIGHTSTONE_MAIN_POOL,
   WRIGHTSTONE_SUB_POOL,
   wrightstoneName,
-} from "../../../data";
+} from "@/domain/wrightstone";
 import { IconTile } from "../controls";
 import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
 import { TraitGlyph, TraitPicker } from "./TraitPicker";

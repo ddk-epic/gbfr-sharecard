@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { TraitId } from "@/catalog/ids";
 import { TraitIcon, traitIconBox } from "../ui";
-import { traitName } from "../../data";
+import { traitName } from "@/domain/naming";
 import { nameTracking } from "./name-tracking";
 
 const CELL = "flex min-w-0 items-center gap-1.25";

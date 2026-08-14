@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Build } from "../../domain/build";
-import { bonusTypeById, bonusValueText } from "../../data";
+import { bonusTypeById } from "@/catalog";
+import { bonusValueText } from "@/domain/naming";
 import { Heading, SectionPanel } from "../ui";
 import { BONUS_ICON_EM, BonusIcon } from "./BonusIcon";
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { TraitId } from "@/catalog/ids";
-import type { TraitCategory, TraitDef } from "../../../domain/catalog";
-import { traitIconUrl } from "../../../data";
+import type { TraitCategory, TraitDef } from "@/catalog/types";
+import { traitIconUrl } from "@/assets/urls";
 import { PopoverHeading } from "../Popover";
 
 const CATEGORY_LABEL: Record<TraitCategory, string> = {

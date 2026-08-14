@@ -1,12 +1,12 @@
 import type { Weapon } from "../../../domain/build";
 import type { CharacterId, TraitId } from "@/catalog/ids";
+import { weaponArtUrl } from "@/assets/urls";
+import { traitName } from "@/domain/naming";
 import {
   characterWeaponOptions,
   resolveWeapon,
-  traitName,
-  weaponArtUrl,
   weaponPoolDefaults,
-} from "../../../data";
+} from "@/domain/weapons";
 import { IconTile } from "../controls";
 import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
 import { TraitGlyph } from "./TraitPicker";

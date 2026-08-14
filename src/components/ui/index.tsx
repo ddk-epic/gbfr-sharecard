@@ -6,12 +6,8 @@ export {
   ParchmentBackdrop,
   type ParchmentBackdropProps,
 } from "./ParchmentBackdrop";
-import {
-  STAT_ICON_ART,
-  statIconUrl,
-  traitIconUrl,
-  type StatIconId,
-} from "../../data";
+import { STAT_ICON_ART } from "@/assets/art-metrics";
+import { statIconUrl, traitIconUrl, type StatIconId } from "@/assets/urls";
 
 /* Leaf primitives the card and the editor both render. */
 

@@ -1,6 +1,6 @@
 // Where the user is, kept in the URL so a reload lands on the same screen.
 
-import { asCharacterId } from "../data";
+import { asCharacterId } from "@/catalog";
 import type { CharacterId } from "@/catalog/ids";
 
 /**

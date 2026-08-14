@@ -3,16 +3,14 @@ import { ChevronLeft, X } from "lucide-react";
 import type { SummonSlot } from "../../../domain/build";
 import type { BonusTypeId, SummonId, TraitId } from "@/catalog/ids";
 import { SIGIL_LEVELS } from "../../../domain/build";
+import { bonusIconUrl, summonIconUrl } from "@/assets/urls";
+import { BONUS_TYPES } from "@/catalog";
+import { bonusValueText, traitName } from "@/domain/naming";
 import {
-  BONUS_TYPES,
-  bonusIconUrl,
-  bonusValueText,
   summonEquipTiers,
-  summonIconUrl,
   summonsWithTrait,
   SUMMON_TRAIT_POOL,
-  traitName,
-} from "../../../data";
+} from "@/domain/summons";
 import { IconTile, Stepper } from "../controls";
 import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
 import { TraitGlyph, TraitPicker } from "./TraitPicker";

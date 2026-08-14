@@ -1,5 +1,6 @@
 import type { CharacterId } from "@/catalog/ids";
-import { characterById, portraitUrl } from "../../data";
+import { portraitUrl } from "@/assets/urls";
+import { characterById } from "@/catalog";
 
 /**
  * The full-height backdrop layer: the character art, spanning column 1 top to

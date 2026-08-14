@@ -1,11 +1,8 @@
 import type { Build } from "../../../domain/build";
 import type { BonusTypeId } from "@/catalog/ids";
-import {
-  BONUS_TYPES,
-  bonusIconUrl,
-  bonusTypeById,
-  bonusValueText,
-} from "../../../data";
+import { bonusIconUrl } from "@/assets/urls";
+import { BONUS_TYPES, bonusTypeById } from "@/catalog";
+import { bonusValueText } from "@/domain/naming";
 import { BonusIcon } from "../../../components/build/BonusIcon";
 import { IconTile, Stepper } from "../controls";
 import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";

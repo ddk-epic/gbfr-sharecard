@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { masterlevelArtUrl } from "../../data";
+import { masterlevelArtUrl } from "@/assets/urls";
 import { Label, PALETTE, Part, type SvgId } from "./label";
 
 /** Base art and number-cell sizes */
