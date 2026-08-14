@@ -152,17 +152,17 @@ export const WRIGHTSTONE_MAIN_POOL: TraitDef[] = Object.keys(
   .map((id) => traitById.get(id))
   .filter((trait): trait is TraitDef => trait !== undefined);
 
-/** The archive's one random-trait pool, 72 traits. */
-export const ROLL_POOL: TraitDef[] = TRAITS.filter((trait) => trait.roll);
-
-/** A wrightstone rolls its two subs from the one pool. */
-export const WRIGHTSTONE_SUB_POOL = ROLL_POOL;
+/** The archive's one random-trait pool, 72 traits. A wrightstone rolls its two
+    subs from it. */
+export const WRIGHTSTONE_SUB_POOL: TraitDef[] = TRAITS.filter(
+  (trait) => trait.wrightstoneSub,
+);
 /** A `+` sigil's second trait rolls from the same pool. */
-export const SIGIL_SECOND_TRAIT_POOL = ROLL_POOL;
+export const SIGIL_SECOND_TRAIT_POOL = WRIGHTSTONE_SUB_POOL;
 
 /** Sigil traits that are not locked to a character - the same for every build. */
 const SIGIL_OPEN_POOL: TraitDef[] = TRAITS.filter(
-  (trait) => trait.sigil && !trait.character,
+  (trait) => trait.firstTrait && !trait.character,
 );
 
 /** The character's pool for a sigil's own trait. Character sigils are gated by
@@ -178,7 +178,7 @@ export function sigilTraitPool(characterId: CharacterId): TraitDef[] {
 
 /** True when a sigil carrying this trait can take a second one. */
 export const takesSecondTrait = (trait: TraitId): boolean =>
-  !traitById.get(trait)?.soloSigil;
+  !traitById.get(trait)?.noSecondSlot;
 
 export const SUMMON_TRAIT_POOL: TraitDef[] = [
   ...new Set(SUMMONS.flatMap((summon) => summon.traits)),

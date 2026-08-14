@@ -139,7 +139,9 @@ const english = (key) => text.get(key) ?? null;
 // Rows without a glyph are internal (combat states, phantom placeholders).
 const maxLevelByKey = new Map(
   database
-    .prepare("select Key, max(Level) as maxLevel from skill_status group by Key")
+    .prepare(
+      "select Key, max(Level) as maxLevel from skill_status group by Key",
+    )
     .all()
     .map((row) => [row.Key, row.maxLevel]),
 );
@@ -156,25 +158,26 @@ const TRAIT_CATEGORIES = {
 const categoryOf = (icon) =>
   icon.startsWith("05_pl") ? undefined : TRAIT_CATEGORIES[icon.slice(0, 2)];
 
-// The sigil trait flags, from the gem table: which traits sigils grant, which
-// are character-locked, and which sigils never take a second trait.
+// The sigil trait flags, from the gem table. Each answers a different question,
+// so each is built from its own column: `SkillId1` licenses the first slot, and
+// `skill_lot` licenses a wrightstone sub.
 // See docs/sigils.md.
 const gems = database.prepare("select * from gem").all();
-const sigilKeys = new Set();
-const mainKeys = new Set(); // granted as a sigil's own trait, not as a second
+// First slot only. Reading `SkillId2` in here too would happen to give the same
+// 188 today - no trait is second-only - but it would offer a second-only trait
+// as a first trait the moment the game adds one.
+const firstKeys = new Set();
 const characterByKey = new Map();
 const pairedKeys = new Set(); // grants a second trait, fixed or rolled
 for (const gem of gems) {
   if (!gem.SkillId1) continue;
-  sigilKeys.add(gem.SkillId1);
-  mainKeys.add(gem.SkillId1);
-  if (gem.SkillId2) sigilKeys.add(gem.SkillId2);
+  firstKeys.add(gem.SkillId1);
   if (gem.PlayerReq) characterByKey.set(gem.SkillId1, gem.PlayerReq);
   if (gem.SkillId2 || gem.SkillTypeLotIdForRandom2ndSkill !== -1)
     pairedKeys.add(gem.SkillId1);
 }
 // One pool, cut into groups; every lot draws a subset of the same 72.
-const rollKeys = new Set(
+const wrightstoneSubKeys = new Set(
   database
     .prepare("select SkillId from skill_lot")
     .all()
@@ -190,15 +193,15 @@ const traits = database
   .map(({ key, name, icon }) => {
     const maxLevel = maxLevelByKey.get(key);
     if (maxLevel == null) missingMaxLevel.push(`${name} (${key})`);
-    const sigil = sigilKeys.has(key);
+    const firstTrait = firstKeys.has(key);
     return {
       id: slug(name),
       name,
       maxLevel: maxLevel ?? null,
       category: categoryOf(icon),
-      ...(sigil && { sigil: true }),
-      ...(rollKeys.has(key) && { roll: true }),
-      ...(mainKeys.has(key) && !pairedKeys.has(key) && { soloSigil: true }),
+      ...(firstTrait && { firstTrait: true }),
+      ...(wrightstoneSubKeys.has(key) && { wrightstoneSub: true }),
+      ...(firstTrait && !pairedKeys.has(key) && { noSecondSlot: true }),
       ...(characterByKey.has(key) && { character: characterByKey.get(key) }),
     };
   })
@@ -322,7 +325,9 @@ if (rankedSignatures.length !== EQUIP_TIER_GROUPS.length)
 // Equip bonuses are the same stats as over-masteries, so they key by bonus type
 // id. The datamine page predates the game's wording for one of them.
 const EQUIP_BONUS_ALIASES = { "Healing Cap Up": "Skill Healing Cap Up" };
-const bonusTypeIdByName = new Map(bonusTypes.map((b) => [normalize(b.name), b.id]));
+const bonusTypeIdByName = new Map(
+  bonusTypes.map((b) => [normalize(b.name), b.id]),
+);
 const bonusTypeId = (name) => {
   const id = bonusTypeIdByName.get(
     normalize(EQUIP_BONUS_ALIASES[name] ?? name),

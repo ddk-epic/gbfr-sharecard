@@ -36,13 +36,16 @@ export type TraitDef = {
   short?: string;
   maxLevel: number;
   category?: TraitCategory;
-  /** A sigil grants it - 188 of the 200 do. The rest are weapon traits. */
-  sigil?: true;
+  /** Can be a sigil's own trait - 188 of the 200. The rest are weapon traits.
+      From `gem.SkillId1` alone, so the first slot never inherits a trait that
+      only ever appears as somebody else's second. */
+  firstTrait?: true;
   /** In the archive's one random-trait pool: a `+` sigil's second trait and a
       wrightstone's subs both draw from it. 72 traits. */
-  roll?: true;
-  /** Every sigil granting it is single-trait, so it never takes a second. */
-  soloSigil?: true;
+  wrightstoneSub?: true;
+  /** A sigil built on this trait has no second slot at all - every gem granting
+      it first is single-trait. About the sigil, not the trait. */
+  noSecondSlot?: true;
   /** Character-locked sigil, by `Character.playerId`. */
   character?: string;
 };

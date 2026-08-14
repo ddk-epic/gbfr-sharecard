@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
   CHARACTERS,
-  ROLL_POOL,
+  WRIGHTSTONE_SUB_POOL,
   TRAITS,
   asCharacterId,
   sigilTraitPool,
@@ -14,23 +14,25 @@ const character = (id: string) => {
   return minted;
 };
 
-const withFlag = (flag: "sigil" | "roll" | "soloSigil") =>
+const withFlag = (
+  flag: "firstTrait" | "wrightstoneSub" | "noSecondSlot",
+) =>
   TRAITS.filter((trait) => trait[flag]);
 
 describe("trait flags", () => {
   test("the counts the archive gives", () => {
     expect(TRAITS).toHaveLength(200);
-    expect(withFlag("sigil")).toHaveLength(188);
-    expect(withFlag("roll")).toHaveLength(72);
-    expect(withFlag("soloSigil")).toHaveLength(6);
+    expect(withFlag("firstTrait")).toHaveLength(188);
+    expect(withFlag("wrightstoneSub")).toHaveLength(72);
+    expect(withFlag("noSecondSlot")).toHaveLength(6);
   });
 
   test("everything that rolls is a sigil trait", () => {
-    expect(withFlag("roll").filter((trait) => !trait.sigil)).toEqual([]);
+    expect(withFlag("wrightstoneSub").filter((trait) => !trait.firstTrait)).toEqual([]);
   });
 
   test("the twelve without a sigil are weapon traits", () => {
-    expect(TRAITS.filter((trait) => !trait.sigil).map((trait) => trait.id))
+    expect(TRAITS.filter((trait) => !trait.firstTrait).map((trait) => trait.id))
       .toMatchInlineSnapshot(`
       [
         "catastrophe",
@@ -49,8 +51,8 @@ describe("trait flags", () => {
     `);
   });
 
-  test("no single-trait sigil is in the roll pool", () => {
-    expect(ROLL_POOL.filter((trait) => trait.soloSigil)).toEqual([]);
+  test("no single-trait sigil is in the wrightstone pool", () => {
+    expect(WRIGHTSTONE_SUB_POOL.filter((trait) => trait.noSecondSlot)).toEqual([]);
   });
 
   test("takesSecondTrait is false for exactly the single-trait six", () => {
@@ -62,7 +64,7 @@ describe("trait flags", () => {
 
 describe("sigil trait pool", () => {
   const openTraits = TRAITS.filter(
-    (trait) => trait.sigil && !trait.character,
+    (trait) => trait.firstTrait && !trait.character,
   ).length;
 
   test("every playable character owns sigils", () => {
