@@ -34,6 +34,10 @@ export type Build = {
   masterTraits: MasterTraitSelections;
 };
 
+/** A slot array with one index replaced. */
+export const setAt = <T>(slots: T[], index: number, value: T) =>
+  slots.map((slot, i) => (i === index ? value : slot));
+
 export type OverMasteryLine = { bonusType: BonusTypeId; value: number };
 
 /** series is the (character x series) cell id. ATK/HP and slots come from the catalog; crit/stun don't. */

@@ -1,5 +1,6 @@
 import type { Build } from "@/domain/build";
 import type { CharacterId } from "@/catalog/ids";
+import { setAt } from "@/domain/build";
 import { skillIconUrl } from "@/assets/urls";
 import { characterCatalog } from "@/catalog";
 import { IconTile } from "@/screens/editor/controls";
@@ -64,6 +65,3 @@ export function SkillsPopover({
     </Popover>
   );
 }
-
-const setAt = <T,>(slots: T[], index: number, value: T) =>
-  slots.map((slot, i) => (i === index ? value : slot));

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { TraitId } from "@/catalog/ids";
 import { SIGIL_LEVELS } from "@/domain/build";
 import { traitName } from "@/domain/naming";
-import { SectionPanel } from "@/components/ui";
+import { EditOverlay, SectionPanel } from "@/components/ui";
 import { ROW_LVL_CAP_HEIGHT, TraitCell } from "@/components/build/gear-row";
 import { LvlDisplay } from "@/components/build/LvlDisplay";
 import { SigilsGrid } from "@/components/build/SigilsGrid";
@@ -43,14 +43,7 @@ export function SigilsSection({
           label="add sigils"
         />
       )}
-      {!picking && (
-        <button
-          type="button"
-          aria-label="Edit sigils"
-          className="hover:bg-band/15 absolute inset-0 z-10 cursor-pointer rounded-lg"
-          onClick={(e) => onOpen(e.currentTarget)}
-        />
-      )}
+      {!picking && <EditOverlay label="Edit sigils" onOpen={onOpen} />}
     </SectionPanel>
   );
 }

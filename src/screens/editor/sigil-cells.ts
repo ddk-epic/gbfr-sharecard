@@ -1,6 +1,6 @@
 import type { Build } from "@/domain/build";
 import type { TraitId } from "@/catalog/ids";
-import { SIGIL_DEFAULT_LEVEL } from "@/domain/build";
+import { SIGIL_DEFAULT_LEVEL, setAt } from "@/domain/build";
 import { canFollow, takesSecondTrait } from "@/domain/sigils";
 
 export type Sigils = Build["sigils"];
@@ -56,9 +56,6 @@ export function nextEmpty(
     null
   );
 }
-
-const setAt = (sigils: Sigils, index: number, value: Sigils[number]) =>
-  sigils.map((slot, i) => (i === index ? value : slot));
 
 /** A second trait survives a change of first only if it is still legal behind
     it - swapping away from a character trait drops its partner. */

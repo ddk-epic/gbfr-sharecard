@@ -7,7 +7,7 @@ import { weaponArtUrl } from "@/assets/urls";
 import { resolveWeapon } from "@/domain/weapons";
 import { wrightstoneName } from "@/domain/wrightstone";
 import { BaseStat } from "@/components/build/StatIcon";
-import { Heading } from "@/components/ui";
+import { EditOverlay, Heading } from "@/components/ui";
 import { LvlDisplay } from "./LvlDisplay";
 import { StatDisplay, STAT_BOX_HEIGHT } from "./StatDisplay";
 import { LvlWeapon } from "./LvlWeapon";
@@ -219,12 +219,7 @@ export function Weapon({
           />
         ))}
         {onOpen && (
-          <button
-            type="button"
-            aria-label="Edit weapon"
-            className="hover:bg-band/15 absolute inset-0 z-10 cursor-pointer rounded-md"
-            onClick={(e) => onOpen(e.currentTarget)}
-          />
+          <EditOverlay label="Edit weapon" radius="md" onOpen={onOpen} />
         )}
       </div>
     </>
@@ -260,12 +255,7 @@ export function Wrightstone({
         />
       ))}
       {onOpen && (
-        <button
-          type="button"
-          aria-label="Edit imbued traits"
-          className="hover:bg-band/15 absolute inset-0 z-10 cursor-pointer rounded-md"
-          onClick={(e) => onOpen(e.currentTarget)}
-        />
+        <EditOverlay label="Edit imbued traits" radius="md" onOpen={onOpen} />
       )}
     </div>
   );

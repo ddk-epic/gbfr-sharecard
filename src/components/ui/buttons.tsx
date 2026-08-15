@@ -32,6 +32,28 @@ export function Cta({
   );
 }
 
+/** Transparent hit area over a section, opening its editor. */
+export function EditOverlay({
+  label,
+  radius = "lg",
+  onOpen,
+}: {
+  label: string;
+  radius?: "md" | "lg";
+  onOpen: (el: Element) => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      className={`hover:bg-band/15 absolute inset-0 z-10 cursor-pointer ${
+        radius === "md" ? "rounded-md" : "rounded-lg"
+      }`}
+      onClick={(e) => onOpen(e.currentTarget)}
+    />
+  );
+}
+
 export function BackButton({
   children,
   inline = false,

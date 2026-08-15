@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { SummonSlot } from "@/domain/build";
+import { setAt } from "@/domain/build";
 import { IdentityCol } from "@/screens/editor/sections/IdentityCol";
 import { EDITOR_ZOOM, type PaneProps } from "@/screens/editor/controls";
 import { anchorOf, type Anchor } from "@/screens/editor/popovers/Popover";
@@ -10,6 +11,7 @@ import { SkillsPopover } from "@/screens/editor/popovers/SkillsPopover";
 import { OverMasteryPopover } from "@/screens/editor/popovers/OverMasteryPopover";
 import { SummonsPopover } from "@/screens/editor/popovers/SummonsPopover";
 import { EmptySlot } from "@/screens/editor/controls";
+import { EditOverlay } from "@/components/ui";
 import { traitIconBox } from "@/components/build/TraitIcon";
 
 const DESIGN_WIDTH = 560;
@@ -23,9 +25,6 @@ type Open =
   | { kind: "skills"; anchor: Anchor }
   | { kind: "overMastery"; anchor: Anchor }
   | { kind: "summon"; index: number; anchor: Anchor };
-
-const setAt = <T,>(slots: T[], index: number, value: T) =>
-  slots.map((slot, i) => (i === index ? value : slot));
 
 export function SkillsPane({ build, onChange }: PaneProps) {
   const [open, setOpen] = useState<Open | null>(null);
@@ -57,13 +56,9 @@ export function SkillsPane({ build, onChange }: PaneProps) {
               </div>
             )}
           />
-          <button
-            type="button"
-            aria-label="Edit skills"
-            className="hover:bg-band/15 absolute inset-0 z-10 cursor-pointer rounded-lg"
-            onClick={(e) =>
-              setOpen({ kind: "skills", anchor: anchorOf(e.currentTarget) })
-            }
+          <EditOverlay
+            label="Edit skills"
+            onOpen={(el) => setOpen({ kind: "skills", anchor: anchorOf(el) })}
           />
         </div>
         <div className="relative">
@@ -77,15 +72,10 @@ export function SkillsPane({ build, onChange }: PaneProps) {
               />
             )}
           />
-          <button
-            type="button"
-            aria-label="Edit over mastery"
-            className="hover:bg-band/15 absolute inset-0 z-10 cursor-pointer rounded-lg"
-            onClick={(e) =>
-              setOpen({
-                kind: "overMastery",
-                anchor: anchorOf(e.currentTarget),
-              })
+          <EditOverlay
+            label="Edit over mastery"
+            onOpen={(el) =>
+              setOpen({ kind: "overMastery", anchor: anchorOf(el) })
             }
           />
         </div>
@@ -124,16 +114,11 @@ export function SkillsPane({ build, onChange }: PaneProps) {
           wrapCell={(index, cell) => (
             <div className="relative py-px">
               {cell}
-              <button
-                type="button"
-                aria-label={`Edit summon ${index + 1}`}
-                className="hover:bg-band/15 absolute inset-0 z-10 cursor-pointer rounded-md"
-                onClick={(e) =>
-                  setOpen({
-                    kind: "summon",
-                    index,
-                    anchor: anchorOf(e.currentTarget),
-                  })
+              <EditOverlay
+                label={`Edit summon ${index + 1}`}
+                radius="md"
+                onOpen={(el) =>
+                  setOpen({ kind: "summon", index, anchor: anchorOf(el) })
                 }
               />
             </div>

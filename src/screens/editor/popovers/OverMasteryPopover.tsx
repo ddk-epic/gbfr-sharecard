@@ -1,5 +1,6 @@
 import type { Build } from "@/domain/build";
 import type { BonusTypeId } from "@/catalog/ids";
+import { setAt } from "@/domain/build";
 import { bonusIconUrl } from "@/assets/urls";
 import { BONUS_TYPES, bonusTypeById } from "@/catalog";
 import { bonusValueText } from "@/domain/naming";
@@ -116,6 +117,3 @@ export function OverMasteryPopover({
     </Popover>
   );
 }
-
-const setAt = <T,>(slots: T[], index: number, value: T) =>
-  slots.map((slot, i) => (i === index ? value : slot));
