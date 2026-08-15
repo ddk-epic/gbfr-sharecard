@@ -353,12 +353,6 @@ if (unlockedCharacters.length)
   throw new Error(`no gem.PlayerReq matches: ${unlockedCharacters.join(", ")}`);
 
 // ----------------------------------------------------- sigil-lots.json
-// Every trait sits in exactly one lot, and the lot carries the whole rule: what
-// it may lead, what may follow it, whether it rolls. The two facts that vary per
-// trait rather than per lot - who a paired trait's partner is, and which style
-// owns a locked trait - are the `pairs` and `styles` tables beside them.
-// `eligibleSecondTraits` names lots, except where a lot pins one trait; a lot id
-// and a trait id never collide, which the assertion below holds to.
 const PINNED_LOTS = { "dmg-cap": "lucilius", regen: "boundary" };
 const SECOND_ELIGIBLE = ["standard", "synthesisOnly"];
 

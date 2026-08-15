@@ -1,7 +1,3 @@
-// Addresses for the art under public/. These bake in Vite's BASE_URL and the
-// filename conventions the scripts/ exporters write, so they are a deployment
-// concern rather than game data - which is why they sit outside catalog/.
-
 import type {
   BonusTypeId,
   CharacterId,

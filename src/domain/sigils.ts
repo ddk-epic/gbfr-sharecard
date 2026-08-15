@@ -1,6 +1,3 @@
-// Which traits a sigil may carry, and which may sit behind which. Every rule is
-// a lot's; only a partner and a style's ownership vary per trait.
-
 import type { CharacterId, TraitId } from "@/catalog/ids";
 import type { SigilLot, SigilLotId, TraitDef } from "@/catalog/types";
 import { SIGIL_LOTS, TRAITS, characterById } from "@/catalog";

@@ -1,5 +1,3 @@
-// The router cannot enforce Nav on its own; these pin the redirect that does.
-
 import { describe, expect, test } from "vitest";
 import { createMemoryHistory, createRouter } from "@tanstack/react-router";
 import { rootRoute } from "./root-route";

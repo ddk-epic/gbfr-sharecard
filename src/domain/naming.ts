@@ -1,5 +1,3 @@
-// Display names derived from catalog definitions.
-
 import type { BonusTypeId, TraitId } from "@/catalog/ids";
 import { bonusTypeById, traitById } from "@/catalog";
 

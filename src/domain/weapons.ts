@@ -1,5 +1,3 @@
-// Which weapons a character owns, and what a chosen one resolves to.
-
 import type { CharacterId, TraitId } from "@/catalog/ids";
 import type {
   CharacterCatalog,

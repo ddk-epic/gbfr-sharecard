@@ -1,5 +1,3 @@
-// Summon trait pools and the equip-bonus ladders.
-
 import type { BonusTypeId, SummonId, TraitId } from "@/catalog/ids";
 import type { SummonDef, TraitDef } from "@/catalog/types";
 import { SUMMONS, SUMMON_EQUIP_TIERS, summonById, traitById } from "@/catalog";

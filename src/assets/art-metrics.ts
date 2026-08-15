@@ -1,5 +1,3 @@
-// Intrinsic pixel sizes of the art files, needed to lay them out before they load.
-
 import type { StatIconId } from "./urls";
 
 export const STAT_ICON_ART: Record<StatIconId, { w: number; h: number }> = {

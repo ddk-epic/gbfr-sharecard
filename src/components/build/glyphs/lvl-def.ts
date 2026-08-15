@@ -1,8 +1,3 @@
-/**
- * Lvl measurements in reference-screenshot coordinates: where the badge puts
- * the game's art. The art's own metrics - cell, baseline, advances - live in
- * digits.generated.ts, documented in docs/digits.md.
- */
 import { DIGIT_GLYPHS, type DigitGlyph } from "./digits.generated";
 
 export type DigitPlacement = {

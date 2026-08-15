@@ -1,5 +1,3 @@
-// The wrightstone's trait pools and its derived name.
-
 import type { TraitId } from "@/catalog/ids";
 import type { TraitDef } from "@/catalog/types";
 import { SIGIL_LOTS, TRAITS, WRIGHTSTONE_PREFIXES, traitById } from "@/catalog";

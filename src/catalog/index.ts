@@ -1,6 +1,3 @@
-// The static game data, typed and indexed. This is the leaf layer: it holds
-// no rules and imports nothing above it.
-
 import type {
   BonusTypeDef,
   Character,
