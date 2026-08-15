@@ -78,5 +78,5 @@ is committed.
 ## Note
 
 The character list is hardcoded in `index.html` — a `file://` page cannot read
-`src/data/characters.json`. It is the full in-game roster and is wider than
+`src/catalog/characters.json`. It is the full in-game roster and is wider than
 `characters.json`, which currently only carries the base 23.

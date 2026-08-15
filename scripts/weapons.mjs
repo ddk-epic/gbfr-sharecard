@@ -2,9 +2,9 @@
 //   node scripts/weapons.mjs [extract-dir] [--write]
 //
 // Emits (with --write):
-//   src/data/weapon-series.json  - one row per base series: id, name, atk, hp, slots[5]
-//   src/data/weapon-levels.json  - named per-step level sequences, referenced by slots
-//   patches src/data/characters/<id>.json in place with weapons / hpOffset / signatureTrait
+//   src/catalog/weapon-series.json  - one row per base series: id, name, atk, hp, slots[5]
+//   src/catalog/weapon-levels.json  - named per-step level sequences, referenced by slots
+//   patches src/catalog/characters/<id>.json in place with weapons / hpOffset / signatureTrait
 //
 // atk/hp are the MAXED totals (level 150 + awakening + transcendence + plus), hp at a
 // zero-offset character (Zeta); per-character hp is series.hp + character.hpOffset.
@@ -18,7 +18,7 @@ const EXTRACT = process.argv[2]?.startsWith("--")
   ? "../gbfr-extract"
   : (process.argv[2] ?? "../gbfr-extract");
 const WRITE = process.argv.includes("--write");
-const DATA = new URL("../src/data/", import.meta.url);
+const DATA = new URL("../src/catalog/", import.meta.url);
 
 const text = await readTextTables(`${EXTRACT}/system/table/text/en`, { readFile, readdir });
 const en = (k) => String(text.get(k) ?? "").split("\n")[0].trim();

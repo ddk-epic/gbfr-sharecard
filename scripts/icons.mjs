@@ -1,6 +1,6 @@
 // One-off icon pipeline: converts icons extracted from the game archive to WebP
 // under public/icons/ (weapon art under public/weapons/) and writes the
-// game-id -> icon-file index to src/data/icon-index.json. Results are committed;
+// game-id -> icon-file index to src/assets/icon-index.json. Results are committed;
 // re-run only when the game updates. Existing files are left alone.
 // Art and game data © Cygames. Archive access: docs/archive.md.
 //
@@ -28,7 +28,9 @@ import { readTextTables } from "./msgpack.mjs";
 const EXTRACT_DIR = process.argv[2] ?? "../gbfr-extract";
 const ICONS_DIR = new URL("../public/icons/", import.meta.url);
 const WEAPONS_DIR = new URL("../public/weapons/", import.meta.url);
-const DATA_DIR = new URL("../src/data/", import.meta.url);
+// The catalog is what the index is built from; the index itself ships as an asset.
+const CATALOG_DIR = new URL("../src/catalog/", import.meta.url);
+const ASSETS_DIR = new URL("../src/assets/", import.meta.url);
 const WEBP_QUALITY = 88;
 const WEAPON_ART_WIDTH = 512; // native is 1280px square; the card's box is far smaller
 // Native is 320px square. The card draws a skill at 20px (`Diamond`, size-5) and
@@ -369,7 +371,7 @@ console.log(`bonus: ${bonusCount} bonus types`);
 // ------------------------------------------------------------------ skills
 // public/icons/skills/<character>/<skill>.webp. Both halves come from the game
 // and the card already holds both - the character, and `skill.id` out of
-// src/data/characters/<character>.json, which is the name slug - so it builds
+// src/catalog/characters/<character>.json, which is the name slug - so it builds
 // the path itself and skills need no index at all.
 //
 // The character in the path is what settles Gran and Djeeta: they have their
@@ -434,7 +436,7 @@ const CARD_ART_HEIGHT = 900;
 const charaRoot = `${EXTRACT_DIR}/ui/layouts/common/image_chara/noatlastextures`;
 
 const characters = JSON.parse(
-  await readFile(new URL("characters.json", DATA_DIR)),
+  await readFile(new URL("characters.json", CATALOG_DIR)),
 );
 await mkdir(ART_DIR, { recursive: true });
 let artCount = 0;
@@ -469,7 +471,7 @@ console.log(`art: ${artCount} characters`);
 const summonsDirectory = new URL("summon/", ICONS_DIR);
 await mkdir(summonsDirectory, { recursive: true });
 const summonName = (key) => String(text.get(key) ?? "").replace(/\s+/g, " ").trim();
-const summonCatalog = JSON.parse(await readFile(new URL("summons.json", DATA_DIR)));
+const summonCatalog = JSON.parse(await readFile(new URL("summons.json", CATALOG_DIR)));
 const summonIds = new Set(summonCatalog.map((s) => s.id));
 const summonsSeen = new Set();
 for (const row of database
@@ -588,11 +590,11 @@ const settled = Object.fromEntries(
   Object.entries(index).filter(([name]) => SETTLED.has(name)),
 );
 await writeFile(
-  new URL("icon-index.json", DATA_DIR),
+  new URL("icon-index.json", ASSETS_DIR),
   JSON.stringify(settled, null, 2) + "\n",
 );
 console.log(
-  `\nwrote src/data/icon-index.json: ${Object.keys(settled).join(", ")}` +
+  `\nwrote src/assets/icon-index.json: ${Object.keys(settled).join(", ")}` +
     ` (held back: ${Object.keys(index).filter((n) => !SETTLED.has(n)).join(", ")})`,
 );
 if (missing.length)

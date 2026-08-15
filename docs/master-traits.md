@@ -223,7 +223,7 @@ it's already the object's key. Rendering composes the two.
 
 **Master-trait data is hand-authored and stays that way.** It is transcribed
 from in-game screenshots, merged per style by `tools/mt-card`, and lives in
-`src/data/characters/<character>.json` as three styles × four ranks of cells,
+`src/catalog/characters/<character>.json` as three styles × four ranks of cells,
 each with an `id`, a short `label` and a longer `description`. The archive
 tables above are recorded for cross-checking, not as a source - the decision to
 author them is about control over wording and layout, not about availability.

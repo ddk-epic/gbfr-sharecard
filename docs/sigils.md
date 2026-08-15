@@ -445,7 +445,7 @@ styles.
 
 ### What the editor offers
 
-`src/data/index.ts` turns the flags into the pools:
+`src/domain/sigils.ts` turns the flags into the pools:
 
 | Export                             | Pool                                    |
 | ---------------------------------- | --------------------------------------- |

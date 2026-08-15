@@ -1,5 +1,5 @@
 // One-off catalog extraction: reads the game archive and writes the committed
-// JSON under src/data/. Re-run only when the game updates.
+// JSON under src/catalog/. Re-run only when the game updates.
 //
 //   node scripts/extract.mjs [extract-dir]
 //
@@ -21,7 +21,7 @@
 //   characters.json           - hand-authored; elements and playerId are
 //                               already committed. This script only checks that
 //                               every playerId still matches a gem.PlayerReq
-//   master traits             - hand-authored per character in src/data/characters/
+//   master traits             - hand-authored per character in src/catalog/characters/
 //
 // Game data © Cygames.
 
@@ -29,7 +29,7 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { DatabaseSync } from "node:sqlite";
 import { readTextTables } from "./msgpack.mjs";
 
-const OUT_DIR = new URL("../src/data/", import.meta.url);
+const OUT_DIR = new URL("../src/catalog/", import.meta.url);
 const EXTRACT_DIR = process.argv[2] ?? "../gbfr-extract";
 const SUMMON_DOC_URL =
   "https://raw.githubusercontent.com/Nenkai/relink-modding/main/docs/resources/summon_trait_chances.md";
@@ -57,7 +57,7 @@ const fetchText = async (url) => {
 };
 const writeJson = async (name, data) => {
   await writeFile(new URL(name, OUT_DIR), JSON.stringify(data, null, 2) + "\n");
-  console.log(`wrote src/data/${name}`);
+  console.log(`wrote src/catalog/${name}`);
 };
 
 /**

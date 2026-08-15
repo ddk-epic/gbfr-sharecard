@@ -286,7 +286,7 @@ if (entryPoint && import.meta.url === pathToFileURL(entryPoint).href) {
   const { readdir, readFile, writeFile } = await import("node:fs/promises");
   const force = process.argv.includes("--force");
   const dry = process.argv.includes("--dry");
-  const dir = new URL("../src/data/characters/", import.meta.url);
+  const dir = new URL("../src/catalog/characters/", import.meta.url);
 
   // keep the hand-authored layout: one cell per line, scalar arrays inline
   const serialize = (value) =>

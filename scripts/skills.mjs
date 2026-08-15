@@ -1,7 +1,7 @@
 // Generate the skill catalog from the game archive.
 //   node scripts/skills.mjs [extract-dir] [--write]
 //
-// Patches src/data/characters/<id>.json in place with skills: [{id, name}].
+// Patches src/catalog/characters/<id>.json in place with skills: [{id, name}].
 // `name` is the game's own English skill name; `id` is that name slugged the
 // same way icons.mjs names the icon file, so it always resolves
 // public/icons/skills/<character>/<id>.webp without an index.
@@ -14,7 +14,7 @@ const EXTRACT = process.argv[2]?.startsWith("--")
   ? "../gbfr-extract"
   : (process.argv[2] ?? "../gbfr-extract");
 const WRITE = process.argv.includes("--write");
-const DATA = new URL("../src/data/", import.meta.url);
+const DATA = new URL("../src/catalog/", import.meta.url);
 const ICONS_DIR = new URL("../public/icons/skills/", import.meta.url);
 
 const text = await readTextTables(`${EXTRACT}/system/table/text/en`, { readFile, readdir });
