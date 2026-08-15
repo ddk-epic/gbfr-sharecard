@@ -30,14 +30,23 @@ const ELEMENT_COLOR: Record<ElementId, string> = {
 
 const ARRANGEMENT_LAYOUT: Record<
   Arrangement,
-  { headingClass: string; listClass: string; showDivider: boolean }
+  {
+    panelClass: string;
+    headingClass: string;
+    listClass: string;
+    showDivider: boolean;
+  }
 > = {
   grid: {
+    // Bottom padding trimmed to the heading gap; the panel's py-3.5 reads
+    // lopsided under the last row.
+    panelClass: "pb-1",
     headingClass: "mb-1",
     listClass: "relative grid grid-cols-2 grid-rows-2",
     showDivider: true,
   },
   list: {
+    panelClass: "",
     headingClass: "mb-2",
     listClass: "divide-line-soft -mb-2 grid grid-cols-1 divide-y",
     showDivider: false,
@@ -52,14 +61,15 @@ const SKILL_LAYOUT: Record<
     iconPad: string;
     iconSize: string;
     textClass: string;
+    textZoom?: number;
     trackingStyle: (name: string) => CSSProperties;
   }
 > = {
   compact: {
     rowClass: "",
     iconOrder: "",
-    iconPad: "p-1",
-    iconSize: "size-16",
+    iconPad: "pl-1 py-1",
+    iconSize: "size-18",
     textClass: "",
     trackingStyle: (name) => ({ letterSpacing: nameTracking(name) }),
   },
@@ -69,6 +79,7 @@ const SKILL_LAYOUT: Record<
     iconPad: "p-0.5",
     iconSize: "size-17",
     textClass: "tracking-wide",
+    textZoom: 1.15,
     trackingStyle: () => ({}),
   },
 };
@@ -109,7 +120,10 @@ function SkillCell({
           alt={def.name}
         />
       </div>
-      <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+      <span
+        className="flex min-w-0 flex-1 flex-col gap-1.5"
+        style={{ zoom: layout.textZoom }}
+      >
         <span
           className={`leading-[1.3] font-semibold ${layout.textClass}`}
           style={{
@@ -153,7 +167,7 @@ export function SkillsSection({
   );
 
   return (
-    <SectionPanel shadow className="flex flex-col">
+    <SectionPanel shadow className={`flex flex-col ${layout.panelClass}`}>
       <Heading size="lg" className={layout.headingClass}>
         Skills
       </Heading>
