@@ -48,6 +48,9 @@ export type TraitDef = {
   /** In the archive's one random-trait pool, which a wrightstone's two subs
       draw from. 72 traits. */
   wrightstoneSub?: true;
+  /** The second slot is pinned to this trait, not picked: the one gem carrying
+      this first never rolls, and synthesis refuses it. The Lucilius trio only. */
+  fixedSecond?: TraitId;
   /** Every gem granting this trait first is single-trait. A property of those
       sigils, not the trait: it can still be a `secondTrait` on someone else's
       sigil, as Crabmiration is. */

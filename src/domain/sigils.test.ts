@@ -25,7 +25,7 @@ describe("trait flags", () => {
     expect(withFlag("firstTrait")).toHaveLength(188);
     expect(withFlag("secondTrait")).toHaveLength(80);
     expect(withFlag("wrightstoneSub")).toHaveLength(72);
-    expect(withFlag("noSecondSlot")).toHaveLength(6);
+    expect(withFlag("noSecondSlot")).toHaveLength(9);
   });
 
   test("everything that rolls is a sigil trait", () => {
@@ -66,10 +66,22 @@ describe("trait flags", () => {
     );
   });
 
-  test("takesSecondTrait is false for exactly the single-trait six", () => {
-    expect(TRAITS.filter((trait) => !takesSecondTrait(trait.id))).toHaveLength(
-      6,
-    );
+  test("takesSecondTrait is false for exactly the single-trait sigils", () => {
+    expect(
+      TRAITS.filter((trait) => !takesSecondTrait(trait.id)).map((t) => t.id),
+    ).toMatchInlineSnapshot(`
+      [
+        "crabby-resonance",
+        "crabmiration",
+        "crabvestment-returns",
+        "immortal-shell",
+        "in-a-pinch",
+        "natural-defenses",
+        "seven-net",
+        "stout-heart",
+        "sumo-force",
+      ]
+    `);
   });
 
   test("the traits that lead but never follow", () => {
@@ -191,6 +203,20 @@ describe("second trait pool", () => {
       expect(trait.secondTrait, trait.id).toBeUndefined();
       expect(ids("guardians-conviction")).not.toContain(trait.id);
     }
+  });
+
+  test("the Lucilius trio pins DMG Cap, and nothing else does", () => {
+    const pinned = TRAITS.filter((trait) => trait.fixedSecond);
+    expect(pinned.map((trait) => trait.id)).toEqual(["alpha", "beta", "gamma"]);
+    for (const trait of pinned) expect(trait.fixedSecond).toBe("dmg-cap");
+  });
+
+  test("a pinned first trait offers only its own second", () => {
+    expect(ids("alpha")).toEqual(["dmg-cap"]);
+    expect(canFollow("alpha", "dmg-cap")).toBe(true);
+    expect(canFollow("alpha", "atk")).toBe(false);
+    // The pin is one-way - DMG Cap leads a normal sigil.
+    expect(ids("dmg-cap").length).toBeGreaterThan(1);
   });
 
   test("canFollow allows a duplicate, and both pair orders", () => {

@@ -24,19 +24,34 @@ export function sigilTraitPool(characterId: CharacterId): TraitDef[] {
   ];
 }
 
+/** The trait this one's sigil always carries second, if the slot is pinned. */
+export function fixedSecondTrait(
+  firstTrait: TraitId | null | undefined,
+): TraitId | null {
+  return (firstTrait && traitById.get(firstTrait)?.fixedSecond) ?? null;
+}
+
 /** The pool for a sigil's second trait (depends on its first). */
 export function sigilSecondTraitPool(
   firstTrait: TraitId | null | undefined,
 ): TraitDef[] {
+  const pinnedId = fixedSecondTrait(firstTrait);
+  const pinned = pinnedId ? traitById.get(pinnedId) : undefined;
+  if (pinned) return [pinned];
   const partnerId = firstTrait ? traitById.get(firstTrait)?.pairsWith : null;
   const partner = partnerId ? traitById.get(partnerId) : undefined;
   return partner ? [partner, ...SECOND_OPEN_POOL] : SECOND_OPEN_POOL;
 }
 
 /** Whether `second` may sit behind `first` on one sigil. Duplicates are legal. */
-export const canFollow = (first: TraitId, second: TraitId): boolean =>
-  !!traitById.get(second)?.secondTrait ||
-  traitById.get(first)?.pairsWith === second;
+export const canFollow = (first: TraitId, second: TraitId): boolean => {
+  const pinned = fixedSecondTrait(first);
+  if (pinned) return second === pinned;
+  return (
+    !!traitById.get(second)?.secondTrait ||
+    traitById.get(first)?.pairsWith === second
+  );
+};
 
 /** Whether a sigil built on this trait has a second slot. */
 export const takesSecondTrait = (trait: TraitId): boolean =>

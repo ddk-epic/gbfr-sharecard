@@ -162,7 +162,15 @@ const categoryOf = (icon) =>
 // so each is built from its own column: `SkillId1` licenses the first slot,
 // synthesis licenses the second, and `skill_lot` licenses a wrightstone sub.
 // See docs/sigils.md.
-const gems = database.prepare("select * from gem").all();
+// Three two-trait crab gems sit in the table but ship in no build of the game -
+// Crabs Are Forever+, Immortal Shell+, In a Pinch+. Their five traits exist only
+// as one-trait sigils, so the rows are dropped before any flag reads them. There
+// is no obtainability column to test; the keys are the only handle.
+const PHANTOM_GEMS = new Set(["426AD20E", "66CB28BA", "76786869"]);
+const allGems = database.prepare("select * from gem").all();
+const gems = allGems.filter((gem) => !PHANTOM_GEMS.has(gem.Key));
+if (allGems.length - gems.length !== PHANTOM_GEMS.size)
+  throw new Error("a phantom gem key no longer matches a gem row");
 // First slot only. Reading `SkillId2` in here too would happen to give the same
 // 188 today - no trait is second-only - but it would offer a second-only trait
 // as a first trait the moment the game adds one.
@@ -260,6 +268,24 @@ if (styles.size !== 28)
 // So the free second-trait pool is the character-locked traits taken back out.
 for (const key of characterKeys) secondKeys.delete(key);
 
+// Alpha, Beta and Gamma reach the board on one gem each, which pins DMG Cap in
+// the second slot and never rolls. Synthesis refuses those gems, so no other
+// sigil can carry the trait and the slot is not a choice at all.
+// `IsLuciliusGem` is three-valued, not a boolean: 1 is exactly these three, 2 is
+// every character sigil and awakening. Ain and the Boundaries pin Regen the same
+// way but carry 2, and are character-locked and paired instead.
+const fixedSecondByKey = new Map();
+for (const gem of gems) {
+  if (gem.IsLuciliusGem !== 1) continue;
+  if (!gem.SkillId2 || gem.SkillTypeLotIdForRandom2ndSkill !== -1)
+    throw new Error(`Lucilius gem ${gem.Key} no longer pins a second trait`);
+  fixedSecondByKey.set(gem.SkillId1, gem.SkillId2);
+}
+if (fixedSecondByKey.size !== 3)
+  throw new Error(
+    `expected 3 pinned second traits, found ${fixedSecondByKey.size}`,
+  );
+
 const missingMaxLevel = [];
 const traitRows = database
   .prepare("select Key, Name, IconId1 from skill where IconId1 != ''")
@@ -284,6 +310,9 @@ const traits = traitRows
       ...(secondKeys.has(key) && { secondTrait: true }),
       ...(wrightstoneSubKeys.has(key) && { wrightstoneSub: true }),
       ...(firstTrait && !pairedKeys.has(key) && { noSecondSlot: true }),
+      ...(fixedSecondByKey.has(key) && {
+        fixedSecond: idByKey.get(fixedSecondByKey.get(key)),
+      }),
       ...(characterByKey.has(key) && { character: characterByKey.get(key) }),
       ...(pairedWith.has(key) && {
         pairsWith: idByKey.get(pairedWith.get(key)),

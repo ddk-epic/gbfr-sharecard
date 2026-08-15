@@ -1,7 +1,7 @@
 import type { Build } from "@/domain/build";
 import type { TraitId } from "@/catalog/ids";
 import { SIGIL_DEFAULT_LEVEL, setAt } from "@/domain/build";
-import { canFollow, takesSecondTrait } from "@/domain/sigils";
+import { canFollow, fixedSecondTrait, takesSecondTrait } from "@/domain/sigils";
 
 export type Sigils = Build["sigils"];
 
@@ -70,7 +70,9 @@ export function pick(sigils: Sigils, cell: Cell, trait: TraitId): Sigils {
       : sigils;
   return setAt(sigils, cell.index, {
     primaryTrait: trait,
-    secondaryTrait: keptSecond(trait, slot?.secondaryTrait),
+    // A pinned second fills itself - the sigil only ever drops carrying it.
+    secondaryTrait:
+      fixedSecondTrait(trait) ?? keptSecond(trait, slot?.secondaryTrait),
     level: slot?.level ?? SIGIL_DEFAULT_LEVEL,
   });
 }

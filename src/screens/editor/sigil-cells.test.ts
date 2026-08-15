@@ -117,6 +117,26 @@ describe("picking", () => {
     });
   });
 
+  test("a pinned first trait brings its second with it", () => {
+    const sigils = pick(board(null), { index: 0, secondary: false }, "alpha");
+    expect(sigils[0]).toEqual({
+      primaryTrait: "alpha",
+      secondaryTrait: "dmg-cap",
+      level: 15,
+    });
+    // Both cells filled, so the cursor moves past the sigil entirely.
+    expect(nextEmpty(sigils, { index: 0, secondary: false })).toBeNull();
+  });
+
+  test("a pinned pick overrides the second trait it replaces", () => {
+    const sigils = pick(
+      board(slot(A, B)),
+      { index: 0, secondary: false },
+      "beta",
+    );
+    expect(sigils[0]?.secondaryTrait).toBe("dmg-cap");
+  });
+
   test("a second trait needs a first, so it cannot land alone", () => {
     const sigils = board(null);
     expect(pick(sigils, { index: 0, secondary: true }, B)).toBe(sigils);

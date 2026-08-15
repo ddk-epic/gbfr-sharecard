@@ -20,7 +20,8 @@
     "name": "Alpha",
     "maxLevel": 30,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "fixedSecond": "dmg-cap"
   },
   {
     "id": "atk",
@@ -78,7 +79,8 @@
     "name": "Beta",
     "maxLevel": 30,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "fixedSecond": "dmg-cap"
   },
   {
     "id": "bladequeens-circuit",
@@ -265,7 +267,8 @@
     "name": "Crabby Resonance",
     "maxLevel": 45,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "noSecondSlot": true
   },
   {
     "id": "crabmiration",
@@ -628,7 +631,8 @@
     "name": "Gamma",
     "maxLevel": 30,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "fixedSecond": "dmg-cap"
   },
   {
     "id": "garrison",
@@ -836,7 +840,8 @@
     "name": "Immortal Shell",
     "maxLevel": 20,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "noSecondSlot": true
   },
   {
     "id": "improved-dodge",
@@ -870,7 +875,8 @@
     "name": "In a Pinch",
     "maxLevel": 15,
     "category": "special",
-    "firstTrait": true
+    "firstTrait": true,
+    "noSecondSlot": true
   },
   {
     "id": "injury-to-insult",

@@ -245,18 +245,30 @@ Ten of the twelve are not on `weapon` either; they arrive only when a weapon is
 transcended. Only _Catastrophe_ and _Sigil Booster_ sit on the weapon row
 itself.
 
-### Six traits have only single-trait sigils
+### Nine traits have only single-trait sigils
 
-Carrying a trait and taking a second trait are separate questions. For six
-traits **every** `gem` row that grants them has an empty `SkillId2` and a `-1`
-roll lot, so no sigil of theirs is ever a `+`:
+Carrying a trait and taking a second trait are separate questions. For nine
+traits no sigil is ever a `+`, so the second slot never exists:
 
-_Crabmiration_ · _Crabvestment Returns_ · _Natural Defenses_ · _Seven Net_ ·
+_Crabby Resonance_ · _Crabmiration_ · _Crabvestment Returns_ ·
+_Immortal Shell_ · _In a Pinch_ · _Natural Defenses_ · _Seven Net_ ·
 _Stout Heart_ · _Sumo Force_
 
-The set is narrower than the names suggest. _Auto Potion_ and _Immortal Shell_
-are the same kind of curio and are not in it: _Auto Potion+_ rolls on lot 16,
-and _Immortal Shell+_ carries _Crabvestment Returns_ fixed.
+Six of them are read straight off the table: **every** `gem` row granting them
+has an empty `SkillId2` and a `-1` roll lot.
+
+The other three - _Crabby Resonance_, _Immortal Shell_, _In a Pinch_ - need the
+table overruled. It holds three two-trait crab gems that ship in no build of the
+game: _Crabs Are Forever+_ (`426AD20E`, carrying _Crabmiration_),
+_Immortal Shell+_ (`66CB28BA`) and _In a Pinch+_ (`76786869`, both carrying
+_Crabvestment Returns_). No column marks them unobtainable - not
+`CanGemMix`, not `ItemTierId`, not `CanOnlyHoldOne` - so `extract.mjs` drops the
+three keys by hand before any flag reads the table, and throws if a key stops
+matching a row. Without that, five traits would claim a second slot the game
+never offers.
+
+_Auto Potion_ looks like the same kind of curio but is not in the set:
+_Auto Potion+_ genuinely exists and rolls on lot 16.
 
 _Stout Heart_ is the extreme case - a single-trait sigil, never a second trait,
 and absent from all 36 `skill_lot` groups. Nothing random in the game hands it
@@ -274,6 +286,17 @@ fixed - never _Regen_. The three Boundary/_Ain_ sigils carry
 `IsLuciliusGem = 2`, the same value as every character sigil, and their fixed
 trait is _Regen_ (`SKILL_066_00`). Two different sets, two different fixed
 traits.
+
+The trio's _DMG Cap_ is not a default the player can edit away. One gem carries
+each trait, it pins the second slot, it never rolls, and synthesis refuses it -
+so no _Alpha_ sigil holding anything else can exist. That is what `fixedSecond`
+records: `extract.mjs` reads `IsLuciliusGem = 1`, the editor fills the second
+slot the moment the first is picked, and the second-slot pool collapses to the
+one entry. `pairsWith` widens a pool by one; `fixedSecond` replaces it.
+
+_Ain_ and the two Boundaries pin _Regen_ by the same mechanic but do not get the
+flag - they are character-locked, so `character` and `pairsWith` already keep
+them out of every free pool.
 
 ## The second-trait pool is 80 open, plus one paired
 
@@ -333,10 +356,8 @@ trait in both slots, so nothing rejects a sigil carrying a trait twice.
 
 `noSecondSlot` and `secondTrait` remain separate questions - one is about the
 sigil, the other about the trait - but as of 2.0.2 nothing sets both. The only
-sigils that carried a single-trait trait second were _Crabs Are Forever+_
-(_Crabmiration_) and _Immortal Shell+_ (_Crabvestment Returns_), and synthesis
-refuses both, so neither trait reaches the second slot. Those two sigils are
-also not obtainable in the shipping game; their `gem` rows are leftovers.
+rows that put a single-trait trait second were the three phantom crab gems, and
+those are dropped before the flags are built (see above).
 
 ## Sigil synthesis
 
@@ -441,7 +462,7 @@ never rolls can end up there.
 
 ### The flags
 
-`scripts/extract.mjs` writes four booleans and one reference onto `traits.json`,
+`scripts/extract.mjs` writes four booleans and two references onto `traits.json`,
 plus `character` holding the `PlayerReq` of a character-locked trait. Each
 answers a **different** question, so each is built from its own column:
 
@@ -450,8 +471,9 @@ answers a **different** question, so each is built from its own column:
 | `firstTrait`     | 188   | can it be a sigil's own trait?               | `gem.SkillId1`                           |
 | `secondTrait`    | 80    | can it follow **any** first trait?           | synthesis-eligible legendary+, open only |
 | `pairsWith`      | 56    | which single trait may it follow?            | gems carrying two character traits       |
+| `fixedSecond`    | 3     | which trait is its second slot pinned to?    | `gem.IsLuciliusGem = 1`                  |
 | `wrightstoneSub` | 72    | can it be a wrightstone sub?                 | `skill_lot`                              |
-| `noSecondSlot`   | 6     | does a sigil built on it lack a second slot? | `SkillId1` with no pair, ever            |
+| `noSecondSlot`   | 9     | does a sigil built on it lack a second slot? | `SkillId1` with no pair, ever            |
 
 Three traps these names are shaped to avoid:
 
@@ -480,8 +502,9 @@ styles.
 | `sigilTraitPool(characterId)`      | first slot: 101 open + that character's |
 | `sigilSecondTraitPool(firstTrait)` | second slot: the 80, plus the partner   |
 | `canFollow(first, second)`         | the pair rule as a predicate            |
+| `fixedSecondTrait(first)`          | the pinned second, or null              |
 | `WRIGHTSTONE_SUB_POOL`             | the 72                                  |
-| `takesSecondTrait(id)`             | false for the six                       |
+| `takesSecondTrait(id)`             | false for the nine                      |
 
 The second pool keys off the **first trait**, not the character: every trait in
 it is either open or that first trait's own partner, so it cannot leak another
@@ -490,12 +513,15 @@ bound to its character - `storage.ts` keys on it - so it never changes under a
 build.
 
 Changing a first trait re-checks the second and drops it if the pair is no
-longer legal, so swapping away from a character trait clears its partner.
+longer legal, so swapping away from a character trait clears its partner. A
+first trait with a `fixedSecond` skips that check and fills its second slot
+outright - picking _Alpha_ writes _DMG Cap_ beside it, and the cursor moves on
+to the next sigil.
 
 The second slot is **narrower** than the first: 80 open traits against 101.
-Exactly **21** traits can lead a sigil and never follow it, and they are one
-group with one cause - every trait whose only legendary `+` sigil is a unique
-synthesis refuses:
+Exactly **21** traits can lead a sigil and never follow it, for one of two
+reasons - either their only legendary `+` sigil is a unique synthesis refuses, or
+(for the five crab traits) they have no `+` sigil at all:
 
 _Alpha_ · _Beta_ · _Gamma_ · _Auto Potion_ · _Berserker Echo_ ·
 _Crabby Resonance_ · _Crabmiration_ · _Crabvestment Returns_ ·
