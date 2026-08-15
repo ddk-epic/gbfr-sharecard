@@ -5,10 +5,9 @@ import { summonIconUrl } from "@/assets/urls";
 import { summonById } from "@/catalog";
 import { traitName } from "@/domain/naming";
 import { TraitIcon, traitIconBox } from "@/components/build/TraitIcon";
-import { Heading, SectionPanel } from "@/components/ui";
+import { Heading, SectionPanel, nameTracking } from "@/components/ui";
 import { BONUS_ICON_EM, BonusIconStrut, BonusLine } from "./BonusIcon";
 import { LvlDisplay } from "./LvlDisplay";
-import { nameTracking } from "./name-tracking";
 
 type Arrangement = "grid" | "list";
 type Density = "compact" | "loose";

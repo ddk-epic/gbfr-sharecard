@@ -4,9 +4,13 @@ import type { CharacterId } from "@/catalog/ids";
 import type { ElementId } from "@/catalog/types";
 import { skillIconUrl } from "@/assets/urls";
 import { characterCatalog } from "@/catalog";
-import { Heading, ReverseSlantedBar, SectionPanel } from "@/components/ui";
+import {
+  Heading,
+  ReverseSlantedBar,
+  SectionPanel,
+  nameTracking,
+} from "@/components/ui";
 import { ElementIcon } from "./ElementIcon";
-import { nameTracking } from "./name-tracking";
 
 type SkillDef = ReturnType<typeof characterCatalog>["skills"][number];
 type Arrangement = "grid" | "list";
