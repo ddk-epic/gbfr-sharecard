@@ -268,24 +268,26 @@ if (styles.size !== 28)
 // So the free second-trait pool is the character-locked traits taken back out.
 for (const key of characterKeys) secondKeys.delete(key);
 
-// Alpha, Beta and Gamma reach the board on one gem each, which pins DMG Cap in
-// the second slot and never rolls. Synthesis refuses those gems, so no other
-// sigil can carry the trait and the slot is not a choice at all.
-// `IsLuciliusGem` is three-valued, not a boolean: 1 is exactly these three, 2 is
-// every character sigil and awakening. Ain and the Boundaries pin Regen the same
-// way but carry 2, and are character-locked and paired instead.
-const fixedSecondByKey = new Map();
+// Six traits reach the board on sigils that pin their second slot rather than
+// offer it: Alpha, Beta and Gamma pin DMG Cap, and Ain and the two Boundaries
+// pin Regen. Three conditions have to hold together for the slot to be settled -
+// every sigil carrying the trait first agrees on one second trait, none of them
+// rolls, and synthesis refuses them, so no other sigil can carry the trait.
+// Drop any one and the slot reopens: a `Warpath+` rolls on lot 15, an awakening
+// shares its trait with a `+` that rolls, and a generic `<Trait> V+` goes in the
+// pot. `IsLuciliusGem` would name the first three but not the second three - it
+// is 1 on Alpha/Beta/Gamma and 2 on every character sigil, Warpaths included.
+const secondsByKey = new Map(); // first trait -> distinct fixed seconds
+const rollsByKey = new Set(); // first trait -> some sigil rolls its second
+const offeredKeys = new Set(); // first trait -> synthesis accepts some sigil
 for (const gem of gems) {
-  if (gem.IsLuciliusGem !== 1) continue;
-  if (!gem.SkillId2 || gem.SkillTypeLotIdForRandom2ndSkill !== -1)
-    throw new Error(`Lucilius gem ${gem.Key} no longer pins a second trait`);
-  fixedSecondByKey.set(gem.SkillId1, gem.SkillId2);
+  if (!gem.SkillId1) continue;
+  if (gem.SkillTypeLotIdForRandom2ndSkill !== -1) rollsByKey.add(gem.SkillId1);
+  if (!gem.CanGemMix) offeredKeys.add(gem.SkillId1);
+  if (!gem.SkillId2) continue;
+  if (!secondsByKey.has(gem.SkillId1)) secondsByKey.set(gem.SkillId1, new Set());
+  secondsByKey.get(gem.SkillId1).add(gem.SkillId2);
 }
-if (fixedSecondByKey.size !== 3)
-  throw new Error(
-    `expected 3 pinned second traits, found ${fixedSecondByKey.size}`,
-  );
-
 const missingMaxLevel = [];
 const traitRows = database
   .prepare("select Key, Name, IconId1 from skill where IconId1 != ''")
@@ -295,6 +297,20 @@ const traitRows = database
 
 // `pairsWith` names the partner by trait id, so the key has to resolve first.
 const idByKey = new Map(traitRows.map((row) => [row.key, slug(row.name)]));
+
+// Resolved here because `idByKey` is the set of keys that become catalog traits.
+// Two unnamed keys also pin a second trait - more crab leftovers - and they have
+// no trait row to carry the flag.
+const fixedSecondByKey = new Map();
+for (const [key, seconds] of secondsByKey) {
+  if (!idByKey.has(key) || !idByKey.has([...seconds][0])) continue;
+  if (seconds.size !== 1 || rollsByKey.has(key) || offeredKeys.has(key)) continue;
+  fixedSecondByKey.set(key, [...seconds][0]);
+}
+if (fixedSecondByKey.size !== 6)
+  throw new Error(
+    `expected 6 pinned second traits, found ${fixedSecondByKey.size}`,
+  );
 
 const traits = traitRows
   .map(({ key, name, icon }) => {

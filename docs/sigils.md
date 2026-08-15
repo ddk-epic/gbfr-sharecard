@@ -287,16 +287,30 @@ fixed - never _Regen_. The three Boundary/_Ain_ sigils carry
 trait is _Regen_ (`SKILL_066_00`). Two different sets, two different fixed
 traits.
 
-The trio's _DMG Cap_ is not a default the player can edit away. One gem carries
-each trait, it pins the second slot, it never rolls, and synthesis refuses it -
-so no _Alpha_ sigil holding anything else can exist. That is what `fixedSecond`
-records: `extract.mjs` reads `IsLuciliusGem = 1`, the editor fills the second
-slot the moment the first is picked, and the second-slot pool collapses to the
-one entry. `pairsWith` widens a pool by one; `fixedSecond` replaces it.
+Neither fixed trait is a default the player can edit away, and `fixedSecond`
+records both sets. Three conditions have to hold together for a second slot to
+be settled rather than offered:
 
-_Ain_ and the two Boundaries pin _Regen_ by the same mechanic but do not get the
-flag - they are character-locked, so `character` and `pairsWith` already keep
-them out of every free pool.
+- every sigil carrying the trait first agrees on **one** second trait;
+- **none of them rolls** - `SkillTypeLotIdForRandom2ndSkill` is `-1` throughout;
+- **synthesis refuses them all**, so no other sigil can carry the trait.
+
+Drop any one and the slot reopens. A `Warpath+` rolls on lot 15; an awakening
+shares its trait with a `+` that rolls; a generic `<Trait> V+` goes in the pot.
+Six traits satisfy all three - _Alpha_, _Beta_, _Gamma_ on _DMG Cap_, and _Ain_,
+_Seven-Star Boundary_, _Two-Crown Boundary_ on _Regen_.
+
+`IsLuciliusGem` would name the first three and miss the other three, which is
+why the rule is built from the three conditions instead.
+
+The editor fills the second slot the moment the first is picked, and the
+second-slot pool collapses to the one entry. `pairsWith` widens a pool by one;
+`fixedSecond` replaces it, and wins over `character` too - _Ain_ is
+character-locked **and** pinned, so Sandalphon is offered it and nobody else,
+and _Regen_ lands beside it automatically.
+
+Pinning a second says nothing about the trait itself following anything. All six
+still lead only.
 
 ## The second-trait pool is 80 open, plus one paired
 
@@ -471,7 +485,7 @@ answers a **different** question, so each is built from its own column:
 | `firstTrait`     | 188   | can it be a sigil's own trait?               | `gem.SkillId1`                           |
 | `secondTrait`    | 80    | can it follow **any** first trait?           | synthesis-eligible legendary+, open only |
 | `pairsWith`      | 56    | which single trait may it follow?            | gems carrying two character traits       |
-| `fixedSecond`    | 3     | which trait is its second slot pinned to?    | `gem.IsLuciliusGem = 1`                  |
+| `fixedSecond`    | 6     | which trait is its second slot pinned to?    | one second, no roll, synthesis refuses   |
 | `wrightstoneSub` | 72    | can it be a wrightstone sub?                 | `skill_lot`                              |
 | `noSecondSlot`   | 9     | does a sigil built on it lack a second slot? | `SkillId1` with no pair, ever            |
 
@@ -515,8 +529,8 @@ build.
 Changing a first trait re-checks the second and drops it if the pair is no
 longer legal, so swapping away from a character trait clears its partner. A
 first trait with a `fixedSecond` skips that check and fills its second slot
-outright - picking _Alpha_ writes _DMG Cap_ beside it, and the cursor moves on
-to the next sigil.
+outright - picking _Alpha_ writes _DMG Cap_ beside it, picking _Ain_ writes
+_Regen_, and the cursor moves on to the next sigil.
 
 The second slot is **narrower** than the first: 80 open traits against 101.
 Exactly **21** traits can lead a sigil and never follow it, for one of two

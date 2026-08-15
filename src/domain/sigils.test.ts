@@ -205,10 +205,40 @@ describe("second trait pool", () => {
     }
   });
 
-  test("the Lucilius trio pins DMG Cap, and nothing else does", () => {
-    const pinned = TRAITS.filter((trait) => trait.fixedSecond);
-    expect(pinned.map((trait) => trait.id)).toEqual(["alpha", "beta", "gamma"]);
-    for (const trait of pinned) expect(trait.fixedSecond).toBe("dmg-cap");
+  test("six traits pin their second, and nothing else does", () => {
+    expect(
+      TRAITS.filter((trait) => trait.fixedSecond).map((trait) => [
+        trait.id,
+        trait.fixedSecond,
+      ]),
+    ).toMatchInlineSnapshot(`
+      [
+        [
+          "ain",
+          "regen",
+        ],
+        [
+          "alpha",
+          "dmg-cap",
+        ],
+        [
+          "beta",
+          "dmg-cap",
+        ],
+        [
+          "gamma",
+          "dmg-cap",
+        ],
+        [
+          "seven-star-boundary",
+          "regen",
+        ],
+        [
+          "two-crown-boundary",
+          "regen",
+        ],
+      ]
+    `);
   });
 
   test("a pinned first trait offers only its own second", () => {
@@ -217,6 +247,14 @@ describe("second trait pool", () => {
     expect(canFollow("alpha", "atk")).toBe(false);
     // The pin is one-way - DMG Cap leads a normal sigil.
     expect(ids("dmg-cap").length).toBeGreaterThan(1);
+  });
+
+  test("a pinned character trait beats the open pool, but still leads only", () => {
+    expect(ids("ain")).toEqual(["regen"]);
+    expect(canFollow("ain", "regen")).toBe(true);
+    expect(canFollow("ain", "atk")).toBe(false);
+    // Pinning a second does not make the trait itself followable.
+    expect(canFollow("dmg-cap", "ain")).toBe(false);
   });
 
   test("canFollow allows a duplicate, and both pair orders", () => {

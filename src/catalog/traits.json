@@ -13,6 +13,7 @@
     "name": "Ain",
     "maxLevel": 15,
     "firstTrait": true,
+    "fixedSecond": "regen",
     "character": "PL2100"
   },
   {
@@ -1216,6 +1217,7 @@
     "name": "Seven-Star Boundary",
     "maxLevel": 15,
     "firstTrait": true,
+    "fixedSecond": "regen",
     "character": "PL2200"
   },
   {
@@ -1479,6 +1481,7 @@
     "name": "Two-Crown Boundary",
     "maxLevel": 15,
     "firstTrait": true,
+    "fixedSecond": "regen",
     "character": "PL2300"
   },
   {
