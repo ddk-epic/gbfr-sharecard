@@ -16,6 +16,7 @@ import {
 const SOLO = "stout-heart";
 const A = "war-elemental";
 const B = "improved-guard";
+const C = "atk";
 
 const slot = (primary: string, secondary: string | null = null): SigilSlot => ({
   primaryTrait: primary,
@@ -109,9 +110,9 @@ describe("picking", () => {
   });
 
   test("replacing a first trait keeps the level and the second", () => {
-    const sigils = pick(board(slot(A, B)), { index: 0, secondary: false }, "x");
+    const sigils = pick(board(slot(A, B)), { index: 0, secondary: false }, C);
     expect(sigils[0]).toEqual({
-      primaryTrait: "x",
+      primaryTrait: C,
       secondaryTrait: B,
       level: 15,
     });

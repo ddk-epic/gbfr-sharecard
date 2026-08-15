@@ -29,6 +29,7 @@ export type Character = {
 export type TraitCategory =
   "basic" | "attack" | "defense" | "special" | "support";
 
+/** Display data only - what a trait may do is its lot's, in sigil-lots.json. */
 export type TraitDef = {
   id: TraitId;
   name: string;
@@ -36,29 +37,33 @@ export type TraitDef = {
   short?: string;
   maxLevel: number;
   category?: TraitCategory;
-  /** Can be a sigil's own trait - 188 of the 200, the rest weapon traits. */
-  firstTrait?: true;
-  /** Can sit in a sigil's second slot behind any first trait - 90 traits, a
-      superset of `wrightstoneSub`. */
-  secondTrait?: true;
-  /** The style's other character trait, by id. A character trait may sit second
-      only behind this one, in either order. Set on the 56 paired traits, two
-      per style. */
-  pairsWith?: TraitId;
-  /** In the archive's one random-trait pool, which a wrightstone's two subs
-      draw from. 72 traits. */
+};
+
+export type SigilLotId =
+  | "standard"
+  | "synthesisOnly"
+  | "firstTraitOnly"
+  | "singleTraitOnly"
+  | "lucilius"
+  | "boundary"
+  | "weaponOnly";
+
+/** One lot's whole rule. `eligibleSecondTraits` names the lots its sigil's
+    second slot accepts, or the one trait that slot is pinned to; absent means
+    the sigil has no second slot. */
+export type SigilLot = {
+  firstSlot?: true;
+  eligibleSecondTraits?: (SigilLotId | TraitId)[];
   wrightstoneSub?: true;
-  /** The second slot is pinned to this trait, not picked: every sigil carrying
-      this one first agrees on it, none rolls, and synthesis refuses them all.
-      Six traits - Alpha/Beta/Gamma on DMG Cap, Ain and the Boundaries on Regen.
-      Outranks `character`, which the three Regen ones also carry. */
-  fixedSecond?: TraitId;
-  /** Every gem granting this trait first is single-trait. A property of those
-      sigils, not the trait: it can still be a `secondTrait` on someone else's
-      sigil, as Crabmiration is. */
-  noSecondSlot?: true;
-  /** Character-locked sigil, by `Character.playerId`. */
-  character?: string;
+  traits: TraitId[];
+};
+
+/** `pairs` are the two traits of a style that may follow each other, one tuple
+    per style. `styles` keys a style's own traits by `Character.playerId`. */
+export type SigilLots = {
+  lots: Record<SigilLotId, SigilLot>;
+  pairs: [TraitId, TraitId][];
+  styles: Record<string, TraitId[]>;
 };
 
 export type BonusTypeDef = {

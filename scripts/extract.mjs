@@ -158,13 +158,13 @@ const TRAIT_CATEGORIES = {
 const categoryOf = (icon) =>
   icon.startsWith("05_pl") ? undefined : TRAIT_CATEGORIES[icon.slice(0, 2)];
 
-// The sigil trait flags, from the gem table. Each answers a different question,
-// so each is built from its own column: `SkillId1` licenses the first slot,
-// synthesis licenses the second, and `skill_lot` licenses a wrightstone sub.
-// See docs/sigils.md.
+// What a trait may do, from the gem table. Each question takes its own column:
+// `SkillId1` licenses the first slot, synthesis licenses the second, and
+// `skill_lot` licenses a wrightstone sub. The lots below are cut from the
+// answers. See docs/sigils.md.
 // Three two-trait crab gems sit in the table but ship in no build of the game -
 // Crabs Are Forever+, Immortal Shell+, In a Pinch+. Their five traits exist only
-// as one-trait sigils, so the rows are dropped before any flag reads them. There
+// as one-trait sigils, so the rows are dropped before any lot reads them. There
 // is no obtainability column to test; the keys are the only handle.
 const PHANTOM_GEMS = new Set(["426AD20E", "66CB28BA", "76786869"]);
 const allGems = database.prepare("select * from gem").all();
@@ -285,7 +285,8 @@ for (const gem of gems) {
   if (gem.SkillTypeLotIdForRandom2ndSkill !== -1) rollsByKey.add(gem.SkillId1);
   if (!gem.CanGemMix) offeredKeys.add(gem.SkillId1);
   if (!gem.SkillId2) continue;
-  if (!secondsByKey.has(gem.SkillId1)) secondsByKey.set(gem.SkillId1, new Set());
+  if (!secondsByKey.has(gem.SkillId1))
+    secondsByKey.set(gem.SkillId1, new Set());
   secondsByKey.get(gem.SkillId1).add(gem.SkillId2);
 }
 const missingMaxLevel = [];
@@ -304,7 +305,8 @@ const idByKey = new Map(traitRows.map((row) => [row.key, slug(row.name)]));
 const fixedSecondByKey = new Map();
 for (const [key, seconds] of secondsByKey) {
   if (!idByKey.has(key) || !idByKey.has([...seconds][0])) continue;
-  if (seconds.size !== 1 || rollsByKey.has(key) || offeredKeys.has(key)) continue;
+  if (seconds.size !== 1 || rollsByKey.has(key) || offeredKeys.has(key))
+    continue;
   fixedSecondByKey.set(key, [...seconds][0]);
 }
 if (fixedSecondByKey.size !== 6)
@@ -312,27 +314,16 @@ if (fixedSecondByKey.size !== 6)
     `expected 6 pinned second traits, found ${fixedSecondByKey.size}`,
   );
 
+// Eligibility lives in sigil-lots.json, so a trait row is display data only.
 const traits = traitRows
   .map(({ key, name, icon }) => {
     const maxLevel = maxLevelByKey.get(key);
     if (maxLevel == null) missingMaxLevel.push(`${name} (${key})`);
-    const firstTrait = firstKeys.has(key);
     return {
       id: slug(name),
       name,
       maxLevel: maxLevel ?? null,
       category: categoryOf(icon),
-      ...(firstTrait && { firstTrait: true }),
-      ...(secondKeys.has(key) && { secondTrait: true }),
-      ...(wrightstoneSubKeys.has(key) && { wrightstoneSub: true }),
-      ...(firstTrait && !pairedKeys.has(key) && { noSecondSlot: true }),
-      ...(fixedSecondByKey.has(key) && {
-        fixedSecond: idByKey.get(fixedSecondByKey.get(key)),
-      }),
-      ...(characterByKey.has(key) && { character: characterByKey.get(key) }),
-      ...(pairedWith.has(key) && {
-        pairsWith: idByKey.get(pairedWith.get(key)),
-      }),
     };
   })
   .sort((a, b) => a.name.localeCompare(b.name));
@@ -360,6 +351,98 @@ const unlockedCharacters = JSON.parse(
   .map((character) => `${character.name} (${character.playerId})`);
 if (unlockedCharacters.length)
   throw new Error(`no gem.PlayerReq matches: ${unlockedCharacters.join(", ")}`);
+
+// ----------------------------------------------------- sigil-lots.json
+// Every trait sits in exactly one lot, and the lot carries the whole rule: what
+// it may lead, what may follow it, whether it rolls. The two facts that vary per
+// trait rather than per lot - who a paired trait's partner is, and which style
+// owns a locked trait - are the `pairs` and `styles` tables beside them.
+// `eligibleSecondTraits` names lots, except where a lot pins one trait; a lot id
+// and a trait id never collide, which the assertion below holds to.
+const PINNED_LOTS = { "dmg-cap": "lucilius", regen: "boundary" };
+const SECOND_ELIGIBLE = ["standard", "synthesisOnly"];
+
+const pinnedByLot = new Map();
+for (const secondKey of fixedSecondByKey.values()) {
+  const target = idByKey.get(secondKey);
+  const lot = PINNED_LOTS[target];
+  if (!lot) throw new Error(`no lot named for pinned second trait: ${target}`);
+  pinnedByLot.set(lot, target);
+}
+
+// Order matters: a pinned trait is also paired, and a single-trait sigil never
+// reaches the second-slot tests below it.
+const lotOf = (key) => {
+  if (!firstKeys.has(key)) return "weaponOnly";
+  if (!pairedKeys.has(key)) return "singleTraitOnly";
+  if (fixedSecondByKey.has(key))
+    return PINNED_LOTS[idByKey.get(fixedSecondByKey.get(key))];
+  if (!secondKeys.has(key)) return "firstTraitOnly";
+  return wrightstoneSubKeys.has(key) ? "standard" : "synthesisOnly";
+};
+
+const lotRules = {
+  standard: {
+    firstSlot: true,
+    eligibleSecondTraits: SECOND_ELIGIBLE,
+    wrightstoneSub: true,
+  },
+  synthesisOnly: { firstSlot: true, eligibleSecondTraits: SECOND_ELIGIBLE },
+  firstTraitOnly: { firstSlot: true, eligibleSecondTraits: SECOND_ELIGIBLE },
+  singleTraitOnly: { firstSlot: true },
+  lucilius: {
+    firstSlot: true,
+    eligibleSecondTraits: [pinnedByLot.get("lucilius")],
+  },
+  boundary: {
+    firstSlot: true,
+    eligibleSecondTraits: [pinnedByLot.get("boundary")],
+  },
+  weaponOnly: {},
+};
+
+const traitsByLot = new Map(Object.keys(lotRules).map((lot) => [lot, []]));
+for (const row of traitRows)
+  traitsByLot.get(lotOf(row.key)).push(slug(row.name));
+
+const lots = Object.fromEntries(
+  Object.entries(lotRules).map(([lot, rules]) => [
+    lot,
+    { ...rules, traits: traitsByLot.get(lot).sort() },
+  ]),
+);
+
+// One tuple per style, read off the same `_90` awakenings `pairedWith` came from.
+const pairs = [
+  ...new Map(
+    [...pairedWith].map(([key, partner]) => [
+      [key, partner].sort().join(),
+      [idByKey.get(key), idByKey.get(partner)].sort(),
+    ]),
+  ).values(),
+].sort();
+
+const traitsByStyle = {};
+for (const [key, playerId] of characterByKey) {
+  (traitsByStyle[playerId] ??= []).push(idByKey.get(key));
+}
+for (const owned of Object.values(traitsByStyle)) owned.sort();
+
+const sigilLots = {
+  lots,
+  pairs,
+  styles: Object.fromEntries(Object.entries(traitsByStyle).sort()),
+};
+
+const lotted = Object.values(lots).reduce((n, lot) => n + lot.traits.length, 0);
+if (lotted !== traits.length)
+  throw new Error(`${lotted} traits in lots, ${traits.length} in the catalog`);
+if (pairs.length !== 28)
+  throw new Error(`expected 28 pairs, found ${pairs.length}`);
+const traitIds = new Set(traits.map((trait) => trait.id));
+const collisions = Object.keys(lots).filter((lot) => traitIds.has(lot));
+if (collisions.length)
+  throw new Error(`lot names shadow trait ids: ${collisions.join(", ")}`);
 
 // Summon traits arrive as display names from a third-party page; the archive
 // decides what they resolve to. Normalising past punctuation is enough - the
@@ -488,6 +571,7 @@ const summons = topTierSummons
 
 // ---------------------------------------------------------------- write all
 await writeJson("traits.json", traits);
+await writeJson("sigil-lots.json", sigilLots);
 await writeJson("bonus-types.json", bonusTypes);
 await writeJson("summons.json", summons);
 await writeJson("summon-equip-tiers.json", summonEquipTiers);

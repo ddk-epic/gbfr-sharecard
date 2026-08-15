@@ -5,6 +5,7 @@ import type {
   BonusTypeDef,
   Character,
   CharacterCatalog,
+  SigilLots,
   SummonDef,
   SummonEquipTiers,
   TraitDef,
@@ -15,6 +16,7 @@ import type {
 import type { CharacterId } from "./ids";
 import charactersJson from "./characters.json";
 import traitsJson from "./traits.json";
+import sigilLotsJson from "./sigil-lots.json";
 import bonusTypesJson from "./bonus-types.json";
 import summonsJson from "./summons.json";
 import summonEquipTiersJson from "./summon-equip-tiers.json";
@@ -30,6 +32,8 @@ import charlottaJson from "./characters/charlotta.json";
 
 export const CHARACTERS = charactersJson as Character[];
 export const TRAITS = traitsJson as TraitDef[];
+// `pairs` widens to string[][] on import; the tuple is the shape it is written in.
+export const SIGIL_LOTS = sigilLotsJson as unknown as SigilLots;
 export const BONUS_TYPES = bonusTypesJson as BonusTypeDef[];
 export const SUMMONS = summonsJson as SummonDef[];
 export const WEAPON_SERIES = weaponSeriesJson as WeaponSeries[];

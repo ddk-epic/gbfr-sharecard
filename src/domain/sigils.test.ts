@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
+import type { SigilLotId } from "@/catalog/types";
 import type { TraitId } from "@/catalog/ids";
-import { CHARACTERS, TRAITS, asCharacterId } from "@/catalog";
+import { CHARACTERS, SIGIL_LOTS, TRAITS, asCharacterId } from "@/catalog";
 import { WRIGHTSTONE_SUB_POOL } from "./wrightstone";
 import {
   canFollow,
@@ -15,34 +16,50 @@ const character = (id: string) => {
   return minted;
 };
 
-const withFlag = (
-  flag: "firstTrait" | "secondTrait" | "wrightstoneSub" | "noSecondSlot",
-) => TRAITS.filter((trait) => trait[flag]);
+const lot = (id: SigilLotId) => SIGIL_LOTS.lots[id].traits;
 
-describe("trait flags", () => {
+describe("sigil lots", () => {
   test("the counts the archive gives", () => {
     expect(TRAITS).toHaveLength(200);
-    expect(withFlag("firstTrait")).toHaveLength(188);
-    expect(withFlag("secondTrait")).toHaveLength(80);
-    expect(withFlag("wrightstoneSub")).toHaveLength(72);
-    expect(withFlag("noSecondSlot")).toHaveLength(9);
+    expect(lot("standard")).toHaveLength(72);
+    expect(lot("synthesisOnly")).toHaveLength(8);
+    expect(lot("firstTraitOnly")).toHaveLength(93);
+    expect(lot("singleTraitOnly")).toHaveLength(9);
+    expect(lot("lucilius")).toHaveLength(3);
+    expect(lot("boundary")).toHaveLength(3);
+    expect(lot("weaponOnly")).toHaveLength(12);
   });
 
-  test("everything that rolls is a sigil trait", () => {
+  test("every trait sits in exactly one lot", () => {
+    const seen = Object.values(SIGIL_LOTS.lots).flatMap(
+      (entry) => entry.traits,
+    );
+    expect(seen).toHaveLength(TRAITS.length);
+    expect(new Set(seen).size).toBe(TRAITS.length);
+    for (const id of seen)
+      expect(
+        TRAITS.some((t) => t.id === id),
+        id,
+      ).toBe(true);
+  });
+
+  test("no lot name shadows a trait id", () => {
+    const ids = new Set(TRAITS.map((trait) => trait.id));
     expect(
-      withFlag("wrightstoneSub").filter((trait) => !trait.firstTrait),
+      Object.keys(SIGIL_LOTS.lots).filter((name) => ids.has(name)),
     ).toEqual([]);
   });
 
-  test("the second slot is a superset of the wrightstone pool", () => {
-    expect(
-      withFlag("wrightstoneSub").filter((trait) => !trait.secondTrait),
-    ).toEqual([]);
+  test("only standard rolls, and it is the whole wrightstone pool", () => {
+    const rolling = Object.entries(SIGIL_LOTS.lots)
+      .filter(([, entry]) => entry.wrightstoneSub)
+      .map(([name]) => name);
+    expect(rolling).toEqual(["standard"]);
+    expect(WRIGHTSTONE_SUB_POOL).toHaveLength(72);
   });
 
   test("the twelve without a sigil are weapon traits", () => {
-    expect(TRAITS.filter((trait) => !trait.firstTrait).map((trait) => trait.id))
-      .toMatchInlineSnapshot(`
+    expect(lot("weaponOnly")).toMatchInlineSnapshot(`
       [
         "catastrophe",
         "catastrophe-nova",
@@ -60,93 +77,77 @@ describe("trait flags", () => {
     `);
   });
 
-  test("no single-trait sigil is in the wrightstone pool", () => {
-    expect(WRIGHTSTONE_SUB_POOL.filter((trait) => trait.noSecondSlot)).toEqual(
-      [],
-    );
-  });
-
-  test("takesSecondTrait is false for exactly the single-trait sigils", () => {
+  test("takesSecondTrait is false for the single-trait sigils and weapon traits", () => {
     expect(
       TRAITS.filter((trait) => !takesSecondTrait(trait.id)).map((t) => t.id),
-    ).toMatchInlineSnapshot(`
-      [
-        "crabby-resonance",
-        "crabmiration",
-        "crabvestment-returns",
-        "immortal-shell",
-        "in-a-pinch",
-        "natural-defenses",
-        "seven-net",
-        "stout-heart",
-        "sumo-force",
-      ]
-    `);
+    ).toEqual([...lot("singleTraitOnly"), ...lot("weaponOnly")].sort());
   });
 
-  test("the traits that lead but never follow", () => {
-    expect(
-      TRAITS.filter(
-        (trait) => trait.firstTrait && !trait.character && !trait.secondTrait,
-      ).map((trait) => trait.id),
-    ).toMatchInlineSnapshot(`
-      [
-        "alpha",
-        "auto-potion",
-        "berserker-echo",
-        "beta",
-        "crabby-resonance",
-        "crabmiration",
-        "crabvestment-returns",
-        "flight-over-fight",
-        "gamma",
-        "immortal-shell",
-        "in-a-pinch",
-        "natural-defenses",
-        "potent-greens",
-        "roll-of-the-die",
-        "seven-net",
-        "spartan-echo",
-        "stout-heart",
-        "sumo-force",
-        "super-ultimate-perfect-dodge",
-        "untouchable",
-        "war-elemental",
-      ]
-    `);
+  test("the pinned lots name a trait, the rest name lots", () => {
+    expect(SIGIL_LOTS.lots.lucilius.eligibleSecondTraits).toEqual(["dmg-cap"]);
+    expect(SIGIL_LOTS.lots.boundary.eligibleSecondTraits).toEqual(["regen"]);
+    for (const name of ["standard", "synthesisOnly", "firstTraitOnly"] as const)
+      expect(SIGIL_LOTS.lots[name].eligibleSecondTraits).toEqual([
+        "standard",
+        "synthesisOnly",
+      ]);
+  });
+});
+
+describe("pairs and styles", () => {
+  test("one pair per style, and both halves belong to it", () => {
+    expect(SIGIL_LOTS.pairs).toHaveLength(28);
+    expect(Object.keys(SIGIL_LOTS.styles)).toHaveLength(28);
+    for (const [one, other] of SIGIL_LOTS.pairs) {
+      const owner = Object.entries(SIGIL_LOTS.styles).find(([, owned]) =>
+        owned.includes(one),
+      );
+      expect(owner, one).toBeDefined();
+      expect(owner?.[1], one).toContain(other);
+    }
+  });
+
+  test("a style owns three traits, or four with a Boundary", () => {
+    for (const [playerId, owned] of Object.entries(SIGIL_LOTS.styles)) {
+      const boundaries = owned.filter((id) => lot("boundary").includes(id));
+      expect(owned, playerId).toHaveLength(3 + boundaries.length);
+      expect(boundaries.length, playerId).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test("no style trait is ever freely offered as a second", () => {
+    const open = [...lot("standard"), ...lot("synthesisOnly")];
+    const owned = new Set(Object.values(SIGIL_LOTS.styles).flat());
+    expect(open.filter((id) => owned.has(id))).toEqual([]);
   });
 });
 
 describe("sigil trait pool", () => {
-  const openTraits = TRAITS.filter(
-    (trait) => trait.firstTrait && !trait.character,
-  ).length;
-
   test("every playable character owns sigils", () => {
-    for (const character of CHARACTERS) {
-      const own = TRAITS.filter(
-        (trait) => trait.character === character.playerId,
-      );
-      expect(own.length, character.id).toBeGreaterThanOrEqual(3);
+    for (const entry of CHARACTERS) {
+      const owned = SIGIL_LOTS.styles[entry.playerId] ?? [];
+      expect(owned.length, entry.id).toBeGreaterThanOrEqual(3);
     }
   });
 
   test("a pool is the open traits plus that character's own", () => {
-    for (const character of CHARACTERS) {
-      const pool = sigilTraitPool(character.id);
-      const own = pool.filter((trait) => trait.character);
+    const owned = new Set(Object.values(SIGIL_LOTS.styles).flat());
+    const openTraits = sigilTraitPool(character("io")).filter(
+      (trait) => !owned.has(trait.id),
+    ).length;
+    for (const entry of CHARACTERS) {
+      const pool = sigilTraitPool(entry.id);
+      const own = pool.filter((trait) => owned.has(trait.id));
       expect(pool).toHaveLength(openTraits + own.length);
       for (const trait of own)
-        expect(trait.character, trait.id).toBe(character.playerId);
+        expect(SIGIL_LOTS.styles[entry.playerId], trait.id).toContain(trait.id);
     }
   });
 
   test("Gran and Djeeta share The Captain's sigils", () => {
     const captain = CHARACTERS.filter((c) => c.playerId === "PL0000");
     expect(captain.map((c) => c.id)).toEqual(["gran", "djeeta"]);
-    expect(TRAITS.filter((trait) => trait.character === "PL0000")).toHaveLength(
-      3,
-    );
+    expect(SIGIL_LOTS.styles.PL0000).toHaveLength(3);
   });
 
   test("no character sees another's sigils", () => {
@@ -160,19 +161,14 @@ describe("second trait pool", () => {
   const ids = (first: TraitId | null) =>
     sigilSecondTraitPool(first).map((trait) => trait.id);
 
-  test("no character trait is ever freely offered", () => {
-    expect(
-      TRAITS.filter((trait) => trait.secondTrait && trait.character),
-    ).toEqual([]);
-  });
-
   test("it is wider than the 72 that roll", () => {
-    expect(ids(null).length).toBeGreaterThan(WRIGHTSTONE_SUB_POOL.length);
+    expect(ids("atk")).toHaveLength(80);
+    expect(ids("atk").length).toBeGreaterThan(WRIGHTSTONE_SUB_POOL.length);
     // Reachable only through synthesis.
-    expect(ids(null)).toContain("divergence");
-    expect(ids(null)).toContain("celestial-terra");
-    expect(ids(null)).toContain("fatebreaker");
-    expect(ids(null)).not.toContain("war-elemental");
+    expect(ids("atk")).toContain("divergence");
+    expect(ids("atk")).toContain("celestial-terra");
+    expect(ids("atk")).toContain("fatebreaker");
+    expect(ids("atk")).not.toContain("war-elemental");
   });
 
   test("a character trait follows only its own partner, either way round", () => {
@@ -183,62 +179,19 @@ describe("second trait pool", () => {
     expect(ids("mages-aspiration")).not.toContain("guardians-honor");
   });
 
-  test("pairsWith is symmetric, two per style", () => {
-    const paired = TRAITS.filter((trait) => trait.pairsWith);
-    expect(paired).toHaveLength(56);
-    for (const trait of paired) {
-      const partner = TRAITS.find((other) => other.id === trait.pairsWith);
-      expect(partner?.pairsWith, trait.id).toBe(trait.id);
-      expect(partner?.character, trait.id).toBe(trait.character);
-    }
+  test("a partner widens the open pool by exactly itself", () => {
+    expect(ids("mages-aspiration")).toHaveLength(81);
+    expect(ids("mages-aspiration")[0]).toBe("mages-savvy");
   });
 
   test("a Warpath leads only - it never follows anything", () => {
-    const warpaths = TRAITS.filter(
-      (trait) => trait.character && !trait.pairsWith,
-    );
+    const owned = Object.values(SIGIL_LOTS.styles).flat();
+    const paired = new Set(SIGIL_LOTS.pairs.flat());
+    const leaders = owned.filter((id) => !paired.has(id));
     // 28 Warpath slots, plus Ain and the two Boundaries.
-    expect(warpaths).toHaveLength(31);
-    for (const trait of warpaths) {
-      expect(trait.secondTrait, trait.id).toBeUndefined();
-      expect(ids("guardians-conviction")).not.toContain(trait.id);
-    }
-  });
-
-  test("six traits pin their second, and nothing else does", () => {
-    expect(
-      TRAITS.filter((trait) => trait.fixedSecond).map((trait) => [
-        trait.id,
-        trait.fixedSecond,
-      ]),
-    ).toMatchInlineSnapshot(`
-      [
-        [
-          "ain",
-          "regen",
-        ],
-        [
-          "alpha",
-          "dmg-cap",
-        ],
-        [
-          "beta",
-          "dmg-cap",
-        ],
-        [
-          "gamma",
-          "dmg-cap",
-        ],
-        [
-          "seven-star-boundary",
-          "regen",
-        ],
-        [
-          "two-crown-boundary",
-          "regen",
-        ],
-      ]
-    `);
+    expect(leaders).toHaveLength(31);
+    for (const id of leaders)
+      expect(ids("guardians-conviction"), id).not.toContain(id);
   });
 
   test("a pinned first trait offers only its own second", () => {
@@ -257,10 +210,32 @@ describe("second trait pool", () => {
     expect(canFollow("dmg-cap", "ain")).toBe(false);
   });
 
+  test("a single-trait sigil offers nothing", () => {
+    expect(ids("crabmiration")).toEqual([]);
+    expect(canFollow("crabmiration", "atk")).toBe(false);
+  });
+
   test("canFollow allows a duplicate, and both pair orders", () => {
     expect(canFollow("dmg-cap", "dmg-cap")).toBe(true);
     expect(canFollow("mages-aspiration", "mages-savvy")).toBe(true);
     expect(canFollow("mages-savvy", "mages-aspiration")).toBe(true);
     expect(canFollow("dmg-cap", "mages-warpath")).toBe(false);
+  });
+
+  test("every second pool is the open pool, narrowed or plus a partner", () => {
+    const open = new Set([...lot("standard"), ...lot("synthesisOnly")]);
+    const partner = new Map(
+      SIGIL_LOTS.pairs.flatMap(([a, b]) => [
+        [a, b],
+        [b, a],
+      ]),
+    );
+    for (const trait of TRAITS) {
+      const allowed = new Set(open);
+      const mate = partner.get(trait.id);
+      if (mate) allowed.add(mate);
+      for (const id of ids(trait.id))
+        expect(allowed.has(id), `${trait.id} -> ${id}`).toBe(true);
+    }
   });
 });

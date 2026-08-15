@@ -3,169 +3,117 @@
     "id": "aegis",
     "name": "Aegis",
     "maxLevel": 45,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "ain",
     "name": "Ain",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "fixedSecond": "regen",
-    "character": "PL2100"
+    "maxLevel": 15
   },
   {
     "id": "alpha",
     "name": "Alpha",
     "maxLevel": 30,
-    "category": "special",
-    "firstTrait": true,
-    "fixedSecond": "dmg-cap"
+    "category": "special"
   },
   {
     "id": "atk",
     "name": "ATK",
     "maxLevel": 50,
-    "category": "basic",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "basic"
   },
   {
     "id": "atk-resistance",
     "name": "ATK↓ Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "ATK↓ Res."
   },
   {
     "id": "auto-potion",
     "name": "Auto Potion",
     "maxLevel": 15,
-    "category": "special",
-    "firstTrait": true
+    "category": "special"
   },
   {
     "id": "autorevive",
     "name": "Autorevive",
     "maxLevel": 20,
-    "category": "special",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "special"
   },
   {
     "id": "berserker",
     "name": "Berserker",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "berserker-echo",
     "name": "Berserker Echo",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true
+    "category": "attack"
   },
   {
     "id": "beta",
     "name": "Beta",
     "maxLevel": 30,
-    "category": "special",
-    "firstTrait": true,
-    "fixedSecond": "dmg-cap"
+    "category": "special"
   },
   {
     "id": "bladequeens-circuit",
     "name": "Bladequeen's Circuit",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2500",
-    "pairsWith": "bladequeens-serenade"
+    "maxLevel": 15
   },
   {
     "id": "bladequeens-serenade",
     "name": "Bladequeen's Serenade",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2500",
-    "pairsWith": "bladequeens-circuit"
+    "maxLevel": 15
   },
   {
     "id": "bladequeens-warpath",
     "name": "Bladequeen's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2500"
+    "maxLevel": 15
   },
   {
     "id": "blight-resistance",
     "name": "Blight Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Blight Res."
   },
   {
     "id": "break-assassin",
     "name": "Break Assassin",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "burn-resistance",
     "name": "Burn Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Burn Res."
   },
   {
     "id": "butterflys-grace",
     "name": "Butterfly's Grace",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1400",
-    "pairsWith": "butterflys-valor"
+    "maxLevel": 15
   },
   {
     "id": "butterflys-valor",
     "name": "Butterfly's Valor",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1400",
-    "pairsWith": "butterflys-grace"
+    "maxLevel": 15
   },
   {
     "id": "butterflys-warpath",
     "name": "Butterfly's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1400"
+    "maxLevel": 15
   },
   {
     "id": "cascade",
     "name": "Cascade",
     "maxLevel": 20,
-    "category": "support",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "support"
   },
   {
     "id": "catastrophe",
@@ -183,175 +131,123 @@
     "id": "celestial-aqua",
     "name": "Celestial Aqua",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "category": "attack"
   },
   {
     "id": "celestial-incendo",
     "name": "Celestial Incendo",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "category": "attack"
   },
   {
     "id": "celestial-lumen",
     "name": "Celestial Lumen",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "category": "attack"
   },
   {
     "id": "celestial-nyx",
     "name": "Celestial Nyx",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "category": "attack"
   },
   {
     "id": "celestial-terra",
     "name": "Celestial Terra",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "category": "attack"
   },
   {
     "id": "celestial-ventus",
     "name": "Celestial Ventus",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "category": "attack"
   },
   {
     "id": "charged-attack-dmg",
     "name": "Charged Attack DMG",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "combo-booster",
     "name": "Combo Booster",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "combo-finisher-dmg",
     "name": "Combo Finisher DMG",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "concentrated-fire",
     "name": "Concentrated Fire",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "crabby-resonance",
     "name": "Crabby Resonance",
     "maxLevel": 45,
-    "category": "special",
-    "firstTrait": true,
-    "noSecondSlot": true
+    "category": "special"
   },
   {
     "id": "crabmiration",
     "name": "Crabmiration",
     "maxLevel": 45,
-    "category": "special",
-    "firstTrait": true,
-    "noSecondSlot": true
+    "category": "special"
   },
   {
     "id": "crabvestment-returns",
     "name": "Crabvestment Returns",
     "maxLevel": 15,
-    "category": "special",
-    "firstTrait": true,
-    "noSecondSlot": true
+    "category": "special"
   },
   {
     "id": "crimsons-clout",
     "name": "Crimson's Clout",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1600",
-    "pairsWith": "crimsons-flight"
+    "maxLevel": 15
   },
   {
     "id": "crimsons-flight",
     "name": "Crimson's Flight",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1600",
-    "pairsWith": "crimsons-clout"
+    "maxLevel": 15
   },
   {
     "id": "crimsons-warpath",
     "name": "Crimson's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1600"
+    "maxLevel": 15
   },
   {
     "id": "critical-hit-dmg",
     "name": "Critical Hit DMG",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "critical-hit-rate",
     "name": "Critical Hit Rate",
     "maxLevel": 45,
-    "category": "basic",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "basic"
   },
   {
     "id": "dark-huntresss-surge",
     "name": "Dark Huntress's Surge",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2300",
-    "pairsWith": "dark-huntresss-volley",
     "short": "D. Huntress's Surge"
   },
   {
     "id": "dark-huntresss-volley",
     "name": "Dark Huntress's Volley",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2300",
-    "pairsWith": "dark-huntresss-surge",
     "short": "D. Huntress's Volley"
   },
   {
     "id": "dark-huntresss-warpath",
     "name": "Dark Huntress's Warpath",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2300",
     "short": "D. Huntress's Warpath"
   },
   {
@@ -359,9 +255,6 @@
     "name": "Darkflame Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Darkflame Res."
   },
   {
@@ -369,37 +262,26 @@
     "name": "DEF↓ Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "DEF↓ Res."
   },
   {
     "id": "divergence",
     "name": "Divergence",
     "maxLevel": 15,
-    "category": "support",
-    "firstTrait": true,
-    "secondTrait": true
+    "category": "support"
   },
   {
     "id": "dizzy-resistance",
     "name": "Dizzy Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Dizzy Res."
   },
   {
     "id": "dmg-cap",
     "name": "DMG Cap",
     "maxLevel": 65,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "dmg-cap-cardinal",
@@ -429,769 +311,519 @@
     "id": "dodge-payback",
     "name": "Dodge Payback",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "dragonslayers-dominance",
     "name": "Dragonslayer's Dominance",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1100",
-    "pairsWith": "dragonslayers-ingenuity",
     "short": "Dragonslayer's Dom."
   },
   {
     "id": "dragonslayers-ingenuity",
     "name": "Dragonslayer's Ingenuity",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1100",
-    "pairsWith": "dragonslayers-dominance"
+    "maxLevel": 15
   },
   {
     "id": "dragonslayers-warpath",
     "name": "Dragonslayer's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1100"
+    "maxLevel": 15
   },
   {
     "id": "drain",
     "name": "Drain",
     "maxLevel": 45,
-    "category": "support",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "support"
   },
   {
     "id": "ebonys-poise",
     "name": "Ebony's Poise",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1700",
-    "pairsWith": "ebonys-presence"
+    "maxLevel": 15
   },
   {
     "id": "ebonys-presence",
     "name": "Ebony's Presence",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1700",
-    "pairsWith": "ebonys-poise"
+    "maxLevel": 15
   },
   {
     "id": "ebonys-warpath",
     "name": "Ebony's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1700"
+    "maxLevel": 15
   },
   {
     "id": "enchantresss-blessing",
     "name": "Enchantress's Blessing",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2800",
-    "pairsWith": "enchantresss-rhythm"
+    "maxLevel": 15
   },
   {
     "id": "enchantresss-rhythm",
     "name": "Enchantress's Rhythm",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2800",
-    "pairsWith": "enchantresss-blessing"
+    "maxLevel": 15
   },
   {
     "id": "enchantresss-warpath",
     "name": "Enchantress's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2800"
+    "maxLevel": 15
   },
   {
     "id": "enmity",
     "name": "Enmity",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "eternal-rages-ethos",
     "name": "Eternal Rage's Ethos",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1500",
-    "pairsWith": "eternal-rages-mettle",
     "short": "E. Rage's Ethos"
   },
   {
     "id": "eternal-rages-mettle",
     "name": "Eternal Rage's Mettle",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1500",
-    "pairsWith": "eternal-rages-ethos",
     "short": "E. Rage's Mettle"
   },
   {
     "id": "eternal-rages-warpath",
     "name": "Eternal Rage's Warpath",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1500",
     "short": "E. Rage's Warpath"
   },
   {
     "id": "fast-learner",
     "name": "Fast Learner",
     "maxLevel": 45,
-    "category": "special",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "special"
   },
   {
     "id": "fatebreaker",
     "name": "Fatebreaker",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "category": "attack"
   },
   {
     "id": "fearless-drive",
     "name": "Fearless Drive",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0000",
-    "pairsWith": "fearless-spirit"
+    "maxLevel": 15
   },
   {
     "id": "fearless-heart",
     "name": "Fearless Heart",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0000"
+    "maxLevel": 15
   },
   {
     "id": "fearless-spirit",
     "name": "Fearless Spirit",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0000",
-    "pairsWith": "fearless-drive"
+    "maxLevel": 15
   },
   {
     "id": "firm-stance",
     "name": "Firm Stance",
     "maxLevel": 30,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "flight-over-fight",
     "name": "Flight over Fight",
     "maxLevel": 15,
-    "category": "defense",
-    "firstTrait": true
+    "category": "defense"
   },
   {
     "id": "founders-strategy",
     "name": "Founder's Strategy",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1800",
-    "pairsWith": "founders-truth"
+    "maxLevel": 15
   },
   {
     "id": "founders-truth",
     "name": "Founder's Truth",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1800",
-    "pairsWith": "founders-strategy"
+    "maxLevel": 15
   },
   {
     "id": "founders-warpath",
     "name": "Founder's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1800"
+    "maxLevel": 15
   },
   {
     "id": "gamma",
     "name": "Gamma",
     "maxLevel": 30,
-    "category": "special",
-    "firstTrait": true,
-    "fixedSecond": "dmg-cap"
+    "category": "special"
   },
   {
     "id": "garrison",
     "name": "Garrison",
     "maxLevel": 45,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "glaciate-resistance",
     "name": "Glaciate Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Glaciate Res."
   },
   {
     "id": "gladiators-frenzy",
     "name": "Gladiator's Frenzy",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2400",
-    "pairsWith": "gladiators-top"
+    "maxLevel": 15
   },
   {
     "id": "gladiators-top",
     "name": "Gladiator's Top",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2400",
-    "pairsWith": "gladiators-frenzy"
+    "maxLevel": 15
   },
   {
     "id": "gladiators-warpath",
     "name": "Gladiator's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2400"
+    "maxLevel": 15
   },
   {
     "id": "glass-cannon",
     "name": "Glass Cannon",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "greater-aegis",
     "name": "Greater Aegis",
     "maxLevel": 30,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "guard-payback",
     "name": "Guard Payback",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "guardians-conviction",
     "name": "Guardian's Conviction",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0200",
-    "pairsWith": "guardians-honor"
+    "maxLevel": 15
   },
   {
     "id": "guardians-honor",
     "name": "Guardian's Honor",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0200",
-    "pairsWith": "guardians-conviction"
+    "maxLevel": 15
   },
   {
     "id": "guardians-warpath",
     "name": "Guardian's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0200"
+    "maxLevel": 15
   },
   {
     "id": "guts",
     "name": "Guts",
     "maxLevel": 20,
-    "category": "special",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "special"
   },
   {
     "id": "head-start",
     "name": "Head Start",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "held-under-resistance",
     "name": "Held Under Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Held Under Res."
   },
   {
     "id": "helmsmans-navigation",
     "name": "Helmsman's Navigation",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0300",
-    "pairsWith": "helmsmans-tenacity"
+    "maxLevel": 15
   },
   {
     "id": "helmsmans-tenacity",
     "name": "Helmsman's Tenacity",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0300",
-    "pairsWith": "helmsmans-navigation"
+    "maxLevel": 15
   },
   {
     "id": "helmsmans-warpath",
     "name": "Helmsman's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0300"
+    "maxLevel": 15
   },
   {
     "id": "heros-creed",
     "name": "Hero's Creed",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0900",
-    "pairsWith": "heros-will"
+    "maxLevel": 15
   },
   {
     "id": "heros-warpath",
     "name": "Hero's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0900"
+    "maxLevel": 15
   },
   {
     "id": "heros-will",
     "name": "Hero's Will",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0900",
-    "pairsWith": "heros-creed"
+    "maxLevel": 15
   },
   {
     "id": "holy-knights-grandeur",
     "name": "Holy Knight's Grandeur",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1200",
-    "pairsWith": "holy-knights-luster",
     "short": "H. Knight's Grandeur"
   },
   {
     "id": "holy-knights-luster",
     "name": "Holy Knight's Luster",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1200",
-    "pairsWith": "holy-knights-grandeur",
     "short": "H. Knight's Luster"
   },
   {
     "id": "holy-knights-warpath",
     "name": "Holy Knight's Warpath",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1200",
     "short": "H. Knight's Warpath"
   },
   {
     "id": "hp",
     "name": "HP",
     "maxLevel": 50,
-    "category": "basic",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "basic"
   },
   {
     "id": "immortal-shell",
     "name": "Immortal Shell",
     "maxLevel": 20,
-    "category": "special",
-    "firstTrait": true,
-    "noSecondSlot": true
+    "category": "special"
   },
   {
     "id": "improved-dodge",
     "name": "Improved Dodge",
     "maxLevel": 15,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "improved-guard",
     "name": "Improved Guard",
     "maxLevel": 30,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "improved-healing",
     "name": "Improved Healing",
     "maxLevel": 30,
-    "category": "support",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "support"
   },
   {
     "id": "in-a-pinch",
     "name": "In a Pinch",
     "maxLevel": 15,
-    "category": "special",
-    "firstTrait": true,
-    "noSecondSlot": true
+    "category": "special"
   },
   {
     "id": "injury-to-insult",
     "name": "Injury to Insult",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "less-is-more",
     "name": "Less Is More",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "life-on-the-line",
     "name": "Life on the Line",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "linked-together",
     "name": "Linked Together",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "lords-ambition",
     "name": "Lord's Ambition",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1000",
-    "pairsWith": "lords-procession"
+    "maxLevel": 15
   },
   {
     "id": "lords-procession",
     "name": "Lord's Procession",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1000",
-    "pairsWith": "lords-ambition"
+    "maxLevel": 15
   },
   {
     "id": "lords-warpath",
     "name": "Lord's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1000"
+    "maxLevel": 15
   },
   {
     "id": "low-profile",
     "name": "Low Profile",
     "maxLevel": 20,
-    "category": "special",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "special"
   },
   {
     "id": "lucky-charge",
     "name": "Lucky Charge",
     "maxLevel": 20,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "mages-aspiration",
     "name": "Mage's Aspiration",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0400",
-    "pairsWith": "mages-savvy"
+    "maxLevel": 15
   },
   {
     "id": "mages-savvy",
     "name": "Mage's Savvy",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0400",
-    "pairsWith": "mages-aspiration"
+    "maxLevel": 15
   },
   {
     "id": "mages-warpath",
     "name": "Mage's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0400"
+    "maxLevel": 15
   },
   {
     "id": "natural-defenses",
     "name": "Natural Defenses",
     "maxLevel": 15,
-    "category": "defense",
-    "firstTrait": true,
-    "noSecondSlot": true
+    "category": "defense"
   },
   {
     "id": "nimble-defense",
     "name": "Nimble Defense",
     "maxLevel": 30,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "nimble-onslaught",
     "name": "Nimble Onslaught",
     "maxLevel": 30,
-    "category": "support",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "support"
   },
   {
     "id": "overdrive-assassin",
     "name": "Overdrive Assassin",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "paralysis-resistance",
     "name": "Paralysis Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Paralysis Res."
   },
   {
     "id": "path-to-mastery",
     "name": "Path to Mastery",
     "maxLevel": 45,
-    "category": "special",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "special"
   },
   {
     "id": "phantasms-concord",
     "name": "Phantasm's Concord",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0700",
-    "pairsWith": "phantasms-harmony"
+    "maxLevel": 15
   },
   {
     "id": "phantasms-harmony",
     "name": "Phantasm's Harmony",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0700",
-    "pairsWith": "phantasms-concord"
+    "maxLevel": 15
   },
   {
     "id": "phantasms-warpath",
     "name": "Phantasm's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0700"
+    "maxLevel": 15
   },
   {
     "id": "poison-resistance",
     "name": "Poison Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Poison Res."
   },
   {
     "id": "potent-greens",
     "name": "Potent Greens",
     "maxLevel": 30,
-    "category": "support",
-    "firstTrait": true
+    "category": "support"
   },
   {
     "id": "potion-hoarder",
     "name": "Potion Hoarder",
     "maxLevel": 15,
-    "category": "special",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "special"
   },
   {
     "id": "power-hungry",
     "name": "Power Hungry",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "precise-resilience",
     "name": "Precise Resilience",
     "maxLevel": 30,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "precise-wrath",
     "name": "Precise Wrath",
     "maxLevel": 30,
-    "category": "support",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "support"
   },
   {
     "id": "provoke",
     "name": "Provoke",
     "maxLevel": 20,
-    "category": "special",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "special"
   },
   {
     "id": "quick-charge",
     "name": "Quick Charge",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "quick-cooldown",
     "name": "Quick Cooldown",
     "maxLevel": 45,
-    "category": "support",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "support"
   },
   {
     "id": "regen",
     "name": "Regen",
     "maxLevel": 45,
-    "category": "support",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "support"
   },
   {
     "id": "roll-of-the-die",
     "name": "Roll of the Die",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true
+    "category": "attack"
   },
   {
     "id": "roses-blooming",
     "name": "Rose's Blooming",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0600",
-    "pairsWith": "roses-profusion"
+    "maxLevel": 15
   },
   {
     "id": "roses-profusion",
     "name": "Rose's Profusion",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0600",
-    "pairsWith": "roses-blooming"
+    "maxLevel": 15
   },
   {
     "id": "roses-warpath",
     "name": "Rose's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0600"
+    "maxLevel": 15
   },
   {
     "id": "rupie-tycoon",
     "name": "Rupie Tycoon",
     "maxLevel": 45,
-    "category": "special",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "special"
   },
   {
     "id": "sandtomb-resistance",
     "name": "Sandtomb Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Sandtomb Res."
   },
   {
@@ -1199,26 +831,18 @@
     "name": "SBA Sealed Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "SBA Sealed Res."
   },
   {
     "id": "seven-net",
     "name": "Seven Net",
     "maxLevel": 6,
-    "category": "special",
-    "firstTrait": true,
-    "noSecondSlot": true
+    "category": "special"
   },
   {
     "id": "seven-star-boundary",
     "name": "Seven-Star Boundary",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "fixedSecond": "regen",
-    "character": "PL2200"
+    "maxLevel": 15
   },
   {
     "id": "sigil-booster",
@@ -1231,130 +855,92 @@
     "name": "Skill Sealed Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Skill Sealed Res."
   },
   {
     "id": "skilled-assault",
     "name": "Skilled Assault",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "slow-resistance",
     "name": "Slow Resistance",
     "maxLevel": 30,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true,
     "short": "Slow Res."
   },
   {
     "id": "spartan-echo",
     "name": "Spartan Echo",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true
+    "category": "attack"
   },
   {
     "id": "spirit-edges-fury",
     "name": "Spirit Edge's Fury",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2200",
-    "pairsWith": "spirit-edges-rally",
     "short": "S. Edge's Fury"
   },
   {
     "id": "spirit-edges-rally",
     "name": "Spirit Edge's Rally",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2200",
-    "pairsWith": "spirit-edges-fury",
     "short": "S. Edge's Rally"
   },
   {
     "id": "spirit-edges-warpath",
     "name": "Spirit Edge's Warpath",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2200",
     "short": "S. Edge's Warpath"
   },
   {
     "id": "stamina",
     "name": "Stamina",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "steady-focus",
     "name": "Steady Focus",
     "maxLevel": 15,
-    "category": "special",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "special"
   },
   {
     "id": "steel-nerves",
     "name": "Steel Nerves",
     "maxLevel": 15,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "stout-heart",
     "name": "Stout Heart",
     "maxLevel": 15,
-    "category": "special",
-    "firstTrait": true,
-    "noSecondSlot": true
+    "category": "special"
   },
   {
     "id": "stronghold",
     "name": "Stronghold",
     "maxLevel": 30,
-    "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "defense"
   },
   {
     "id": "stun-power",
     "name": "Stun Power",
     "maxLevel": 45,
-    "category": "basic",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "basic"
   },
   {
     "id": "sumo-force",
     "name": "Sumo Force",
     "maxLevel": 5,
-    "category": "special",
-    "firstTrait": true,
-    "noSecondSlot": true
+    "category": "special"
   },
   {
     "id": "super-ultimate-perfect-dodge",
     "name": "Super Ultimate Perfect Dodge",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true,
     "short": "S. Ult. Perfect Dodge"
   },
   {
@@ -1367,154 +953,102 @@
     "id": "supplementary-dmg",
     "name": "Supplementary DMG",
     "maxLevel": 45,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "supreme-primarchs-awe",
     "name": "Supreme Primarch's Awe",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2100",
-    "pairsWith": "supreme-primarchs-nimbus",
     "short": "S. Primarch's Awe"
   },
   {
     "id": "supreme-primarchs-nimbus",
     "name": "Supreme Primarch's Nimbus",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2100",
-    "pairsWith": "supreme-primarchs-awe",
     "short": "S. Primarch's Nimbus"
   },
   {
     "id": "supreme-primarchs-warpath",
     "name": "Supreme Primarch's Warpath",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2100",
     "short": "S. Primarch's Warpath"
   },
   {
     "id": "swordmasters-art",
     "name": "Swordmaster's Art",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1300",
-    "pairsWith": "swordmasters-prowess"
+    "maxLevel": 15
   },
   {
     "id": "swordmasters-prowess",
     "name": "Swordmaster's Prowess",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1300",
-    "pairsWith": "swordmasters-art"
+    "maxLevel": 15
   },
   {
     "id": "swordmasters-warpath",
     "name": "Swordmaster's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1300"
+    "maxLevel": 15
   },
   {
     "id": "the-blacks-impulse",
     "name": "The Black's Impulse",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2900",
-    "pairsWith": "the-blacks-mark"
+    "maxLevel": 15
   },
   {
     "id": "the-blacks-mark",
     "name": "The Black's Mark",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2900",
-    "pairsWith": "the-blacks-impulse"
+    "maxLevel": 15
   },
   {
     "id": "the-blacks-warpath",
     "name": "The Black's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2900"
+    "maxLevel": 15
   },
   {
     "id": "throw-dmg",
     "name": "Throw DMG",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "thunderwolfs-acuity",
     "name": "Thunderwolf's Acuity",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2700",
-    "pairsWith": "thunderwolfs-recharge"
+    "maxLevel": 15
   },
   {
     "id": "thunderwolfs-recharge",
     "name": "Thunderwolf's Recharge",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2700",
-    "pairsWith": "thunderwolfs-acuity"
+    "maxLevel": 15
   },
   {
     "id": "thunderwolfs-warpath",
     "name": "Thunderwolf's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2700"
+    "maxLevel": 15
   },
   {
     "id": "two-crown-boundary",
     "name": "Two-Crown Boundary",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "fixedSecond": "regen",
-    "character": "PL2300"
+    "maxLevel": 15
   },
   {
     "id": "tyranny",
     "name": "Tyranny",
     "maxLevel": 30,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "ultramarines-adversity",
     "name": "Ultramarine's Adversity",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2600",
-    "pairsWith": "ultramarines-flash"
+    "maxLevel": 15
   },
   {
     "id": "ultramarines-flash",
     "name": "Ultramarine's Flash",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2600",
-    "pairsWith": "ultramarines-adversity"
+    "maxLevel": 15
   },
   {
     "id": "ultramarines-warpath",
     "name": "Ultramarine's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL2600"
+    "maxLevel": 15
   },
   {
     "id": "unbound-exertion",
@@ -1544,104 +1078,72 @@
     "id": "untouchable",
     "name": "Untouchable",
     "maxLevel": 15,
-    "category": "defense",
-    "firstTrait": true
+    "category": "defense"
   },
   {
     "id": "uplift",
     "name": "Uplift",
     "maxLevel": 45,
-    "category": "support",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "support"
   },
   {
     "id": "versalis-foundation",
     "name": "Versalis Foundation",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1900",
-    "pairsWith": "versalis-ignition"
+    "maxLevel": 15
   },
   {
     "id": "versalis-heart",
     "name": "Versalis Heart",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1900"
+    "maxLevel": 15
   },
   {
     "id": "versalis-ignition",
     "name": "Versalis Ignition",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL1900",
-    "pairsWith": "versalis-foundation"
+    "maxLevel": 15
   },
   {
     "id": "veterans-insight",
     "name": "Veteran's Insight",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0500",
-    "pairsWith": "veterans-vision"
+    "maxLevel": 15
   },
   {
     "id": "veterans-vision",
     "name": "Veteran's Vision",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0500",
-    "pairsWith": "veterans-insight"
+    "maxLevel": 15
   },
   {
     "id": "veterans-warpath",
     "name": "Veteran's Warpath",
-    "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0500"
+    "maxLevel": 15
   },
   {
     "id": "war-elemental",
     "name": "War Elemental",
     "maxLevel": 15,
-    "category": "attack",
-    "firstTrait": true
+    "category": "attack"
   },
   {
     "id": "weak-point-dmg",
     "name": "Weak Point DMG",
     "maxLevel": 45,
-    "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true,
-    "wrightstoneSub": true
+    "category": "attack"
   },
   {
     "id": "white-dragons-glory",
     "name": "White Dragon's Glory",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0800",
-    "pairsWith": "white-dragons-oath",
     "short": "W. Dragon's Glory"
   },
   {
     "id": "white-dragons-oath",
     "name": "White Dragon's Oath",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0800",
-    "pairsWith": "white-dragons-glory",
     "short": "W. Dragon's Oath"
   },
   {
     "id": "white-dragons-warpath",
     "name": "White Dragon's Warpath",
     "maxLevel": 15,
-    "firstTrait": true,
-    "character": "PL0800",
     "short": "W. Dragon's Warpath"
   }
 ]

@@ -287,9 +287,9 @@ fixed - never _Regen_. The three Boundary/_Ain_ sigils carry
 trait is _Regen_ (`SKILL_066_00`). Two different sets, two different fixed
 traits.
 
-Neither fixed trait is a default the player can edit away, and `fixedSecond`
-records both sets. Three conditions have to hold together for a second slot to
-be settled rather than offered:
+Neither fixed trait is a default the player can edit away, and the two pinned
+lots record one set each - `lucilius` and `boundary`. Three conditions have to
+hold together for a second slot to be settled rather than offered:
 
 - every sigil carrying the trait first agrees on **one** second trait;
 - **none of them rolls** - `SkillTypeLotIdForRandom2ndSkill` is `-1` throughout;
@@ -304,10 +304,10 @@ _Seven-Star Boundary_, _Two-Crown Boundary_ on _Regen_.
 why the rule is built from the three conditions instead.
 
 The editor fills the second slot the moment the first is picked, and the
-second-slot pool collapses to the one entry. `pairsWith` widens a pool by one;
-`fixedSecond` replaces it, and wins over `character` too - _Ain_ is
-character-locked **and** pinned, so Sandalphon is offered it and nobody else,
-and _Regen_ lands beside it automatically.
+second-slot pool collapses to the one entry. A pair widens a pool by one; a
+pinned lot replaces it, and the lock is orthogonal - _Ain_ is in `boundary` and
+listed under its style, so Sandalphon is offered it and nobody else, and _Regen_
+lands beside it automatically.
 
 Pinning a second says nothing about the trait itself following anything. All six
 still lead only.
@@ -368,10 +368,11 @@ The pairing is read off the gems carrying **two** character traits at once - the
 Duplicates, on the other hand, are entirely legal: synthesis can land the same
 trait in both slots, so nothing rejects a sigil carrying a trait twice.
 
-`noSecondSlot` and `secondTrait` remain separate questions - one is about the
-sigil, the other about the trait - but as of 2.0.2 nothing sets both. The only
-rows that put a single-trait trait second were the three phantom crab gems, and
-those are dropped before the flags are built (see above).
+Having no second slot and being able to follow remain separate questions - one
+is about the sigil, the other about the trait - but as of 2.0.2 no trait does
+both, which is what lets `singleTraitOnly` be a lot of its own. The only rows
+that put a single-trait trait second were the three phantom crab gems, and those
+are dropped before the lots are built (see above).
 
 ## Sigil synthesis
 
@@ -400,8 +401,8 @@ executable - but the rule is known from play:
 
 Both slots draw from the same four, so nothing stops the same trait landing
 twice - **a duplicate pair is legal**. For open traits it also means anything
-that can lead a synthesised sigil can follow one, which is what makes
-`secondTrait` a property of the eligible sigils rather than of any lot table.
+that can lead a synthesised sigil can follow one, which is why the open pool is
+read off the eligible sigils rather than off the archive's own lot tables.
 
 Character traits are the exception the draw alone does not predict: they obey
 the pairing rule above, so a Warpath never comes out second however the four
@@ -474,51 +475,61 @@ Synthesis is not simulated - no costs, no success rates - but it **is** what
 sets the second slot's pool, because it is the only route by which a trait that
 never rolls can end up there.
 
-### The flags
+### The lots
 
-`scripts/extract.mjs` writes four booleans and two references onto `traits.json`,
-plus `character` holding the `PlayerReq` of a character-locked trait. Each
-answers a **different** question, so each is built from its own column:
+`traits.json` carries display data only. Everything a trait may do is its
+**lot's**, in `sigil-lots.json`, and every trait sits in exactly one:
 
-| Flag             | Count | Question it answers                          | Built from                               |
-| ---------------- | ----- | -------------------------------------------- | ---------------------------------------- |
-| `firstTrait`     | 188   | can it be a sigil's own trait?               | `gem.SkillId1`                           |
-| `secondTrait`    | 80    | can it follow **any** first trait?           | synthesis-eligible legendary+, open only |
-| `pairsWith`      | 56    | which single trait may it follow?            | gems carrying two character traits       |
-| `fixedSecond`    | 6     | which trait is its second slot pinned to?    | one second, no roll, synthesis refuses   |
-| `wrightstoneSub` | 72    | can it be a wrightstone sub?                 | `skill_lot`                              |
-| `noSecondSlot`   | 9     | does a sigil built on it lack a second slot? | `SkillId1` with no pair, ever            |
+| Lot               | Count | What a sigil built on it does                 |
+| ----------------- | ----- | --------------------------------------------- |
+| `standard`        | 72    | takes any open second; rolls on a wrightstone |
+| `synthesisOnly`   | 8     | takes any open second; never rolls            |
+| `firstTraitOnly`  | 93    | takes any open second; never follows anything |
+| `singleTraitOnly` | 9     | has no second slot                            |
+| `lucilius`        | 3     | second slot pinned to _DMG Cap_               |
+| `boundary`        | 3     | second slot pinned to _Regen_                 |
+| `weaponOnly`      | 12    | never on a sigil at all                       |
 
-Three traps these names are shaped to avoid:
+A lot's `eligibleSecondTraits` names the **lots** its second slot accepts, so
+"open" is not stored anywhere - it is `standard` + `synthesisOnly` = 80, resolved
+at load. The two pinned lots name a **trait** there instead. A lot id and a trait
+id never collide, and `extract.mjs` throws if one ever shadows the other.
 
-- `firstTrait` reads **`SkillId1` only**. Reading `SkillId2` as well happens to
+The two facts that vary per trait rather than per lot sit beside the lots:
+
+- `pairs` - 28 tuples, the two traits of a style that may follow each other,
+  read off the gems carrying two character traits at once.
+- `styles` - a style's own traits, keyed by `Character.playerId`.
+
+Three traps this shape is built to avoid:
+
+- `firstSlot` reads **`SkillId1` only**. Reading `SkillId2` as well happens to
   give the same 188 today - no trait is second-only - but it would offer a
   second-only trait as a first trait the moment the game adds one.
-- `noSecondSlot` is about **the sigil**, the others about **the trait**. They
-  are independent questions, so a trait setting both would not be a
-  contradiction - it would mean no sigil of its own takes a second trait, while
-  some other sigil carries it second. Nothing sets both today, but do not treat
-  that as an invariant.
-- `secondTrait` means "follows _anything_", so no character trait carries it.
-  A character trait's eligibility is conditional, and `pairsWith` is where that
-  condition lives.
+- Leading and following are **independent** questions. `firstTraitOnly` and
+  `standard` behave identically in a first slot and offer the identical second
+  pool; they differ only in whether the trait may follow someone else, which is
+  downstream of synthesis refusing it.
+- Being open means "follows _anything_", so no style trait is in `standard` or
+  `synthesisOnly`. A style trait's eligibility is conditional, and `pairs` is
+  where that condition lives.
 
-`secondTrait` is a strict superset of `wrightstoneSub`; `extract.mjs` throws if
-that ever stops holding, and again if the pairings do not cover exactly 28
-styles.
+`standard` is exactly the wrightstone roll pool, and the open pool is a strict
+superset of it; `extract.mjs` throws if that stops holding, if the lots stop
+covering all 200 traits, or if the pairings do not cover exactly 28 styles.
 
 ### What the editor offers
 
-`src/domain/sigils.ts` turns the flags into the pools:
+`src/domain/sigils.ts` turns the lots into the pools:
 
-| Export                             | Pool                                    |
-| ---------------------------------- | --------------------------------------- |
-| `sigilTraitPool(characterId)`      | first slot: 101 open + that character's |
-| `sigilSecondTraitPool(firstTrait)` | second slot: the 80, plus the partner   |
-| `canFollow(first, second)`         | the pair rule as a predicate            |
-| `fixedSecondTrait(first)`          | the pinned second, or null              |
-| `WRIGHTSTONE_SUB_POOL`             | the 72                                  |
-| `takesSecondTrait(id)`             | false for the nine                      |
+| Export                             | Pool                                     |
+| ---------------------------------- | ---------------------------------------- |
+| `sigilTraitPool(characterId)`      | first slot: 101 open + that character's  |
+| `sigilSecondTraitPool(firstTrait)` | second slot: the 80, plus the partner    |
+| `canFollow(first, second)`         | the pair rule as a predicate             |
+| `fixedSecondTrait(first)`          | the pinned second, or null               |
+| `WRIGHTSTONE_SUB_POOL`             | the 72                                   |
+| `takesSecondTrait(id)`             | false for the nine and the weapon traits |
 
 The second pool keys off the **first trait**, not the character: every trait in
 it is either open or that first trait's own partner, so it cannot leak another
@@ -528,7 +539,7 @@ build.
 
 Changing a first trait re-checks the second and drops it if the pair is no
 longer legal, so swapping away from a character trait clears its partner. A
-first trait with a `fixedSecond` skips that check and fills its second slot
+first trait in a pinned lot skips that check and fills its second slot
 outright - picking _Alpha_ writes _DMG Cap_ beside it, picking _Ain_ writes
 _Regen_, and the cursor moves on to the next sigil.
 
