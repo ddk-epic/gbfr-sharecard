@@ -33,14 +33,3 @@ export function TraitIcon({
     <span aria-hidden className={`flex-none ${TRAIT_ICON_SIZE[size]}`} />
   ) : null;
 }
-
-/** The `-` a trait cell shows when there is no trait; sized to TraitIcon's box. */
-export function EmptyTraitIcon({ size = 16 }: { size?: TraitIconSize }) {
-  return (
-    <span
-      className={`text-dim inline-flex flex-none items-center justify-center ${TRAIT_ICON_SIZE[size]}`}
-    >
-      -
-    </span>
-  );
-}
