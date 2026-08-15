@@ -1,9 +1,6 @@
 import { LVL_DEF, inkSpan, layoutDigits } from "./glyphs/lvl-def";
-import {
-  FIGURE_BASELINE,
-  FIGURE_XHEIGHT,
-  LVL_DIAMOND,
-} from "./glyphs/digits.generated";
+import { FIGURE_BASELINE, FIGURE_XHEIGHT } from "./glyphs/digits.generated";
+import { LVL_DIAMOND } from "./glyphs/lvl-diamond";
 import { DigitFigures } from "./glyphs/digit-figures";
 import { CAP_RATIO, Label, LvlWord, PALETTE } from "./glyphs/label";
 
