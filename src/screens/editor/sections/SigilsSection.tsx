@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { TraitId } from "@/catalog/ids";
 import { SIGIL_LEVELS } from "../../../domain/build";
 import { traitName } from "@/domain/naming";
-import { SectionPanel } from "../../../components/ui";
+import { SectionPanel } from "@/components/ui";
 import {
   ROW_LVL_CAP_HEIGHT,
   TraitCell,

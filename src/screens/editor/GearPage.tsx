@@ -9,7 +9,7 @@ import {
   SigilPickerCell,
   SigilPickerLevel,
 } from "./sections/SigilsSection";
-import { SectionPanel } from "../../components/ui";
+import { SectionPanel } from "@/components/ui";
 import { WeaponPopover } from "./sections/WeaponPopover";
 import { WrightstonePopover } from "./sections/WrightstonePopover";
 import { SigilsPopover } from "./sections/SigilsPopover";

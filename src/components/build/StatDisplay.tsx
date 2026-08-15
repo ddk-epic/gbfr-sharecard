@@ -1,5 +1,12 @@
-import { LVL_DEF } from "./lvl-def";
-import { CAP_RATIO, Label, labelBox, PALETTE, Part, Value } from "./label";
+import { LVL_DEF } from "./glyphs/lvl-def";
+import {
+  CAP_RATIO,
+  Label,
+  labelBox,
+  PALETTE,
+  Part,
+  Value,
+} from "./glyphs/label";
 
 /** The stat box's height in cap heights. */
 export const STAT_BOX_HEIGHT = 1.42;

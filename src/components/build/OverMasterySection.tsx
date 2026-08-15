@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { Build } from "../../domain/build";
 import { bonusTypeById } from "@/catalog";
 import { bonusValueText } from "@/domain/naming";
-import { Heading, SectionPanel } from "../ui";
+import { Heading, SectionPanel } from "@/components/ui";
 import { BONUS_ICON_EM, BonusIcon } from "./BonusIcon";
 
 type Density = "compact" | "loose";

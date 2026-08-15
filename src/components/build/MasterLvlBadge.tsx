@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { masterlevelArtUrl } from "@/assets/urls";
-import { Label, PALETTE, Part, type SvgId } from "./label";
+import { Label, PALETTE, Part, type SvgId } from "./glyphs/label";
 
 /** Base art and number-cell sizes */
 const BASE = { w: 332, h: 348, file: "masterlevel-diamond" };

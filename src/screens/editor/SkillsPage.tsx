@@ -10,7 +10,7 @@ import { SkillsPopover } from "./sections/SkillsPopover";
 import { OverMasteryPopover } from "./sections/OverMasteryPopover";
 import { SummonsPopover } from "./sections/SummonsPopover";
 import { EmptySlot } from "./controls";
-import { traitIconBox } from "../../components/ui";
+import { traitIconBox } from "@/components/build/TraitIcon";
 
 const DESIGN_WIDTH = 560;
 const ZOOM = EDITOR_ZOOM;

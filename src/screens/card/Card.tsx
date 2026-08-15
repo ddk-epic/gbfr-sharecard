@@ -12,7 +12,7 @@ import { LvlBadge } from "../../components/build/LvlBadge";
 import { MasterlevelBadge } from "../../components/build/MasterLvlBadge";
 import { PwrBadge } from "../../components/build/PwrBadge";
 import { StatusPanel } from "../../components/build/StatusPanel";
-import { BackdropFrame, ParchmentBackdrop } from "../../components/ui";
+import { BackdropFrame, ParchmentBackdrop } from "@/components/ui";
 
 export const CARD_WIDTH = 2880;
 export const CARD_HEIGHT = 1440;

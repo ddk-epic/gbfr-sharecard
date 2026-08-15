@@ -1,7 +1,7 @@
-import { LVL_DEF, inkSpan, layoutDigits } from "./lvl-def";
-import { DigitFigures } from "./digit-figures";
-import { CAP_RATIO, KEYLINE, Label, LvlWord, PALETTE } from "./label";
-import { FIGURE_BASELINE, FIGURE_XHEIGHT } from "./digits.generated";
+import { LVL_DEF, inkSpan, layoutDigits } from "./glyphs/lvl-def";
+import { DigitFigures } from "./glyphs/digit-figures";
+import { CAP_RATIO, KEYLINE, Label, LvlWord, PALETTE } from "./glyphs/label";
+import { FIGURE_BASELINE, FIGURE_XHEIGHT } from "./glyphs/digits.generated";
 
 /** SEED: "Lvl"'s advance at LVL_DEF.lvl.cap (word ratio 1), badge units; scales
     with `wordRatio` like kern1/kern2 do. */

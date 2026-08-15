@@ -4,7 +4,7 @@ import type { Build } from "../domain/build";
 import { Card, CARD_HEIGHT, CARD_WIDTH } from "./card/Card";
 import { CardModal } from "./card/CardModal";
 import { canCopy, copyCard, downloadCard } from "./card/export";
-import { BackButton, Cta, Heading, Panel } from "../components/ui";
+import { BackButton, Cta, Heading, Panel } from "@/components/ui";
 
 const ICON = 16;
 const COPY_IDLE = (

@@ -4,7 +4,7 @@ import type { CharacterId } from "@/catalog/ids";
 import type { ElementId } from "@/catalog/types";
 import { elementIconUrl, skillIconUrl } from "@/assets/urls";
 import { characterCatalog } from "@/catalog";
-import { Heading, ReverseSlantedBar, SectionPanel } from "../ui";
+import { Heading, ReverseSlantedBar, SectionPanel } from "@/components/ui";
 import { nameTracking } from "./name-tracking";
 
 type SkillDef = ReturnType<typeof characterCatalog>["skills"][number];

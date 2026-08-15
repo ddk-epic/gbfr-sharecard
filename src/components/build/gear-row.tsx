@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { TraitId } from "@/catalog/ids";
-import { TraitIcon, traitIconBox } from "../ui";
+import { TraitIcon, traitIconBox } from "@/components/build/TraitIcon";
 import { traitName } from "@/domain/naming";
 import { nameTracking } from "./name-tracking";
 

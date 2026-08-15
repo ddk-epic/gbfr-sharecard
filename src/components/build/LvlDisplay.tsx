@@ -1,5 +1,5 @@
-import { SlantedBar } from "../ui";
-import { LVL_DEF } from "./lvl-def";
+import { SlantedBar } from "@/components/ui";
+import { LVL_DEF } from "./glyphs/lvl-def";
 import {
   CAP_RATIO,
   Label,
@@ -8,7 +8,7 @@ import {
   PALETTE,
   TraitPrefix,
   Value,
-} from "./label";
+} from "./glyphs/label";
 
 /** This chip's placement, in badge units (viewBox space, cap 17).
  * Advances are declared estimates.

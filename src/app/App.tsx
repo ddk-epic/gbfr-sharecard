@@ -22,7 +22,7 @@ import { emptyBuild, type Build } from "../domain/build";
 import { type CharacterId } from "@/catalog/ids";
 import { readBuild, writeBuild } from "@/infra/storage";
 import { defaultWeapon } from "@/domain/weapons";
-import { ParchmentBackdrop } from "../components/ui";
+import { ParchmentBackdrop } from "@/components/ui";
 
 /**
  * No `validateSearch` on the route: on read the router merges its result over

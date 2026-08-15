@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { STAT_ICON_ART } from "@/assets/art-metrics";
 import { pwrArtUrl, statIconUrl } from "@/assets/urls";
-import { CAP_RATIO, Label, PALETTE, Value } from "./label";
+import { CAP_RATIO, Label, PALETTE, Value } from "./glyphs/label";
 
 /** Diamond body nearly fills its own 182x182 canvas. */
 const BASE = { w: 182, h: 182, file: "pwr-diamond" };

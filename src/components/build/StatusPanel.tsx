@@ -1,7 +1,8 @@
 import { Fragment } from "react";
 import type { Build } from "../../domain/build";
 import type { StatIconId } from "@/assets/urls";
-import { StatIcon, SectionPanel } from "../ui";
+import { StatIcon } from "@/components/build/StatIcon";
+import { SectionPanel } from "@/components/ui";
 
 const LABEL_FONT = "font-med";
 const VALUE_FONT = "font-med";

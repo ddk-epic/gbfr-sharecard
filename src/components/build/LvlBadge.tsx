@@ -1,11 +1,11 @@
-import { LVL_DEF, inkSpan, layoutDigits } from "./lvl-def";
+import { LVL_DEF, inkSpan, layoutDigits } from "./glyphs/lvl-def";
 import {
   FIGURE_BASELINE,
   FIGURE_XHEIGHT,
   LVL_DIAMOND,
-} from "./digits.generated";
-import { DigitFigures } from "./digit-figures";
-import { CAP_RATIO, Label, LvlWord, PALETTE } from "./label";
+} from "./glyphs/digits.generated";
+import { DigitFigures } from "./glyphs/digit-figures";
+import { CAP_RATIO, Label, LvlWord, PALETTE } from "./glyphs/label";
 
 /** The word's position on the badge's fixed 140x140 canvas. */
 const WORD = { centre: LVL_DEF.diamond.cx, baseline: 36 };

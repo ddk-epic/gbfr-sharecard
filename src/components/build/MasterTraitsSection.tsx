@@ -6,7 +6,7 @@ import { STYLE_RANK_BUDGETS, stylePerkStates } from "../../domain/derive";
 import { PERK_THRESHOLDS, type MasterTraitCell } from "@/catalog/types";
 import { sboardRankIconUrl, starBgUrl, starIconUrl } from "@/assets/urls";
 import { characterCatalog } from "@/catalog";
-import { Heading } from "../ui";
+import { Heading } from "@/components/ui";
 
 const STYLE_BORDER: Record<StyleId, string> = {
   insight: "border-t-insight",
