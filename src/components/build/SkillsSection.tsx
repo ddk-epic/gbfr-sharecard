@@ -2,9 +2,10 @@ import { Fragment, type CSSProperties, type ReactNode } from "react";
 import type { Build } from "@/domain/build";
 import type { CharacterId } from "@/catalog/ids";
 import type { ElementId } from "@/catalog/types";
-import { elementIconUrl, skillIconUrl } from "@/assets/urls";
+import { skillIconUrl } from "@/assets/urls";
 import { characterCatalog } from "@/catalog";
 import { Heading, ReverseSlantedBar, SectionPanel } from "@/components/ui";
+import { ElementIcon } from "./ElementIcon";
 import { nameTracking } from "./name-tracking";
 
 type SkillDef = ReturnType<typeof characterCatalog>["skills"][number];
@@ -116,11 +117,7 @@ function SkillCell({
         </span>
         <span className="font-med relative flex items-center gap-1.5 self-start py-0.5 pr-4 pl-1">
           <ReverseSlantedBar className="-translate-x-1.5" />
-          <img
-            src={elementIconUrl(def.element)}
-            className="relative size-4.5 flex-none"
-            alt=""
-          />
+          <ElementIcon element={def.element} className="relative size-4.5" />
           <span
             className="relative text-sm capitalize [-webkit-text-stroke:1.5px_var(--ui)] [paint-order:stroke] [text-shadow:0_1px_3px_var(--dim)]"
             style={{ color: ELEMENT_COLOR[def.element] }}
