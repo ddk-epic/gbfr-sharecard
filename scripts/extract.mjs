@@ -207,15 +207,17 @@ for (const row of database.prepare("select * from skill_type_lot").all()) {
 // four input traits - the first rolled from all four, the second from the
 // remaining three. Either slot can take any of them, so the traits an eligible
 // sigil can carry are exactly the traits a synthesised sigil can hold in its
-// SECOND slot. `CanGemMix` is the eligibility flag: it is set on the character
-// and curio sigils, and clear on every generic `<Trait> V+`. The screen asks
-// for "legendary (+) mark sigils", which is rarity V with a `+` name.
-// See docs/sigils.md.
+// SECOND slot. The screen asks for "legendary (+) mark sigils", which is rarity
+// V with a `+` name.
+// `CanGemMix` names the opposite of what it reads as: it marks the sigils
+// synthesis REFUSES. Set on every unique sigil - the character ones, the
+// Lucilius trio, the curios - and clear on the farmable generic `<Trait> V+`,
+// so eligibility is `CanGemMix` CLEAR. See docs/sigils.md.
 const isLegendaryPlus = (gem) =>
   gem.Rarity === 5 && (english(gem.Name) ?? "").endsWith("+");
 const secondKeys = new Set();
 for (const gem of gems) {
-  if (!gem.CanGemMix || !isLegendaryPlus(gem) || !gem.SkillId1) continue;
+  if (gem.CanGemMix || !isLegendaryPlus(gem) || !gem.SkillId1) continue;
   secondKeys.add(gem.SkillId1);
   if (gem.SkillId2) secondKeys.add(gem.SkillId2);
   for (const key of lotKeys.get(gem.SkillTypeLotIdForRandom2ndSkill) ?? [])

@@ -23,7 +23,7 @@ describe("trait flags", () => {
   test("the counts the archive gives", () => {
     expect(TRAITS).toHaveLength(200);
     expect(withFlag("firstTrait")).toHaveLength(188);
-    expect(withFlag("secondTrait")).toHaveLength(90);
+    expect(withFlag("secondTrait")).toHaveLength(80);
     expect(withFlag("wrightstoneSub")).toHaveLength(72);
     expect(withFlag("noSecondSlot")).toHaveLength(6);
   });
@@ -72,14 +72,36 @@ describe("trait flags", () => {
     );
   });
 
-  // The two flags answer opposite ends of the question, so both can be set:
-  // Crabs Are Forever+ carries Crabmiration second, yet no Crabmiration sigil
-  // ever gets a second trait of its own.
-  test("noSecondSlot does not stop a trait being someone else's second", () => {
-    const both = TRAITS.filter(
-      (trait) => trait.noSecondSlot && trait.secondTrait,
-    ).map((trait) => trait.id);
-    expect(both).toEqual(["crabmiration", "crabvestment-returns"]);
+  test("the traits that lead but never follow", () => {
+    expect(
+      TRAITS.filter(
+        (trait) => trait.firstTrait && !trait.character && !trait.secondTrait,
+      ).map((trait) => trait.id),
+    ).toMatchInlineSnapshot(`
+      [
+        "alpha",
+        "auto-potion",
+        "berserker-echo",
+        "beta",
+        "crabby-resonance",
+        "crabmiration",
+        "crabvestment-returns",
+        "flight-over-fight",
+        "gamma",
+        "immortal-shell",
+        "in-a-pinch",
+        "natural-defenses",
+        "potent-greens",
+        "roll-of-the-die",
+        "seven-net",
+        "spartan-echo",
+        "stout-heart",
+        "sumo-force",
+        "super-ultimate-perfect-dodge",
+        "untouchable",
+        "war-elemental",
+      ]
+    `);
   });
 });
 
@@ -134,8 +156,11 @@ describe("second trait pool", () => {
 
   test("it is wider than the 72 that roll", () => {
     expect(ids(null).length).toBeGreaterThan(WRIGHTSTONE_SUB_POOL.length);
-    // Reachable only through synthesis - never through a roll.
+    // Reachable only through synthesis.
     expect(ids(null)).toContain("divergence");
+    expect(ids(null)).toContain("celestial-terra");
+    expect(ids(null)).toContain("fatebreaker");
+    expect(ids(null)).not.toContain("war-elemental");
   });
 
   test("a character trait follows only its own partner, either way round", () => {

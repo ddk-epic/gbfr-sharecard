@@ -20,8 +20,7 @@
     "name": "Alpha",
     "maxLevel": 30,
     "category": "special",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "atk",
@@ -47,8 +46,7 @@
     "name": "Auto Potion",
     "maxLevel": 15,
     "category": "special",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "autorevive",
@@ -73,16 +71,14 @@
     "name": "Berserker Echo",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "beta",
     "name": "Beta",
     "maxLevel": 30,
     "category": "special",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "bladequeens-circuit",
@@ -185,42 +181,48 @@
     "name": "Celestial Aqua",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "celestial-incendo",
     "name": "Celestial Incendo",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "celestial-lumen",
     "name": "Celestial Lumen",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "celestial-nyx",
     "name": "Celestial Nyx",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "celestial-terra",
     "name": "Celestial Terra",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "celestial-ventus",
     "name": "Celestial Ventus",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "charged-attack-dmg",
@@ -263,8 +265,7 @@
     "name": "Crabby Resonance",
     "maxLevel": 45,
     "category": "special",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "crabmiration",
@@ -272,7 +273,6 @@
     "maxLevel": 45,
     "category": "special",
     "firstTrait": true,
-    "secondTrait": true,
     "noSecondSlot": true
   },
   {
@@ -281,7 +281,6 @@
     "maxLevel": 15,
     "category": "special",
     "firstTrait": true,
-    "secondTrait": true,
     "noSecondSlot": true
   },
   {
@@ -559,7 +558,8 @@
     "name": "Fatebreaker",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true
+    "firstTrait": true,
+    "secondTrait": true
   },
   {
     "id": "fearless-drive",
@@ -598,8 +598,7 @@
     "name": "Flight over Fight",
     "maxLevel": 15,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "founders-strategy",
@@ -629,8 +628,7 @@
     "name": "Gamma",
     "maxLevel": 30,
     "category": "special",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "garrison",
@@ -838,8 +836,7 @@
     "name": "Immortal Shell",
     "maxLevel": 20,
     "category": "special",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "improved-dodge",
@@ -873,8 +870,7 @@
     "name": "In a Pinch",
     "maxLevel": 15,
     "category": "special",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "injury-to-insult",
@@ -1068,8 +1064,7 @@
     "name": "Potent Greens",
     "maxLevel": 30,
     "category": "support",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "potion-hoarder",
@@ -1148,8 +1143,7 @@
     "name": "Roll of the Die",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "roses-blooming",
@@ -1258,8 +1252,7 @@
     "name": "Spartan Echo",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "spirit-edges-fury",
@@ -1354,7 +1347,6 @@
     "maxLevel": 15,
     "category": "attack",
     "firstTrait": true,
-    "secondTrait": true,
     "short": "S. Ult. Perfect Dodge"
   },
   {
@@ -1544,8 +1536,7 @@
     "name": "Untouchable",
     "maxLevel": 15,
     "category": "defense",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "uplift",
@@ -1607,8 +1598,7 @@
     "name": "War Elemental",
     "maxLevel": 15,
     "category": "attack",
-    "firstTrait": true,
-    "secondTrait": true
+    "firstTrait": true
   },
   {
     "id": "weak-point-dmg",

@@ -104,9 +104,9 @@ among them**.
 
 That last sentence is about the roll pool only. It is not a statement about
 second traits in general - once the fixed rows and synthesis are counted, the
-second slot reaches 90 open traits, and a character trait can follow its own
+second slot reaches 80 open traits, and a character trait can follow its own
 partner besides. See
-[the second-trait pool](#the-second-trait-pool-is-90-open-plus-one-paired).
+[the second-trait pool](#the-second-trait-pool-is-80-open-plus-one-paired).
 
 Which of the 72 a given sigil rolled is not in the archive - it is per owned
 sigil - so this project stores it on the build rather than looking it up.
@@ -275,7 +275,7 @@ fixed - never _Regen_. The three Boundary/_Ain_ sigils carry
 trait is _Regen_ (`SKILL_066_00`). Two different sets, two different fixed
 traits.
 
-## The second-trait pool is 90 open, plus one paired
+## The second-trait pool is 80 open, plus one paired
 
 Counting only the roll pool badly undercounts what a legal `+` sigil can hold.
 Take the rarity-5 `+` sigils - the "legendary (+) mark" sigils the synthesis
@@ -294,13 +294,20 @@ sigils: _Guardian's Awakening+_ is _Conviction_ + _Honor_), plus _Divergence_
 from _War Elemental+_ and _Crabmiration_ / _Crabvestment Returns_ from the
 crab curios.
 
-Synthesis then widens the open half the rest of the way. Because the output's
-first trait is drawn from all four input traits and its second from the
-remaining three, any **open** trait an eligible sigil carries can land in the
-second slot. Resolving the eligible sigils' own traits, their fixed seconds and
-their roll lots, then dropping the character-locked ones, gives **90**.
+Synthesis then decides the open half. Because the output's first trait is drawn
+from all four input traits and its second from the remaining three, any **open**
+trait an eligible sigil carries can land in the second slot - the draw is random
+and repeatable, so every combination of the four eventually comes out. Resolving
+the eligible sigils' own traits, their fixed seconds and their roll lots, then
+dropping the character-locked ones, gives **80**.
 
-The 72 that roll are a strict subset of those 90.
+Synthesis both widens and narrows. It adds the six _Celestial_ elements and
+_Fatebreaker_, which never roll and are never a fixed second - they arrive only
+because their generic `V+` sigils are legal inputs. It withholds the curio
+traits, whose sigils it refuses; see
+[`CanGemMix`](#cangemmix-marks-what-synthesis-refuses).
+
+The 72 that roll are a strict subset of those 80.
 
 ### Character traits do not join that pool
 
@@ -324,10 +331,12 @@ The pairing is read off the gems carrying **two** character traits at once - the
 Duplicates, on the other hand, are entirely legal: synthesis can land the same
 trait in both slots, so nothing rejects a sigil carrying a trait twice.
 
-_Crabmiration_ and _Crabvestment Returns_ are worth pausing on: both are in the
-90 **and** carry `noSecondSlot`. That is consistent - no sigil whose _first_
-trait is _Crabmiration_ takes a second. Being a second trait and taking one are
-separate questions.
+`noSecondSlot` and `secondTrait` remain separate questions - one is about the
+sigil, the other about the trait - but as of 2.0.2 nothing sets both. The only
+sigils that carried a single-trait trait second were _Crabs Are Forever+_
+(_Crabmiration_) and _Immortal Shell+_ (_Crabvestment Returns_), and synthesis
+refuses both, so neither trait reaches the second slot. Those two sigils are
+also not obtainable in the shipping game; their `gem` rows are leftovers.
 
 ## Sigil synthesis
 
@@ -363,21 +372,39 @@ Character traits are the exception the draw alone does not predict: they obey
 the pairing rule above, so a Warpath never comes out second however the four
 inputs fall.
 
-### `CanGemMix` is the eligibility flag
+### `CanGemMix` marks what synthesis refuses
 
-Not every sigil can go in the pot, and `CanGemMix` is how the archive says so.
-It is set on 264 of 1034 rows; restricted to the legendary `+` tier it selects
+Not every sigil can go in the pot, and `CanGemMix` is how the archive says so -
+but **it names the opposite of what it reads as**. The column is set on the
+sigils synthesis will **not** accept. Eligibility is `CanGemMix` **clear**.
+
+It is set on 264 of 1034 rows; restricted to the legendary `+` tier it marks
 **151 of 354**, and the split is clean:
 
-| `CanGemMix` | What it covers                                                                                                                                                                                                                                                                                                                                                    |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1           | every character sigil - trait, Warpath, Awakening - plus the curios: _Ain+_, _Alpha+_/_Beta+_/_Gamma+_, the Boundaries, _War Elemental+_, _Untouchable+_, _Roll of the Die+_, _Auto Potion+_, _Flight over Fight+_, _Potent Greens+_, _Immortal Shell+_, _In a Pinch+_, _Spartan Echo+_, _Berserker Echo+_, _Crabs Are Forever+_, _Super Ultimate Perfect Dodge+_ |
-| 0           | every generic `<Trait> V+` - _Damage Cap V+_, _Tyranny V+_, _Attack Power V+_, all resistances                                                                                                                                                                                                                                                                    |
+| `CanGemMix` | Synthesis | What it covers                                                                                                                                                                                                                                                                                                                                                    |
+| ----------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1           | refused   | every character sigil - trait, Warpath, Awakening - plus the curios: _Ain+_, _Alpha+_/_Beta+_/_Gamma+_, the Boundaries, _War Elemental+_, _Untouchable+_, _Roll of the Die+_, _Auto Potion+_, _Flight over Fight+_, _Potent Greens+_, _Immortal Shell+_, _In a Pinch+_, _Spartan Echo+_, _Berserker Echo+_, _Crabs Are Forever+_, _Super Ultimate Perfect Dodge+_ |
+| 0           | accepted  | every generic `<Trait> V+` - _Damage Cap V+_, _Tyranny V+_, _Attack Power V+_, all resistances - and _Improved Dodge+_                                                                                                                                                                                                                                            |
 
-The rule reads as a design decision: synthesis exists to recombine the sigils
-you **cannot** farm on demand. A generic _Damage Cap V+_ you simply re-farm, so
-it is not an input - but _DMG Cap_ still reaches the second slot, because
-_Alpha+_ carries it fixed and _Alpha+_ **is** eligible.
+The rule reads as a design decision the other way round from what the column
+name suggests: synthesis recombines the sigils you **can** farm on demand, and
+the ones you cannot are kept out of the randomiser. So _DMG Cap_ reaches the
+second slot on the strength of _Damage Cap V+_, and _Alpha_ does not reach it at
+all - _Alpha+_ is the only sigil carrying it, and the pot will not take it.
+
+Three things fix the polarity, and it is worth keeping all three, because the
+column name argues against them:
+
+- **In game.** _Alpha+_/_Beta+_/_Gamma+_ cannot be selected as synthesis inputs;
+  _Improved Dodge+_ can. Those are opposite values of `CanGemMix`, and the
+  observed behaviour matches "1 means refused" in both directions.
+- **Improved Dodge+ is the tell in the table.** It is the one named, non-generic
+  legendary `+` sigil on the `0` side. Under the old reading it was an
+  unexplained exception; under this one it is simply a farmable sigil.
+- **The flag sits where inputs cannot.** It is set on rarity 1-3 sigils
+  (_Crabby Resonance_, _Crabmiration_, _Seven Net_) that could never be inputs
+  anyway, since the screen demands legendary `+`. As "may be synthesised" that is
+  dead data; as "this sigil is unique" it marks the whole catalog consistently.
 
 Note the direction: `CanGemMix` gates which sigils are **inputs**. It does not
 gate what the editor may offer, and the traits it unlocks are mostly not on
@@ -387,9 +414,9 @@ One ambiguity is left open deliberately. The screen has two different prompts -
 `TXT_YOROZU_CHOICE_LEGPLUS_GN` ("Select a **(+) mark** legendary sigil") and
 `TXT_YOROZU_CHOICE_LEG_GN` ("Select a legendary sigil") - which might mean the
 second input need not be `+`. This project takes **both inputs as `+`**, which
-is the only path players use. If that is ever wrong, the 104 rarity-5 non-`+`
-rows join the pot and _Stout Heart_, _Natural Defenses_, _Seven Net_ and
-_Sumo Force_ gain `secondTrait`.
+is the only path players use. Under this reading it makes no difference to the
+pool either way: all 104 rarity-5 non-`+` rows carry `CanGemMix = 1`, so they
+are refused whether or not the screen would offer them.
 
 ## Not resolved
 
@@ -421,7 +448,7 @@ answers a **different** question, so each is built from its own column:
 | Flag             | Count | Question it answers                          | Built from                               |
 | ---------------- | ----- | -------------------------------------------- | ---------------------------------------- |
 | `firstTrait`     | 188   | can it be a sigil's own trait?               | `gem.SkillId1`                           |
-| `secondTrait`    | 90    | can it follow **any** first trait?           | synthesis-eligible legendary+, open only |
+| `secondTrait`    | 80    | can it follow **any** first trait?           | synthesis-eligible legendary+, open only |
 | `pairsWith`      | 56    | which single trait may it follow?            | gems carrying two character traits       |
 | `wrightstoneSub` | 72    | can it be a wrightstone sub?                 | `skill_lot`                              |
 | `noSecondSlot`   | 6     | does a sigil built on it lack a second slot? | `SkillId1` with no pair, ever            |
@@ -432,9 +459,10 @@ Three traps these names are shaped to avoid:
   give the same 188 today - no trait is second-only - but it would offer a
   second-only trait as a first trait the moment the game adds one.
 - `noSecondSlot` is about **the sigil**, the others about **the trait**. They
-  are independent, and _Crabmiration_ sets both it and `secondTrait`: _Crabs Are
-  Forever+_ carries Crabmiration second, yet no Crabmiration sigil ever gets a
-  second trait of its own. That is not a contradiction.
+  are independent questions, so a trait setting both would not be a
+  contradiction - it would mean no sigil of its own takes a second trait, while
+  some other sigil carries it second. Nothing sets both today, but do not treat
+  that as an invariant.
 - `secondTrait` means "follows _anything_", so no character trait carries it.
   A character trait's eligibility is conditional, and `pairsWith` is where that
   condition lives.
@@ -450,7 +478,7 @@ styles.
 | Export                             | Pool                                    |
 | ---------------------------------- | --------------------------------------- |
 | `sigilTraitPool(characterId)`      | first slot: 101 open + that character's |
-| `sigilSecondTraitPool(firstTrait)` | second slot: the 90, plus the partner   |
+| `sigilSecondTraitPool(firstTrait)` | second slot: the 80, plus the partner   |
 | `canFollow(first, second)`         | the pair rule as a predicate            |
 | `WRIGHTSTONE_SUB_POOL`             | the 72                                  |
 | `takesSecondTrait(id)`             | false for the six                       |
@@ -464,11 +492,22 @@ build.
 Changing a first trait re-checks the second and drops it if the pair is no
 longer legal, so swapping away from a character trait clears its partner.
 
-The second slot is **narrower** than the first: 90 open traits against 101.
-Exactly eleven traits can lead a sigil and never follow it - the six
-_Celestial_ elements, _Fatebreaker_, and the four single-trait curios _Natural
-Defenses_, _Seven Net_, _Stout Heart_ and _Sumo Force_. None of them rolls, and
-none sits on a synthesis-eligible sigil.
+The second slot is **narrower** than the first: 80 open traits against 101.
+Exactly **21** traits can lead a sigil and never follow it, and they are one
+group with one cause - every trait whose only legendary `+` sigil is a unique
+synthesis refuses:
+
+_Alpha_ · _Beta_ · _Gamma_ · _Auto Potion_ · _Berserker Echo_ ·
+_Crabby Resonance_ · _Crabmiration_ · _Crabvestment Returns_ ·
+_Flight over Fight_ · _Immortal Shell_ · _In a Pinch_ · _Natural Defenses_ ·
+_Potent Greens_ · _Roll of the Die_ · _Seven Net_ · _Spartan Echo_ ·
+_Stout Heart_ · _Sumo Force_ · _Super Ultimate Perfect Dodge_ · _Untouchable_ ·
+_War Elemental_
+
+None of them rolls, none is a fixed second, and none sits on a sigil the pot
+will take. The six _Celestial_ elements and _Fatebreaker_ are **not** in this
+group, though they look like they should be: they never roll either, but their
+generic `V+` sigils are legal inputs, so synthesis can put them second.
 
 Picking a single-trait trait moves the cursor straight to the next sigil: the
 second cell is not offered, and the cell count drops to match.
