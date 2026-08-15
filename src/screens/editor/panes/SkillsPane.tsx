@@ -11,6 +11,7 @@ import { SkillsPopover } from "@/screens/editor/popovers/SkillsPopover";
 import { OverMasteryPopover } from "@/screens/editor/popovers/OverMasteryPopover";
 import { SummonsPopover } from "@/screens/editor/popovers/SummonsPopover";
 import { EmptySlot } from "@/screens/editor/controls";
+import { BonusIconStrut } from "@/components/build/BonusIcon";
 import { EditOverlay } from "@/components/ui";
 import { traitIconBox } from "@/components/build/TraitIcon";
 
@@ -64,12 +65,14 @@ export function SkillsPane({ build, onChange }: PaneProps) {
         <div className="relative">
           <OverMasterySection
             overMastery={build.overMastery}
-            density="loose"
             renderEmpty={() => (
-              <EmptySlot
-                className="flex-1 py-0.75 text-base"
-                label="add bonus"
-              />
+              <>
+                <BonusIconStrut />
+                <EmptySlot
+                  className="flex-1 self-stretch text-base"
+                  label="add bonus"
+                />
+              </>
             )}
           />
           <EditOverlay
