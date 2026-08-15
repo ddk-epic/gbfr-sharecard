@@ -1,6 +1,6 @@
 import type { CellId, StyleId, StyleRank } from "@/catalog/ids";
-import { MasterTraitsSection } from "../../components/build/MasterTraitsSection";
-import type { PageProps } from "./controls";
+import { MasterTraitsSection } from "@/components/build/MasterTraitsSection";
+import type { PaneProps } from "@/screens/editor/controls";
 
 /** The card's Master Traits block: col 3 of Card.tsx's upper row. */
 const DESIGN_WIDTH = 1481;
@@ -11,7 +11,7 @@ const ZOOM = 0.74;
 /** Picked cells keep the card's own ring, so only empty ones take the hover. */
 const HOVER_RING = "cursor-pointer hover:shadow-[inset_0_0_0_1px_#7fd4f8]";
 
-export function MasterTraitsPage({ build, onChange }: PageProps) {
+export function MasterTraitsPane({ build, onChange }: PaneProps) {
   const toggleCell = (style: StyleId, rank: StyleRank, id: CellId) => {
     const selected = build.masterTraits[style][rank];
     onChange({

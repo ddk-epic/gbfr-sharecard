@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
-import type { Wrightstone } from "../../../domain/build";
+import type { Wrightstone } from "@/domain/build";
 import type { TraitId } from "@/catalog/ids";
-import { WRIGHTSTONE_LEVELS } from "../../../domain/build";
+import { WRIGHTSTONE_LEVELS } from "@/domain/build";
 import { traitIconUrl } from "@/assets/urls";
 import { traitName } from "@/domain/naming";
 import {
@@ -10,8 +10,13 @@ import {
   WRIGHTSTONE_SUB_POOL,
   wrightstoneName,
 } from "@/domain/wrightstone";
-import { IconTile } from "../controls";
-import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
+import { IconTile } from "@/screens/editor/controls";
+import {
+  Popover,
+  PopoverHeading,
+  POPOVER_BASE,
+  type Anchor,
+} from "@/screens/editor/popovers/Popover";
 import { TraitGlyph, TraitPicker } from "./TraitPicker";
 
 const WIDTH = 26 * POPOVER_BASE;

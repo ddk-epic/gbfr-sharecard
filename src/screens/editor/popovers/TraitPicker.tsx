@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { TraitId } from "@/catalog/ids";
 import type { TraitCategory, TraitDef } from "@/catalog/types";
 import { traitIconUrl } from "@/assets/urls";
-import { PopoverHeading } from "../Popover";
+import { PopoverHeading } from "@/screens/editor/popovers/Popover";
 
 const CATEGORY_LABEL: Record<TraitCategory, string> = {
   basic: "Basic",

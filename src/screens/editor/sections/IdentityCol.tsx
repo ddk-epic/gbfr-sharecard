@@ -1,10 +1,10 @@
-import { CHARACTER_LEVEL, type Build } from "../../../domain/build";
-import { Portrait } from "../../../components/build/Portrait";
-import { LvlBadge } from "../../../components/build/LvlBadge";
-import { MasterlevelBadge } from "../../../components/build/MasterLvlBadge";
-import { NameBadge } from "../../../components/build/NameBadge";
-import { PwrBadge } from "../../../components/build/PwrBadge";
-import { StatusPanel } from "../../../components/build/StatusPanel";
+import { CHARACTER_LEVEL, type Build } from "@/domain/build";
+import { Portrait } from "@/components/build/Portrait";
+import { LvlBadge } from "@/components/build/LvlBadge";
+import { MasterlevelBadge } from "@/components/build/MasterLvlBadge";
+import { NameBadge } from "@/components/build/NameBadge";
+import { PwrBadge } from "@/components/build/PwrBadge";
+import { StatusPanel } from "@/components/build/StatusPanel";
 
 /** Mirrors Portrait's own PORTRAIT_BLEED_RIGHT, which it keeps private. */
 const PORTRAIT_BLEED_RIGHT = 130;

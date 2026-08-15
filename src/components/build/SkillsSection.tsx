@@ -1,5 +1,5 @@
 import { Fragment, type CSSProperties, type ReactNode } from "react";
-import type { Build } from "../../domain/build";
+import type { Build } from "@/domain/build";
 import type { CharacterId } from "@/catalog/ids";
 import type { ElementId } from "@/catalog/types";
 import { elementIconUrl, skillIconUrl } from "@/assets/urls";

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { Build } from "../../domain/build";
+import type { Build } from "@/domain/build";
 import { bonusTypeById } from "@/catalog";
 import { bonusValueText } from "@/domain/naming";
 import { Heading, SectionPanel } from "@/components/ui";

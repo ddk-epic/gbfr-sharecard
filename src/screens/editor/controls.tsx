@@ -1,11 +1,11 @@
 import { Plus } from "lucide-react";
 import type { ReactNode } from "react";
-import type { Build } from "../../domain/build";
+import type { Build } from "@/domain/build";
 
 export const EDITOR_ZOOM = 0.64;
 export const GEAR_ZOOM = 0.6;
 
-export type PageProps = {
+export type PaneProps = {
   build: Build;
   onChange: (next: Build) => void;
 };

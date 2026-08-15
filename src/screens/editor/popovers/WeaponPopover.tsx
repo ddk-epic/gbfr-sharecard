@@ -1,4 +1,4 @@
-import type { Weapon } from "../../../domain/build";
+import type { Weapon } from "@/domain/build";
 import type { CharacterId, TraitId } from "@/catalog/ids";
 import { weaponArtUrl } from "@/assets/urls";
 import { traitName } from "@/domain/naming";
@@ -7,8 +7,13 @@ import {
   resolveWeapon,
   weaponPoolDefaults,
 } from "@/domain/weapons";
-import { IconTile } from "../controls";
-import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
+import { IconTile } from "@/screens/editor/controls";
+import {
+  Popover,
+  PopoverHeading,
+  POPOVER_BASE,
+  type Anchor,
+} from "@/screens/editor/popovers/Popover";
 import { TraitGlyph } from "./TraitPicker";
 
 const WIDTH = 26 * POPOVER_BASE;

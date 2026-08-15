@@ -1,11 +1,16 @@
-import type { Build } from "../../../domain/build";
+import type { Build } from "@/domain/build";
 import type { BonusTypeId } from "@/catalog/ids";
 import { bonusIconUrl } from "@/assets/urls";
 import { BONUS_TYPES, bonusTypeById } from "@/catalog";
 import { bonusValueText } from "@/domain/naming";
-import { BonusIcon } from "../../../components/build/BonusIcon";
-import { IconTile, Stepper } from "../controls";
-import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
+import { BonusIcon } from "@/components/build/BonusIcon";
+import { IconTile, Stepper } from "@/screens/editor/controls";
+import {
+  Popover,
+  PopoverHeading,
+  POPOVER_BASE,
+  type Anchor,
+} from "@/screens/editor/popovers/Popover";
 
 const WIDTH = 28 * POPOVER_BASE;
 

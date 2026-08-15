@@ -2,7 +2,11 @@ import { useMemo } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import type { CharacterId, TraitId } from "@/catalog/ids";
 import { sigilSecondTraitPool, sigilTraitPool } from "@/domain/sigils";
-import { Popover, POPOVER_BASE, type Anchor } from "../Popover";
+import {
+  Popover,
+  POPOVER_BASE,
+  type Anchor,
+} from "@/screens/editor/popovers/Popover";
 import { TraitPicker } from "./TraitPicker";
 import {
   cellCount,
@@ -10,7 +14,7 @@ import {
   type Cell,
   type FillOrder,
   type Sigils,
-} from "./sigil-cells";
+} from "@/screens/editor/sigil-cells";
 
 const WIDTH = 26 * POPOVER_BASE;
 

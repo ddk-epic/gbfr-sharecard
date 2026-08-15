@@ -1,15 +1,15 @@
 import { useState } from "react";
-import type { SummonSlot } from "../../domain/build";
-import { IdentityCol } from "./sections/IdentityCol";
-import { EDITOR_ZOOM, type PageProps } from "./controls";
-import { anchorOf, type Anchor } from "./Popover";
-import { SkillsSection } from "../../components/build/SkillsSection";
-import { OverMasterySection } from "../../components/build/OverMasterySection";
-import { SummonsSection } from "../../components/build/SummonsSection";
-import { SkillsPopover } from "./sections/SkillsPopover";
-import { OverMasteryPopover } from "./sections/OverMasteryPopover";
-import { SummonsPopover } from "./sections/SummonsPopover";
-import { EmptySlot } from "./controls";
+import type { SummonSlot } from "@/domain/build";
+import { IdentityCol } from "@/screens/editor/sections/IdentityCol";
+import { EDITOR_ZOOM, type PaneProps } from "@/screens/editor/controls";
+import { anchorOf, type Anchor } from "@/screens/editor/popovers/Popover";
+import { SkillsSection } from "@/components/build/SkillsSection";
+import { OverMasterySection } from "@/components/build/OverMasterySection";
+import { SummonsSection } from "@/components/build/SummonsSection";
+import { SkillsPopover } from "@/screens/editor/popovers/SkillsPopover";
+import { OverMasteryPopover } from "@/screens/editor/popovers/OverMasteryPopover";
+import { SummonsPopover } from "@/screens/editor/popovers/SummonsPopover";
+import { EmptySlot } from "@/screens/editor/controls";
 import { traitIconBox } from "@/components/build/TraitIcon";
 
 const DESIGN_WIDTH = 560;
@@ -27,7 +27,7 @@ type Open =
 const setAt = <T,>(slots: T[], index: number, value: T) =>
   slots.map((slot, i) => (i === index ? value : slot));
 
-export function SkillsPage({ build, onChange }: PageProps) {
+export function SkillsPane({ build, onChange }: PaneProps) {
   const [open, setOpen] = useState<Open | null>(null);
   const close = () => setOpen(null);
 

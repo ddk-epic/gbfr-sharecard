@@ -1,9 +1,9 @@
 import { Fragment, useRef, useState, type ReactNode } from "react";
 import { Check, ChevronLeft, Copy, Download, Maximize2 } from "lucide-react";
-import type { Build } from "../domain/build";
-import { Card, CARD_HEIGHT, CARD_WIDTH } from "./card/Card";
-import { CardModal } from "./card/CardModal";
-import { canCopy, copyCard, downloadCard } from "./card/export";
+import type { Build } from "@/domain/build";
+import { Card, CARD_HEIGHT, CARD_WIDTH } from "@/screens/card/Card";
+import { CardModal } from "@/screens/card/CardModal";
+import { canCopy, copyCard, downloadCard } from "@/screens/card/export";
 import { BackButton, Cta, Heading, Panel } from "@/components/ui";
 
 const ICON = 16;

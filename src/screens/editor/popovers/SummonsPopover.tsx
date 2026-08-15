@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
-import type { SummonSlot } from "../../../domain/build";
+import type { SummonSlot } from "@/domain/build";
 import type { BonusTypeId, SummonId, TraitId } from "@/catalog/ids";
-import { SIGIL_LEVELS } from "../../../domain/build";
+import { SIGIL_LEVELS } from "@/domain/build";
 import { bonusIconUrl, summonIconUrl } from "@/assets/urls";
 import { BONUS_TYPES } from "@/catalog";
 import { bonusValueText, traitName } from "@/domain/naming";
@@ -11,8 +11,13 @@ import {
   summonsWithTrait,
   SUMMON_TRAIT_POOL,
 } from "@/domain/summons";
-import { IconTile, Stepper } from "../controls";
-import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
+import { IconTile, Stepper } from "@/screens/editor/controls";
+import {
+  Popover,
+  PopoverHeading,
+  POPOVER_BASE,
+  type Anchor,
+} from "@/screens/editor/popovers/Popover";
 import { TraitGlyph, TraitPicker } from "./TraitPicker";
 
 const WIDTH = 28 * POPOVER_BASE;

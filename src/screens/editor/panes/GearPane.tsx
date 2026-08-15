@@ -1,18 +1,22 @@
 import { useState } from "react";
 import type { TraitId } from "@/catalog/ids";
-import { IdentityCol } from "./sections/IdentityCol";
-import { EDITOR_ZOOM, GEAR_ZOOM, type PageProps } from "./controls";
-import { anchorOf, type Anchor } from "./Popover";
-import { Weapon, Wrightstone } from "../../components/build/Weapon";
+import { IdentityCol } from "@/screens/editor/sections/IdentityCol";
+import {
+  EDITOR_ZOOM,
+  GEAR_ZOOM,
+  type PaneProps,
+} from "@/screens/editor/controls";
+import { anchorOf, type Anchor } from "@/screens/editor/popovers/Popover";
+import { Weapon, Wrightstone } from "@/components/build/Weapon";
 import {
   SigilsSection,
   SigilPickerCell,
   SigilPickerLevel,
-} from "./sections/SigilsSection";
+} from "@/screens/editor/sections/SigilsSection";
 import { SectionPanel } from "@/components/ui";
-import { WeaponPopover } from "./sections/WeaponPopover";
-import { WrightstonePopover } from "./sections/WrightstonePopover";
-import { SigilsPopover } from "./sections/SigilsPopover";
+import { WeaponPopover } from "@/screens/editor/popovers/WeaponPopover";
+import { WrightstonePopover } from "@/screens/editor/popovers/WrightstonePopover";
+import { SigilsPopover } from "@/screens/editor/popovers/SigilsPopover";
 import {
   clear,
   cursorFor,
@@ -22,7 +26,7 @@ import {
   type Cell,
   type FillOrder,
   type Sigils,
-} from "./sections/sigil-cells";
+} from "@/screens/editor/sigil-cells";
 
 /** The width these sections were drawn at: the card's gear column. */
 const DESIGN_WIDTH = 754;
@@ -37,7 +41,7 @@ type Open =
   | { kind: "wrightstone"; anchor: Anchor }
   | { kind: "sigils"; anchor: Anchor };
 
-export function GearPage({ build, onChange }: PageProps) {
+export function GearPane({ build, onChange }: PaneProps) {
   const [open, setOpen] = useState<Open | null>(null);
   const [cursor, setCursor] = useState<Cell | null>(null);
   /** That cursor's walking direction. */

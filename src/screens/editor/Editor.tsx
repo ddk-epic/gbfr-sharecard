@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { Build } from "../../domain/build";
-import { traitLevelTotals } from "../../domain/derive";
+import type { Build } from "@/domain/build";
+import { traitLevelTotals } from "@/domain/derive";
 import { traitById } from "@/catalog";
 import { traitName } from "@/domain/naming";
-import { EDITOR_ZOOM, type PageProps } from "./controls";
-import { SkillsPage } from "./SkillsPage";
-import { GearPage } from "./GearPage";
-import { MasterTraitsPage } from "./MasterTraitsPage";
+import { EDITOR_ZOOM, type PaneProps } from "./controls";
+import { SkillsPane } from "./panes/SkillsPane";
+import { GearPane } from "./panes/GearPane";
+import { MasterTraitsPane } from "./panes/MasterTraitsPane";
 import { BackButton, Cta, Heading } from "@/components/ui";
 
-const PAGE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
+const PANE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
 
 /** The pager chevrons stand in for a 150px glyph. Half the box is padding,
     so the drawn chevron is ARROW_SIZE/2 tall. */
@@ -30,7 +30,7 @@ const ARROW_BUTTON =
   "text-ink-strong/35 hover:text-ink-strong flex flex-1 cursor-pointer items-center leading-none";
 
 /**
- * Windowed 3-page carousel. A page flip rolls the whole window off one side
+ * Windowed 3-pane carousel. A pane flip rolls the whole window off one side
  * and back in from the opposite side; content never slides inside the frame.
  */
 export function Editor({
@@ -38,23 +38,23 @@ export function Editor({
   onChange,
   onBack,
   onGenerate,
-}: PageProps & { onBack: () => void; onGenerate: () => void }) {
-  const [page, setPage] = useState(0);
+}: PaneProps & { onBack: () => void; onGenerate: () => void }) {
+  const [pane, setPane] = useState(0);
   const [checklistOpen, setChecklistOpen] = useState(true);
   const windowRef = useRef<HTMLDivElement>(null);
   const flippingRef = useRef(false);
 
   const flipTo = (target: number, direction?: number) => {
-    const next = (target + PAGE_LABELS.length) % PAGE_LABELS.length;
-    if (flippingRef.current || next === page) return;
-    const dir = direction ?? (next > page ? 1 : -1);
+    const next = (target + PANE_LABELS.length) % PANE_LABELS.length;
+    if (flippingRef.current || next === pane) return;
+    const dir = direction ?? (next > pane ? 1 : -1);
     const win = windowRef.current!;
     flippingRef.current = true;
     win.style.transition = `transform ${FLIP_MS}ms ease-in`;
     win.style.transform = `translateX(${-dir * FLIP_OFFSET_PX}px)`;
     setTimeout(() => {
       // Swapped while off-screen, so the window takes its new width unseen.
-      setPage(next);
+      setPane(next);
       win.style.transition = "none";
       win.style.transform = `translateX(${dir * FLIP_OFFSET_PX}px)`;
       requestAnimationFrame(() =>
@@ -74,14 +74,14 @@ export function Editor({
     const onKey = (e: KeyboardEvent) => {
       const tag = (document.activeElement as HTMLElement)?.tagName;
       if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
-      if (e.key === "ArrowLeft") flipTo(page - 1, -1);
-      if (e.key === "ArrowRight") flipTo(page + 1, 1);
+      if (e.key === "ArrowLeft") flipTo(pane - 1, -1);
+      if (e.key === "ArrowRight") flipTo(pane + 1, 1);
     };
     addEventListener("keydown", onKey);
     return () => removeEventListener("keydown", onKey);
   });
 
-  const pageProps = { build, onChange };
+  const paneProps = { build, onChange };
   return (
     <div>
       <div className="absolute inset-0 z-1 flex flex-col items-center justify-center gap-2.5">
@@ -94,11 +94,11 @@ export function Editor({
             </BackButton>
           </div>
           <div className="flex items-center justify-center gap-2">
-            {PAGE_LABELS.map((label, i) => (
+            {PANE_LABELS.map((label, i) => (
               <button
                 key={label}
                 className={`${TAB} ${
-                  i === page
+                  i === pane
                     ? "from-band via-band-soft text-ink-strong bg-linear-90 from-0% via-60% to-[#b9d7e8] to-100%"
                     : "text-dim bg-white/55 shadow-[inset_0_0_0_1px_var(--line-soft)] hover:bg-white/90"
                 }`}
@@ -114,19 +114,19 @@ export function Editor({
         <div className="flex h-[76%] w-full items-stretch" data-popover-bounds>
           <button
             className={`${ARROW_BUTTON} justify-start pl-27.5 hover:bg-linear-90 hover:from-white/40 hover:to-white/0`}
-            aria-label="previous page"
-            onClick={() => flipTo(page - 1, -1)}
+            aria-label="previous pane"
+            onClick={() => flipTo(pane - 1, -1)}
           >
             <ChevronLeft size={ARROW_SIZE} strokeWidth={1} aria-hidden />
           </button>
           <div
             ref={windowRef}
-            className={`relative h-full flex-none ${WINDOW_MIN_WIDTH[page]}`}
+            className={`relative h-full flex-none ${WINDOW_MIN_WIDTH[pane]}`}
           >
-            {page === 0 && <SkillsPage {...pageProps} />}
-            {page === 1 && <GearPage {...pageProps} />}
-            {page === 2 && <MasterTraitsPage {...pageProps} />}
-            {page !== 2 &&
+            {pane === 0 && <SkillsPane {...paneProps} />}
+            {pane === 1 && <GearPane {...paneProps} />}
+            {pane === 2 && <MasterTraitsPane {...paneProps} />}
+            {pane !== 2 &&
               (checklistOpen ? (
                 <TraitChecklist
                   build={build}
@@ -143,8 +143,8 @@ export function Editor({
           </div>
           <button
             className={`${ARROW_BUTTON} justify-end pr-27.5 hover:bg-linear-270 hover:from-white/40 hover:to-white/0`}
-            aria-label="next page"
-            onClick={() => flipTo(page + 1, 1)}
+            aria-label="next pane"
+            onClick={() => flipTo(pane + 1, 1)}
           >
             <ChevronRight size={ARROW_SIZE} strokeWidth={1} aria-hidden />
           </button>

@@ -15,10 +15,10 @@ import {
   SELECT,
   type Nav,
 } from "./nav";
-import { CharacterSelect } from "../screens/CharacterSelect";
-import { Editor } from "../screens/editor/Editor";
-import { CardScreen } from "../screens/CardScreen";
-import { emptyBuild, type Build } from "../domain/build";
+import { CharacterSelect } from "@/screens/character-select/CharacterSelect";
+import { Editor } from "@/screens/editor/Editor";
+import { CardScreen } from "@/screens/card/CardScreen";
+import { emptyBuild, type Build } from "@/domain/build";
 import { type CharacterId } from "@/catalog/ids";
 import { readBuild, writeBuild } from "@/infra/storage";
 import { defaultWeapon } from "@/domain/weapons";

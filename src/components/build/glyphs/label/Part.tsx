@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { usePart } from "./Label";
-import { LVL_DEF } from "../lvl-def";
+import { LVL_DEF } from "@/components/build/glyphs/lvl-def";
 import type { ToneColors } from "./palette";
 
 /** SEED: "GBFR UI Medium" cap-ink height over em. Sizes in the module are font

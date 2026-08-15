@@ -1,9 +1,14 @@
-import type { Build } from "../../../domain/build";
+import type { Build } from "@/domain/build";
 import type { CharacterId } from "@/catalog/ids";
 import { skillIconUrl } from "@/assets/urls";
 import { characterCatalog } from "@/catalog";
-import { IconTile } from "../controls";
-import { Popover, PopoverHeading, POPOVER_BASE, type Anchor } from "../Popover";
+import { IconTile } from "@/screens/editor/controls";
+import {
+  Popover,
+  PopoverHeading,
+  POPOVER_BASE,
+  type Anchor,
+} from "@/screens/editor/popovers/Popover";
 
 const WIDTH = 26 * POPOVER_BASE;
 

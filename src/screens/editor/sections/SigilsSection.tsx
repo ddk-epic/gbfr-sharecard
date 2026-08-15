@@ -1,17 +1,14 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 import type { TraitId } from "@/catalog/ids";
-import { SIGIL_LEVELS } from "../../../domain/build";
+import { SIGIL_LEVELS } from "@/domain/build";
 import { traitName } from "@/domain/naming";
 import { SectionPanel } from "@/components/ui";
-import {
-  ROW_LVL_CAP_HEIGHT,
-  TraitCell,
-} from "../../../components/build/gear-row";
-import { LvlDisplay } from "../../../components/build/LvlDisplay";
-import { SigilsGrid } from "../../../components/build/SigilsGrid";
-import { EmptySlot } from "../controls";
-import { sameCell, type Cell, type Sigils } from "./sigil-cells";
+import { ROW_LVL_CAP_HEIGHT, TraitCell } from "@/components/build/gear-row";
+import { LvlDisplay } from "@/components/build/LvlDisplay";
+import { SigilsGrid } from "@/components/build/SigilsGrid";
+import { EmptySlot } from "@/screens/editor/controls";
+import { sameCell, type Cell, type Sigils } from "@/screens/editor/sigil-cells";
 
 export function SigilsSection({
   sigils,

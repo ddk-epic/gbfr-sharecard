@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import type { SigilSlot } from "../../../domain/build";
+import type { SigilSlot } from "@/domain/build";
 import {
   cellCount,
   cells,
