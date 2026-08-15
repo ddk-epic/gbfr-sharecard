@@ -1,5 +1,7 @@
 import type { BonusTypeId } from "@/catalog/ids";
 import { bonusIconUrl } from "@/assets/urls";
+import { bonusTypeById } from "@/catalog";
+import { bonusValueText } from "@/domain/naming";
 
 /** Gear-row's trait glyph against its text: size-7 (1.75rem) over text-2xl (1.5rem). */
 const GLYPH_TO_TEXT = 7 / 6;
@@ -7,6 +9,37 @@ const GLYPH_TO_TEXT = 7 / 6;
 const MARGIN_COMPENSATION = 86 / 62;
 /** Icon side, in em, so the box matches a trait glyph and tracks the text. */
 export const BONUS_ICON_EM = `${GLYPH_TO_TEXT * MARGIN_COMPENSATION}em`;
+
+/** Zero-width strut carrying a BonusIcon's height, so a bonus-less row matches
+    a filled one. */
+export function BonusIconStrut() {
+  return (
+    <span
+      aria-hidden
+      className="w-0 flex-none"
+      style={{ height: BONUS_ICON_EM }}
+    />
+  );
+}
+
+/** A bonus's icon, name and value; the name and value never break apart. */
+export function BonusLine({
+  bonusType,
+  value,
+}: {
+  bonusType: BonusTypeId;
+  value: number;
+}) {
+  return (
+    <>
+      <BonusIcon bonusType={bonusType} className="-ml-1" />
+      <span className="space-x-0.75 whitespace-nowrap">
+        <span>{bonusTypeById.get(bonusType)?.name} </span>
+        <span className="font-med">{bonusValueText(bonusType, value)}</span>
+      </span>
+    </>
+  );
+}
 
 export function BonusIcon({
   bonusType,

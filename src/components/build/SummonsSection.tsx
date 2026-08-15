@@ -2,11 +2,11 @@ import { Fragment, type ReactNode } from "react";
 import type { Build, SummonSlot } from "@/domain/build";
 import type { SummonId } from "@/catalog/ids";
 import { summonIconUrl } from "@/assets/urls";
-import { bonusTypeById, summonById } from "@/catalog";
-import { bonusValueText, traitName } from "@/domain/naming";
+import { summonById } from "@/catalog";
+import { traitName } from "@/domain/naming";
 import { TraitIcon, traitIconBox } from "@/components/build/TraitIcon";
 import { Heading, SectionPanel } from "@/components/ui";
-import { BONUS_ICON_EM, BonusIcon } from "./BonusIcon";
+import { BONUS_ICON_EM, BonusIconStrut, BonusLine } from "./BonusIcon";
 import { LvlDisplay } from "./LvlDisplay";
 import { nameTracking } from "./name-tracking";
 
@@ -55,8 +55,6 @@ const CELL_LAYOUT: Record<
 };
 
 const summonName = (slot: SummonSlot) => summonById.get(slot.summonId)?.name;
-const bonusName = (slot: SummonSlot) =>
-  slot.equipBonus && bonusTypeById.get(slot.equipBonus.bonusType)?.name;
 
 // Trait glyph/Lvl are preset to 16/18/22.
 const TRAIT_ICON = 18;
@@ -121,13 +119,10 @@ function EquipBonusRow({ slot }: { slot: SummonSlot }) {
   if (!slot.equipBonus) return null;
   return (
     <div className={`text-ui ${BONUS_ROW}`} style={{ height: BONUS_ICON_EM }}>
-      <BonusIcon bonusType={slot.equipBonus.bonusType} className="-ml-1" />
-      <span className="whitespace-nowrap">
-        <span>{bonusName(slot)} </span>
-        <span className="font-med">
-          {bonusValueText(slot.equipBonus.bonusType, slot.equipBonus.value)}
-        </span>
-      </span>
+      <BonusLine
+        bonusType={slot.equipBonus.bonusType}
+        value={slot.equipBonus.value}
+      />
     </div>
   );
 }
@@ -137,11 +132,7 @@ function EquipBonusRow({ slot }: { slot: SummonSlot }) {
 const BONUS_EMPTY: Record<Density, () => ReactNode> = {
   compact: () => (
     <div className="flex min-w-0 items-center gap-1.25 text-[18px]">
-      <span
-        aria-hidden
-        className="w-0 flex-none"
-        style={{ height: BONUS_ICON_EM }}
-      />
+      <BonusIconStrut />
       <span className="bg-slanted-bar h-3 w-32 rounded-sm" />
     </div>
   ),

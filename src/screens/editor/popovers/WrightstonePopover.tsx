@@ -17,7 +17,8 @@ import {
   POPOVER_BASE,
   type Anchor,
 } from "@/screens/editor/popovers/Popover";
-import { TraitGlyph, TraitPicker } from "./TraitPicker";
+import { TraitIcon } from "@/components/build/TraitIcon";
+import { TraitPicker } from "./TraitPicker";
 
 const WIDTH = 26 * POPOVER_BASE;
 
@@ -177,7 +178,7 @@ function SubRow({
         }`}
         onClick={onPick}
       >
-        <TraitGlyph trait={trait} />
+        <TraitIcon trait={trait} size="em" placeholder />
         <span className={`min-w-0 flex-1 ${trait ? "" : "text-dim"}`}>
           {trait ? traitName(trait) : "no trait"}
         </span>

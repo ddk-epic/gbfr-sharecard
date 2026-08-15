@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { TraitId } from "@/catalog/ids";
 import type { TraitCategory, TraitDef } from "@/catalog/types";
-import { traitIconUrl } from "@/assets/urls";
+import { TraitIcon } from "@/components/build/TraitIcon";
 import { PopoverHeading } from "@/screens/editor/popovers/Popover";
 
 const CATEGORY_LABEL: Record<TraitCategory, string> = {
@@ -15,18 +15,6 @@ const CATEGORY_ORDER = Object.keys(CATEGORY_LABEL) as TraitCategory[];
 
 /** Fixed, so the panel keeps its height as the filter narrows the list. */
 const LIST_HEIGHT = "h-[31em]";
-
-const GLYPH_BOX = "size-[1.55em] flex-none";
-
-/** Empty or icon-less traits keep the glyph's box, so rows hold their height. */
-export function TraitGlyph({ trait }: { trait: TraitId | null }) {
-  const url = trait ? traitIconUrl(trait) : null;
-  return url ? (
-    <img src={url} alt="" className={GLYPH_BOX} />
-  ) : (
-    <span aria-hidden className={GLYPH_BOX} />
-  );
-}
 
 /** Filtered, category-grouped trait list. The pool and what a pick means are
     the caller's. */
@@ -100,7 +88,7 @@ export function TraitPicker({
                       className="hover:bg-band/35 flex w-full cursor-pointer items-center gap-1.5 rounded px-1 py-0.5 text-left text-[1em] disabled:cursor-default disabled:hover:bg-transparent"
                       onClick={() => onPick(trait.id)}
                     >
-                      <TraitGlyph trait={trait.id} />
+                      <TraitIcon trait={trait.id} size="em" placeholder />
                       <span className="min-w-0 flex-1">{trait.name}</span>
                       {trailing?.(trait)}
                     </button>

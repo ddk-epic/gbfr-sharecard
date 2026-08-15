@@ -14,7 +14,7 @@ import {
   POPOVER_BASE,
   type Anchor,
 } from "@/screens/editor/popovers/Popover";
-import { TraitGlyph } from "./TraitPicker";
+import { TraitIcon } from "@/components/build/TraitIcon";
 
 const WIDTH = 26 * POPOVER_BASE;
 
@@ -85,7 +85,7 @@ export function WeaponPopover({
                 }`}
                 onClick={() => pickPoolTrait(ordinal, trait)}
               >
-                <TraitGlyph trait={trait} />
+                <TraitIcon trait={trait} size="em" placeholder />
                 <span className="min-w-0 flex-1">{traitName(trait)}</span>
               </button>
             ))}

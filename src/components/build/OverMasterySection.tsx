@@ -1,9 +1,7 @@
 import type { ReactNode } from "react";
 import type { Build } from "@/domain/build";
-import { bonusTypeById } from "@/catalog";
-import { bonusValueText } from "@/domain/naming";
 import { Heading, SectionPanel } from "@/components/ui";
-import { BONUS_ICON_EM, BonusIcon } from "./BonusIcon";
+import { BonusIconStrut, BonusLine } from "./BonusIcon";
 
 type Density = "compact" | "loose";
 
@@ -35,15 +33,10 @@ const DENSITY_LAYOUT: Record<
 // index to stay stable across renders.
 const GHOST_WIDTHS = ["w-44", "w-32", "w-38", "w-28", "w-40", "w-34"];
 
-// Strut carries the real row's BonusIcon height so filled and empty rows match.
 function OverMasteryPlaceholder({ index }: { index: number }) {
   return (
     <>
-      <span
-        aria-hidden
-        className="w-0 flex-none"
-        style={{ height: BONUS_ICON_EM }}
-      />
+      <BonusIconStrut />
       <span
         className={`bg-slanted-bar h-3.5 rounded-sm ${GHOST_WIDTHS[index % GHOST_WIDTHS.length]}`}
       />
@@ -75,13 +68,7 @@ export function OverMasterySection({
         {overMastery.map((line, i) => (
           <div className={layout.rowClass} key={i}>
             {line ? (
-              <>
-                <BonusIcon bonusType={line.bonusType} className="-ml-1" />
-                <span>{bonusTypeById.get(line.bonusType)?.name} </span>
-                <span className="font-med">
-                  {bonusValueText(line.bonusType, line.value)}
-                </span>
-              </>
+              <BonusLine bonusType={line.bonusType} value={line.value} />
             ) : (
               renderEmpty(i)
             )}

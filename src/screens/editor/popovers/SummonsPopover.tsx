@@ -11,6 +11,7 @@ import {
   summonsWithTrait,
   SUMMON_TRAIT_POOL,
 } from "@/domain/summons";
+import { TraitIcon } from "@/components/build/TraitIcon";
 import { IconTile, Stepper } from "@/screens/editor/controls";
 import {
   Popover,
@@ -18,7 +19,7 @@ import {
   POPOVER_BASE,
   type Anchor,
 } from "@/screens/editor/popovers/Popover";
-import { TraitGlyph, TraitPicker } from "./TraitPicker";
+import { TraitPicker } from "./TraitPicker";
 
 const WIDTH = 28 * POPOVER_BASE;
 
@@ -103,7 +104,7 @@ export function SummonsPopover({
             >
               <ChevronLeft size={18} aria-hidden />
             </button>
-            <TraitGlyph trait={trait} />
+            <TraitIcon trait={trait} size="em" placeholder />
             <span className="min-w-0 flex-1 text-[1em] font-semibold">
               {traitName(trait)}
             </span>
