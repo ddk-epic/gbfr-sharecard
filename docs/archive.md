@@ -60,9 +60,9 @@ Tables hold keys, not text. A trait row carries `Name` = `TXT_SKILL_000_00`; the
 string `ATK` comes from the `.msg` side. Any query producing readable output
 joins the two.
 
-The two can disagree. Six character styles have their trait names in the text
-tables but only one of three rows in `skill` - see
-[sigils.md](sigils.md#the-dlc-six-are-text-only).
+The two can disagree. Six character styles have all three trait rows in `skill`
+but only one resolved key between them, so a key-filtered query finds one row of
+three - see [sigils.md](sigils.md#the-dlc-six-carry-hashed-keys).
 
 ## The tables behind these docs
 
@@ -131,7 +131,7 @@ DLC character skill icon. See [weapons.md](weapons.md) for the weapon side.
 4 = unique character functionality cmn_iclb_act_{0:03}_{1:02}
 ```
 
-One atlas therefore covers both the mastery board and over-masteries.
+One atlas therefore covers both the Masteries nodes and Over Mastery.
 
 **One glyph was never located.** The skill-slot `Orb` has no sprite name that
 obviously matches; the best candidates are in `hud_guide_command`
