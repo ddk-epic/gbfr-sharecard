@@ -1,0 +1,94 @@
+{
+  "gran": {
+    "base": { "hp": 3430, "atk": 677 },
+    "board": { "hp": 56250, "atk": 8791, "crit": 78, "stun": 12 }
+  },
+  "djeeta": {
+    "base": { "hp": 3430, "atk": 677 },
+    "board": { "hp": 56250, "atk": 8791, "crit": 78, "stun": 12 }
+  },
+  "katalina": {
+    "base": { "hp": 3499, "atk": 656 },
+    "board": { "hp": 56200, "atk": 8812, "crit": 78, "stun": 10.9 }
+  },
+  "rackam": {
+    "base": { "hp": 3570, "atk": 631 },
+    "board": { "hp": 56150, "atk": 8832, "crit": 78, "stun": 10.9 }
+  },
+  "io": {
+    "base": { "hp": 3156, "atk": 666 },
+    "board": { "hp": 56500, "atk": 8802, "crit": 78, "stun": 10.9 }
+  },
+  "eugen": {
+    "base": { "hp": 3637, "atk": 699 },
+    "board": { "hp": 56050, "atk": 8769, "crit": 78, "stun": 10.9 }
+  },
+  "rosetta": {
+    "base": { "hp": 3327, "atk": 642 },
+    "board": { "hp": 56350, "atk": 8826, "crit": 78, "stun": 10.9 }
+  },
+  "ferry": {
+    "base": { "hp": 3256, "atk": 620 },
+    "board": { "hp": 56400, "atk": 8848, "crit": 78, "stun": 10.9 }
+  },
+  "lancelot": {
+    "base": { "hp": 3462, "atk": 652 },
+    "board": { "hp": 56250, "atk": 8816, "crit": 78, "stun": 10.9 }
+  },
+  "vane": {
+    "base": { "hp": 3704, "atk": 689 },
+    "board": { "hp": 56000, "atk": 8779, "crit": 78, "stun": 10.9 }
+  },
+  "percival": {
+    "base": { "hp": 3604, "atk": 707 },
+    "board": { "hp": 56100, "atk": 8761, "crit": 78, "stun": 10.9 }
+  },
+  "siegfried": {
+    "base": { "hp": 3535, "atk": 739 },
+    "board": { "hp": 56150, "atk": 8729, "crit": 78, "stun": 10.9 }
+  },
+  "charlotta": {
+    "base": { "hp": 3399, "atk": 665 },
+    "board": { "hp": 56250, "atk": 8803, "crit": 78, "stun": 10.9 }
+  },
+  "yodarha": {
+    "base": { "hp": 3197, "atk": 730 },
+    "board": { "hp": 56450, "atk": 8738, "crit": 78, "stun": 10.9 }
+  },
+  "narmaya": {
+    "base": { "hp": 3361, "atk": 708 },
+    "board": { "hp": 56300, "atk": 8760, "crit": 78, "stun": 10.9 }
+  },
+  "ghandagoza": {
+    "base": { "hp": 3739, "atk": 741 },
+    "board": { "hp": 55950, "atk": 8727, "crit": 78, "stun": 10.9 }
+  },
+  "zeta": {
+    "base": { "hp": 3293, "atk": 728 },
+    "board": { "hp": 56350, "atk": 8740, "crit": 78, "stun": 10.9 }
+  },
+  "vaseraga": {
+    "base": { "hp": 3773, "atk": 720 },
+    "board": { "hp": 55950, "atk": 8748, "crit": 78, "stun": 10.9 }
+  },
+  "cagliostro": {
+    "base": { "hp": 3227, "atk": 636 },
+    "board": { "hp": 56450, "atk": 8832, "crit": 78, "stun": 10.9 }
+  },
+  "id": {
+    "base": { "hp": 3394, "atk": 687 },
+    "board": { "hp": 56250, "atk": 8781, "crit": 78, "stun": 10.9 }
+  },
+  "sandalphon": {
+    "base": { "hp": 3630, "atk": 688 },
+    "board": { "hp": 56050, "atk": 8780, "crit": 78, "stun": 10.9 }
+  },
+  "seofon": {
+    "base": { "hp": 3530, "atk": 709 },
+    "board": { "hp": 56150, "atk": 8759, "crit": 78, "stun": 10.9 }
+  },
+  "tweyen": {
+    "base": { "hp": 3260, "atk": 686 },
+    "board": { "hp": 56420, "atk": 8782, "crit": 78, "stun": 10.9 }
+  }
+}

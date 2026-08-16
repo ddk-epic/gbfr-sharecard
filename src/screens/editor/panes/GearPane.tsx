@@ -91,11 +91,7 @@ export function GearPane({ build, onChange }: PaneProps) {
         className="flex-none"
         style={{ width: IDENTITY_WIDTH, zoom: EDITOR_ZOOM }}
       >
-        <IdentityCol
-          build={build}
-          width={IDENTITY_WIDTH}
-          onChangeStatus={(status) => onChange({ ...build, status })}
-        />
+        <IdentityCol build={build} width={IDENTITY_WIDTH} />
       </div>
       <div
         className="flex flex-none flex-col gap-3"

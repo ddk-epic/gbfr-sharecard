@@ -34,7 +34,7 @@ const slotPool = (cat: CharacterCatalog, slot: WeaponSlot): TraitId[] =>
     .filter((t): t is TraitId => t !== undefined);
 
 /** The trait each pool slot starts on, in pool order. */
-export function weaponPoolDefaults(id: CharacterId, series: string): TraitId[] {
+export function defaultPoolTraits(id: CharacterId, series: string): TraitId[] {
   const cat = characterCatalog(id);
   const def = weaponSeriesById.get(series);
   if (!def) return [];
@@ -50,12 +50,7 @@ export function defaultWeapon(id: CharacterId): Weapon {
   const series =
     owned.find((o) => o.series === TERMINUS_SERIES)?.series ?? owned[0]?.series;
   if (!series) throw new Error(`no weapons for character: ${id}`);
-  return {
-    series,
-    critRate: 0,
-    stun: 0,
-    poolTraits: weaponPoolDefaults(id, series),
-  };
+  return { series, poolTraits: defaultPoolTraits(id, series) };
 }
 
 /** HP is series.hp + weaponHpOffset, except Terminus. */

@@ -2,10 +2,12 @@ import type {
   BonusTypeDef,
   Character,
   CharacterCatalog,
+  CharacterStats,
   SigilLots,
   SummonDef,
   SummonEquipTiers,
   TraitDef,
+  TraitStats,
   WeaponLevels,
   WeaponSeries,
   WrightstonePrefixMap,
@@ -17,6 +19,8 @@ import sigilLotsJson from "./sigil-lots.json";
 import bonusTypesJson from "./bonus-types.json";
 import summonsJson from "./summons.json";
 import summonEquipTiersJson from "./summon-equip-tiers.json";
+import traitStatsJson from "./trait-stats.json";
+import characterStatsJson from "./character-stats.json";
 import weaponSeriesJson from "./weapon-series.json";
 import weaponLevelsJson from "./weapon-levels.json";
 import wrightstonePrefixesJson from "./wrightstone-prefixes.json";
@@ -32,6 +36,12 @@ export const TRAITS = traitsJson as TraitDef[];
 // `pairs` widens to string[][] on import; the tuple is the shape it is written in.
 export const SIGIL_LOTS = sigilLotsJson as unknown as SigilLots;
 export const BONUS_TYPES = bonusTypesJson as BonusTypeDef[];
+// `unit` and `stat` widen to string on import; the JSON is generated to shape.
+export const TRAIT_STATS = traitStatsJson as unknown as TraitStats;
+export const CHARACTER_STATS = characterStatsJson as Record<
+  string,
+  CharacterStats
+>;
 export const SUMMONS = summonsJson as SummonDef[];
 export const WEAPON_SERIES = weaponSeriesJson as WeaponSeries[];
 export const WEAPON_LEVELS = weaponLevelsJson as WeaponLevels;

@@ -5,7 +5,7 @@ import { traitName } from "@/domain/naming";
 import {
   characterWeaponOptions,
   resolveWeapon,
-  weaponPoolDefaults,
+  defaultPoolTraits,
 } from "@/domain/weapons";
 import { IconTile } from "@/screens/editor/controls";
 import {
@@ -37,12 +37,7 @@ export function WeaponPopover({
   /** A weapon is always equipped, so a pick swaps. */
   const pickSeries = (series: string) => {
     if (weapon.series === series) return;
-    onChange({
-      series,
-      critRate: 0,
-      stun: 0,
-      poolTraits: weaponPoolDefaults(characterId, series),
-    });
+    onChange({ series, poolTraits: defaultPoolTraits(characterId, series) });
   };
 
   const pickPoolTrait = (ordinal: number, trait: TraitId) =>

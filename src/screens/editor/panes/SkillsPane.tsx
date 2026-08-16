@@ -34,11 +34,7 @@ export function SkillsPane({ build, onChange }: PaneProps) {
   return (
     <div className="flex h-full gap-2.5">
       <div className="flex-none" style={{ width: IDENTITY_WIDTH, zoom: ZOOM }}>
-        <IdentityCol
-          build={build}
-          width={IDENTITY_WIDTH}
-          onChangeStatus={(status) => onChange({ ...build, status })}
-        />
+        <IdentityCol build={build} width={IDENTITY_WIDTH} />
       </div>
 
       <div

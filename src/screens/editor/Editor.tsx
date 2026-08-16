@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Build } from "@/domain/build";
-import { traitLevelTotals } from "@/domain/derive";
+import { traitLevelTotals } from "@/domain/status";
 import { traitById } from "@/catalog";
 import { traitName } from "@/domain/naming";
 import { EDITOR_ZOOM, type PaneProps } from "./controls";
@@ -161,7 +161,9 @@ export function Editor({
 const CHECKLIST_ROW =
   "border-line-soft text-ui flex items-center justify-between gap-2.5 border-b py-2 text-xl last:border-b-0";
 
-/** Sigil + wrightstone trait level sums. Editor-only. */
+/** Trait levels totalled over sigils, the Sigil Booster, the wrightstone, the
+    weapon's slots and summons. Uncapped, so a total past the max reads as an
+    overcap. Editor-only. */
 function TraitChecklist({
   build,
   onClose,

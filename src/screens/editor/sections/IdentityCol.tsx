@@ -5,6 +5,7 @@ import { MasterlevelBadge } from "@/components/build/MasterLvlBadge";
 import { NameBadge } from "@/components/build/NameBadge";
 import { PwrBadge } from "@/components/build/PwrBadge";
 import { StatusPanel } from "@/components/build/StatusPanel";
+import { deriveStatus } from "@/domain/status";
 
 /** Mirrors Portrait's own PORTRAIT_BLEED_RIGHT, which it keeps private. */
 const PORTRAIT_BLEED_RIGHT = 130;
@@ -19,15 +20,7 @@ const PWR_TOP = -150;
 const LAYER_FADE = "linear-gradient(to bottom, #000 20%, transparent)";
 
 /** Card column 1 - portrait, badges, name and the Status panel. */
-export function IdentityCol({
-  build,
-  width,
-  onChangeStatus,
-}: {
-  build: Build;
-  width: number;
-  onChangeStatus: (next: Build["status"]) => void;
-}) {
+export function IdentityCol({ build, width }: { build: Build; width: number }) {
   return (
     <div className="relative flex h-full flex-col justify-end gap-5.75">
       <div
@@ -46,7 +39,7 @@ export function IdentityCol({
       </div>
       <NameBadge characterId={build.characterId} className="relative" />
       <div className="relative z-2">
-        <StatusPanel status={build.status} onChange={onChangeStatus} />
+        <StatusPanel status={deriveStatus(build)} />
       </div>
     </div>
   );

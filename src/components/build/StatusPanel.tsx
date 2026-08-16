@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import type { Build } from "@/domain/build";
+import type { Status } from "@/domain/status";
 import type { StatIconId } from "@/assets/urls";
 import { StatIcon } from "@/components/build/StatIcon";
 import { SectionPanel } from "@/components/ui";
@@ -16,25 +16,17 @@ const VALUE_BOX = {
 
 const VALUE_INK = `tracking-tight tabular-nums ${VALUE_FONT} ${VALUE_WEIGHT}`;
 
-/* The number input. It lies transparent over the span. */
-const FIELD = `${VALUE_INK} caret-ink-strong absolute -inset-x-0.5 -inset-y-1.5 rounded-[5px] border border-transparent bg-transparent text-right text-transparent outline-none group-hover:border-line focus:border-band focus:bg-white/20 [&::-webkit-inner-spin-button]:appearance-none`;
-
-const clamp = (v: number, max: number) => Math.max(0, Math.min(max, v || 0));
-
-type Status = Build["status"];
-
 type Row = {
   key: keyof Status;
   stat: StatIconId;
   label: string;
   ink: string;
   unit?: string;
-  max: number;
 };
 
 const LEFT: Row[] = [
-  { key: "hp", stat: "hp", label: "HP", ink: "text-hp", max: 999999 },
-  { key: "atk", stat: "atk", label: "ATK", ink: "text-atk", max: 999999 },
+  { key: "hp", stat: "hp", label: "HP", ink: "text-hp" },
+  { key: "atk", stat: "atk", label: "ATK", ink: "text-atk" },
 ];
 
 const RIGHT: Row[] = [
@@ -44,41 +36,23 @@ const RIGHT: Row[] = [
     label: "Crit. Hit Rate",
     ink: "text-ui",
     unit: "%",
-    max: 100,
   },
-  {
-    key: "stunPower",
-    stat: "stun",
-    label: "Stun Power",
-    ink: "text-ui",
-    max: 99999,
-  },
+  { key: "stunPower", stat: "stun", label: "Stun Power", ink: "text-ui" },
 ];
 
+/** Read-only everywhere: the four stats are derived from the Build. */
 export function StatusPanel({
   status,
   className = "",
-  onChange,
 }: {
   status: Status;
   className?: string;
-  /** Editor-only: each value becomes an inline field, edited in place. */
-  onChange?: (next: Status) => void;
 }) {
   return (
-    <SectionPanel
-      shadow
-      className={`${className} pr-4 pl-4 ${onChange ? "group" : ""}`}
-    >
+    <SectionPanel shadow className={`${className} pr-4 pl-4`}>
       <div className="grid grid-cols-[9fr_11fr] gap-x-5">
-        <Half rows={LEFT} status={status} digits={6} onChange={onChange} />
-        <Half
-          rows={RIGHT}
-          status={status}
-          digits={5}
-          className="pr-4"
-          onChange={onChange}
-        />
+        <Half rows={LEFT} status={status} digits={6} />
+        <Half rows={RIGHT} status={status} digits={5} className="pr-4" />
       </div>
     </SectionPanel>
   );
@@ -89,13 +63,11 @@ function Half({
   status,
   digits,
   className = "",
-  onChange,
 }: {
   rows: Row[];
   status: Status;
   digits: keyof typeof VALUE_BOX;
   className?: string;
-  onChange?: (next: Status) => void;
 }) {
   return (
     <div
@@ -117,22 +89,6 @@ function Half({
             className={`relative justify-self-end text-right text-[28px] ${VALUE_BOX[digits]}`}
           >
             <span className={`${VALUE_INK} ${row.ink}`}>{status[row.key]}</span>
-            {onChange && (
-              <input
-                type="number"
-                aria-label={row.label}
-                min={0}
-                max={row.max}
-                className={FIELD}
-                value={status[row.key]}
-                onChange={(e) =>
-                  onChange({
-                    ...status,
-                    [row.key]: clamp(Number(e.target.value), row.max),
-                  })
-                }
-              />
-            )}
             {row.unit && (
               <i className="font-med absolute bottom-px left-full pl-0.5 text-[65%] not-italic">
                 {row.unit}

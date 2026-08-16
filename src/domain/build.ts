@@ -22,9 +22,8 @@ export const SIGIL_DEFAULT_LEVEL = 15;
 export const WRIGHTSTONE_LEVELS = [20, 15, 10];
 
 export type Build = {
-  schemaVersion: 3;
+  schemaVersion: 4;
   characterId: CharacterId; // slug, e.g. "io"
-  status: { hp: number; atk: number; critRate: number; stunPower: number }; // player-entered
   skills: (SkillId | null)[]; // exactly 4
   overMastery: (OverMasteryLine | null)[]; // exactly 4; all random lines
   weapon: Weapon; // always equipped; the character's Terminus by default
@@ -40,11 +39,10 @@ export const setAt = <T>(slots: T[], index: number, value: T) =>
 
 export type OverMasteryLine = { bonusType: BonusTypeId; value: number };
 
-/** series is the (character x series) cell id. ATK/HP and slots come from the catalog; crit/stun don't. */
+/** series is the (character x series) cell id; ATK/HP and slots come from the
+    catalog. */
 export type Weapon = {
   series: string;
-  critRate: number;
-  stun: number;
   /** One per `kind: "pool"` slot, in slot order. */
   poolTraits: TraitId[];
 };
@@ -85,9 +83,8 @@ export function emptyMasterTraits(): MasterTraitSelections {
     does not read. */
 export function emptyBuild(characterId: CharacterId, weapon: Weapon): Build {
   return {
-    schemaVersion: 3,
+    schemaVersion: 4,
     characterId,
-    status: { hp: 0, atk: 0, critRate: 0, stunPower: 0 },
     skills: [null, null, null, null],
     overMastery: [null, null, null, null],
     weapon,

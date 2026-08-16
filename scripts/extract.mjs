@@ -55,8 +55,10 @@ const fetchText = async (url) => {
   if (!res.ok) throw new Error(`${res.status} ${url}`);
   return res.text();
 };
-const writeJson = async (name, data) => {
-  await writeFile(new URL(name, OUT_DIR), JSON.stringify(data, null, 2) + "\n");
+const writeJson = async (name, data) =>
+  writeText(name, JSON.stringify(data, null, 2) + "\n");
+const writeText = async (name, text) => {
+  await writeFile(new URL(name, OUT_DIR), text);
   console.log(`wrote src/catalog/${name}`);
 };
 
@@ -563,12 +565,143 @@ const summons = topTierSummons
   }))
   .sort((a, b) => a.name.localeCompare(b.name));
 
+// ---------------------------------------------------- trait-stats.json
+// Hand-written because neither half is derivable: the stat clause sits in the
+// `LevelValue` column its format string names ("ATK +{1:.1f}%" is LevelValue2),
+// and of the ~50 traits with an ATK percentage clause only these reach the
+// displayed number. See docs/stats.md.
+const STAT_TRAIT_SOURCES = [
+  { key: "SKILL_000_00", stat: "atk", unit: "flat", column: 1 },
+  { key: "SKILL_001_00", stat: "hp", unit: "flat", column: 1 },
+  { key: "SKILL_003_00", stat: "crit", unit: "flat", column: 1 },
+  { key: "SKILL_004_00", stat: "stun", unit: "flat", column: 1 },
+  { key: "1E1CECCE", stat: "atk", unit: "percent", column: 1 }, // Catastrophe Nova
+  { key: "235D86EF", stat: "atk", unit: "percent", column: 1 }, // Supernova
+  { key: "SKILL_158_00", stat: "atk", unit: "percent", column: 1 }, // Glass Cannon
+  { key: "SKILL_027_00", stat: "atk", unit: "percent", column: 2 }, // Tyranny
+  { key: "SKILL_027_00", stat: "hp", unit: "percent", column: 1, sign: -1 }, // Tyranny's malus
+];
+
+const ladderOf = database.prepare(
+  "select * from skill_status where Key = ? order by Level",
+);
+const traitStats = {};
+for (const source of STAT_TRAIT_SOURCES) {
+  const id = idByKey.get(source.key);
+  if (!id)
+    throw new Error(`stat trait key resolves to no trait: ${source.key}`);
+  const rows = ladderOf.all(source.key);
+  if (!rows.length) throw new Error(`no skill_status rows for ${source.key}`);
+  // The ladder is indexed by level, so a gap would silently shift every value.
+  rows.forEach((row, index) => {
+    if (row.Level !== index + 1)
+      throw new Error(`${source.key} skips level ${index + 1}`);
+  });
+  (traitStats[id] ??= []).push({
+    stat: source.stat,
+    unit: source.unit,
+    values: rows.map(
+      (row) => (source.sign ?? 1) * row[`LevelValue${source.column}`],
+    ),
+  });
+}
+
+// ------------------------------------------------ character-stats.json
+const STAT_BY_PARAM_TYPE = { 0: "atk", 1: "hp", 2: "crit", 3: "stun" };
+
+const boardParams = new Map(
+  database
+    .prepare("select * from limit_bonus_param")
+    .all()
+    .map((param) => [param.Key, param]),
+);
+const boardBonuses = new Map(
+  database
+    .prepare("select * from limit_bonus")
+    .all()
+    .map((bonus) => [bonus.Key, bonus]),
+);
+
+// `LimitBonusParamIndex` is a level into the param's own value ladder, not an
+// index into ParamId1/2/3 - it runs to 7 where there are only ever 3 params.
+const tallyNodes = (nodes, totals) => {
+  for (const node of nodes) {
+    const bonus = boardBonuses.get(node.LimitBonusId);
+    if (!bonus) continue;
+    for (const paramId of [bonus.ParamId1, bonus.ParamId2, bonus.ParamId3]) {
+      const param = paramId && boardParams.get(paramId);
+      if (!param) continue;
+      // The board's `Attack +{0}%` nodes are type 114, and are confirmed in
+      // game not to reach the displayed ATK. Only the four flat types count.
+      const stat = STAT_BY_PARAM_TYPE[param.DisplayNumberMultiplier];
+      if (!stat) continue;
+      totals[stat] += param[`Lv${node.LimitBonusParamIndex + 1}Value`] ?? 0;
+    }
+  }
+  return totals;
+};
+
+// `ap_tree_rebuild` mirrors its own rungs 1-6 at rung 7 with re-priced values,
+// so summing both double-counts; at T7 the rung-7 rows are the whole section.
+const NODE_TREES = [
+  "select * from ap_tree_atk where CharaId = ?",
+  "select * from ap_tree_def where CharaId = ?",
+  "select * from ap_tree_wep where CharaId = ?",
+  "select * from ap_tree_rebuild where CharaId = ? and ReqWepTranscensionLevel = 7",
+].map((sql) => database.prepare(sql));
+const baseStatus = database.prepare(
+  "select * from chara_status where Key = ? and Level = 100",
+);
+
+const characterStats = {};
+for (const character of JSON.parse(
+  await readFile(new URL("characters.json", OUT_DIR), "utf8"),
+)) {
+  const base = baseStatus.get(character.playerId);
+  if (!base) throw new Error(`no level-100 row for ${character.playerId}`);
+  const board = { hp: 0, atk: 0, crit: 0, stun: 0 };
+  for (const tree of NODE_TREES)
+    tallyNodes(tree.all(character.playerId), board);
+  // Stun stays in the archive's tenths; the derivation scales it once, at the end.
+  for (const stat of Object.keys(board)) board[stat] = +board[stat].toFixed(2);
+  characterStats[character.id] = {
+    base: { hp: base.Hp, atk: base.Attack },
+    board,
+  };
+}
+
+// Prettier keeps an object collapsed when the source has no line break after
+// its `{`, so a stat block written on one line survives a format pass.
+const inline = (stats) =>
+  `{ ${Object.entries(stats)
+    .map(([stat, value]) => `"${stat}": ${value}`)
+    .join(", ")} }`;
+const characterStatsText = `{\n${Object.entries(characterStats)
+  .map(
+    ([id, { base, board }]) =>
+      `  "${id}": {\n    "base": ${inline(base)},\n    "board": ${inline(board)}\n  }`,
+  )
+  .join(",\n")}\n}\n`;
+
+// The four stats close to the unit on a maxed Io, so drift here is a regression.
+const io = characterStats.io;
+const IO_EXPECTED = {
+  base: { hp: 3156, atk: 666 },
+  board: { hp: 56500, atk: 8802, crit: 78, stun: 10.9 },
+};
+if (JSON.stringify(io) !== JSON.stringify(IO_EXPECTED))
+  throw new Error(
+    `Io no longer matches the confirmed build: ${JSON.stringify(io)}`,
+  );
+
 // ---------------------------------------------------------------- write all
 await writeJson("traits.json", traits);
 await writeJson("sigil-lots.json", sigilLots);
 await writeJson("bonus-types.json", bonusTypes);
 await writeJson("summons.json", summons);
 await writeJson("summon-equip-tiers.json", summonEquipTiers);
+await writeJson("trait-stats.json", traitStats);
+await writeText("character-stats.json", characterStatsText);
 
 if (unresolvedTraits.size)
   console.warn(

@@ -23,6 +23,10 @@ const MARKER_GUTTER_WIDTH = 32;
     SectionPanel padding makes this unnecessary. */
 const ROW_INDENT = `calc(var(--spacing) * 2.5 + ${MARKER_GUTTER_WIDTH}px)`;
 
+/** Zero on every weapon of every series. */
+const WEAPON_CRIT = 0;
+const WEAPON_STUN = 0;
+
 const WEAPON_STAT_CAP_HEIGHT = 22;
 const WEAPON_LVL_CAP_HEIGHT = WEAPON_STAT_CAP_HEIGHT * 1.8;
 /** The weapon "Lvl"'s ink height, x the level's cap. By eye, not tied to the
@@ -190,15 +194,10 @@ export function Weapon({
               <WeaponStat tone="atk" value={resolved.atk} reserve={5} />
             </BaseStat>
             <BaseStat {...statPlate("crit")}>
-              <WeaponStat
-                tone="ui"
-                value={weapon.critRate}
-                unit="%"
-                reserve={4}
-              />
+              <WeaponStat tone="ui" value={WEAPON_CRIT} unit="%" reserve={4} />
             </BaseStat>
             <BaseStat {...statPlate("stun")}>
-              <WeaponStat tone="ui" value={weapon.stun} reserve={4} />
+              <WeaponStat tone="ui" value={WEAPON_STUN} reserve={4} />
             </BaseStat>
           </div>
         </div>

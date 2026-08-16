@@ -123,6 +123,25 @@ export type ResolvedWeapon = {
   slots: ResolvedWeaponSlot[];
 };
 
+export type StatKey = "hp" | "atk" | "crit" | "stun";
+
+/** One trait's contribution to one stat, indexed by trait level. A percentage
+ *  entry compounds instead of adding. */
+export type TraitStat = {
+  stat: StatKey;
+  unit: "flat" | "percent";
+  values: number[];
+};
+
+export type TraitStats = Record<TraitId, TraitStat[]>;
+
+/** `board` is the whole mastery board - Offense, Defense and
+ * every weapon's Collection section. */
+export type CharacterStats = {
+  base: { hp: number; atk: number };
+  board: Record<StatKey, number>;
+};
+
 export type WrightstonePrefixMap = Record<TraitId, string>; // main trait -> display prefix
 
 /** `label` is the short UI string, `description` the full in-game text.
