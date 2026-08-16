@@ -83,11 +83,19 @@ Anything reading Stun Power out of the archive will meet it.
 
 `limit_bonus_param` also carries a column the headers call `Unk19`, which is
 `10` on **exactly** the 41 rows of stat type 3 and `1` on the other 1082, and
-zero `Unk19 = 1` rows hold a fraction. Whether the game renders the stored
-`0.2` or a normalised `2` is not established from the archive - `skill_status`
-has no such column and stores fractions anyway, so `Unk19` cannot be the thing
-that makes the stat work. Treat it as a per-stat-type flag that marks fractional
-storage.
+zero `Unk19 = 1` rows hold a fraction.
+
+**The game renders ten times the stored value**, confirmed in game. Three stun
+sigils stacked on one build pooled the Stun Power trait to levels 16, 32 and 45,
+whose `skill_status` ladder holds `5.1`, `6.9` and `10`; the displayed Stun Power
+moved by `+51`, `+18` and `+31`, which are the differences of `51 / 69 / 100`. So
+an over-mastery storing `1.6` shows as `16`, on the same `2 … 20` ladder as the
+nine percentage stats. The readings are in
+[stats.md](stats.md#over-masteries-pay-by-roll-level).
+
+That settles the rendering, not the mechanism. `skill_status` has no `Unk19`
+column and stores fractions anyway, so `Unk19` cannot be the thing that makes the
+stat work - treat it as a per-stat-type flag that marks fractional storage.
 
 The column the headers call `DisplayNumberMultiplier` is a different thing
 again, and also misnamed: it holds a stat-type index (0 ATK, 1 HP, 2 crit,
@@ -166,8 +174,9 @@ step and never between two. The roll probabilities are not modelled - a
 sharecard shows a build that already exists, not the odds of rolling it.
 
 **Stun Power is normalised to whole numbers** by its `Unk19`, putting it on the
-same `2 … 20` ladder as the percentage stats. The catalog holds only whole
-numbers, so nothing downstream deals in fractions. It is still flat rather than
+same `2 … 20` ladder as the percentage stats. That is what the game itself shows,
+not a presentation choice made here. The catalog holds only whole numbers, so
+nothing downstream deals in fractions. It is still flat rather than
 percent - the format string decides that, and Stun Power's carries no `%`.
 
 ## The stat icons
