@@ -135,11 +135,11 @@ export type TraitStat = {
 
 export type TraitStats = Record<TraitId, TraitStat[]>;
 
-/** `board` is the whole mastery board - Offense, Defense and
+/** `masteries` is every Masteries node taken - Offense, Defense and
  * every weapon's Collection section. */
 export type CharacterStats = {
   base: { hp: number; atk: number };
-  board: Record<StatKey, number>;
+  masteries: Record<StatKey, number>;
 };
 
 export type WrightstonePrefixMap = Record<TraitId, string>; // main trait -> display prefix

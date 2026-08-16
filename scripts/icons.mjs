@@ -494,7 +494,8 @@ if (summonsMissing.length)
   console.warn(`  no icon for: ${summonsMissing.join(", ")}`);
 
 // ------------------------------------------------------------------ sboard
-// public/icons/sboard/ - the master-trait board glyphs from pause_pause_common:
+// public/icons/sboard/ - the master-trait glyphs from pause_pause_common, the
+// directory named after the archive's `skillboard` tables:
 // the four Style Rank badges (round/diamond/hex gems, EX gold-rimmed) and the
 // level star with its highlight backing. The star marks a trait's I-III tier in
 // a cell and a style's earned perk tier in the header; the backing is a larger,

@@ -55,7 +55,7 @@ export type StatIconId = "hp" | "atk" | "crit" | "stun" | "power";
 export const statIconUrl = (stat: StatIconId) =>
   `${import.meta.env.BASE_URL}icons/stats/${stat}.webp`;
 
-/** Master-trait board glyphs: rank badge by Style Rank, plus the level star and its backing. */
+/** Master-trait glyphs: rank badge by Style Rank, plus the level star and its backing. */
 export const sboardRankIconUrl = (rank: StyleRank) =>
   `${import.meta.env.BASE_URL}icons/sboard/rank-${rank}.webp`;
 export const starIconUrl = `${import.meta.env.BASE_URL}icons/sboard/star.webp`;

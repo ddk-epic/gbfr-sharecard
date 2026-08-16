@@ -72,7 +72,7 @@ export function traitLevelTotals(build: Build): Map<TraitId, number> {
 
 /** The four displayed stats: a flat sum, then one multiplicative stage in which
     percentage traits compound rather than add. Assumes the Build is at cap -
-    character 100, weapons maxed and transcended, board and fate complete. */
+    character 100, weapons maxed and transcended, Masteries and fate complete. */
 export function deriveStatus(build: Build): Status {
   const character = CHARACTER_STATS[build.characterId];
   const weapon = resolveWeapon(build.characterId, build.weapon);
@@ -84,7 +84,7 @@ export function deriveStatus(build: Build): Status {
     stun: BASE_STUN,
   };
   for (const stat of Object.keys(flat) as StatKey[])
-    flat[stat] += character.board[stat];
+    flat[stat] += character.masteries[stat];
 
   const factor: Record<StatKey, number> = { hp: 1, atk: 1, crit: 1, stun: 1 };
   for (const [trait, total] of traitLevelTotals(build)) {

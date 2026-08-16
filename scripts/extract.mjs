@@ -270,7 +270,7 @@ if (styles.size !== 28)
 // So the free second-trait pool is the character-locked traits taken back out.
 for (const key of characterKeys) secondKeys.delete(key);
 
-// Six traits reach the board on sigils that pin their second slot rather than
+// Six traits only ever arrive on sigils that pin their second slot rather than
 // offer it: Alpha, Beta and Gamma pin DMG Cap, and Ain and the two Boundaries
 // pin Regen. Three conditions have to hold together for the slot to be settled -
 // every sigil carrying the trait first agrees on one second trait, none of them
@@ -609,13 +609,13 @@ for (const source of STAT_TRAIT_SOURCES) {
 // ------------------------------------------------ character-stats.json
 const STAT_BY_PARAM_TYPE = { 0: "atk", 1: "hp", 2: "crit", 3: "stun" };
 
-const boardParams = new Map(
+const masteryParams = new Map(
   database
     .prepare("select * from limit_bonus_param")
     .all()
     .map((param) => [param.Key, param]),
 );
-const boardBonuses = new Map(
+const masteryBonuses = new Map(
   database
     .prepare("select * from limit_bonus")
     .all()
@@ -626,12 +626,12 @@ const boardBonuses = new Map(
 // index into ParamId1/2/3 - it runs to 7 where there are only ever 3 params.
 const tallyNodes = (nodes, totals) => {
   for (const node of nodes) {
-    const bonus = boardBonuses.get(node.LimitBonusId);
+    const bonus = masteryBonuses.get(node.LimitBonusId);
     if (!bonus) continue;
     for (const paramId of [bonus.ParamId1, bonus.ParamId2, bonus.ParamId3]) {
-      const param = paramId && boardParams.get(paramId);
+      const param = paramId && masteryParams.get(paramId);
       if (!param) continue;
-      // The board's `Attack +{0}%` nodes are type 114, and are confirmed in
+      // The `Attack +{0}%` mastery nodes are type 114, and are confirmed in
       // game not to reach the displayed ATK. Only the four flat types count.
       const stat = STAT_BY_PARAM_TYPE[param.DisplayNumberMultiplier];
       if (!stat) continue;
@@ -659,14 +659,15 @@ for (const character of JSON.parse(
 )) {
   const base = baseStatus.get(character.playerId);
   if (!base) throw new Error(`no level-100 row for ${character.playerId}`);
-  const board = { hp: 0, atk: 0, crit: 0, stun: 0 };
+  const masteries = { hp: 0, atk: 0, crit: 0, stun: 0 };
   for (const tree of NODE_TREES)
-    tallyNodes(tree.all(character.playerId), board);
+    tallyNodes(tree.all(character.playerId), masteries);
   // Stun stays in the archive's tenths; the derivation scales it once, at the end.
-  for (const stat of Object.keys(board)) board[stat] = +board[stat].toFixed(2);
+  for (const stat of Object.keys(masteries))
+    masteries[stat] = +masteries[stat].toFixed(2);
   characterStats[character.id] = {
     base: { hp: base.Hp, atk: base.Attack },
-    board,
+    masteries,
   };
 }
 
@@ -678,8 +679,8 @@ const inline = (stats) =>
     .join(", ")} }`;
 const characterStatsText = `{\n${Object.entries(characterStats)
   .map(
-    ([id, { base, board }]) =>
-      `  "${id}": {\n    "base": ${inline(base)},\n    "board": ${inline(board)}\n  }`,
+    ([id, { base, masteries }]) =>
+      `  "${id}": {\n    "base": ${inline(base)},\n    "masteries": ${inline(masteries)}\n  }`,
   )
   .join(",\n")}\n}\n`;
 
@@ -687,7 +688,7 @@ const characterStatsText = `{\n${Object.entries(characterStats)
 const io = characterStats.io;
 const IO_EXPECTED = {
   base: { hp: 3156, atk: 666 },
-  board: { hp: 56500, atk: 8802, crit: 78, stun: 10.9 },
+  masteries: { hp: 56500, atk: 8802, crit: 78, stun: 10.9 },
 };
 if (JSON.stringify(io) !== JSON.stringify(IO_EXPECTED))
   throw new Error(

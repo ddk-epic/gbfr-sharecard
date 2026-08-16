@@ -5,7 +5,7 @@ import { canFollow, fixedSecondTrait, takesSecondTrait } from "@/domain/sigils";
 
 export type Sigils = Build["sigils"];
 
-/** A trait's place on the board. */
+/** A trait's place in the sigil grid. */
 export type Cell = { index: number; secondary: boolean };
 
 export const sameCell = (a: Cell | null, b: Cell | null) =>
