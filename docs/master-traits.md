@@ -55,8 +55,15 @@ three of the four rows and then breaks on EX, which is funded at 50 rather than
 30, so the reading is not safe to use.
 
 Rank 2 and Rank 3 are also not distinguishable by cell count - both hold 9 - so
-which group key is which rests on `Unk3` increasing with rank. That is an
-assumption, not a proof.
+which group key is which rests on `Unk3` increasing with rank.
+
+**PWR corroborates it.** Every cell selected is worth `50 x` its rank's
+`chara_power_skillboard_rank_adjust` weight, and cells from the three ranks
+measure 50, 100 and 150 in game - see
+[stats.md](stats.md#the-skillboard-pays-50-a-cell-times-the-rank-weight). A rank
+3 cell paying exactly three times a rank 1 cell puts `4A5DDC7B` at weight 3.
+The same readings show EX cells pay 50, so its missing row in that table is a
+default of 1 rather than a zero.
 
 `skillboard_category` is `3 / 6 / 6` on every one of its four rows - the perk
 thresholds, and **universal rather than per-character**.
