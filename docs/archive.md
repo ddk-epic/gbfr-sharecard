@@ -27,8 +27,10 @@ GBFRDataTools.exe tbl-to-sqlite -i <dir>/system/table -o <dir>/tables.sqlite -v 
 index but writes only the tables. `-v` is the **game** version, not the tool
 version.
 
-A complete extract is **308 `.tbl` files, 302 SQLite tables, and 33,440 English
-strings**. Those three numbers are the check that an extract is whole.
+A complete extract is **305 `.tbl` files, 302 SQLite tables, and 33,440 English
+strings**. Those three numbers are the check that an extract is whole. The three
+tables that do not reach SQLite are the three with no `.headers` file;
+[tables.md](tables.md) names them and describes every table that does.
 
 Icons come out of the same archive through three further commands, which
 `scripts/icons.mjs` carries in its header.
@@ -63,6 +65,9 @@ tables but only one of three rows in `skill` - see
 [sigils.md](sigils.md#the-dlc-six-are-text-only).
 
 ## The tables behind these docs
+
+Every table in the archive is listed in [tables.md](tables.md). The ones this
+project actually reads:
 
 | Table                        | Holds                                                  |
 | ---------------------------- | ------------------------------------------------------ |
