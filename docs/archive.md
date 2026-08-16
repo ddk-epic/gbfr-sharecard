@@ -64,22 +64,25 @@ tables but only one of three rows in `skill` - see
 
 ## The tables behind these docs
 
-| Table                        | Holds                                                 |
-| ---------------------------- | ----------------------------------------------------- |
-| `skill`                      | every trait: `Key`, `Name`, `IconId1`, `IsResistance` |
-| `skill_status`               | per-trait, per-level values - and so the max level    |
-| `gem`                        | every sigil, 1034 rows                                |
-| `gem_rare`                   | sigil level range per rarity                          |
-| `weapon`, `weapon_status`    | weapons and their per-level ATK/HP                    |
-| `weapon_status_awake`        | ATK/HP added per awakening level                      |
-| `weapon_status_rebuild`      | ATK/HP added per transcendence step                   |
-| `weapon_skill_level_rebuild` | transcendence trait slots and ladders                 |
-| `limit_bonus*`               | masteries and over-masteries                          |
-| `chara`                      | the roster: `CharId`, `CharaName`, `Element`          |
+| Table                        | Holds                                                  |
+| ---------------------------- | ------------------------------------------------------ |
+| `skill`                      | every trait: `Key`, `Name`, `IconId1`, `IsResistance`  |
+| `skill_status`               | per-trait, per-level values - and so the max level     |
+| `gem`                        | every sigil, 1034 rows                                 |
+| `gem_rare`                   | sigil level range per rarity                           |
+| `weapon`, `weapon_status`    | weapons and their per-level ATK/HP                     |
+| `weapon_status_awake`        | ATK/HP added per awakening level                       |
+| `weapon_status_rebuild`      | ATK/HP added per transcendence step                    |
+| `weapon_skill_level_rebuild` | transcendence trait slots and ladders                  |
+| `limit_bonus*`               | masteries and over-masteries                           |
+| `chara`                      | the roster: `CharId`, `CharaName`, `Element`           |
+| `chara_status`               | per-character base HP/ATK by level, and flat crit/stun |
+| `chara_status_fate`          | the HP/ATK a fate episode adds                         |
+| `chara_power_*`              | the PWR coefficients                                   |
 
 Per-class analysis: [weapons.md](weapons.md), [sigils.md](sigils.md),
 [overmasteries.md](overmasteries.md), [summons.md](summons.md),
-[master-traits.md](master-traits.md).
+[master-traits.md](master-traits.md), [stats.md](stats.md).
 
 ## Icon classes not extracted
 
