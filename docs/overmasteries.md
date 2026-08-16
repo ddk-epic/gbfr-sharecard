@@ -9,16 +9,16 @@ be re-checked. See [archive.md](archive.md) for how it is extracted.
 There is no `overmastery` table. The system is **meditation**, and its rows are
 keyed `MED_EFF_*`.
 
-| Table                             | Rows | Holds                                          |
-| --------------------------------- | ---- | ---------------------------------------------- |
-| `limit_bonus_meditation`          | 3    | the three meditation tiers                     |
-| `limit_bonus_meditation_category` | 45   | which stats each tier can roll                 |
-| `limit_bonus_meditation_weight`   | 10   | level probabilities                            |
-| `limit_bonus_param`               | 1123 | the stat values, shared with the mastery board |
-| `limit_bonus`                     | -    | the mastery board, a different system          |
+| Table                             | Rows | Holds                                                     |
+| --------------------------------- | ---- | --------------------------------------------------------- |
+| `limit_bonus_meditation`          | 3    | the three meditation tiers                                |
+| `limit_bonus_meditation_category` | 45   | which stats each tier can roll                            |
+| `limit_bonus_meditation_weight`   | 10   | level probabilities                                       |
+| `limit_bonus_param`               | 1123 | the stat values, shared with the rest of Masteries        |
+| `limit_bonus`                     | -    | the Offense/Defense/Collection nodes, a different section |
 
 `limit_bonus_param` is **not** over-mastery-specific. It carries every mastery
-parameter in the game, `LBP_EFF_*` for the board and `MED_EFF_*` for
+parameter in the game, `LBP_EFF_*` for the Masteries nodes and `MED_EFF_*` for
 over-masteries. Filtering by the keys in `limit_bonus_meditation_category` is
 what separates them.
 
@@ -210,5 +210,5 @@ offset order. In catalog order:
 | Skybound Art Damage Cap Up  | s_14   |
 | Skill Healing Cap Up        | s_15   |
 
-`s_05`, `s_09`, `s_10`, `s_12` are board stats (DEF, non-cap damage variants) the
+`s_05`, `s_09`, `s_10`, `s_12` are Masteries stats (DEF, non-cap damage variants) the
 meditation system never rolls, so they go unused.

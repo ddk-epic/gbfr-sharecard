@@ -60,7 +60,7 @@ which group key is which rests on `Unk3` increasing with rank.
 **PWR corroborates it.** Every cell selected is worth `50 x` its rank's
 `chara_power_skillboard_rank_adjust` weight, and cells from the three ranks
 measure 50, 100 and 150 in game - see
-[stats.md](stats.md#the-skillboard-pays-50-a-cell-times-the-rank-weight). A rank
+[stats.md](stats.md#master-traits-pay-50-a-cell-times-the-rank-weight). A rank
 3 cell paying exactly three times a rank 1 cell puts `4A5DDC7B` at weight 3.
 The same readings show EX cells pay 50, so its missing row in that table is a
 default of 1 rather than a zero.
@@ -109,7 +109,7 @@ Every fifth master level also carries flat stats, in the same table:
 | 50     | +600 | +300 | +20     |
 
 A character at master level 50 has therefore gained **+6000 HP, +3000 ATK and
-+100 DMG Cap** from the board itself, before a single point is spent. Level 1
++100 DMG Cap** from master levels alone, before a single point is spent. Level 1
 grants a point but no stats; the stat awards start at level 2.
 
 ## What a rank costs in MSP
@@ -154,7 +154,7 @@ So reaching each rank costs, cumulatively:
 | Level cap (level 55)       | 3,309,499      |
 
 For scale, a Large meditation - the tier this project uses for over-masteries -
-costs 2,000 MSP, so a fully funded board is worth about 820 of them.
+costs 2,000 MSP, so fully funding every master trait is worth about 820 of them.
 
 The `99,999` at level 50 is the game's own value, not a rounding artefact here;
 every cumulative total from level 50 up ends in `499` because of it.
@@ -163,7 +163,7 @@ every cumulative total from level 50 up ends in `499` because of it.
 
 `skillboard_unlock` stops at master level 50, but the cost table runs five
 levels further, and those five cost 1,670,000 MSP between them - more than
-everything before level 50 put together. They grant no board points.
+everything before level 50 put together. They grant no master-trait points.
 
 What they buy is the **Unbound Master** weapon trait, which the game describes
 as _"Boosts damage cap based on master level."_ It is the only trait in the
@@ -178,7 +178,7 @@ The rate goes up **tenfold** past 50. The last five levels double the trait's
 value, from 25% to 50%, which is what the disproportionate cost is paying for.
 
 Unbound Master sits in slot 5 of a maxed Terminus weapon, so the weapon only
-opens the trait - its level comes from the board. That is why
+opens the trait - its level comes from the master traits. That is why
 [weapons.md](weapons.md) records Terminus slot 5 topping out at `1` where every
 other series reaches 15: the slot is a switch, not a ladder.
 

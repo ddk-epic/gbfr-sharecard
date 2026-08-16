@@ -65,7 +65,7 @@ Terminus slot 5 tops out at **1**, not 15, because _Unbound Master_ does not
 take its level from the weapon. The game describes it as _"Boosts damage cap
 based on master level"_, and it is the only trait with a 55-step ladder - the
 same 55 as the master level cap. The slot is a switch that turns the trait on;
-the board sets how strong it is. See
+master level sets how strong it is. See
 [master-traits.md](master-traits.md#what-levels-51-55-buy).
 
 The post-launch Defender is the only series with a non-standard slot 1:

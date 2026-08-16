@@ -67,11 +67,11 @@ admitted gap.
 | `limit_bonus_meditation`          | 3    | over-mastery meditation tiers: how many roll, their weights, MSP cost |
 | `limit_bonus_meditation_category` | 45   | per-category meditation weights                                       |
 | `limit_bonus_meditation_weight`   | 10   | the weight rows those categories point at (per tier, not per level)   |
-| `ap_open_rank`                    | 10   | mastery board rank unlocks: quest and master level required           |
-| `ap_tree_atk`                     | 6109 | attack board nodes: cost, prerequisites, grid position, requirements  |
-| `ap_tree_def`                     | 4678 | defence board nodes, same shape                                       |
-| `ap_tree_wep`                     | 960  | weapon board nodes, same shape                                        |
-| `ap_tree_rebuild`                 | 1920 | transcendence board nodes, same shape                                 |
+| `ap_open_rank`                    | 10   | Masteries rank unlocks: quest and master level required               |
+| `ap_tree_atk`                     | 6109 | Masteries Offense nodes: cost, prerequisites, grid position, reqs     |
+| `ap_tree_def`                     | 4678 | Masteries Defense nodes, same shape                                   |
+| `ap_tree_wep`                     | 960  | Masteries Collection nodes, same shape                                |
+| `ap_tree_rebuild`                 | 1920 | Masteries Collection transcendence nodes, same shape                  |
 
 ## Skillboard
 
