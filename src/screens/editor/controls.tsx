@@ -1,6 +1,8 @@
 import { Plus } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Build } from "@/domain/build";
+import type { TraitId } from "@/catalog/ids";
+import { TraitCell } from "@/components/build/gear-row";
 
 export const EDITOR_ZOOM = 0.64;
 export const GEAR_ZOOM = 0.6;
@@ -110,6 +112,58 @@ export function IconTile({
         </span>
       )}
     </button>
+  );
+}
+
+/** Cell overlay box. */
+const OVERLAY = "absolute inset-x-0 -inset-y-0.5 rounded";
+
+/** A gear-row trait cell that takes clicks while its popover is picking: a
+    filled cell clears, an empty one aims the cursor. */
+export function TraitPickCell({
+  trait,
+  label,
+  aimed = false,
+  disabled = false,
+  onPick,
+  onClear,
+}: {
+  trait: TraitId | null;
+  /** Names the cell in its aria label, e.g. "sigil 1 first trait". */
+  label: string;
+  /** The cursor sits on this cell. */
+  aimed?: boolean;
+  disabled?: boolean;
+  onPick: () => void;
+  onClear: () => void;
+}) {
+  if (disabled)
+    return (
+      <div className={`min-w-0 ${trait ? "" : "opacity-40"}`}>
+        <TraitCell trait={trait} />
+      </div>
+    );
+
+  return (
+    <div className="group/cell relative min-w-0">
+      <span
+        aria-hidden
+        className={`${OVERLAY} ${aimed ? "bg-band/50" : ""} ${
+          trait
+            ? "group-hover/cell:bg-rose-500/20"
+            : "group-hover/cell:bg-band/25"
+        }`}
+      />
+      <div className={trait ? "group-hover/cell:line-through" : ""}>
+        <TraitCell trait={trait} />
+      </div>
+      <button
+        type="button"
+        className={`${OVERLAY} cursor-pointer`}
+        aria-label={trait ? `clear ${label}` : `pick ${label}`}
+        onClick={() => (trait ? onClear() : onPick())}
+      />
+    </div>
   );
 }
 

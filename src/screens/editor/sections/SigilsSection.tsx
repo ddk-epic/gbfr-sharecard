@@ -2,12 +2,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 import type { TraitId } from "@/catalog/ids";
 import { SIGIL_LEVELS } from "@/domain/build";
-import { traitName } from "@/domain/naming";
 import { EditOverlay, SectionPanel } from "@/components/ui";
-import { ROW_LVL_CAP_HEIGHT, TraitCell } from "@/components/build/gear-row";
+import { ROW_LVL_CAP_HEIGHT } from "@/components/build/gear-row";
 import { LvlDisplay } from "@/components/build/LvlDisplay";
 import { SigilsGrid } from "@/components/build/SigilsGrid";
-import { EmptySlot } from "@/screens/editor/controls";
+import { EmptySlot, TraitPickCell } from "@/screens/editor/controls";
 import { sameCell, type Cell, type Sigils } from "@/screens/editor/sigil-cells";
 
 export function SigilsSection({
@@ -51,9 +50,6 @@ export function SigilsSection({
   );
 }
 
-/** Cell overlay box. */
-const OVERLAY = "absolute inset-x-0 -inset-y-0.5 rounded";
-
 /** Interactive sigil cell, live only while the sigils popover is open. */
 export function SigilPickerCell({
   index,
@@ -71,33 +67,15 @@ export function SigilPickerCell({
   onClear: (cell: Cell) => void;
 }) {
   const cell = { index, secondary };
-  const aimed = sameCell(cursor, cell);
-  const which = secondary ? "second" : "first";
 
   return (
-    <div className="group/cell relative min-w-0">
-      <span
-        aria-hidden
-        className={`${OVERLAY} ${aimed ? "bg-band/50" : ""} ${
-          trait
-            ? "group-hover/cell:bg-rose-500/20"
-            : "group-hover/cell:bg-band/25"
-        }`}
-      />
-      <div className={trait ? "group-hover/cell:line-through" : ""}>
-        <TraitCell trait={trait} />
-      </div>
-      <button
-        type="button"
-        className={`${OVERLAY} cursor-pointer`}
-        aria-label={
-          trait
-            ? `remove ${traitName(trait)} from sigil ${index + 1}`
-            : `pick sigil ${index + 1} ${which} trait`
-        }
-        onClick={() => (trait ? onClear(cell) : onCursor(cell))}
-      />
-    </div>
+    <TraitPickCell
+      trait={trait}
+      label={`sigil ${index + 1} ${secondary ? "second" : "first"} trait`}
+      aimed={sameCell(cursor, cell)}
+      onPick={() => onCursor(cell)}
+      onClear={() => onClear(cell)}
+    />
   );
 }
 
