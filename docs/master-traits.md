@@ -5,8 +5,8 @@ All selections across all three styles are active at once. Everything here is
 read out of the game archive (version 2.0.2); the tables are named so any claim
 can be re-checked. See [archive.md](archive.md) for how it is extracted.
 
-This page is a head start. The archive side below is newly found and has not
-been reconciled with the authored data.
+The archive side has been reconciled with the authored data on cell counts,
+style titles and the perks; the cell wording itself stays hand-authored.
 
 ## The game calls it the skillboard
 
@@ -21,17 +21,24 @@ There is no `master_trait` table. The system is **skillboard**, ten tables:
 | `skillboard_category`            | 4    | the styles                                    |
 | `skillboard_group`               | 4    | the ranks                                     |
 | `skillboard_unlock`              | 50   | node budget per master level                  |
-| `skillboard_auto_acquire`        | 1450 | cells granted rather than chosen              |
+| `skillboard_auto_acquire`        | 1450 | unexplained - 50 rows per character           |
 
 `skillboard_layout`, `skillboard_effect` and `skillboard_ui` all hold 2895 rows -
 one per cell, joined by key.
 
 A character's three styles are on the `chara` row itself, as
-`SkillboardCategoryId1/2/3`. For every character they are the same three keys:
+`SkillboardCategoryId1/2/3`. For every character they are the same three keys,
+and each is one of the styles:
 
-```
-SB_DEF · SB_ATK · SB_LIMIT
-```
+| Category   | Style   |
+| ---------- | ------- |
+| `SB_DEF`   | Insight |
+| `SB_ATK`   | Essence |
+| `SB_LIMIT` | Crux    |
+
+The mapping is read off the perk node names below - `TXT_SB_NAME_PL0400_SP000`
+is "Insight: Pure Concentration" and sits in `SB_DEF`. Note it does not follow
+the key names: `SB_ATK` is Essence, not the damage-flavoured Crux.
 
 A fourth category exists, keyed only by hash (`544087E7`), that no character
 references.
@@ -54,8 +61,10 @@ unexplained. `Unk3` fits "master level at which this rank is fully funded" for
 three of the four rows and then breaks on EX, which is funded at 50 rather than
 30, so the reading is not safe to use.
 
-Rank 2 and Rank 3 are also not distinguishable by cell count - both hold 9 - so
-which group key is which rests on `Unk3` increasing with rank.
+Rank 2 and Rank 3 are also not distinguishable by cell count - both hold 9 - but
+the perk nodes settle their order independently of `Unk3`: their `SP` indices run
+`0 / 1 / 2` across `68DE92AC / A96D9EBC / 4A5DDC7B`, and each perk's text builds
+on the one before it.
 
 **PWR corroborates it.** Every cell selected is worth `50 x` its rank's
 `chara_power_skillboard_rank_adjust` weight, and cells from the three ranks
@@ -66,7 +75,9 @@ The same readings show EX cells pay 50, so its missing row in that table is a
 default of 1 rather than a zero.
 
 `skillboard_category` is `3 / 6 / 6` on every one of its four rows - the perk
-thresholds, and **universal rather than per-character**.
+thresholds, and **universal rather than per-character**. The three numbers are
+per rank, not a ladder over the style's total; see
+[the perks](#the-three-perks-are-the-styles-mechanic) below.
 
 ## The points are earned, one per master level
 
@@ -196,10 +207,50 @@ other series reaches 15: the slot is a switch, not a ladder.
 Identical across all three styles, giving 33 cells per style and 99 per
 character.
 
-**This is one more than the authored data holds in ranks 1-3**, which carry
-`4 / 8 / 8 / 10`. `skillboard_auto_acquire` is the likely explanation - a cell
-granted outright rather than chosen would appear in the layout and not on a
-selection grid - but that has not been confirmed.
+The authored data carries `4 / 8 / 8 / 10`, one fewer in each of ranks 1-3 and
+the same in EX. **The extra node is the rank's perk** - see below. It is not
+`skillboard_auto_acquire`, which was the earlier guess here: that table returns
+no rows for any of the three, while ordinary cells hit it once or three times.
+So the authored grids are complete, and a rank grid is 4 wide, not 5.
+
+## The three perks are the style's mechanic
+
+Each style holds exactly three perk nodes, one in each of ranks 1, 2 and 3 and
+**none in EX**. They are not bonus lines - they are the character's style
+mechanic and its two upgrades, and `skillboard_effect` points each at its own
+text pair. Io's `SB_DEF` (Insight):
+
+| Rank | Index | Name string                | Text                                          |
+| ---- | ----- | -------------------------- | --------------------------------------------- |
+| 1    | 0     | `TXT_SB_NAME_PL0400_SP000` | introduces Superstar, and rewrites Stargaze V |
+| 2    | 1     | -                          | `SP001` - what gaining a Superstar lvl does   |
+| 3    | 2     | -                          | `SP002` - raises Superstar's max lvl          |
+
+`skillboard_layout.Unk30` indexes them `0/1/2` for `SB_DEF`, `100/101/102` for
+`SB_ATK` and `200/201/202` for `SB_LIMIT`, matching the `SP0xx / SP1xx / SP2xx`
+text keys; the trailing digit is the rank. `Unk25` reads 100 on a perk node
+against 50 on an ordinary cell. Verified identical on two characters.
+
+**Only the rank 1 node carries a `NAME` string**, and that name is the style's
+in-game header - which is where the per-character title comes from.
+
+Ranks 2 and 3 read as nonsense without rank 1 (they modify an effect rank 1
+introduces), and the game bears that out: **a rank's perk requires the rank
+below it**. The full rule, confirmed by in-game testing:
+
+- A perk activates when **its own rank section, in that style**, holds
+  `3 / 6 / 6` selections - the section's own count, never the style's total.
+- A perk also requires the perk below it, so the active perks are always a
+  prefix. An empty rank 2 leaves rank 3 dark however full it is.
+- **EX has no perk.** Its 20 points feed no threshold.
+- None of it is enforced. Any cell can be selected at any time; the thresholds
+  only decide what displays as active.
+
+Cells whose description opens `"<Style> Rank II:"` are cells that modify the
+perk mechanic, and the project carries that tier as `MasterTraitCell.perkRank`.
+It is **not** what lights a cell up: the game lights every selected cell in a
+rank section once that section clears its threshold, wherever a cell's own
+`perkRank` points.
 
 ## Icons are incomplete
 
@@ -218,9 +269,10 @@ full icon set is even reachable if a visual ticket wants one.
 
 The in-game header above a style's grid reads "`<word>: <title>`" - e.g. Io's
 Insight page is headed "Insight: Pure Concentration". The leading word
-(Insight/Essence/Crux) is universal, the same for every character; it is
-read off the screenshot's header, the same way the cells themselves are
-transcribed.
+(Insight/Essence/Crux) is universal, the same for every character. The whole
+string is in the archive, as the rank 1 perk node's `NAME` text
+(`TXT_SB_NAME_<player>_SP000/100/200`); the authored titles were transcribed
+from screenshots and agree with it.
 
 The catalog stores only the title half, on the style object itself
 (`masterTraits.<style>.title`) - the word is never repeated in data since
@@ -237,7 +289,18 @@ author them is about control over wording and layout, not about availability.
 
 Cell order in the authored catalog _is_ the table layout the card renders. A
 build stores the set of selected cell ids per style and rank; perk state is
-derived from those, never stored.
+derived from those by `src/domain/master-traits.ts`, never stored.
 
-The cell-count discrepancy is worth settling before the Master Traits section
-lands, since it decides whether a rank grid is 4 or 5 wide.
+The perks themselves are not modelled. Their names and descriptions are in the
+archive but the project holds none of it - only the rank 1 name's title half,
+and the thresholds needed to tell whether a perk is live. A build does not need
+to know what a perk does to show that it fired.
+
+**The pool is enforced, the thresholds are not.** The editor refuses a pick once
+a rank's 10 (or EX's 20) points are spent across the three styles, and dims the
+cells it will not take; a picked cell can always be un-picked. Nothing stops a
+build from reaching a threshold or from ignoring one. Enforcing the pool is what
+keeps a card from claiming perks the game cannot fund: all three styles clearing
+`3 / 6 / 6` would need 45 points against the 30 that ranks 1-3 hold. Builds saved
+before this was enforced stay as they are and can only shrink - `hydrate` keeps
+or discards a build whole, and clamping would pick which selections to lose.
