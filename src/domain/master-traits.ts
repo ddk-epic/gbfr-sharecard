@@ -1,5 +1,5 @@
 import type { MasterTraitSelections } from "./build";
-import type { PerkRank, StyleId, StyleRank } from "@/catalog/ids";
+import type { CellId, PerkRank, StyleId, StyleRank } from "@/catalog/ids";
 import { PERK_RANKS, STYLES } from "@/catalog/ids";
 
 /**
@@ -31,3 +31,52 @@ export const STYLE_RANK_BUDGETS: Record<StyleRank, number> = {
   r3: 10,
   ex: 20,
 };
+
+/** Points spent in a rank section. The pool is shared by all three styles. */
+export function rankSpend(
+  selections: MasterTraitSelections,
+  rank: StyleRank,
+): number {
+  return STYLES.reduce((n, style) => n + selections[style][rank].length, 0);
+}
+
+/** Negative on a build saved before the budget was enforced. */
+export function rankPointsLeft(
+  selections: MasterTraitSelections,
+  rank: StyleRank,
+): number {
+  return STYLE_RANK_BUDGETS[rank] - rankSpend(selections, rank);
+}
+
+const withRank = (
+  selections: MasterTraitSelections,
+  style: StyleId,
+  rank: StyleRank,
+  cells: CellId[],
+): MasterTraitSelections => ({
+  ...selections,
+  [style]: { ...selections[style], [rank]: cells },
+});
+
+/**
+ * Deselecting is always allowed, so an overspent build can only shrink;
+ * selecting needs a point left in the rank's shared pool. Refusing returns the
+ * same object, letting the caller toggle unconditionally.
+ */
+export function toggleCell(
+  selections: MasterTraitSelections,
+  style: StyleId,
+  rank: StyleRank,
+  id: CellId,
+): MasterTraitSelections {
+  const selected = selections[style][rank];
+  if (selected.includes(id))
+    return withRank(
+      selections,
+      style,
+      rank,
+      selected.filter((cell) => cell !== id),
+    );
+  if (rankPointsLeft(selections, rank) <= 0) return selections;
+  return withRank(selections, style, rank, [...selected, id]);
+}
