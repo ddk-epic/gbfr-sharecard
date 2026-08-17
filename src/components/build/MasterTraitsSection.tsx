@@ -6,7 +6,12 @@ import { STYLE_RANK_BUDGETS, stylePerkStates } from "@/domain/derive";
 import { PERK_THRESHOLDS, type MasterTraitCell } from "@/catalog/types";
 import { sboardRankIconUrl, starBgUrl, starIconUrl } from "@/assets/urls";
 import { characterCatalog } from "@/catalog";
-import { Heading } from "@/components/ui";
+import {
+  Heading,
+  Tooltip,
+  traitLabelFit,
+  type TooltipPlacement,
+} from "@/components/ui";
 
 const STYLE_BORDER: Record<StyleId, string> = {
   insight: "border-t-insight",
@@ -76,8 +81,18 @@ export type CellInteraction = (
   rank: StyleRank,
 ) => {
   onClick?: () => void;
-  title?: string;
+  /** Shown on hover; omit for no tooltip. */
+  tooltip?: string;
   className?: string;
+};
+
+const tooltipPlacementSide = (
+  placement: TooltipPlacement,
+  rank: StyleRank,
+): TooltipPlacement => {
+  if (placement === "top" && rank === "r1") return "bottom";
+  if (placement === "bottom" && rank === "ex") return "top";
+  return placement;
 };
 
 /** One Style Rank section. */
@@ -88,6 +103,7 @@ function MasterTraitStyleRank({
   selected,
   perkHit,
   cellInteraction,
+  tooltipPlacement,
 }: {
   style: StyleId;
   rank: StyleRank;
@@ -95,6 +111,7 @@ function MasterTraitStyleRank({
   selected: CellId[];
   perkHit: boolean;
   cellInteraction?: CellInteraction;
+  tooltipPlacement: TooltipPlacement;
 }) {
   return (
     <div className="relative flex flex-col">
@@ -116,32 +133,39 @@ function MasterTraitStyleRank({
       </div>
       {/** Cells */}
       <div className="grid grid-cols-2 gap-1.5 pb-4.5">
-        {cells.map((cell) => {
-          // wrap when text length + star (2 weight each) larger than 18
-          const wrapRule = cell.label.length + (cell.perkRank ?? 0) * 2 >= 19;
+        {cells.map((cell, i) => {
+          const fit = traitLabelFit(cell.label, cell.perkRank);
           const interaction = cellInteraction?.(cell, style, rank);
           return (
-            <div
+            <Tooltip
               key={cell.id}
-              onClick={interaction?.onClick}
-              title={interaction?.title}
-              className={`flex h-[46px] items-center overflow-hidden rounded-sm px-2.25 py-1 text-lg ${wrapRule && "px-1.75 text-[20px] leading-[1.02]"} ${
-                selected.includes(cell.id)
-                  ? `bg-linear-135 from-white/18 text-white ${perkHit ? "to-purple-400/50 shadow-[inset_0_0_0_1px_var(--color-purple-300)]" : "to-deep-3/30 shadow-[inset_0_0_0_1px_var(--deep-ring)]"}`
-                  : "bg-deep-cell text-deep-mute"
-              } ${interaction?.className ?? ""}`}
+              text={interaction?.tooltip}
+              placement={tooltipPlacementSide(tooltipPlacement, rank)}
+              align={i % 2 === 1 ? "end" : "start"}
             >
-              <span className="[-webkit-text-stroke:3px_var(--deep-5)] [paint-order:stroke]">
-                {cell.perkRank && (
-                  <Stars
-                    count={cell.perkRank}
-                    className="translate-y-[-0.1em]"
-                  />
-                )}
-                {cell.perkRank && " "}
-                {cell.label}
-              </span>
-            </div>
+              <div
+                onClick={interaction?.onClick}
+                className={`flex h-[46px] items-center overflow-hidden rounded-sm px-2.25 py-1 text-lg ${fit.wraps ? "px-1.75 text-[20px] leading-[1.02]" : ""} ${
+                  selected.includes(cell.id)
+                    ? `bg-linear-135 from-white/18 text-white ${perkHit ? "to-purple-400/50 shadow-[inset_0_0_0_1px_var(--color-purple-300)]" : "to-deep-3/30 shadow-[inset_0_0_0_1px_var(--deep-ring)]"}`
+                    : "bg-deep-cell text-deep-mute"
+                } ${interaction?.className ?? ""}`}
+              >
+                <span
+                  style={{ letterSpacing: fit.tracking }}
+                  className="[-webkit-text-stroke:3px_var(--deep-5)] [paint-order:stroke]"
+                >
+                  {cell.perkRank && (
+                    <Stars
+                      count={cell.perkRank}
+                      className="translate-y-[-0.1em]"
+                    />
+                  )}
+                  {cell.perkRank && " "}
+                  {cell.label}
+                </span>
+              </div>
+            </Tooltip>
           );
         })}
       </div>
@@ -156,6 +180,7 @@ function MasterTraitStyleColumn({
   selectedByRank,
   perks,
   cellInteraction,
+  tooltipPlacement,
 }: {
   style: StyleId;
   title: string;
@@ -163,10 +188,11 @@ function MasterTraitStyleColumn({
   selectedByRank: Record<StyleRank, CellId[]>;
   perks: boolean[];
   cellInteraction?: CellInteraction;
+  tooltipPlacement: TooltipPlacement;
 }) {
   return (
     <div
-      className={`styleCol text-deep-ink relative flex min-h-0 flex-col overflow-hidden rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
+      className={`styleCol text-deep-ink relative flex min-h-0 flex-col rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
     >
       <h4 className="flex-none pb-4 text-2xl font-bold text-white [text-shadow:0_1px_5px_rgba(10,50,70,0.55)]">
         {STYLE_LABEL[style]}: {title}
@@ -180,6 +206,7 @@ function MasterTraitStyleColumn({
           selected={selectedByRank[rank]}
           perkHit={perks[i] ?? false}
           cellInteraction={cellInteraction}
+          tooltipPlacement={tooltipPlacement}
         />
       ))}
     </div>
@@ -189,9 +216,11 @@ function MasterTraitStyleColumn({
 export function MasterTraitsSection({
   build,
   cellInteraction,
+  tooltipPlacement = "top",
 }: {
   build: Build;
   cellInteraction?: CellInteraction;
+  tooltipPlacement?: TooltipPlacement;
 }) {
   const catalog = characterCatalog(build.characterId);
   const perks = stylePerkStates(build.masterTraits, PERK_THRESHOLDS);
@@ -227,6 +256,7 @@ export function MasterTraitsSection({
             selectedByRank={build.masterTraits[style]}
             perks={perks[style]}
             cellInteraction={cellInteraction}
+            tooltipPlacement={tooltipPlacement}
           />
         ))}
       </div>

@@ -11,6 +11,8 @@ const ZOOM = 0.74;
 /** Picked cells keep the card's own ring, so only empty ones take the hover. */
 const HOVER_RING = "cursor-pointer hover:shadow-[inset_0_0_0_1px_#7fd4f8]";
 
+const TOOLTIP_PLACEMENT = "top" as const;
+
 export function MasterTraitsPane({ build, onChange }: PaneProps) {
   const toggleCell = (style: StyleId, rank: StyleRank, id: CellId) => {
     const selected = build.masterTraits[style][rank];
@@ -35,9 +37,12 @@ export function MasterTraitsPane({ build, onChange }: PaneProps) {
     >
       <MasterTraitsSection
         build={build}
+        tooltipPlacement={TOOLTIP_PLACEMENT}
         cellInteraction={(cell, style, rank) => ({
           onClick: () => toggleCell(style, rank, cell.id),
-          title: cell.description,
+          // Nothing to reveal when the label is the whole description.
+          tooltip:
+            cell.description === cell.label ? undefined : cell.description,
           className: build.masterTraits[style][rank].includes(cell.id)
             ? "cursor-pointer"
             : HOVER_RING,
