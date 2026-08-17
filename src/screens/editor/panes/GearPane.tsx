@@ -3,6 +3,7 @@ import type { TraitId } from "@/catalog/ids";
 import { IdentityCol } from "@/screens/editor/sections/IdentityCol";
 import {
   EDITOR_ZOOM,
+  EmptySlot,
   GEAR_ZOOM,
   type PaneProps,
 } from "@/screens/editor/controls";
@@ -106,6 +107,12 @@ export function GearPane({ build, onChange }: PaneProps) {
           <Wrightstone
             build={build}
             density="loose"
+            renderEmpty={() => (
+              <EmptySlot
+                className="pointer-events-none absolute inset-0 text-xl"
+                label="add wrightstone"
+              />
+            )}
             onOpen={(el) =>
               setOpen({ kind: "wrightstone", anchor: anchorOf(el) })
             }

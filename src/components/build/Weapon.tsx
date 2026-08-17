@@ -228,10 +228,13 @@ export function Weapon({
 export function Wrightstone({
   build,
   density = "compact",
+  renderEmpty,
   onOpen,
 }: {
   build: Build;
   density?: Density;
+  /** Covers the trait rows only, so the heading stays readable. */
+  renderEmpty?: () => ReactNode;
   onOpen?: (el: Element) => void;
 }) {
   const layout = WRIGHTSTONE_LAYOUT[density];
@@ -240,19 +243,24 @@ export function Wrightstone({
 
   return (
     <div className={layout.wrapClass}>
-      <div className="font-med text-dim mt-3 flex justify-between px-2.5 tracking-[0.07em]">
+      {/* "relative z-1" lifts the title div so descenders can bleed past the line box, 
+          otherwise the placeholder will paint over them. */}
+      <div
+        className={`font-med text-dim relative z-1 mt-3 flex justify-between px-2.5 tracking-[0.07em] ${layout.dimEmpty && !wrightstone ? "text-dim/70" : ""}`}
+      >
         <span>Imbued Traits</span>
-        <span className={layout.dimEmpty && !wrightstone ? "text-dim/70" : ""}>
-          {wrightstoneName(wrightstone?.main.trait)}
-        </span>
+        <span>{wrightstoneName(wrightstone?.main.trait)}</span>
       </div>
-      {rows.map((row, i) => (
-        <WeaponTraitRow
-          key={i}
-          trait={row?.trait ?? null}
-          level={row?.level ?? null}
-        />
-      ))}
+      <div className="relative">
+        {rows.map((row, i) => (
+          <WeaponTraitRow
+            key={i}
+            trait={row?.trait ?? null}
+            level={row?.level ?? null}
+          />
+        ))}
+        {!wrightstone && renderEmpty?.()}
+      </div>
       {onOpen && (
         <EditOverlay label="Edit imbued traits" radius="md" onOpen={onOpen} />
       )}
