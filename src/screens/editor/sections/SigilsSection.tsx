@@ -36,13 +36,16 @@ export function SigilsSection({
         sigils={sigils}
         renderCell={renderCell}
         renderLevel={renderLevel}
+        overlay={
+          filled === 0 &&
+          !picking && (
+            <EmptySlot
+              className="pointer-events-none absolute inset-0 text-xl"
+              label="add sigils"
+            />
+          )
+        }
       />
-      {filled === 0 && !picking && (
-        <EmptySlot
-          className="pointer-events-none absolute inset-0 text-xl"
-          label="add sigils"
-        />
-      )}
       {!picking && <EditOverlay label="Edit sigils" onOpen={onOpen} />}
     </SectionPanel>
   );

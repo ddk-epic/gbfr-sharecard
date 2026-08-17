@@ -16,6 +16,7 @@ export function SigilsGrid({
       className="-translate-y-0.5"
     />
   ),
+  overlay,
 }: {
   sigils: (SigilSlot | null)[];
   renderCell?: (
@@ -24,13 +25,14 @@ export function SigilsGrid({
     trait: TraitId | null,
   ) => ReactNode;
   renderLevel?: (index: number, level: number | null) => ReactNode;
+  overlay?: ReactNode;
 }) {
   return (
     <>
       <Heading size="lg" className="flex-none">
         Sigils
       </Heading>
-      <div className="flex flex-none flex-col">
+      <div className="relative flex flex-none flex-col">
         {sigils.map((slot, i) => (
           <GearRow cols="1fr 1fr" key={i}>
             {renderCell(i, false, slot?.primaryTrait ?? null)}
@@ -38,6 +40,7 @@ export function SigilsGrid({
             {renderLevel(i, slot ? slot.level : null)}
           </GearRow>
         ))}
+        {overlay}
       </div>
     </>
   );
