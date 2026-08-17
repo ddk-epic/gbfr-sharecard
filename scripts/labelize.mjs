@@ -259,6 +259,9 @@ const OVERRIDES = {
     "insight.r2.7": "Zone Attack Charge Speed +20%",
   },
   "cagliostro.json": {
+    "insight.r2.5": "Collapse ++ ATK +5% Cap +10%",
+    "insight.r3.13": "Collapse ++ ATK +5% Cap +10%",
+    "insight.r3.14": "Combo Finisher Debuff +10%",
     "essence.r3.15": "Instant Collapse: Cap +30%",
     "crux.r2.5": "Rhizomata: Phantasmagoria to all",
     "crux.r2.6": "Phantasmagoria Dur +10%",
@@ -272,8 +275,18 @@ const OVERRIDES = {
   },
   "charlotta.json": {
     "insight.ex.21": "Noble Order: +50k dmg buffer",
+    "insight.r3.14": "Noble Order ATK +10% Cap +10%",
+    "essence.r3.13": "Diamond Cutter Cap +20%/lvl",
     "essence.r3.15": "Charged block window +10%",
+    "essence.ex.21": "Diamond Cutter Cap +20%/lvl",
     "crux.r3.15": "Enhanced Noble Stance: Cap +30%",
+  },
+  "io.json": {
+    "essence.ex.21": "Freeze+Lightning Debuff +10%",
+  },
+  "katalina.json": {
+    "crux.r2.5": "Blade Blue ATK +3% Cap +5%/lvl",
+    "crux.r3.14": "Blade Blue ATK +3% Cap +5%/lvl",
   },
 };
 

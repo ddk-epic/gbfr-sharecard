@@ -24,487 +24,124 @@
     "insight": {
       "title": "Forever Ares",
       "r1": [
-        {
-          "id": "insight.r1.1",
-          "label": "Ares summoned: ATK +10%",
-          "description": "While Ares is summoned: ATK +10%"
-        },
-        {
-          "id": "insight.r1.2",
-          "label": "Blades of Frost ATK +20%",
-          "description": "Blades of Frost: ATK +20%"
-        },
-        {
-          "id": "insight.r1.3",
-          "label": "DMG Cap +15%",
-          "description": "DMG Cap +15%"
-        },
-        {
-          "id": "insight.r1.4",
-          "label": "Max HP +15k",
-          "description": "Max HP +15,000"
-        }
+        { "id": "insight.r1.1", "label": "Ares summoned: ATK +10%", "description": "While Ares is summoned: ATK +10%" },
+        { "id": "insight.r1.2", "label": "Blades of Frost ATK +20%", "description": "Blades of Frost: ATK +20%" },
+        { "id": "insight.r1.3", "label": "DMG Cap +15%", "description": "DMG Cap +15%" },
+        { "id": "insight.r1.4", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "r2": [
-        {
-          "id": "insight.r2.5",
-          "label": "Damage Skill ATK +20%",
-          "description": "Insight Rank I: Damage Skill ATK +20%",
-          "perkRank": 1
-        },
-        {
-          "id": "insight.r2.6",
-          "label": "Damage Skill DMG Cap +20%",
-          "description": "Insight Rank I: Damage Skill DMG Cap +20%",
-          "perkRank": 1
-        },
-        {
-          "id": "insight.r2.7",
-          "label": "Realm of Ice ATK +25%",
-          "description": "Realm of Ice: ATK +25%"
-        },
-        {
-          "id": "insight.r2.8",
-          "label": "Frozen Blade ATK +10%",
-          "description": "Frozen Blade: ATK +10%"
-        },
-        {
-          "id": "insight.r2.9",
-          "label": "Enchanted Lands ATK +10%",
-          "description": "Enchanted Lands: ATK +10%"
-        },
-        {
-          "id": "insight.r2.10",
-          "label": "DMG Cap +20%",
-          "description": "DMG Cap +20%"
-        },
-        {
-          "id": "insight.r2.11",
-          "label": "ATK +30%",
-          "description": "ATK +30%"
-        },
-        {
-          "id": "insight.r2.12",
-          "label": "Poison: DMG Cap +100%",
-          "description": "While inflicted with Poison: DMG Cap +100%"
-        }
+        { "id": "insight.r2.5", "label": "Damage Skill ATK +20%", "description": "Insight Rank I: Damage Skill ATK +20%", "perkRank": 1 },
+        { "id": "insight.r2.6", "label": "Damage Skill DMG Cap +20%", "description": "Insight Rank I: Damage Skill DMG Cap +20%", "perkRank": 1 },
+        { "id": "insight.r2.7", "label": "Realm of Ice ATK +25%", "description": "Realm of Ice: ATK +25%" },
+        { "id": "insight.r2.8", "label": "Frozen Blade ATK +10%", "description": "Frozen Blade: ATK +10%" },
+        { "id": "insight.r2.9", "label": "Enchanted Lands ATK +10%", "description": "Enchanted Lands: ATK +10%" },
+        { "id": "insight.r2.10", "label": "DMG Cap +20%", "description": "DMG Cap +20%" },
+        { "id": "insight.r2.11", "label": "ATK +30%", "description": "ATK +30%" },
+        { "id": "insight.r2.12", "label": "Poison: DMG Cap +100%", "description": "While inflicted with Poison: DMG Cap +100%" }
       ],
       "r3": [
-        {
-          "id": "insight.r3.13",
-          "label": "Ares Summon Dur +1s",
-          "description": "Insight Rank III: Ares Summon Duration +1 sec.",
-          "perkRank": 3
-        },
-        {
-          "id": "insight.r3.14",
-          "label": "Dual Raid DMG +5%/lvl",
-          "description": "Insight Rank III: Dual Raid grants an additional DMG Dealt +5% per effect lvl",
-          "perkRank": 3
-        },
-        {
-          "id": "insight.r3.15",
-          "label": "Ares summoned: ATK +10%",
-          "description": "While Ares is summoned: ATK +10%"
-        },
-        {
-          "id": "insight.r3.16",
-          "label": "Combo Finishers DMG Cap +35%",
-          "description": "Combo Finishers: DMG Cap +35%"
-        },
-        {
-          "id": "insight.r3.17",
-          "label": "Azure Sword CD -5%",
-          "description": "Azure Sword: Cooldown -5%"
-        },
-        {
-          "id": "insight.r3.18",
-          "label": "DMG Cap +20% ×Basic",
-          "description": "DMG Cap +20% per Basic Stats-type sigil equipped (max sigils: 5)"
-        },
-        {
-          "id": "insight.r3.19",
-          "label": "Guard Break +7%",
-          "description": "Guard Break Resistance +7%"
-        },
-        {
-          "id": "insight.r3.20",
-          "label": "Max HP +15k",
-          "description": "Max HP +15,000"
-        }
+        { "id": "insight.r3.13", "label": "Ares Summon Dur +1s", "description": "Insight Rank III: Ares Summon Duration +1 sec.", "perkRank": 3 },
+        { "id": "insight.r3.14", "label": "Dual Raid DMG +5%/lvl", "description": "Insight Rank III: Dual Raid grants an additional DMG Dealt +5% per effect lvl", "perkRank": 3 },
+        { "id": "insight.r3.15", "label": "Ares summoned: ATK +10%", "description": "While Ares is summoned: ATK +10%" },
+        { "id": "insight.r3.16", "label": "Combo Finishers DMG Cap +35%", "description": "Combo Finishers: DMG Cap +35%" },
+        { "id": "insight.r3.17", "label": "Azure Sword CD -5%", "description": "Azure Sword: Cooldown -5%" },
+        { "id": "insight.r3.18", "label": "DMG Cap +20% ×Basic", "description": "DMG Cap +20% per Basic Stats-type sigil equipped (max sigils: 5)" },
+        { "id": "insight.r3.19", "label": "Guard Break +7%", "description": "Guard Break Resistance +7%" },
+        { "id": "insight.r3.20", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "ex": [
-        {
-          "id": "insight.ex.21",
-          "label": "Ares summoned: DEF +5%",
-          "description": "While Ares is summoned: DEF +5%"
-        },
-        {
-          "id": "insight.ex.22",
-          "label": "Frozen Blade DMG Cap +45%",
-          "description": "Frozen Blade: DMG Cap +45%"
-        },
-        {
-          "id": "insight.ex.23",
-          "label": "Enchanted Lands DMG Cap +45%",
-          "description": "Enchanted Lands: DMG Cap +45%"
-        },
-        {
-          "id": "insight.ex.24",
-          "label": "Dodge: Shield 1k",
-          "description": "Upon performing a perfect dodge: Grants Shield (1000)"
-        },
-        {
-          "id": "insight.ex.25",
-          "label": "DMG Cap +20% ×Basic",
-          "description": "DMG Cap +20% per Basic Stats-type sigil equipped (max sigils: 5)"
-        },
-        {
-          "id": "insight.ex.26",
-          "label": "Crit Rate +25%",
-          "description": "Critical Hit Rate +25%"
-        },
-        {
-          "id": "insight.ex.27",
-          "label": "Crit DMG +9%",
-          "description": "Critical Hit DMG +9%"
-        },
-        {
-          "id": "insight.ex.28",
-          "label": "DMG Cap +35%",
-          "description": "DMG Cap +35%"
-        },
-        {
-          "id": "insight.ex.29",
-          "label": "Summon Cost -1",
-          "description": "Weakens summons specs in exchange for Summon Cost -1. Doesn't affect 1-cost or potion-gifting summons. This trait can't be used with a Summon Cost +1 trait"
-        },
-        {
-          "id": "insight.ex.30",
-          "label": "DMG Cap +35%",
-          "description": "DMG Cap +35%"
-        }
+        { "id": "insight.ex.21", "label": "Ares summoned: DEF +5%", "description": "While Ares is summoned: DEF +5%" },
+        { "id": "insight.ex.22", "label": "Frozen Blade DMG Cap +45%", "description": "Frozen Blade: DMG Cap +45%" },
+        { "id": "insight.ex.23", "label": "Enchanted Lands DMG Cap +45%", "description": "Enchanted Lands: DMG Cap +45%" },
+        { "id": "insight.ex.24", "label": "Dodge: Shield 1k", "description": "Upon performing a perfect dodge: Grants Shield (1000)" },
+        { "id": "insight.ex.25", "label": "DMG Cap +20% ×Basic", "description": "DMG Cap +20% per Basic Stats-type sigil equipped (max sigils: 5)" },
+        { "id": "insight.ex.26", "label": "Crit Rate +25%", "description": "Critical Hit Rate +25%" },
+        { "id": "insight.ex.27", "label": "Crit DMG +9%", "description": "Critical Hit DMG +9%" },
+        { "id": "insight.ex.28", "label": "DMG Cap +35%", "description": "DMG Cap +35%" },
+        { "id": "insight.ex.29", "label": "Summon Cost -1", "description": "Weakens summons specs in exchange for Summon Cost -1. Doesn't affect 1-cost or potion-gifting summons. This trait can't be used with a Summon Cost +1 trait" },
+        { "id": "insight.ex.30", "label": "DMG Cap +35%", "description": "DMG Cap +35%" }
       ]
     },
     "essence": {
       "title": "Army of Two",
       "r1": [
-        {
-          "id": "essence.r1.1",
-          "label": "Ares summoned: ATK +10%",
-          "description": "While Ares is summoned: ATK +10%"
-        },
-        {
-          "id": "essence.r1.2",
-          "label": "Ares summons: DEF +10% max",
-          "description": "Boosts DEF by a max of +10% based on the number of times Ares has been summoned during the quest"
-        },
-        {
-          "id": "essence.r1.3",
-          "label": "DMG Cap +15%",
-          "description": "DMG Cap +15%"
-        },
+        { "id": "essence.r1.1", "label": "Ares summoned: ATK +10%", "description": "While Ares is summoned: ATK +10%" },
+        { "id": "essence.r1.2", "label": "Ares summons: DEF +10% max", "description": "Boosts DEF by a max of +10% based on the number of times Ares has been summoned during the quest" },
+        { "id": "essence.r1.3", "label": "DMG Cap +15%", "description": "DMG Cap +15%" },
         { "id": "essence.r1.4", "label": "DEF +5%", "description": "DEF +5%" }
       ],
       "r2": [
-        {
-          "id": "essence.r2.5",
-          "label": "Ares summons: ATK +30% max",
-          "description": "Boosts ATK by a max of +30% based on the number of times Ares has been summoned during the quest"
-        },
-        {
-          "id": "essence.r2.6",
-          "label": "Ares summoned: DMG Cap +25%",
-          "description": "While Ares is summoned: DMG Cap +25%"
-        },
-        {
-          "id": "essence.r2.7",
-          "label": "Heal→Shield 5% of max HP",
-          "description": "Heal now grants Shield (5% of max HP) instead of healing HP. Stacks with other master traits of the same effect"
-        },
-        {
-          "id": "essence.r2.8",
-          "label": "Sacred Winds CD -5%",
-          "description": "Sacred Winds: Cooldown -5%"
-        },
-        {
-          "id": "essence.r2.9",
-          "label": "Winter's Rain Stun Power +10%",
-          "description": "Winter's Rain: Stun Power +10%"
-        },
-        {
-          "id": "essence.r2.10",
-          "label": "Combo Finishers DMG Cap +35%",
-          "description": "Combo Finishers: DMG Cap +35%"
-        },
-        {
-          "id": "essence.r2.11",
-          "label": "Max HP +15k",
-          "description": "Max HP +15,000"
-        },
-        {
-          "id": "essence.r2.12",
-          "label": "Burn: DMG Cap +100%",
-          "description": "While inflicted with Burn: DMG Cap +100%"
-        }
+        { "id": "essence.r2.5", "label": "Ares summons: ATK +30% max", "description": "Boosts ATK by a max of +30% based on the number of times Ares has been summoned during the quest" },
+        { "id": "essence.r2.6", "label": "Ares summoned: DMG Cap +25%", "description": "While Ares is summoned: DMG Cap +25%" },
+        { "id": "essence.r2.7", "label": "Heal→Shield 5% of max HP", "description": "Heal now grants Shield (5% of max HP) instead of healing HP. Stacks with other master traits of the same effect" },
+        { "id": "essence.r2.8", "label": "Sacred Winds CD -5%", "description": "Sacred Winds: Cooldown -5%" },
+        { "id": "essence.r2.9", "label": "Winter's Rain Stun Power +10%", "description": "Winter's Rain: Stun Power +10%" },
+        { "id": "essence.r2.10", "label": "Combo Finishers DMG Cap +35%", "description": "Combo Finishers: DMG Cap +35%" },
+        { "id": "essence.r2.11", "label": "Max HP +15k", "description": "Max HP +15,000" },
+        { "id": "essence.r2.12", "label": "Burn: DMG Cap +100%", "description": "While inflicted with Burn: DMG Cap +100%" }
       ],
       "r3": [
-        {
-          "id": "essence.r3.13",
-          "label": "Special Supp DMG +20%",
-          "description": "Essence Rank II: Special Supplementary DMG +20%",
-          "perkRank": 2
-        },
-        {
-          "id": "essence.r3.14",
-          "label": "Ares summons: DMG Cap +40% max",
-          "description": "Boosts DMG Cap by a max of +40% based on the number of times Ares has been summoned during the quest"
-        },
-        {
-          "id": "essence.r3.15",
-          "label": "Ares dismissed: DMG Cut 20",
-          "description": "When Ares is dismissed: Gain DMG Cut (20)"
-        },
-        {
-          "id": "essence.r3.16",
-          "label": "Skill DMG Cap +30%",
-          "description": "Skill DMG Cap +30%"
-        },
-        {
-          "id": "essence.r3.17",
-          "label": "DMG Cap +25%",
-          "description": "DMG Cap +25%"
-        },
-        {
-          "id": "essence.r3.18",
-          "label": "ATK +10% ×Attack",
-          "description": "ATK +10% per Attack-type sigil equipped (max sigils: 5)"
-        },
-        {
-          "id": "essence.r3.19",
-          "label": "Chain Burst DMG Cap +40%",
-          "description": "Chain Burst DMG Cap +40%"
-        },
-        {
-          "id": "essence.r3.20",
-          "label": "ATK +30%",
-          "description": "ATK +30%"
-        }
+        { "id": "essence.r3.13", "label": "Special Supp DMG +20%", "description": "Essence Rank II: Special Supplementary DMG +20%", "perkRank": 2 },
+        { "id": "essence.r3.14", "label": "Ares summons: DMG Cap +40% max", "description": "Boosts DMG Cap by a max of +40% based on the number of times Ares has been summoned during the quest" },
+        { "id": "essence.r3.15", "label": "Ares dismissed: DMG Cut 20", "description": "When Ares is dismissed: Gain DMG Cut (20)" },
+        { "id": "essence.r3.16", "label": "Skill DMG Cap +30%", "description": "Skill DMG Cap +30%" },
+        { "id": "essence.r3.17", "label": "DMG Cap +25%", "description": "DMG Cap +25%" },
+        { "id": "essence.r3.18", "label": "ATK +10% ×Attack", "description": "ATK +10% per Attack-type sigil equipped (max sigils: 5)" },
+        { "id": "essence.r3.19", "label": "Chain Burst DMG Cap +40%", "description": "Chain Burst DMG Cap +40%" },
+        { "id": "essence.r3.20", "label": "ATK +30%", "description": "ATK +30%" }
       ],
       "ex": [
-        {
-          "id": "essence.ex.21",
-          "label": "Ares summoned: Drain",
-          "description": "While Ares is summoned: Gain Drain"
-        },
-        {
-          "id": "essence.ex.22",
-          "label": "Ares dismissed: ATK↑ 10%",
-          "description": "When Ares is dismissed: Gain ATK Up (10%)"
-        },
-        {
-          "id": "essence.ex.23",
-          "label": "Azure Sword CD -5%",
-          "description": "Azure Sword: Cooldown -5%"
-        },
-        {
-          "id": "essence.ex.24",
-          "label": "Sacred Winds CD -5%",
-          "description": "Sacred Winds: Cooldown -5%"
-        },
-        {
-          "id": "essence.ex.25",
-          "label": "Winter's Rain CD -5%",
-          "description": "Winter's Rain: Cooldown -5%"
-        },
-        {
-          "id": "essence.ex.26",
-          "label": "ATK +20% / DMG Cap +50%",
-          "description": "ATK +20% / DMG Cap +50%. Debuffs on self: DMG Taken +50% / Duration +50% / Movement Restriction +50%"
-        },
-        {
-          "id": "essence.ex.27",
-          "label": "ATK +10% ×Attack",
-          "description": "ATK +10% per Attack-type sigil equipped (max sigils: 5)"
-        },
-        {
-          "id": "essence.ex.28",
-          "label": "DMG Cap +35%",
-          "description": "DMG Cap +35%"
-        },
-        {
-          "id": "essence.ex.29",
-          "label": "Summon Cost +1",
-          "description": "Strengthens summons specs in exchange for Summon Cost +1. 3-cost summons can't be called as your first summon. This trait can't be used with a Summon Cost -1 trait"
-        },
-        {
-          "id": "essence.ex.30",
-          "label": "DMG Cap +35%",
-          "description": "DMG Cap +35%"
-        }
+        { "id": "essence.ex.21", "label": "Ares summoned: Drain", "description": "While Ares is summoned: Gain Drain" },
+        { "id": "essence.ex.22", "label": "Ares dismissed: ATK↑ 10%", "description": "When Ares is dismissed: Gain ATK Up (10%)" },
+        { "id": "essence.ex.23", "label": "Azure Sword CD -5%", "description": "Azure Sword: Cooldown -5%" },
+        { "id": "essence.ex.24", "label": "Sacred Winds CD -5%", "description": "Sacred Winds: Cooldown -5%" },
+        { "id": "essence.ex.25", "label": "Winter's Rain CD -5%", "description": "Winter's Rain: Cooldown -5%" },
+        { "id": "essence.ex.26", "label": "ATK +20% / DMG Cap +50%", "description": "ATK +20% / DMG Cap +50%. Debuffs on self: DMG Taken +50% / Duration +50% / Movement Restriction +50%" },
+        { "id": "essence.ex.27", "label": "ATK +10% ×Attack", "description": "ATK +10% per Attack-type sigil equipped (max sigils: 5)" },
+        { "id": "essence.ex.28", "label": "DMG Cap +35%", "description": "DMG Cap +35%" },
+        { "id": "essence.ex.29", "label": "Summon Cost +1", "description": "Strengthens summons specs in exchange for Summon Cost +1. 3-cost summons can't be called as your first summon. This trait can't be used with a Summon Cost -1 trait" },
+        { "id": "essence.ex.30", "label": "DMG Cap +35%", "description": "DMG Cap +35%" }
       ]
     },
     "crux": {
       "title": "Blade Blue",
       "r1": [
-        {
-          "id": "crux.r1.1",
-          "label": "Ares summoned: DMG Cap +25%",
-          "description": "While Ares is summoned: DMG Cap +25%"
-        },
-        {
-          "id": "crux.r1.2",
-          "label": "Blades of Frost ATK +20%",
-          "description": "Blades of Frost: ATK +20%"
-        },
-        {
-          "id": "crux.r1.3",
-          "label": "DMG Cap +15%",
-          "description": "DMG Cap +15%"
-        },
-        {
-          "id": "crux.r1.4",
-          "label": "Max HP +15k",
-          "description": "Max HP +15,000"
-        }
+        { "id": "crux.r1.1", "label": "Ares summoned: DMG Cap +25%", "description": "While Ares is summoned: DMG Cap +25%" },
+        { "id": "crux.r1.2", "label": "Blades of Frost ATK +20%", "description": "Blades of Frost: ATK +20%" },
+        { "id": "crux.r1.3", "label": "DMG Cap +15%", "description": "DMG Cap +15%" },
+        { "id": "crux.r1.4", "label": "Max HP +15k", "description": "Max HP +15,000" }
       ],
       "r2": [
-        {
-          "id": "crux.r2.5",
-          "label": "Blade Blue ATK +3% Cap +5%/lvl",
-          "description": "Crux Rank I: Blade Blue grants an additional ATK +3% and DMG Cap +5% per effect lvl",
-          "perkRank": 1
-        },
-        {
-          "id": "crux.r2.6",
-          "label": "Ares summoned: ATK +10%",
-          "description": "While Ares is summoned: ATK +10%"
-        },
-        {
-          "id": "crux.r2.7",
-          "label": "Ares not summoned: ATK +10%",
-          "description": "While Ares isn't summoned: ATK +10%"
-        },
-        {
-          "id": "crux.r2.8",
-          "label": "Emerald Shield add. DEF +5%",
-          "description": "Emerald Shield: DEF Up grants an additional DEF +5%"
-        },
-        {
-          "id": "crux.r2.9",
-          "label": "Light Wall CD -5%",
-          "description": "Light Wall: Cooldown -5%"
-        },
-        {
-          "id": "crux.r2.10",
-          "label": "Attacks DMG Cap +35%",
-          "description": "Attacks: DMG Cap +35%"
-        },
-        {
-          "id": "crux.r2.11",
-          "label": "Crit Rate +15%",
-          "description": "Critical Hit Rate +15%"
-        },
-        {
-          "id": "crux.r2.12",
-          "label": "Blight: DMG Cap +100%",
-          "description": "While inflicted with Blight: DMG Cap +100%"
-        }
+        { "id": "crux.r2.5", "label": "Blade Blue ATK +3% Cap +5%/lvl", "description": "Crux Rank I: Blade Blue grants an additional ATK +3% and DMG Cap +5% per effect lvl", "perkRank": 1 },
+        { "id": "crux.r2.6", "label": "Ares summoned: ATK +10%", "description": "While Ares is summoned: ATK +10%" },
+        { "id": "crux.r2.7", "label": "Ares not summoned: ATK +10%", "description": "While Ares isn't summoned: ATK +10%" },
+        { "id": "crux.r2.8", "label": "Emerald Shield add. DEF +5%", "description": "Emerald Shield: DEF Up grants an additional DEF +5%" },
+        { "id": "crux.r2.9", "label": "Light Wall CD -5%", "description": "Light Wall: Cooldown -5%" },
+        { "id": "crux.r2.10", "label": "Attacks DMG Cap +35%", "description": "Attacks: DMG Cap +35%" },
+        { "id": "crux.r2.11", "label": "Crit Rate +15%", "description": "Critical Hit Rate +15%" },
+        { "id": "crux.r2.12", "label": "Blight: DMG Cap +100%", "description": "While inflicted with Blight: DMG Cap +100%" }
       ],
       "r3": [
-        {
-          "id": "crux.r3.13",
-          "label": "Ares summon: Shield 1k (party)",
-          "description": "Upon summoning Ares: Grants Shield (1000) to the entire party"
-        },
-        {
-          "id": "crux.r3.14",
-          "label": "Blade Blue ATK +3% Cap +5%/lvl",
-          "description": "Crux Rank I: Blade Blue grants an additional ATK +3% and DMG Cap +5% per effect lvl",
-          "perkRank": 1
-        },
-        {
-          "id": "crux.r3.15",
-          "label": "Ares not summoned: DMG Cap +30%",
-          "description": "While Ares isn't summoned: DMG Cap +30%"
-        },
-        {
-          "id": "crux.r3.16",
-          "label": "DMG Cap +25%",
-          "description": "DMG Cap +25%"
-        },
-        {
-          "id": "crux.r3.17",
-          "label": "Emerald Shield Buff Dur +10%",
-          "description": "Emerald Shield: Buff Duration +10% (DEF Up / Stout Heart)"
-        },
-        {
-          "id": "crux.r3.18",
-          "label": "HP +10k ×Def/Sup",
-          "description": "HP +10,000 per Defense- or Support-type sigil equipped (max sigils: 4)"
-        },
-        {
-          "id": "crux.r3.19",
-          "label": "Crit DMG +9%",
-          "description": "Critical Hit DMG +9%"
-        },
-        {
-          "id": "crux.r3.20",
-          "label": "Crit Rate +25%",
-          "description": "Critical Hit Rate +25%"
-        }
+        { "id": "crux.r3.13", "label": "Ares summon: Shield 1k (party)", "description": "Upon summoning Ares: Grants Shield (1000) to the entire party" },
+        { "id": "crux.r3.14", "label": "Blade Blue ATK +3% Cap +5%/lvl", "description": "Crux Rank I: Blade Blue grants an additional ATK +3% and DMG Cap +5% per effect lvl", "perkRank": 1 },
+        { "id": "crux.r3.15", "label": "Ares not summoned: DMG Cap +30%", "description": "While Ares isn't summoned: DMG Cap +30%" },
+        { "id": "crux.r3.16", "label": "DMG Cap +25%", "description": "DMG Cap +25%" },
+        { "id": "crux.r3.17", "label": "Emerald Shield Buff Dur +10%", "description": "Emerald Shield: Buff Duration +10% (DEF Up / Stout Heart)" },
+        { "id": "crux.r3.18", "label": "HP +10k ×Def/Sup", "description": "HP +10,000 per Defense- or Support-type sigil equipped (max sigils: 4)" },
+        { "id": "crux.r3.19", "label": "Crit DMG +9%", "description": "Critical Hit DMG +9%" },
+        { "id": "crux.r3.20", "label": "Crit Rate +25%", "description": "Critical Hit Rate +25%" }
       ],
       "ex": [
-        {
-          "id": "crux.ex.21",
-          "label": "Skill DMG Cap +40%",
-          "description": "Skill DMG Cap +40%"
-        },
-        {
-          "id": "crux.ex.22",
-          "label": "Light Wall Invincibility Dur +2s",
-          "description": "Light Wall: Invincibility Duration +2 sec."
-        },
-        {
-          "id": "crux.ex.23",
-          "label": "Heal→Shield 5% of max HP",
-          "description": "Heal now grants Shield (5% of max HP) instead of healing HP. Stacks with other master traits of the same effect"
-        },
-        {
-          "id": "crux.ex.24",
-          "label": "Low HP: Crit Gauge -10%",
-          "description": "While in critical condition: Critical Gauge Depletion -10%"
-        },
-        {
-          "id": "crux.ex.25",
-          "label": "DEF +6% ×Def/Sup",
-          "description": "DEF +6% per Defense- or Support-type sigil equipped (max sigils: 5)"
-        },
-        {
-          "id": "crux.ex.26",
-          "label": "Stun Power +4",
-          "description": "Stun Power +4"
-        },
-        {
-          "id": "crux.ex.27",
-          "label": "Weak elem: DMG +10%",
-          "description": "Against foes of the weaker element: DMG Dealt +10%"
-        },
-        {
-          "id": "crux.ex.28",
-          "label": "DMG Cap +35%",
-          "description": "DMG Cap +35%"
-        },
-        {
-          "id": "crux.ex.29",
-          "label": "Primal Burst DMG +25%",
-          "description": "Primal bursts gain DMG Dealt +25%. Effect strength is based on the total number of this effect equipped by the entire party"
-        },
-        {
-          "id": "crux.ex.30",
-          "label": "DMG Cap +35%",
-          "description": "DMG Cap +35%"
-        }
+        { "id": "crux.ex.21", "label": "Skill DMG Cap +40%", "description": "Skill DMG Cap +40%" },
+        { "id": "crux.ex.22", "label": "Light Wall Invincibility Dur +2s", "description": "Light Wall: Invincibility Duration +2 sec." },
+        { "id": "crux.ex.23", "label": "Heal→Shield 5% of max HP", "description": "Heal now grants Shield (5% of max HP) instead of healing HP. Stacks with other master traits of the same effect" },
+        { "id": "crux.ex.24", "label": "Low HP: Crit Gauge -10%", "description": "While in critical condition: Critical Gauge Depletion -10%" },
+        { "id": "crux.ex.25", "label": "DEF +6% ×Def/Sup", "description": "DEF +6% per Defense- or Support-type sigil equipped (max sigils: 5)" },
+        { "id": "crux.ex.26", "label": "Stun Power +4", "description": "Stun Power +4" },
+        { "id": "crux.ex.27", "label": "Weak elem: DMG +10%", "description": "Against foes of the weaker element: DMG Dealt +10%" },
+        { "id": "crux.ex.28", "label": "DMG Cap +35%", "description": "DMG Cap +35%" },
+        { "id": "crux.ex.29", "label": "Primal Burst DMG +25%", "description": "Primal bursts gain DMG Dealt +25%. Effect strength is based on the total number of this effect equipped by the entire party" },
+        { "id": "crux.ex.30", "label": "DMG Cap +35%", "description": "DMG Cap +35%" }
       ]
     }
   }
