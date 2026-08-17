@@ -84,18 +84,18 @@ const SKILL_LAYOUT: Record<
   },
 };
 
-/** An empty skill slot ghost placeholder. */
+/** An empty skill slot ghost placeholder, boxed like a compact SkillCell. */
 function SkillGhost() {
   return (
     <div className="flex min-h-0 items-center">
-      <div className="flex-none p-1">
-        <span className="grid size-16 place-items-center">
-          <span className="bg-slanted-bar size-11 rotate-45 rounded-sm" />
+      <div className="flex-none py-1 pl-1">
+        <span className="grid size-18 place-items-center">
+          <span className="bg-slanted-bar size-12 rotate-45 rounded-sm" />
         </span>
       </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <span className="bg-slanted-bar h-4 w-4/5 rounded-sm" />
-        <span className="bg-slanted-bar h-2.5 w-2/5 rounded-sm" />
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <span className="bg-slanted-bar h-5 w-4/5 rounded-sm" />
+        <span className="bg-slanted-bar h-3 w-2/5 rounded-sm" />
       </div>
     </div>
   );
