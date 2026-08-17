@@ -143,7 +143,7 @@ export function Weapon({
 }) {
   const layout = WEAPON_LAYOUT[density];
   const weapon = build.weapon;
-  const resolved = resolveWeapon(build.characterId, weapon);
+  const resolved = resolveWeapon(build.characterId, weapon, build.masterLevel);
 
   return (
     <>

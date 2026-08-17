@@ -106,7 +106,12 @@ export function Card({ build }: { build: Build }) {
         >
           <div>
             <LvlBadge level={CHARACTER_LEVEL} size={189} inset={-10} />
-            <MasterlevelBadge size={130} top={-4} left={137} />
+            <MasterlevelBadge
+              level={build.masterLevel}
+              size={130}
+              top={-4}
+              left={137}
+            />
             <PwrBadge power={56252} size={110} top={750} left={10} />
           </div>
           <NameBadge characterId={build.characterId} />

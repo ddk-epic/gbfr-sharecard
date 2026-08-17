@@ -36,16 +36,18 @@ const OVER_MASTERY_STAT: Record<BonusTypeId, StatKey> = {
   "stun-power-up": "stun",
 };
 
-/** A trait's level summed over every source, uncapped so an overcap stays
-    visible. Its value ladder is read once at that total, clamped to the
-    ladder's length - reading each source and summing values is wrong. */
+/** A trait's level summed over every source; allowed to overcap. */
 export function traitLevelTotals(build: Build): Map<TraitId, number> {
   const levels = new Map<TraitId, number>();
   const add = (trait: TraitId | null | undefined, level: number) => {
     if (trait) levels.set(trait, (levels.get(trait) ?? 0) + level);
   };
 
-  const weapon = resolveWeapon(build.characterId, build.weapon);
+  const weapon = resolveWeapon(
+    build.characterId,
+    build.weapon,
+    build.masterLevel,
+  );
   for (const slot of weapon.slots) add(slot.trait, slot.level);
 
   // The booster credits each sigil slot, so a two-trait sigil takes it twice.
@@ -70,12 +72,16 @@ export function traitLevelTotals(build: Build): Map<TraitId, number> {
   return levels;
 }
 
-/** The four displayed stats: a flat sum, then one multiplicative stage in which
-    percentage traits compound rather than add. Assumes the Build is at cap -
-    character 100, weapons maxed and transcended, Masteries and fate complete. */
+/** The four displayed stats: a flat sum; compounded rather than added. Assumes 
+    the Build is at cap - character 100, weapons maxed and transcended, Masteries 
+    and fate complete. */
 export function deriveStatus(build: Build): Status {
   const character = CHARACTER_STATS[build.characterId];
-  const weapon = resolveWeapon(build.characterId, build.weapon);
+  const weapon = resolveWeapon(
+    build.characterId,
+    build.weapon,
+    build.masterLevel,
+  );
 
   const flat: Record<StatKey, number> = {
     hp: character.base.hp + FATE.hp + MASTER_LEVELS.hp + weapon.hp,

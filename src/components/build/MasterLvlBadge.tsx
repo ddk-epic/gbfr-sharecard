@@ -1,5 +1,10 @@
 import { useId } from "react";
 import { masterlevelArtUrl } from "@/assets/urls";
+import {
+  MASTER_LEVEL_DEFAULT,
+  MASTER_LEVEL_MAX,
+  MASTER_LEVEL_MIN,
+} from "@/domain/build";
 import { Label, PALETTE, Part, type SvgId } from "./glyphs/label";
 
 /** Base art and number-cell sizes */
@@ -8,11 +13,9 @@ const NUM_CELL = { w: 216, h: 192 };
 
 const CENTER = { x: BASE.w / 2, y: BASE.h / 2 };
 
-export const MIN_MASTERLEVEL = 51;
-export const MAX_MASTERLEVEL = 55;
-export const DEFAULT_MASTERLEVEL = MAX_MASTERLEVEL;
-
-const numFile = (level: number) => `masterlevel-${level - 50}`;
+/** Art is one file per level above 50. */
+const numFile = (level: number) =>
+  `masterlevel-${level - MASTER_LEVEL_MIN + 1}`;
 
 const KEYLINE = { outer: 0.22, inner: 0.01 };
 
@@ -33,7 +36,7 @@ const FADE = { cx: CENTER.x, cy: CENTER.y, w: 270, h: 270, opacity: 0.5 };
 const FADE_BACK = { cx: CENTER.x, cy: CENTER.y, w: 380, h: 380, opacity: 0.5 };
 
 export function MasterlevelBadge({
-  level = DEFAULT_MASTERLEVEL,
+  level = MASTER_LEVEL_DEFAULT,
   size = BASE.w,
   top = 0,
   left = 0,
@@ -49,7 +52,7 @@ export function MasterlevelBadge({
   // url(#name) resolves document-wide, not per svg, so every id is namespaced.
   const id: SvgId = (name) => `${uid}-${name}`;
 
-  const clamped = Math.min(Math.max(level, MIN_MASTERLEVEL), MAX_MASTERLEVEL);
+  const clamped = Math.min(Math.max(level, MASTER_LEVEL_MIN), MASTER_LEVEL_MAX);
   return (
     <svg
       viewBox={`0 0 ${BASE.w} ${BASE.h}`}

@@ -5,6 +5,7 @@ import type {
   WeaponSlot,
 } from "@/catalog/types";
 import type { Weapon } from "./build";
+import { MASTER_LEVEL_DEFAULT } from "./build";
 import {
   WEAPON_LEVELS,
   WEAPON_SERIES,
@@ -15,6 +16,7 @@ import {
 /** The maxed transcendence rung, as an index into a slot's level sequence. */
 const MAX_RUNG = 7;
 const TERMINUS_SERIES = "terminus";
+const UNBOUND_MASTER = "unbound-master";
 
 /** The weapons a character owns, in canonical series order. */
 export function characterWeaponOptions(
@@ -53,8 +55,13 @@ export function defaultWeapon(id: CharacterId): Weapon {
   return { series, poolTraits: defaultPoolTraits(id, series) };
 }
 
-/** HP is series.hp + weaponHpOffset, except Terminus. */
-export function resolveWeapon(id: CharacterId, weapon: Weapon): ResolvedWeapon {
+/** HP is series.hp + weaponHpOffset, except Terminus.
+    `masterLevel` sets Unbound Master's level. */
+export function resolveWeapon(
+  id: CharacterId,
+  weapon: Weapon,
+  masterLevel: number = MASTER_LEVEL_DEFAULT,
+): ResolvedWeapon {
   const cat = characterCatalog(id);
   const series = weaponSeriesById.get(weapon.series);
   const entry = cat.weapons[weapon.series];
@@ -64,7 +71,9 @@ export function resolveWeapon(id: CharacterId, weapon: Weapon): ResolvedWeapon {
   // `poolTraits` counts pool slots, not rows, so it advances only on a pool slot.
   let picked = 0;
   const slots = series.slots.map((slot) => {
-    const level = WEAPON_LEVELS[slot.levels]?.[MAX_RUNG] ?? 0;
+    const rung = WEAPON_LEVELS[slot.levels]?.[MAX_RUNG] ?? 0;
+    const level =
+      slot.trait === UNBOUND_MASTER && rung > 0 ? masterLevel : rung;
     if (slot.trait) {
       return { kind: "fixed" as const, trait: slot.trait, pool: [], level };
     }

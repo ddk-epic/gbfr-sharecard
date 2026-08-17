@@ -33,7 +33,12 @@ export function IdentityCol({ build, width }: { build: Build; width: number }) {
         seam={width - PORTRAIT_BLEED_RIGHT}
       />
       <LvlBadge level={CHARACTER_LEVEL} size={189} inset={-10} />
-      <MasterlevelBadge size={130} top={-4} left={137} />
+      <MasterlevelBadge
+        level={build.masterLevel}
+        size={130}
+        top={-4}
+        left={137}
+      />
       <div className="relative">
         <PwrBadge power={POWER} size={110} top={PWR_TOP} left={10} />
       </div>

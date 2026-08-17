@@ -9,12 +9,16 @@ import type {
   TraitId,
 } from "@/catalog/ids";
 
-// Builds are shown at cap: no half-levelled characters or weapons, and
-// weapons are assumed fully transcended.
+// Builds are shown at cap; weapons are assumed fully transcended.
 export const CHARACTER_LEVEL = 100;
 export const WEAPON_LEVEL_MAX = 150;
 
-/** A sigil's own level ladder - rarity V only, so it never leaves this range. */
+/** Only levels 51-55 are modelled. */
+export const MASTER_LEVEL_MIN = 51;
+export const MASTER_LEVEL_MAX = 55;
+export const MASTER_LEVEL_DEFAULT = MASTER_LEVEL_MAX;
+
+/** A sigil's own level ladder; rarity V only. */
 export const SIGIL_LEVELS = [11, 12, 13, 14, 15];
 export const SIGIL_DEFAULT_LEVEL = 15;
 
@@ -22,8 +26,9 @@ export const SIGIL_DEFAULT_LEVEL = 15;
 export const WRIGHTSTONE_LEVELS = [20, 15, 10];
 
 export type Build = {
-  schemaVersion: 4;
+  schemaVersion: 5;
   characterId: CharacterId; // slug, e.g. "io"
+  masterLevel: number; // Levels 51-55
   skills: (SkillId | null)[]; // exactly 4
   overMastery: (OverMasteryLine | null)[]; // exactly 4; all random lines
   weapon: Weapon; // always equipped; the character's Terminus by default
@@ -83,8 +88,9 @@ export function emptyMasterTraits(): MasterTraitSelections {
     does not read. */
 export function emptyBuild(characterId: CharacterId, weapon: Weapon): Build {
   return {
-    schemaVersion: 4,
+    schemaVersion: 5,
     characterId,
+    masterLevel: MASTER_LEVEL_DEFAULT,
     skills: [null, null, null, null],
     overMastery: [null, null, null, null],
     weapon,
