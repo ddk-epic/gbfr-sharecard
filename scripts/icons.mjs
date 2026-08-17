@@ -427,19 +427,20 @@ console.log(`skills: ${skillCount} rows -> ${(await readdir(skillsDirectory)).le
 // 900px against a 3608x3660 native: the card's box draws it at 869 (70% of
 // 1080, background-sized to 115%), so this is the tallest anything needs today.
 //
-// NOTE: this writes public/art/, NOT public/portraits/. The committed portraits
-// are the wiki's _2, and every character's portraitY is hand-tuned to that
-// framing - swapping the source re-frames the card, editor and grid, so the
-// switch is a visual decision, not this script's to make.
-const ART_DIR = new URL("../public/art/", import.meta.url);
+// NOTE: the files committed under public/characters/ are the wiki's _2, not the
+// _0 written here, and existing files are left alone. Every character's
+// portraitY is hand-tuned to that framing - swapping the source re-frames the
+// card, editor and grid, so the switch is a visual decision, not this script's
+// to make.
+const CHARACTER_DIR = new URL("../public/characters/", import.meta.url);
 const CARD_ART_HEIGHT = 900;
 const charaRoot = `${EXTRACT_DIR}/ui/layouts/common/image_chara/noatlastextures`;
 
 const characters = JSON.parse(
   await readFile(new URL("characters.json", CATALOG_DIR)),
 );
-await mkdir(ART_DIR, { recursive: true });
-let artCount = 0;
+await mkdir(CHARACTER_DIR, { recursive: true });
+let characterCount = 0;
 for (const character of characters) {
   const stem = `cmn_imgchr_${character.artId}`;
   const source = `${charaRoot}/${stem}/${stem}_0.png`;
@@ -447,7 +448,7 @@ for (const character of characters) {
     missing.push(`${stem}_0.png`);
     continue;
   }
-  const destination = new URL(`${character.id}.webp`, ART_DIR);
+  const destination = new URL(`${character.id}.webp`, CHARACTER_DIR);
   if (!existsSync(destination))
     await writeFile(
       destination,
@@ -456,9 +457,9 @@ for (const character of characters) {
         .webp({ quality: WEBP_QUALITY })
         .toBuffer(),
     );
-  artCount++;
+  characterCount++;
 }
-console.log(`art: ${artCount} characters`);
+console.log(`characters: ${characterCount} illustrations`);
 
 // ---------------------------------------------------------- summon icons
 // public/icons/summon/<id>.webp - the equipped-summon portraits, diamond-cropped
