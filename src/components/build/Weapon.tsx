@@ -27,11 +27,15 @@ const ROW_INDENT = `calc(var(--spacing) * 2.5 + ${MARKER_GUTTER_WIDTH}px)`;
 const WEAPON_CRIT = 0;
 const WEAPON_STUN = 0;
 
-const WEAPON_STAT_CAP_HEIGHT = 22;
-const WEAPON_LVL_CAP_HEIGHT = WEAPON_STAT_CAP_HEIGHT * 1.8;
-/** The weapon "Lvl"'s ink height, x the level's cap. By eye, not tied to the
-    stat plates' cap. */
+const WEAPON_STAT_CAP_HEIGHT = 21;
+
+/** The weapon "Lvl"'s ink height, x the level's cap. By eye. */
 const WEAPON_WORD_RATIO = 0.45;
+/** The weapon "Lvl"'s independent cap, px. */
+const WEAPON_WORD_CAP_HEIGHT = 21;
+
+/** The number's cap, following the word up at the word ratio. */
+const WEAPON_LVL_CAP_HEIGHT = WEAPON_WORD_CAP_HEIGHT / WEAPON_WORD_RATIO;
 /** Added to each plate's icon offset, in px. */
 const STAT_PLATE_ICON_INSET = 3;
 /** Plate icon scale, source px per cap px. */
@@ -185,6 +189,8 @@ export function Weapon({
             cap={WEAPON_LVL_CAP_HEIGHT}
             level={WEAPON_LEVEL_MAX}
             wordRatio={WEAPON_WORD_RATIO}
+            // 3px uplift to be on the same y as the weapon stats
+            className="-translate-y-0.75"
           />
           <div className="flex flex-1 items-baseline justify-end gap-2">
             <BaseStat {...statPlate("hp")}>
