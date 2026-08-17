@@ -40,10 +40,11 @@ const CELL_LAYOUT: Record<
   { outerClass: string; innerClass: string; invisibleWhenEmpty: boolean }
 > = {
   compact: {
-    outerClass:
-      "relative -mb-1 -ml-1 flex min-h-0 items-center overflow-hidden",
+    // No negative bottom margin: it grew the cell past its grid area and the
+    // bleed portrait painted into the row below.
+    outerClass: "relative -ml-1 flex min-h-0 items-center overflow-hidden",
     innerClass:
-      "relative z-1 mb-px flex min-w-0 flex-col gap-1.25 px-4.5 py-3.25",
+      "relative z-1 mb-px flex min-w-0 flex-col gap-1.25 px-4.5 py-2.75",
     invisibleWhenEmpty: false,
   },
   loose: {
