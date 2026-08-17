@@ -86,15 +86,6 @@ export type CellInteraction = (
   className?: string;
 };
 
-const tooltipPlacementSide = (
-  placement: TooltipPlacement,
-  rank: StyleRank,
-): TooltipPlacement => {
-  if (placement === "top" && rank === "r1") return "bottom";
-  if (placement === "bottom" && rank === "ex") return "top";
-  return placement;
-};
-
 /** One Style Rank section. */
 function MasterTraitStyleRank({
   style,
@@ -140,7 +131,7 @@ function MasterTraitStyleRank({
             <Tooltip
               key={cell.id}
               text={interaction?.tooltip}
-              placement={tooltipPlacementSide(tooltipPlacement, rank)}
+              placement={tooltipPlacement}
               align={i % 2 === 1 ? "end" : "start"}
             >
               <div
@@ -227,7 +218,7 @@ export function MasterTraitsSection({
   const perkStars = (style: StyleId) => perks[style].filter(Boolean).length;
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-3.75">
+    <div className="text-ui flex h-full min-h-0 flex-col gap-3.75">
       <Heading
         tone="deep"
         size="lg"
