@@ -24,7 +24,7 @@ export function Cta({
       className={`inline-flex cursor-pointer items-center justify-center gap-2 font-bold tracking-wider ${
         sm
           ? "rounded-md px-4 py-1.75 text-[13.5px]"
-          : "rounded-[7px] px-8 py-2.75 text-[15.5px]"
+          : "rounded-[7px] px-7 py-2.75 text-[15.5px]"
       } ${CTA_VARIANT[variant]}`}
       onClick={onClick}
     >

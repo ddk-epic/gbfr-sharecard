@@ -147,7 +147,7 @@ export function Editor({
           </button>
         </div>
         <Cta onClick={onGenerate}>
-          Generate Card
+          <span>Generate Card</span>
           <ChevronDown size={16} aria-hidden />
         </Cta>
       </div>
