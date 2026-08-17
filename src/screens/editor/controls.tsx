@@ -66,6 +66,7 @@ export function IconTile({
   selected = false,
   disabled = false,
   contain = false,
+  scale = 1,
   badge,
   onClick,
 }: {
@@ -75,6 +76,8 @@ export function IconTile({
   disabled?: boolean;
   /** Art trimmed to a long bounding box (weapons): fit it whole, don't crop. */
   contain?: boolean;
+  /** Zooms the art inside the tile; the tile box keeps its size. */
+  scale?: number;
   /** Slot number once picked, so order is readable from the grid. */
   badge?: ReactNode;
   onClick: () => void;
@@ -98,6 +101,7 @@ export function IconTile({
         className={`size-[3.5em] flex-none object-center ${
           contain ? "object-contain" : "object-cover"
         }`}
+        style={{ scale }}
       />
       <span className="text-ui text-[0.85em]">{name}</span>
       {badge !== undefined && (

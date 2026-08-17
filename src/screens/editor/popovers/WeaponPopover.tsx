@@ -56,6 +56,7 @@ export function WeaponPopover({
             icon={weaponArtUrl(characterId, option.name)}
             name={option.name}
             contain
+            scale={1.5}
             selected={option.series === weapon.series}
             onClick={() => pickSeries(option.series)}
           />
