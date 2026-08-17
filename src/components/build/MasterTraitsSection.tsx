@@ -1,8 +1,8 @@
 import { Fragment } from "react";
 import type { Build } from "@/domain/build";
-import type { CellId, StyleId, StyleRank } from "@/catalog/ids";
-import { RANKS, STYLES } from "@/catalog/ids";
-import { STYLE_RANK_BUDGETS, stylePerkStates } from "@/domain/derive";
+import type { CellId, PerkRank, StyleId, StyleRank } from "@/catalog/ids";
+import { PERK_RANKS, RANKS, STYLES } from "@/catalog/ids";
+import { STYLE_RANK_BUDGETS, stylePerkStates } from "@/domain/master-traits";
 import { PERK_THRESHOLDS, type MasterTraitCell } from "@/catalog/types";
 import { sboardRankIconUrl, starBgUrl, starIconUrl } from "@/assets/urls";
 import { characterCatalog } from "@/catalog";
@@ -177,7 +177,7 @@ function MasterTraitStyleColumn({
   title: string;
   cellsByRank: Record<StyleRank, MasterTraitCell[]>;
   selectedByRank: Record<StyleRank, CellId[]>;
-  perks: boolean[];
+  perks: Record<PerkRank, boolean>;
   cellInteraction?: CellInteraction;
   tooltipPlacement: TooltipPlacement;
 }) {
@@ -188,14 +188,14 @@ function MasterTraitStyleColumn({
       <h4 className="flex-none pb-4 text-2xl font-bold text-white [text-shadow:0_1px_5px_rgba(10,50,70,0.55)]">
         {STYLE_LABEL[style]}: {title}
       </h4>
-      {RANKS.map((rank, i) => (
+      {RANKS.map((rank) => (
         <MasterTraitStyleRank
           key={rank}
           style={style}
           rank={rank}
           cells={cellsByRank[rank]}
           selected={selectedByRank[rank]}
-          perkHit={perks[i] ?? false}
+          perkHit={rank !== "ex" && perks[rank]}
           cellInteraction={cellInteraction}
           tooltipPlacement={tooltipPlacement}
         />
@@ -215,7 +215,8 @@ export function MasterTraitsSection({
 }) {
   const catalog = characterCatalog(build.characterId);
   const perks = stylePerkStates(build.masterTraits, PERK_THRESHOLDS);
-  const perkStars = (style: StyleId) => perks[style].filter(Boolean).length;
+  const perkStars = (style: StyleId) =>
+    PERK_RANKS.filter((rank) => perks[style][rank]).length;
 
   return (
     <div className="text-ui flex h-full min-h-0 flex-col gap-3.75">

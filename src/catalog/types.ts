@@ -2,6 +2,7 @@ import type {
   BonusTypeId,
   CellId,
   CharacterId,
+  PerkRank,
   SkillId,
   StyleId,
   StyleRank,
@@ -161,8 +162,13 @@ export type MasterTraitSections = Record<
   { title: string } & Record<StyleRank, MasterTraitCell[]>
 >;
 
-/** Selection counts activating style perks 1..3 */
-export const PERK_THRESHOLDS: number[] = [3, 6, 6];
+/** Selections needed in a style's rank section to activate that rank's perk.
+ *  Universal, not per-character. */
+export const PERK_THRESHOLDS: Record<PerkRank, number> = {
+  r1: 3,
+  r2: 6,
+  r3: 6,
+};
 
 export type CharacterCatalog = {
   id: string;
