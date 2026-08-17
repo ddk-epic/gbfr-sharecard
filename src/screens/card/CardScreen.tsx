@@ -10,13 +10,13 @@ const ICON = 16;
 const COPY_IDLE = (
   <>
     <Copy size={ICON} aria-hidden />
-    Copy PNG
+    <span>Copy PNG</span>
   </>
 );
 const DOWNLOAD_IDLE = (
   <>
     <Download size={ICON} aria-hidden />
-    Download
+    <span>Download</span>
   </>
 );
 const done = (text: string) => (
@@ -128,7 +128,7 @@ export function CardScreen({
             </div>
             <span className="pointer-events-none absolute top-2.5 right-2.5 flex items-center gap-1.5 rounded-md bg-black/45 px-2 py-1 text-[11px] font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
               <Maximize2 size={13} aria-hidden />
-              Full resolution
+              <span>Full resolution</span>
             </span>
           </div>
           <div className="flex items-center justify-center">
