@@ -70,7 +70,7 @@ export function OverMasteryPopover({
               key={i}
               className={`border-line-soft flex flex-col justify-center ${CELL_HEIGHT} px-1.5 pb-1`}
             >
-              <div className="mb-1 flex items-center gap-1.5 text-[1em]">
+              <div className="mb-1 flex items-center gap-1 text-[1em]">
                 <BonusIcon bonusType={line.bonusType} />
                 <span className="min-w-0 flex-1">
                   {bonusTypeById.get(line.bonusType)?.name}

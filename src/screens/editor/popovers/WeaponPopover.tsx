@@ -76,7 +76,7 @@ export function WeaponPopover({
                 key={trait}
                 type="button"
                 aria-pressed={trait === slot.trait}
-                className={`flex w-full cursor-pointer items-center gap-1.5 rounded px-1 py-0.5 text-left text-[1em] ${
+                className={`flex w-full cursor-pointer items-center gap-1 rounded px-1 py-0.5 text-left text-[1em] ${
                   trait === slot.trait ? "bg-band/70" : "hover:bg-band/35"
                 }`}
                 onClick={() => pickPoolTrait(ordinal, trait)}

@@ -171,7 +171,7 @@ function SubRow({
       <button
         type="button"
         disabled={!enabled}
-        className={`border-line flex min-w-0 flex-1 items-center gap-1.5 rounded-[5px] border px-1.5 py-1 text-left text-[1em] ${
+        className={`border-line flex min-w-0 flex-1 items-center gap-1 rounded-[5px] border px-1.5 py-1 text-left text-[1em] ${
           enabled
             ? "hover:bg-band/35 cursor-pointer bg-white/70"
             : "text-dim bg-white/40 opacity-40"

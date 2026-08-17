@@ -85,7 +85,7 @@ export function TraitPicker({
                       key={trait.id}
                       type="button"
                       disabled={disabled}
-                      className="hover:bg-band/35 flex w-full cursor-pointer items-center gap-1.5 rounded px-1 py-0.5 text-left text-[1em] disabled:cursor-default disabled:hover:bg-transparent"
+                      className="hover:bg-band/35 flex w-full cursor-pointer items-center gap-1 rounded px-1 py-0.5 text-left text-[1em] disabled:cursor-default disabled:hover:bg-transparent"
                       onClick={() => onPick(trait.id)}
                     >
                       <TraitIcon trait={trait.id} size="em" placeholder />
