@@ -1,5 +1,5 @@
 import { Fragment, useRef, useState, type ReactNode } from "react";
-import { Check, ChevronLeft, Copy, Download, Maximize2 } from "lucide-react";
+import { Check, Copy, Download, Maximize2 } from "lucide-react";
 import type { Build } from "@/domain/build";
 import { Card, CARD_HEIGHT, CARD_WIDTH } from "@/screens/card/Card";
 import { CardModal } from "@/screens/card/CardModal";
@@ -93,10 +93,7 @@ export function CardScreen({
 
   return (
     <>
-      <BackButton onClick={onBack}>
-        <ChevronLeft size={ICON} aria-hidden />
-        Editor
-      </BackButton>
+      <BackButton label="Editor" onClick={onBack} />
       <div className="absolute inset-0 flex flex-col items-center justify-center pb-13">
         <Panel pad="sm">
           <div className="flex items-center gap-2.5">

@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import type { MouseEventHandler, ReactNode } from "react";
 
 const CTA_VARIANT = {
@@ -55,11 +56,11 @@ export function EditOverlay({
 }
 
 export function BackButton({
-  children,
+  label,
   inline = false,
   onClick,
 }: {
-  children: ReactNode;
+  label: string;
   /** Sits in a header row rather than floating over the stage. */
   inline?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -71,7 +72,8 @@ export function BackButton({
       }`}
       onClick={onClick}
     >
-      {children}
+      <ChevronLeft size={16} aria-hidden />
+      <span>{label}</span>
     </button>
   );
 }

@@ -88,10 +88,7 @@ export function Editor({
         {/* Header: back button + centered tabs. */}
         <div className="flex w-full items-center px-10">
           <div className="flex flex-1 justify-start">
-            <BackButton inline onClick={onBack}>
-              <ChevronLeft size={16} aria-hidden />
-              Character
-            </BackButton>
+            <BackButton inline label="Character" onClick={onBack} />
           </div>
           <div className="flex items-center justify-center gap-2">
             {PANE_LABELS.map((label, i) => (
