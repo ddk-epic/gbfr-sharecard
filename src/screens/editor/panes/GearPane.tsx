@@ -1,10 +1,12 @@
 import { useState } from "react";
 import type { TraitId } from "@/catalog/ids";
+import type { Build } from "@/domain/build";
 import { IdentityCol } from "@/screens/editor/sections/IdentityCol";
 import {
   EDITOR_ZOOM,
   EmptySlot,
   GEAR_ZOOM,
+  TraitPickCell,
   type PaneProps,
 } from "@/screens/editor/controls";
 import { anchorOf, type Anchor } from "@/screens/editor/popovers/Popover";
@@ -28,6 +30,13 @@ import {
   type FillOrder,
   type Sigils,
 } from "@/screens/editor/sigil-cells";
+import {
+  canClearSub,
+  canFillSub,
+  nextEmptySub,
+  setSub,
+  type SubSlot,
+} from "@/screens/editor/wrightstone-subs";
 
 /** The width these sections were drawn at: the card's gear column. */
 const DESIGN_WIDTH = 754;
@@ -47,9 +56,17 @@ export function GearPane({ build, onChange }: PaneProps) {
   const [cursor, setCursor] = useState<Cell | null>(null);
   /** That cursor's walking direction. */
   const [order, setOrder] = useState<FillOrder>("across");
+  /** The wrightstone sub row a pick fills. */
+  const [subCursor, setSubCursor] = useState<SubSlot | null>(null);
   const close = () => setOpen(null);
 
   const setSigils = (sigils: Sigils) => onChange({ ...build, sigils });
+
+  const stone = build.wrightstone;
+  const setStone = (next: Build["wrightstone"]) => {
+    onChange({ ...build, wrightstone: next });
+    setSubCursor(nextEmptySub(next));
+  };
 
   const sigilsOpen = open?.kind === "sigils";
   const renderSigilCell = sigilsOpen
@@ -79,6 +96,32 @@ export function GearPane({ build, onChange }: PaneProps) {
       )
     : undefined;
 
+  const stoneOpen = open?.kind === "wrightstone";
+  const renderSub = stoneOpen
+    ? (slot: SubSlot, trait: TraitId | null) => (
+        <TraitPickCell
+          trait={trait}
+          label={`imbued sub trait ${slot}`}
+          aimed={subCursor === slot}
+          disabled={
+            trait ? !canClearSub(stone, slot) : !canFillSub(stone, slot)
+          }
+          onPick={() => setSubCursor(slot)}
+          onClear={() => {
+            if (!stone) return;
+            onChange({ ...build, wrightstone: setSub(stone, slot, null) });
+            // The emptied row is the likeliest next pick.
+            setSubCursor(slot);
+          }}
+        />
+      )
+    : undefined;
+
+  const pickSub = (trait: TraitId) => {
+    if (!stone || !subCursor) return;
+    setStone(setSub(stone, subCursor, trait));
+  };
+
   const pickTrait = (trait: TraitId) => {
     if (!cursor) return;
     const next = pick(build.sigils, cursor, trait);
@@ -107,14 +150,24 @@ export function GearPane({ build, onChange }: PaneProps) {
           <Wrightstone
             build={build}
             density="loose"
-            renderEmpty={() => (
-              <EmptySlot
-                className="pointer-events-none absolute inset-0 text-xl"
-                label="add wrightstone"
-              />
-            )}
-            onOpen={(el) =>
-              setOpen({ kind: "wrightstone", anchor: anchorOf(el) })
+            renderEmpty={
+              stoneOpen
+                ? undefined
+                : () => (
+                    <EmptySlot
+                      className="pointer-events-none absolute inset-0 text-xl"
+                      label="add wrightstone"
+                    />
+                  )
+            }
+            renderSub={renderSub}
+            onOpen={
+              stoneOpen
+                ? undefined
+                : (el) => {
+                    setSubCursor(nextEmptySub(stone));
+                    setOpen({ kind: "wrightstone", anchor: anchorOf(el) });
+                  }
             }
           />
         </SectionPanel>
@@ -141,9 +194,11 @@ export function GearPane({ build, onChange }: PaneProps) {
       )}
       {open?.kind === "wrightstone" && (
         <WrightstonePopover
-          wrightstone={build.wrightstone}
+          wrightstone={stone}
+          cursor={subCursor}
           anchor={open.anchor}
-          onChange={(wrightstone) => onChange({ ...build, wrightstone })}
+          onChange={setStone}
+          onPick={pickSub}
           onClose={close}
         />
       )}

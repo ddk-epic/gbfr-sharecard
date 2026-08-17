@@ -94,15 +94,18 @@ function WeaponTraitRow({
   trait,
   level,
   marker,
+  cell,
 }: {
   trait: TraitId | null;
   level: number | null;
   marker?: ReactNode;
+  /** Stands in for the plain trait cell, e.g. an editable one. */
+  cell?: ReactNode;
 }) {
   return (
     <GearRow cols={`${MARKER_GUTTER_WIDTH}px 1fr`}>
       <span className="flex items-center justify-end pr-1">{marker}</span>
-      <TraitCell trait={trait} />
+      {cell ?? <TraitCell trait={trait} />}
       <LvlDisplay
         cap={ROW_LVL_CAP_HEIGHT}
         level={level}
@@ -235,17 +238,20 @@ export function Wrightstone({
   build,
   density = "compact",
   renderEmpty,
+  renderSub,
   onOpen,
 }: {
   build: Build;
   density?: Density;
   /** Covers the trait rows only, so the heading stays readable. */
   renderEmpty?: () => ReactNode;
+  /** Replaces a sub row's trait cell, e.g. with an editable one. */
+  renderSub?: (slot: 1 | 2, trait: TraitId | null) => ReactNode;
   onOpen?: (el: Element) => void;
 }) {
   const layout = WRIGHTSTONE_LAYOUT[density];
   const wrightstone = build.wrightstone;
-  const rows = [wrightstone?.main, wrightstone?.sub1, wrightstone?.sub2];
+  const subs = [wrightstone?.sub1, wrightstone?.sub2];
 
   return (
     <div className={layout.wrapClass}>
@@ -258,13 +264,22 @@ export function Wrightstone({
         <span>{wrightstoneName(wrightstone?.main.trait)}</span>
       </div>
       <div className="relative">
-        {rows.map((row, i) => (
-          <WeaponTraitRow
-            key={i}
-            trait={row?.trait ?? null}
-            level={row?.level ?? null}
-          />
-        ))}
+        <WeaponTraitRow
+          trait={wrightstone?.main.trait ?? null}
+          level={wrightstone?.main.level ?? null}
+        />
+        {subs.map((row, i) => {
+          const trait = row?.trait ?? null;
+          const slot = (i + 1) as 1 | 2;
+          return (
+            <WeaponTraitRow
+              key={slot}
+              trait={trait}
+              level={row?.level ?? null}
+              cell={renderSub?.(slot, trait)}
+            />
+          );
+        })}
         {!wrightstone && renderEmpty?.()}
       </div>
       {onOpen && (
