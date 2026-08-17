@@ -1,8 +1,11 @@
 import type { ReactNode } from "react";
 
-/* Heading variants */
+/* Heading variants; colored transparent to prevent interpolating through 
+transparent black that greys out the last bit */
 const HEADING_TONE = {
   band: "from-band via-band-soft to-[rgba(156,198,221,0)] text-ink-strong",
+  "band-deep":
+    "from-deep-5 via-deep-4 to-[rgba(10,93,134,0)] text-white [-webkit-text-stroke:3px_var(--ui)] [paint-order:stroke]",
   deep: "from-deep-2 via-deep-3 to-deep-4 text-white [text-shadow:0_1px_4px_rgba(10,50,70,0.5)]",
 };
 

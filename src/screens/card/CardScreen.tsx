@@ -97,7 +97,7 @@ export function CardScreen({
       <div className="absolute inset-0 flex flex-col items-center justify-center pb-13">
         <Panel pad="sm">
           <div className="flex items-center gap-2.5">
-            <Heading>Share Card</Heading>
+            <Heading tone="band-deep">Share Card</Heading>
             <span className="text-dim ml-auto text-[12.5px]">
               PNG · {CARD_WIDTH}×{CARD_HEIGHT}
             </span>
