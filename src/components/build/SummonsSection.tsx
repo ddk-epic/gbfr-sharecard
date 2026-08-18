@@ -2,6 +2,10 @@ import { Fragment, type ReactNode } from "react";
 import type { Build, SummonSlot } from "@/domain/build";
 import type { SummonId } from "@/catalog/ids";
 import { summonIconUrl } from "@/assets/urls";
+import {
+  SUMMON_PORTRAIT_WIDTH,
+  summonPortraitOffset,
+} from "@/assets/art-metrics";
 import { summonById } from "@/catalog";
 import { traitName } from "@/domain/naming";
 import { TraitIcon, traitIconBox } from "@/components/build/TraitIcon";
@@ -40,8 +44,7 @@ const CELL_LAYOUT: Record<
   { outerClass: string; innerClass: string; invisibleWhenEmpty: boolean }
 > = {
   compact: {
-    // No negative bottom margin: it grew the cell past its grid area and the
-    // bleed portrait painted into the row below.
+    // No negative bottom margin.
     outerClass: "relative -ml-1 flex min-h-0 items-center overflow-hidden",
     innerClass:
       "relative z-1 mb-px flex min-w-0 flex-col gap-1.25 px-4.5 py-2.75",
@@ -61,24 +64,20 @@ const TRAIT_ICON = 18;
 
 const BONUS_ROW = "flex min-w-0 items-center gap-1.25 pl-1 text-[18px]";
 
-/* Portrait framing. */
-const PORTRAIT_SCALE = "scale-130";
-/** Slides the frame down the art - 0% is the top - since the face sits high. */
-const PORTRAIT_CROP = "object-[50%_10%]";
+/** The art bleeds off the cell's right edge and fades out both sides. */
 const PORTRAIT_FADE =
   "mask-[linear-gradient(to_left,rgba(0,0,0,0)_0%,#000_14%,#000_60%,rgba(0,0,0,0)_100%)]";
 
 function SummonPortrait({ summonId }: { summonId: SummonId }) {
   return (
     <div
-      className={`pointer-events-none absolute inset-y-0 right-0 w-1/3 ${PORTRAIT_FADE}`}
-    >
-      <img
-        src={summonIconUrl(summonId)}
-        alt=""
-        className={`h-full w-full object-cover ${PORTRAIT_CROP} ${PORTRAIT_SCALE}`}
-      />
-    </div>
+      className={`pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-no-repeat ${PORTRAIT_FADE}`}
+      style={{
+        backgroundImage: `url('${summonIconUrl(summonId)}')`,
+        backgroundSize: `${SUMMON_PORTRAIT_WIDTH}% auto`,
+        backgroundPosition: `50% calc(50% + ${summonPortraitOffset(summonId)}px)`,
+      }}
+    />
   );
 }
 
@@ -127,8 +126,7 @@ function EquipBonusRow({ slot }: { slot: SummonSlot }) {
   );
 }
 
-/* Bonus-empty is independent of whole-cell emptiness: a filled slot can still
-   lack an equip bonus. */
+/* Bonus-empty strut. */
 const BONUS_EMPTY: Record<Density, () => ReactNode> = {
   compact: () => (
     <div className="flex min-w-0 items-center gap-1.25 text-[18px]">
@@ -148,8 +146,6 @@ const BONUS_EMPTY: Record<Density, () => ReactNode> = {
   ),
 };
 
-/* Whole-cell empty defaults, one per side; the card's dim ghost bars vs the
-   editor's invisible strut - genuinely different DOM, so this is a slot. */
 function defaultCompactEmpty(): { name: ReactNode; trait: ReactNode } {
   return {
     name: (
