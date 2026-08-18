@@ -428,10 +428,10 @@ console.log(`skills: ${skillCount} rows -> ${(await readdir(skillsDirectory)).le
 // 1080, background-sized to 115%), so this is the tallest anything needs today.
 //
 // NOTE: the files committed under public/characters/ are the wiki's _2, not the
-// _0 written here, and existing files are left alone. Every character's
-// portraitY is hand-tuned to that framing - swapping the source re-frames the
-// card, editor and grid, so the switch is a visual decision, not this script's
-// to make.
+// _0 written here, and existing files are left alone. The framing offsets in
+// src/assets/art-metrics.ts are hand-tuned to that crop - swapping the source
+// re-frames the card, editor and grid, so the switch is a visual decision, not
+// this script's to make.
 const CHARACTER_DIR = new URL("../public/characters/", import.meta.url);
 const CARD_ART_HEIGHT = 900;
 const charaRoot = `${EXTRACT_DIR}/ui/layouts/common/image_chara/noatlastextures`;

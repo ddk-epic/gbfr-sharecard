@@ -5,8 +5,6 @@
     "artId": "0001",
     "playerId": "PL0000",
     "portrait": "characters/gran.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Wind",
     "enabled": false
   },
@@ -16,8 +14,6 @@
     "artId": "0101",
     "playerId": "PL0000",
     "portrait": "characters/djeeta.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Wind",
     "enabled": false
   },
@@ -27,8 +23,6 @@
     "artId": "0200",
     "playerId": "PL0200",
     "portrait": "characters/katalina.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Water",
     "enabled": true
   },
@@ -38,8 +32,6 @@
     "artId": "0300",
     "playerId": "PL0300",
     "portrait": "characters/rackam.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Fire",
     "enabled": true
   },
@@ -49,8 +41,6 @@
     "artId": "0400",
     "playerId": "PL0400",
     "portrait": "characters/io.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Light",
     "enabled": true
   },
@@ -60,8 +50,6 @@
     "artId": "0500",
     "playerId": "PL0500",
     "portrait": "characters/eugen.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Earth",
     "enabled": false
   },
@@ -71,8 +59,6 @@
     "artId": "0600",
     "playerId": "PL0600",
     "portrait": "characters/rosetta.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Dark",
     "enabled": false
   },
@@ -82,8 +68,6 @@
     "artId": "0700",
     "playerId": "PL0700",
     "portrait": "characters/ferry.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Light",
     "enabled": false
   },
@@ -93,8 +77,6 @@
     "artId": "0800",
     "playerId": "PL0800",
     "portrait": "characters/lancelot.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Water",
     "enabled": false
   },
@@ -104,8 +86,6 @@
     "artId": "0900",
     "playerId": "PL0900",
     "portrait": "characters/vane.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Water",
     "enabled": false
   },
@@ -115,8 +95,6 @@
     "artId": "1000",
     "playerId": "PL1000",
     "portrait": "characters/percival.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Fire",
     "enabled": false
   },
@@ -126,8 +104,6 @@
     "artId": "1100",
     "playerId": "PL1100",
     "portrait": "characters/siegfried.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Earth",
     "enabled": false
   },
@@ -137,8 +113,6 @@
     "artId": "1200",
     "playerId": "PL1200",
     "portrait": "characters/charlotta.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Light",
     "enabled": true
   },
@@ -148,8 +122,6 @@
     "artId": "1300",
     "playerId": "PL1300",
     "portrait": "characters/yodarha.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Wind",
     "enabled": false
   },
@@ -159,8 +131,6 @@
     "artId": "1400",
     "playerId": "PL1400",
     "portrait": "characters/narmaya.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Dark",
     "enabled": true
   },
@@ -170,8 +140,6 @@
     "artId": "1500",
     "playerId": "PL1500",
     "portrait": "characters/ghandagoza.webp",
-    "portraitX": 45,
-    "portraitY": 0,
     "element": "Fire",
     "enabled": false
   },
@@ -181,8 +149,6 @@
     "artId": "1600",
     "playerId": "PL1600",
     "portrait": "characters/zeta.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Fire",
     "enabled": false
   },
@@ -192,8 +158,6 @@
     "artId": "1700",
     "playerId": "PL1700",
     "portrait": "characters/vaseraga.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Dark",
     "enabled": false
   },
@@ -203,8 +167,6 @@
     "artId": "1800",
     "playerId": "PL1800",
     "portrait": "characters/cagliostro.webp",
-    "portraitX": 70,
-    "portraitY": 0,
     "element": "Earth",
     "enabled": true
   },
@@ -214,8 +176,6 @@
     "artId": "1901",
     "playerId": "PL1900",
     "portrait": "characters/id.webp",
-    "portraitX": 70,
-    "portraitY": 0,
     "element": "Dark",
     "enabled": false
   },
@@ -225,8 +185,6 @@
     "artId": "2100",
     "playerId": "PL2100",
     "portrait": "characters/sandalphon.webp",
-    "portraitX": 50,
-    "portraitY": -130,
     "element": "Light",
     "enabled": false
   },
@@ -236,8 +194,6 @@
     "artId": "2200",
     "playerId": "PL2200",
     "portrait": "characters/seofon.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Wind",
     "enabled": false
   },
@@ -247,8 +203,6 @@
     "artId": "2300",
     "playerId": "PL2300",
     "portrait": "characters/tweyen.webp",
-    "portraitX": 50,
-    "portraitY": 0,
     "element": "Light",
     "enabled": false
   }

@@ -1,4 +1,4 @@
-import type { SummonId } from "@/catalog/ids";
+import type { CharacterId, SummonId } from "@/catalog/ids";
 import type { StatIconId } from "./urls";
 
 export const STAT_ICON_ART: Record<StatIconId, { w: number; h: number }> = {
@@ -53,3 +53,21 @@ const SUMMON_PORTRAIT_OFFSET_BY_ID: Record<SummonId, number> = {
 
 export const summonPortraitOffset = (summonId: SummonId) =>
   SUMMON_PORTRAIT_OFFSET_BY_ID[summonId] ?? SUMMON_PORTRAIT_OFFSET;
+
+const CHARACTER_PORTRAIT_OFFSET = { x: 50, y: 0 };
+
+/** Override, per axis. */
+const CHARACTER_PORTRAIT_OFFSET_BY_ID: Record<
+  string,
+  { x?: number; y?: number }
+> = {
+  cagliostro: { x: 70 },
+  ghandagoza: { x: 45 },
+  id: { x: 70 },
+  sandalphon: { y: -130 },
+};
+
+export const characterPortraitOffset = (characterId: CharacterId) => ({
+  ...CHARACTER_PORTRAIT_OFFSET,
+  ...CHARACTER_PORTRAIT_OFFSET_BY_ID[characterId],
+});

@@ -21,8 +21,6 @@ export type Character = {
       The Captain's `PL0000`; Id's differs from its artId. */
   playerId: string;
   portrait: string; // path
-  portraitX: number; // framing x-offset (px off centre)
-  portraitY: number; // framing y-offset (px off centre)
   element: string;
   enabled: boolean;
 };

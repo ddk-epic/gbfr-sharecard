@@ -1,6 +1,6 @@
 import type { CharacterId } from "@/catalog/ids";
 import { portraitUrl } from "@/assets/urls";
-import { characterById } from "@/catalog";
+import { characterPortraitOffset } from "@/assets/art-metrics";
 
 /**
  * The full-height backdrop layer: the character art, spanning column 1 top to
@@ -25,15 +25,12 @@ export function Portrait({
   /** Column 1's right edge (inset + first column width): the art aligns to it. */
   seam: number;
 }) {
-  const character = characterById.get(characterId);
   const artW = seam + 2 * PORTRAIT_BLEED_RIGHT;
   const bleedEnd = `rgba(0,0,0,${PORTRAIT_BLEED_OPACITY})`;
   const maskH = `linear-gradient(to right, ${bleedEnd} ${PORTRAIT_BLEED_RIGHT - PORTRAIT_BLEED_LEFT}px, #000 ${PORTRAIT_PAD + PORTRAIT_BLEED_RIGHT}px, #000 ${seam - PORTRAIT_PAD + PORTRAIT_BLEED_RIGHT}px, ${bleedEnd} ${artW}px)`;
   const maskV = `linear-gradient(#000 ${PORTRAIT_FADE_START}%, rgba(0,0,0,${PORTRAIT_FADE_OPACITY}) 100%)`;
 
-  // Per-character offsets off centre.
-  const portraitX = character?.portraitX ?? 0;
-  const portraitY = character?.portraitY ?? 0;
+  const { x: portraitX, y: portraitY } = characterPortraitOffset(characterId);
 
   return (
     <div
