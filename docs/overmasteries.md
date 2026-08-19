@@ -1,29 +1,22 @@
 # Over-masteries
 
-The random stat rolls a character earns past level 80. Everything here is read
-out of the game archive (version 2.0.2); the tables are named so any claim can
-be re-checked. See [archive.md](archive.md) for how it is extracted.
+Random stat rolls a character earns past level 80. Archive version 2.0.2. See [archive.md](archive.md).
 
-## The game calls them meditation
+## Meditation
 
-There is no `overmastery` table. The system is **meditation**, and its rows are
-keyed `MED_EFF_*`.
+The game calls them meditation. No `overmastery` table. System = **meditation**, rows keyed `MED_EFF_*`.
 
-| Table                             | Rows | Holds                                                     |
-| --------------------------------- | ---- | --------------------------------------------------------- |
-| `limit_bonus_meditation`          | 3    | the three meditation tiers                                |
-| `limit_bonus_meditation_category` | 45   | which stats each tier can roll                            |
-| `limit_bonus_meditation_weight`   | 10   | level probabilities                                       |
-| `limit_bonus_param`               | 1123 | the stat values, shared with the rest of Masteries        |
-| `limit_bonus`                     | -    | the Offense/Defense/Collection nodes, a different section |
+| Table                             | Rows | Holds                                               |
+| --------------------------------- | ---- | --------------------------------------------------- |
+| `limit_bonus_meditation`          | 3    | the three meditation tiers                          |
+| `limit_bonus_meditation_category` | 45   | which stats each tier can roll                      |
+| `limit_bonus_meditation_weight`   | 10   | level probabilities                                 |
+| `limit_bonus_param`               | 1123 | stat values, shared with rest of Masteries          |
+| `limit_bonus`                     | -    | Offense/Defense/Collection nodes, different section |
 
-`limit_bonus_param` is **not** over-mastery-specific. It carries every mastery
-parameter in the game, `LBP_EFF_*` for the Masteries nodes and `MED_EFF_*` for
-over-masteries. Filtering by the keys in `limit_bonus_meditation_category` is
-what separates them.
+`limit_bonus_param` is **not** over-mastery-specific - every mastery parameter, `LBP_EFF_*` for Masteries nodes and `MED_EFF_*` for over-masteries. Filtering by `limit_bonus_meditation_category` keys separates them.
 
-Unlocking is uniform: `chara.MinLvlForOverMasteries` is **80 for all 29
-characters**.
+`chara.MinLvlForOverMasteries` = **80 for all 29 characters**.
 
 ## Three tiers, four rolls
 
@@ -35,19 +28,13 @@ characters**.
 | Medium | 1                      | 1000     |
 | Large  | 2                      | 2000     |
 
-Every row carries `NumMasteries1/2/3` = `4/3/2` with weights `100/0/0`, so the
-count is not random: **a meditation always grants 4 over-masteries**, at every
-tier. The 3 and 2 branches exist in the data and are switched off.
+`NumMasteries1/2/3` = `4/3/2`, weights `100/0/0`: **a meditation always grants 4 over-masteries**, every tier. 3/2 branches present in data, switched off.
 
-The English strings for the tier names are **empty** -
-`TXT_MEDITATION_TITLE_SMALL` and its siblings resolve to `""`. The UI names
-these somewhere the archive does not say.
+`TXT_MEDITATION_TITLE_SMALL` and siblings resolve to `""` - tier names not in the archive text.
 
 ## The eleven stats
 
-`limit_bonus_meditation_category` joined to `limit_bonus_param` by `Key`:
-
-Each row carries a ten-step ladder in `Lv1Value`-`Lv10Value`:
+`limit_bonus_meditation_category` joined to `limit_bonus_param` by `Key`. Each row: ten-step ladder `Lv1Value`-`Lv10Value`:
 
 | Stat                        | `MED_EFF_` key     | ×mult | Lv1 → Lv10                                           |
 | --------------------------- | ------------------ | ----- | ---------------------------------------------------- |
@@ -63,69 +50,44 @@ Each row carries a ten-step ladder in `Lv1Value`-`Lv10Value`:
 | Skybound Art Damage Cap Up  | `ARTS_LIMIT01`     | 1     | ”                                                    |
 | Skill Healing Cap Up        | `RECOVERY_LIMIT01` | 1     | ”                                                    |
 
-Eleven stats, and eight of the ten steps are reachable - see the level table
-below. Nine of the eleven share one ladder; only ATK and HP differ, and Stun
-Power is that same ladder stored a tenth of the size.
+Eight of ten steps reachable (see level table below). Nine of eleven share one ladder; only ATK/HP differ, Stun Power is the same ladder at a tenth of the size.
 
-### Stun Power's fractions are the archive's own
+### Stun Power
 
-`0.1, 0.1, 0.2, …` is **what the table holds**. It is not a typo here and not a
-transcription error - it is confirmed in two independent tables that share no
-columns:
+`0.1, 0.1, 0.2, …` is what the table holds, confirmed in two tables sharing no columns:
 
-- `limit_bonus_param` stores the over-mastery ladder as `0.1 … 2`.
-- `skill_status` stores the Stun Power **trait** as `0.5, 1, 1.5, 2, 2.3 … 10`,
-  where Critical Hit Rate holds `5, 6, 7, 8, 9 … 50` and ATK holds
-  `4, 6, 8, 10, 12 … 2000`.
+- `limit_bonus_param`: over-mastery ladder `0.1 … 2`.
+- `skill_status`: Stun Power **trait** `0.5, 1, 1.5, 2, 2.3 … 10` (Critical Hit Rate: `5, 6, 7, 8, 9 … 50`; ATK: `4, 6, 8, 10, 12 … 2000`).
 
-So fractional storage is a property of the stat, not of the over-mastery system.
-Anything reading Stun Power out of the archive will meet it.
+Fractional storage is a property of the stat, not the over-mastery system.
 
-`limit_bonus_param` also carries a column the headers call `Unk19`, which is
-`10` on **exactly** the 41 rows of stat type 3 and `1` on the other 1082, and
-zero `Unk19 = 1` rows hold a fraction.
+`limit_bonus_param`'s `Unk19` column: `10` on **exactly** the 41 rows of stat type 3, `1` on the other 1082 - zero `Unk19 = 1` rows hold a fraction.
 
-**The game renders ten times the stored value**, confirmed in game. Three stun
-sigils stacked on one build pooled the Stun Power trait to levels 16, 32 and 45,
-whose `skill_status` ladder holds `5.1`, `6.9` and `10`; the displayed Stun Power
-moved by `+51`, `+18` and `+31`, which are the differences of `51 / 69 / 100`. So
-an over-mastery storing `1.6` shows as `16`, on the same `2 … 20` ladder as the
-nine percentage stats. The readings are in
-[stats.md](stats.md#over-masteries-pay-by-roll-level).
+**The game renders ten times the stored value**, confirmed in game: three stun sigils stacked, Stun Power pooled to levels 16, 32, 45; `skill_status` ladder holds `5.1`, `6.9`, `10`; displayed Stun Power moved `+51`, `+18`, `+31` (= `51/69/100`). An over-mastery storing `1.6` shows as `16`, on the same `2 … 20` ladder as the nine percentage stats. Readings: [research/pwr-formula.md](../research/pwr-formula.md).
 
-That settles the rendering, not the mechanism. `skill_status` has no `Unk19`
-column and stores fractions anyway, so `Unk19` cannot be the thing that makes the
-stat work - treat it as a per-stat-type flag that marks fractional storage.
+That settles rendering, not mechanism - `skill_status` has no `Unk19` and stores fractions anyway. Treat `Unk19` as a per-stat-type flag marking fractional storage.
 
-The column the headers call `DisplayNumberMultiplier` is a different thing
-again, and also misnamed: it holds a stat-type index (0 ATK, 1 HP, 2 crit,
-3 stun, then 100-107 for the damage family).
+`DisplayNumberMultiplier` (header name) is a different, also-misnamed thing: a stat-type index (0 ATK, 1 HP, 2 crit, 3 stun, 100-107 damage family).
 
-## Flat or percent is in the format string
+## Flat or percent
 
-`NameFormat` resolves to the line the UI prints, and whether it carries a `%` is
-the only reliable test:
+Flat or percent is in the format string. `NameFormat` resolves to the UI line; whether it carries `%` is the only reliable test:
 
-| Stat                      | Format                                                          |
-| ------------------------- | --------------------------------------------------------------- |
-| Attack Power Up           | `Attack +{0}`                                                   |
-| Health Up                 | `HP +{0}`                                                       |
-| **Stun Power Up**         | **`Stun Power +{0}`**                                           |
-| Critical Hit Rate Up      | `Critical Hit Rate +{0}%`                                       |
-| Skill Damage Up           | `Skill Damage +{0}%`                                            |
-| Skill Healing Cap Up      | `Healing Cap (Receiving) +{0}%`⏎`Healing Cap (Bestowing) +{0}%` |
-| … the remaining cap stats | `… +{0}%`                                                       |
+| Stat                  | Format                                                          |
+| --------------------- | --------------------------------------------------------------- |
+| Attack Power Up       | `Attack +{0}`                                                   |
+| Health Up             | `HP +{0}`                                                       |
+| **Stun Power Up**     | **`Stun Power +{0}`**                                           |
+| Critical Hit Rate Up  | `Critical Hit Rate +{0}%`                                       |
+| Skill Damage Up       | `Skill Damage +{0}%`                                            |
+| Skill Healing Cap Up  | `Healing Cap (Receiving) +{0}%`⏎`Healing Cap (Bestowing) +{0}%` |
+| … remaining cap stats | `… +{0}%`                                                       |
 
-**Stun Power is flat, not a percentage**, despite sharing the `2 … 20` ladder
-with the nine percentage stats and sharing nothing else with ATK and HP. The
-stat-type index does not separate them - stun is type 3, adjacent to crit at 2 -
-so a rule built on the type index gets it wrong. _Skill Healing Cap Up_ is also
-the one stat whose format prints two lines.
+**Stun Power is flat, not a percentage**, despite sharing the `2 … 20` ladder with the percentage stats. Stat-type index doesn't separate them (stun = type 3, adjacent to crit at 2). _Skill Healing Cap Up_ is the one stat whose format prints two lines.
 
-## Small tier is weighted toward the basics
+## Small tier
 
-Medium and Large offer all eleven stats at `Weight 1` each - a flat pick. Small
-offers 23 rows rather than 11, because the four basic stats are **repeated**:
+Small tier is weighted toward the basics. Medium/Large: all eleven stats at `Weight 1` - flat pick. Small: 23 rows, four basic stats repeated:
 
 ```
 ATK       ×5   (MED_EFF_ATK01, _02, _03, _04, _05)
@@ -135,15 +97,11 @@ Stun      ×3
 the other seven  ×1 each
 ```
 
-The duplicate keys all resolve to the same `limit_bonus_param` row, so this is
-weighting by row count rather than by the `Weight` column. A Small meditation is
-16-in-23 to roll a basic stat; Medium and Large are 4-in-11.
+Duplicate keys resolve to the same `limit_bonus_param` row - weighting by row count, not the `Weight` column. Small: 16-in-23 for a basic stat. Medium/Large: 4-in-11.
 
-## Which level gets rolled
+## Roll-level weights
 
-`limit_bonus_meditation_weight` is **one row per level and one column per
-tier**, despite the column names reading `WeightLv1/2/3`. Each column sums to
-exactly 10000, so the numbers are basis points.
+`limit_bonus_meditation_weight`: one row per level, one column per tier (despite `WeightLv1/2/3` naming). Each column sums to 10000 - basis points.
 
 | Level | Small | Medium | Large |
 | ----- | ----- | ------ | ----- |
@@ -158,43 +116,21 @@ exactly 10000, so the numbers are basis points.
 | 9     | 200   | 200    | 2200  |
 | 10    | 100   | 100    | 1800  |
 
-**Levels 1 and 2 are unreachable at every tier**, so a roll lands on one of
-**8 values**, not 10. Reading the ladder from level 3 up gives ATK
-`200 … 1000`, HP `400 … 2000`, and `2 … 20` for the nine percentage stats.
+**Levels 1-2 unreachable at every tier** - a roll lands on one of **8 values**. From level 3: ATK `200 … 1000`, HP `400 … 2000`, `2 … 20` for the nine percentage stats.
 
-The three columns are what the tier names mean: Small is weighted toward the
-low end, Medium peaks in the middle, Large climbs toward the top.
+Small weighted low, Medium mid, Large high.
 
-## What this project uses
+## Implementation
 
-Only the **Large tier**, which offers all eleven stats evenly, so the small
-tier's row-count weighting does not carry over. Each stat is stored as its eight
-reachable values rather than a `{min, max}` range, because a roll lands on a
-step and never between two. The roll probabilities are not modelled - a
-sharecard shows a build that already exists, not the odds of rolling it.
+Only **Large tier** - all eleven stats evenly, so Small's row-count weighting doesn't carry over. Each stat stored as its eight reachable values, not a `{min, max}` range - a roll lands on a step, never between two. Roll probabilities not modelled.
 
-**Stun Power is normalised to whole numbers** by its `Unk19`, putting it on the
-same `2 … 20` ladder as the percentage stats. That is what the game itself shows,
-not a presentation choice made here. The catalog holds only whole numbers, so
-nothing downstream deals in fractions. It is still flat rather than
-percent - the format string decides that, and Stun Power's carries no `%`.
+**Stun Power normalised to whole numbers** by `Unk19`, on the same `2 … 20` ladder as the percentage stats - matches what the game shows. Catalog holds only whole numbers. Still flat, not percent - the format string's `%` decides that.
 
 ## The stat icons
 
-Each stat carries a bonus icon, `cmn_iclb_s_01`-`s_15` in `ui/atlas/common_icon_lb`.
-The stat -> sprite pairing is **not in any table**: the meditation rows carry
-`LimitBonusParamTypeId = -1`, and the icon is chosen at runtime by
-`LimitBonusIconSetter` (`window_dialog01_lb01.prfb`). The ordered sprite list is
-in the UI image descriptors instead - `meditationicons.image.imageb` holds the
-four basics and `meditationlatters.image.imageb` the seven damage-family, and
-`summonbaseparamicons.image.imageb` holds all eleven concatenated in the same
-order. All three agree.
+Each stat: a bonus icon, `cmn_iclb_s_01`-`s_15` in `ui/atlas/common_icon_lb`. Stat→sprite pairing **not in any table**: meditation rows carry `LimitBonusParamTypeId = -1`; icon chosen at runtime by `LimitBonusIconSetter` (`window_dialog01_lb01.prfb`). Ordered sprite list in UI image descriptors instead - `meditationicons.image.imageb` (four basics), `meditationlatters.image.imageb` (seven damage-family), `summonbaseparamicons.image.imageb` (all eleven, same order). All three agree.
 
-Those `.imageb` files reference each sprite by the 32-bit `texb|subid` hash from
-Nenkai's [hashlist](https://nenkai.github.io/relink-modding/resources/re/hashes/)
-(XXHash32 variant). Reading them back is: grep the hashlist for `cmn_iclb_s_NN`
-to get each hash, then scan the `.imageb` bytes (uint32 LE) for those hashes in
-offset order. In catalog order:
+`.imageb` files reference each sprite by 32-bit `texb|subid` hash from Nenkai's [hashlist](https://nenkai.github.io/relink-modding/resources/re/hashes/) (XXHash32 variant). Read back: grep hashlist for `cmn_iclb_s_NN` → hash, scan `.imageb` bytes (uint32 LE) for hashes in offset order. Catalog order:
 
 | Stat                        | Sprite |
 | --------------------------- | ------ |
@@ -210,5 +146,4 @@ offset order. In catalog order:
 | Skybound Art Damage Cap Up  | s_14   |
 | Skill Healing Cap Up        | s_15   |
 
-`s_05`, `s_09`, `s_10`, `s_12` are Masteries stats (DEF, non-cap damage variants) the
-meditation system never rolls, so they go unused.
+`s_05`, `s_09`, `s_10`, `s_12` - Masteries stats (DEF, non-cap damage variants) the meditation system never rolls.

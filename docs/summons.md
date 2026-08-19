@@ -1,13 +1,8 @@
 # Summons
 
-A summon carries **main traits** it rolls and an **equip bonus** it grants while
-equipped. Everything here is read out of the game archive (version 2.0.2); the
-tables are named so any claim can be re-checked. See [archive.md](archive.md)
-for how it is extracted.
+A summon carries **main traits** it rolls and an **equip bonus** it grants while equipped. Archive version 2.0.2. See [archive.md](archive.md).
 
-This page is a head start, not a finished survey - the trait side is only
-sketched. The equip bonus side is settled and reconciled with what the catalog
-ships.
+Trait side: only sketched. Equip bonus side: settled, reconciled with the catalog.
 
 ## The tables
 
@@ -22,32 +17,21 @@ ships.
 | `summon_param`                       | 229       | the summon's own combat effect                   |
 | `reward_summon`, `reward_summon_lot` | 177 / 587 | where summons drop                               |
 
-`summon_info` is 77 rows against `summon`'s 189 because a summon exists at
-several rarities. `summon_info.SummonName` carries embedded newlines for the
-long forms - _"Proto Bahamut,\nTranscendent Blue"_.
+`summon_info` 77 rows vs. `summon`'s 189: a summon exists at several rarities. `summon_info.SummonName` carries embedded newlines for long forms - _"Proto Bahamut,\nTranscendent Blue"_.
 
-## Main traits are a weighted lot
+## Main traits
 
-Each `summon` row points at up to four `SummonLotId`s. A lot is a set of
-`summon_lot` rows, each a `SkillId` with a `Weight`, so the traits a summon can
-roll and their odds are both in the table. `SummonCurveId` points into
-`summon_curve`, which weights the _level_ the trait rolls at - the same
-shape as the over-mastery level weighting.
+Main traits are a weighted lot. Each `summon` row points at up to four `SummonLotId`s. A lot = `summon_lot` rows, each a `SkillId` + `Weight`. `SummonCurveId` points into `summon_curve`, which weights the _level_ the trait rolls at - same shape as over-mastery level weighting.
 
-This is the same information Nenkai's `summon_trait_chances.md` dumps.
+Same information as Nenkai's `summon_trait_chances.md`.
 
-## Equip bonuses are a ten-step ladder
+## Equip bonuses
 
-`summon_base_param` holds `Level1Value` through `Level10Value` per bonus, plus a
-`ValueDisplayMultiplier`. There are **two groups of eleven** bonuses, not three:
+Equip bonuses are a ten-step ladder. `summon_base_param` holds `Level1Value`-`Level10Value` per bonus, plus `ValueDisplayMultiplier`. **Two groups of eleven** bonuses, not three.
 
-**Levels are 0-based on the roll side and 1-based in the columns.**
-`summon_curve.SkillOrBaseParamLevel` counts `0`-`9`, and level _n_ there reads
-`Level<n+1>Value` here. The tables below are indexed the way a curve refers to
-them, and carry display values - the multiplier is already applied, which is why
-Stun Power reads in whole numbers.
+**Levels are 0-based on the roll side, 1-based in the columns.** `summon_curve.SkillOrBaseParamLevel` counts `0`-`9`; level _n_ reads `Level<n+1>Value`. Tables below are indexed the curve's way, display values (multiplier applied - why Stun Power reads in whole numbers).
 
-**Group A** - rarity 3, 4 and most of rarity 5:
+**Group A** - rarity 3, 4, most of rarity 5:
 
 | Bonus                       | 0   | 1   | 2   | 3   | 4    | 5    | 6    | 7    | 8    | 9    |
 | --------------------------- | --- | --- | --- | --- | ---- | ---- | ---- | ---- | ---- | ---- |
@@ -79,9 +63,9 @@ Stun Power reads in whole numbers.
 | Skybound Art Damage Cap Up  | 20  | 25   | 30   | 35   | 40   | 45   | 50   | 60   | 80   | 100  |
 | Healing Cap Up              | 20  | 25   | 30   | 35   | 40   | 45   | 50   | 55   | 60   | 75   |
 
-A 23rd row is empty, with a multiplier of 0.
+23rd row empty, multiplier 0.
 
-Most bonuses share a ladder. Group A has only **four** distinct ones:
+Group A ladders - only **four** distinct:
 
 ```
 ATK + Health
@@ -90,34 +74,19 @@ Chain Burst + the three caps + Healing Cap
 Stun Power
 ```
 
-Group B splits into **six** - ATK, Health and Healing Cap each break away from
-the group they shared in A.
+Group B - **six**: ATK, Health, Healing Cap each break away from A's grouping.
 
-**ATK and Health Up are not the same ladder.** In group A they are identical, in
-group B they share the first seven steps and then split - ATK takes `2200` and
-tops out at `3000`, Health skips `2200` and tops out at `5000`. Health is the
-only bonus whose top step is more than a step above the one below it.
+**ATK and Health Up are not the same ladder.** Group A: identical. Group B: share first seven steps, then split - ATK takes `2200`, tops `3000`; Health skips `2200`, tops `5000`. Health's top step is the only one more than a step above the one below.
 
-Two things follow. **Stun Power is stored fractionally here too**, with
-`ValueDisplayMultiplier` 10, exactly as in `limit_bonus_param` - see
-[overmasteries.md](overmasteries.md#stun-powers-fractions-are-the-archives-own).
-And the bonus is named **"Healing Cap Up"** here, where the over-mastery table
-calls the same idea "Skill Healing Cap Up". The two systems do not share their
-naming.
+**Stun Power stored fractionally here too**, `ValueDisplayMultiplier` 10, same as `limit_bonus_param` - see [overmasteries.md](overmasteries.md#stun-power). Named **"Healing Cap Up"** here vs. over-mastery's "Skill Healing Cap Up" - no shared naming between the two systems.
 
-## A tier is a group plus a curve
+## Tiers
 
-The equip bonus is rolled through the **same lot mechanism as the traits**:
-`summon_lot.SkillId` holds base-param keys as well as trait keys, so a lot is
-either a trait pool or an equip-bonus pool. Of 224 lots, 186 are traits, 33 are
-group A and 5 are group B.
+A tier is a group plus a curve. Equip bonus rolls through the **same lot mechanism as traits**: `summon_lot.SkillId` holds base-param keys as well as trait keys. Of 224 lots: 186 traits, 33 group A, 5 group B.
 
-**Group B belongs to rarity 5 alone**, and only 8 of the 189 summons use it.
-Rarity 3, 4 and most of rarity 5 draw from group A. So the two value groups are
-not the tiers - they are two rungs of exclusivity, and the tier comes from the
-lot's `SummonCurveId`, which decides _which levels of the ladder can roll_.
+**Group B is rarity-5-only**, 8 of 189 summons. Rarity 3, 4, most of 5 draw group A. The two value groups aren't the tiers - they're rungs of exclusivity. Tier = the lot's `SummonCurveId`, deciding _which levels can roll_.
 
-Most curves are fixed - a single level at weight 10000. Only four span a range:
+Most curves fixed - single level, weight 10000. Four span a range:
 
 | Curve      | Group | Levels (0-based) | Weights                       |
 | ---------- | ----- | ---------------- | ----------------------------- |
@@ -126,11 +95,7 @@ Most curves are fixed - a single level at weight 10000. Only four span a range:
 | `2E2C5483` | A     | 6-9              | 2500 each                     |
 | `4E547493` | B     | 5-9              | 4500 / 4000 / 700 / 500 / 300 |
 
-Those are the tiers a player experiences as a variable roll. Everything else
-lands on one value every time.
-
-Checked against the committed catalog, the mapping is exact for all eleven
-bonuses:
+Matches the catalog exactly for all eleven bonuses:
 
 | Catalog tier | Group | Curve      | Levels |
 | ------------ | ----- | ---------- | ------ |
@@ -138,29 +103,14 @@ bonuses:
 | `mid`        | A     | `2E2C5483` | 6-9    |
 | `low`        | A     | `DDAB04DC` | 3-5    |
 
-So clustering Nenkai's markdown on value signatures recovered the right three
-groups, and the archive now explains why they exist. Note the legendary curve is
-steeply weighted toward its bottom - `4500` on level 5 against `300` on level 9 -
-so its top value is rare, where `mid` is a flat 2500 across all four.
+Legendary curve weighted toward its bottom - `4500` on level 5 vs. `300` on level 9 - top value rare. `mid` flat 2500 across all four.
 
-The fourth ranged curve, `BD0C6515` at levels 0-2, has **no counterpart in the
-catalog** - the markdown collapses to top-tier summons, so the lowest band never
-appears there.
+`BD0C6515` (levels 0-2) has **no counterpart in the catalog** - markdown collapses to top-tier summons, lowest band absent.
 
-## What this project uses
+## Implementation
 
-The catalog's summon traits and equip tiers are still generated from Nenkai's
-`summon_trait_chances.md`, which is the one external fetch left in
-`scripts/extract.mjs`. The archive tables above are documented but not yet wired.
+Summon traits and equip tiers still generated from Nenkai's `summon_trait_chances.md` - the one external fetch left in `scripts/extract.mjs`. Archive tables above documented, not wired.
 
-Equip bonuses key by over-mastery bonus type id, so the markdown's
-"Healing Cap Up" is aliased to the game's "Skill Healing Cap Up" during
-extraction.
+Equip bonuses key by over-mastery bonus type id: markdown's "Healing Cap Up" aliased to game's "Skill Healing Cap Up" during extraction.
 
-Summon icons are not extracted - see
-[archive.md](archive.md#icon-classes-not-extracted) for where they live and the
-hash workaround they need. Wiring them needs a join that does not exist yet:
-**icons key on the game id (`0300`) and the catalog keys on a name slug.**
-`system/table/text/en/text_sum.msg` closes it - `TXT_SMN_So0300` resolves to
-_Proto Bahamut_ - but a naive scan mis-pairs some rows, and 25 of the catalog's
-74 summons are datamine-only enemy entries with no row in that file at all.
+Summon icons not extracted - see [archive.md](archive.md#icon-classes). Wiring needs a join that doesn't exist: **icons key on game id (`0300`), catalog keys on name slug.** `system/table/text/en/text_sum.msg` closes it - `TXT_SMN_So0300` → _Proto Bahamut_ - but a naive scan mis-pairs some rows, and 25 of 74 catalog summons are datamine-only enemy entries absent from that file.

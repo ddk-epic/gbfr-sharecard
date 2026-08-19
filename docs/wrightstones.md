@@ -1,29 +1,24 @@
 # Wrightstones
 
-The items that imbue a weapon with extra traits. Everything here is read out of
-the game archive (version 2.0.2); the tables are named so any claim can be
-re-checked. See [archive.md](archive.md) for how it is extracted.
+Items that imbue a weapon with extra traits. Archive version 2.0.2. See [archive.md](archive.md).
 
-## The game calls them pendulums
+## Pendulums
 
-There is no `wrightstone` table. The item is a **pendulum**, and its family
-mirrors the sigil family one for one:
+The game calls them pendulums. No `wrightstone` table. Item = **pendulum**; family mirrors the sigil family one for one:
 
-| Table                  | Rows | Holds                                    |
-| ---------------------- | ---- | ---------------------------------------- |
-| `item_pendulum`        | 74   | every wrightstone variant and its rolls  |
-| `item`                 | -    | the display name, rarity and description |
-| `skill_level_lot`      | -    | which level a roll lands on              |
-| `item_pendulum_sell`   | -    | shop pricing                             |
-| `item_pendulum_ticket` | -    | voucher exchange                         |
+| Table                  | Rows | Holds                                   |
+| ---------------------- | ---- | --------------------------------------- |
+| `item_pendulum`        | 74   | every wrightstone variant and its rolls |
+| `item`                 | -    | display name, rarity, description       |
+| `skill_level_lot`      | -    | which level a roll lands on             |
+| `item_pendulum_sell`   | -    | shop pricing                            |
+| `item_pendulum_ticket` | -    | voucher exchange                        |
 
-Every one of the 74 `item_pendulum` rows joins to a real `item` row, so nothing
-in the table is orphaned data.
+All 74 `item_pendulum` rows join to a real `item` row - nothing orphaned.
 
-## Four stones, one per main trait
+## Four stones
 
-`item_pendulum.MainSkill` is fixed per row, and the item name follows from it.
-Five key prefixes appear; four of them are named:
+Four stones, one per main trait. `item_pendulum.MainSkill` fixed per row; item name follows from it. Five key prefixes, four named:
 
 | Keys        | Item name                   | Main trait        | `skill` key    | Rows |
 | ----------- | --------------------------- | ----------------- | -------------- | ---- |
@@ -34,23 +29,15 @@ Five key prefixes appear; four of them are named:
 | `ITEM_24_*` | **(unnamed)**               | Linked Together   | `SKILL_009_00` | 2    |
 | `ITEM_24_*` | **(unnamed)**               | Drain             | `SKILL_067_00` | 4    |
 
-**The `ITEM_24` six carry an empty `ItemName` hash** - no English string, no
-name in any language file. Linked Together and Drain wrightstones exist in the
-table and not in the game. Their level ladder is also stunted: Drain tops out at
-main level 7, Linked Together never leaves the lot.
+**The `ITEM_24` six carry an empty `ItemName` hash** - no English string, no name anywhere. Linked Together and Drain wrightstones exist in the table, not in the game. Level ladder stunted: Drain tops at main level 7, Linked Together never leaves the lot.
 
-So the main trait is not a choice made per stone. **A wrightstone _is_ its main
-trait**, and there are four of them.
+**A wrightstone _is_ its main trait** - four of them, not a per-stone choice.
 
-## Seventeen variants per stone
+## Variants
 
-Each named stone has 14 `ITEM_*` rows plus 3 rows keyed by hash rather than by
-`ITEM_` prefix. The hash-keyed ones are later additions - all four families gain
-the same three - and they are ordinary named items, not internal rows.
+Seventeen variants per stone. Each named stone: 14 `ITEM_*` rows + 3 hash-keyed rows (later additions, all four families gain the same three; ordinary named items).
 
-The variants split into two kinds. **Rolled** stones carry empty `SubSkill1/2`
-and point at a `skill_level_lot`; **preset** stones name their sub traits and
-levels outright.
+Two kinds: **Rolled** stones (empty `SubSkill1/2`, point at a `skill_level_lot`); **preset** stones (sub traits and levels named outright).
 
 Rolled - identical across all four families:
 
@@ -65,7 +52,7 @@ Rolled - identical across all four families:
 | `_0130` | 5      | lot 14 → 10/15  | lot 15 → 7/10   | lot 16 → 5/7    |
 | `_0131` | 5      | lot 17 → **20** | lot 18 → **15** | lot 19 → **10** |
 
-Preset - the sub traits are written into the row:
+Preset - sub traits written into the row:
 
 | Key     | Rarity | Main level | Sub 1             | Sub 2     |
 | ------- | ------ | ---------- | ----------------- | --------- |
@@ -79,7 +66,7 @@ Preset - the sub traits are written into the row:
 | hash    | 4      | 10         | per family, below | DMG Cap 5 |
 | hash    | 5      | **20**     | Aegis 15          | ATK 10    |
 
-The per-family preset pairs:
+Per-family preset pairs:
 
 | Stone         | `_0030` (lv 9)                      | hash (lv 9)        | hash (lv 10)        |
 | ------------- | ----------------------------------- | ------------------ | ------------------- |
@@ -90,32 +77,22 @@ The per-family preset pairs:
 
 ## The two rarity-5 level sets
 
-`_0131` is the top stone, and its three lots each hold a **single** outcome: lot
-17 is level 20 alone, lot 18 is level 15, lot 19 is level 10. A `_0131` roll
-cannot come out any other way. The hash-keyed rarity-5 preset reaches the same
-20 / 15 / 10 by naming Aegis 15 and ATK 10 outright.
+`_0131` = top stone: three lots, each a **single** outcome (17=lvl 20, 18=lvl 15, 19=lvl 10). Can't come out any other way. Hash-keyed rarity-5 preset reaches the same 20/15/10 by naming Aegis 15 and ATK 10 outright.
 
-`_0130` is the other rarity-5 stone, and it is the step below. Its three lots
-each hold **two** equally-weighted outcomes - main 10 or 15, sub1 7 or 10, sub2
-5 or 7 - which read as two tiers:
+`_0130` = the step below: three lots, each **two** equally-weighted outcomes - main 10 or 15, sub1 7 or 10, sub2 5 or 7:
 
 | Tier  | Main | Sub 1 | Sub 2 |
 | ----- | ---- | ----- | ----- |
 | upper | 15   | 10    | 7     |
 | lower | 10   | 7     | 5     |
 
-So the endgame level sets are **20 / 15 / 10** and **15 / 10 / 7**, with
-10 / 7 / 5 as `_0130`'s lower tier. The three lots are stored independently, so
-the table does not itself forbid a mixed draw such as 15 / 7 / 7; the tiering is
-what the paired values imply, not something the archive states.
+Endgame level sets: **20/15/10** and **15/10/7**, plus **10/7/5** as `_0130`'s lower tier. The three lots are stored independently - table doesn't forbid a mixed draw like 15/7/7; tiering is implied by the paired values, not stated.
 
-`LvPrimarySkill` never exceeds 20, `LvSubSkill1` never exceeds 15 and
-`LvSubSkill2` never exceeds 10, across all 74 rows.
+`LvPrimarySkill` ≤ 20, `LvSubSkill1` ≤ 15, `LvSubSkill2` ≤ 10, across all 74 rows.
 
 ## The level lots
 
-`skill_level_lot` is 20 chance columns and a key. The 20 lots the wrightstones
-reference:
+`skill_level_lot`: 20 chance columns + key. The 20 lots wrightstones reference:
 
 | Lot | Distribution         | Lot | Distribution   |
 | --- | -------------------- | --- | -------------- |
@@ -130,111 +107,54 @@ reference:
 | 8   | 7:40 8:30 9:20 10:10 | 18  | 15:1           |
 | 9   | 5:50 6:30 7:20       | 19  | 10:1           |
 
-**Lots 0-13 are percentages summing to 100. Lots 14-19 are not** - they hold
-equal counts of 1, so they read as an even pick among the levels listed. Two
-different conventions in one table; a reader that assumes basis points or
-percentages gets lots 14-19 wrong.
+**Lots 0-13: percentages summing to 100. Lots 14-19: not** - equal counts of 1, even pick among levels listed. Two conventions in one table.
 
-`WeightSubSkill1/2` is a separate thing: it gates **whether** a sub rolls at
-all, not which one. It is 100 on the rolled stones that have that sub and 0
-where the sub is absent. The unnamed `ITEM_24` pair is the only place it takes
-another value - 40 and 20.
+`WeightSubSkill1/2` gates **whether** a sub rolls, not which one: 100 where the sub exists on the rolled stone, 0 where absent. Unnamed `ITEM_24` pair is the only exception - 40 and 20.
 
 ## The sub trait pool
 
-On every rolled stone `SubSkill1` and `SubSkill2` are **empty strings**; only
-the sub's _level_ is lotted. The traits come from `skill_lot`.
+Every rolled stone: `SubSkill1`/`SubSkill2` **empty strings** - only the sub's _level_ is lotted. Traits come from `skill_lot`.
 
-`skill_lot` is 439 rows in 36 groups, and **the union of all 36 groups is 72
-traits**. The groups are six slices of that one pool, repeated over several
-generations of the table: 4 basic, 21 offense, 22 defense, 8 sustain, 8 special,
-9 heavy-hitters. A lot names which slices it draws and at what odds - the widest,
-`skill_type_lot` row 16, draws all six and so reaches all 72. **There is one
-random-trait pool in the archive, and this is it.** See [sigils.md](sigils.md)
-for how sigils draw on it.
+`skill_lot`: 439 rows, 36 groups, union = **72 traits**. Six slices of one pool, repeated over several table generations: 4 basic, 21 offense, 22 defense, 8 sustain, 8 special, 9 heavy-hitters. `skill_type_lot` row 16 (widest) draws all six, reaches all 72. **One random-trait pool in the archive.** See [sigils.md](sigils.md).
 
 The 72, by slice:
 
 **Basic (4)** ATK · HP · Critical Hit Rate · Stun Power
 
-**Offense (21)** Enmity · Stamina · Charged Attack DMG · Linked Together · Throw
-DMG · Critical Hit DMG · Weak Point DMG · Combo Finisher DMG · Concentrated Fire
-· DMG Cap · Combo Booster · Tyranny · Lucky Charge · Injury to Insult ·
-Overdrive Assassin · Break Assassin · Guard Payback · Dodge Payback · Skilled
-Assault · Life on the Line · Quick Charge
+**Offense (21)** Enmity · Stamina · Charged Attack DMG · Linked Together · Throw DMG · Critical Hit DMG · Weak Point DMG · Combo Finisher DMG · Concentrated Fire · DMG Cap · Combo Booster · Tyranny · Lucky Charge · Injury to Insult · Overdrive Assassin · Break Assassin · Guard Payback · Dodge Payback · Skilled Assault · Life on the Line · Quick Charge
 
-**Defense (22)** Garrison · Aegis · Improved Guard · Improved Dodge · Steel
-Nerves · Nimble Defense · Precise Resilience · Firm Stance · and the fourteen
-resistances - ATK↓ · DEF↓ · Poison · Burn · Blight · Sandtomb · Glaciate ·
-Darkflame · Dizzy · Paralysis · Slow · Held Under · Skill Sealed · SBA Sealed
+**Defense (22)** Garrison · Aegis · Improved Guard · Improved Dodge · Steel Nerves · Nimble Defense · Precise Resilience · Firm Stance · fourteen resistances - ATK↓ · DEF↓ · Poison · Burn · Blight · Sandtomb · Glaciate · Darkflame · Dizzy · Paralysis · Slow · Held Under · Skill Sealed · SBA Sealed
 
-**Sustain (8)** Improved Healing · Regen · Drain · Quick Cooldown · Cascade ·
-Uplift · Nimble Onslaught · Precise Wrath
+**Sustain (8)** Improved Healing · Regen · Drain · Quick Cooldown · Cascade · Uplift · Nimble Onslaught · Precise Wrath
 
-**Special (8)** Guts · Autorevive · Potion Hoarder · Low Profile · Provoke ·
-Fast Learner · Rupie Tycoon · Steady Focus
+**Special (8)** Guts · Autorevive · Potion Hoarder · Low Profile · Provoke · Fast Learner · Rupie Tycoon · Steady Focus
 
-**Heavy-hitters (9)** Stronghold · Power Hungry · Path to Mastery ·
-Supplementary DMG · Less Is More · Head Start · Berserker · Glass Cannon ·
-Greater Aegis
+**Heavy-hitters (9)** Stronghold · Power Hungry · Path to Mastery · Supplementary DMG · Less Is More · Head Start · Berserker · Glass Cannon · Greater Aegis
 
-In `traits.json` the 72 carry `roll: true`, written by `scripts/extract.mjs`
-straight from `skill_lot`. There is no separate pool file - the wrightstone sub
-pool and the sigil second-trait pool are the same export.
+`traits.json`: the 72 carry `roll: true`, from `skill_lot` via `scripts/extract.mjs`. No separate pool file - wrightstone sub pool and sigil second-trait pool are the same export.
 
-The 17 distinct traits that appear as subs anywhere in `item_pendulum` are all
-from preset rows, and every one of them is in the 72 - the presets are a floor
-inside the pool, not a separate list: ATK, HP, Linked Together, Critical Hit
-DMG, DMG Cap, Tyranny, Guts, Drain, Autorevive, Quick Cooldown, Cascade, Uplift,
-Aegis, Steel Nerves, Nimble Onslaught, Supplementary DMG, Greater Aegis.
+The 17 distinct traits appearing as subs anywhere in `item_pendulum` are all from preset rows and all in the 72: ATK, HP, Linked Together, Critical Hit DMG, DMG Cap, Tyranny, Guts, Drain, Autorevive, Quick Cooldown, Cascade, Uplift, Aegis, Steel Nerves, Nimble Onslaught, Supplementary DMG, Greater Aegis.
 
-What the pool excludes is as sharp as what it holds. _Stout Heart_ is in no
-`skill_lot` group, carries no second trait on its one sigil, and never rolls as
-a sigil's second trait: nothing random in the game hands it out. The same goes
-for every character trait, every weapon trait, and the curio traits behind
-one-trait sigils.
+_Stout Heart_: no `skill_lot` group, no second trait on its one sigil, never rolls as a second trait - nothing random hands it out. Same for every character trait, weapon trait, and curio trait behind one-trait sigils.
 
-### The stone names no lot
+### No lot column
 
-`item_pendulum` has **no skill-lot column** - its only lot references are the
-three `SkillLevelLotFor*` columns, which carry levels. `gem` points at a trait
-pool through `SkillTypeLotIdForRandom2ndSkill`; the stone has no equivalent, and
-no table outside `skill_type_lot` references a `skill_lot` group at all.
+The stone names no lot. `item_pendulum` has **no skill-lot column** - only lot references are the three `SkillLevelLotFor*` columns, which carry levels. `gem` points at a trait pool via `SkillTypeLotIdForRandom2ndSkill`; the stone has no equivalent, and no table outside `skill_type_lot` references a `skill_lot` group at all.
 
-So the 72 are the pool by elimination rather than by pointer: it is the only
-random-trait pool the archive holds, and the stone's own presets sit inside it.
+The 72 = the pool by elimination, not pointer: the only random-trait pool the archive holds.
 
 ## Not resolved
 
-- The column that would tie a stone to `skill_lot`. None exists, so the pool is
-  established by elimination rather than by pointer.
-- `QuestExBaseDataId` - two ids per family, and 0 on every preset and on
-  `_0000`. Rows `_0001` through `_0020` share the family's first id and the
-  `_0130`/`_0131` pair takes its second: Stun 17/22, Crit 18/23, HP 19/24, Weak
-  Point 20/25, and 21 for the unnamed Linked Together pair. Two contiguous
-  blocks of five, so it plausibly names the quest that drops the stone; nothing
-  has been matched to it.
-- `SortOrderMaybe` is a stable per-family constant (Dread 3, Vitality 0,
-  Fortification 2, Sequestration 1) and does not match `item.SortOrder`.
+- The column tying a stone to `skill_lot` - none exists.
+- `QuestExBaseDataId` - two ids per family, 0 on every preset and on `_0000`. `_0001`-`_0020` share the family's first id; `_0130`/`_0131` take its second: Stun 17/22, Crit 18/23, HP 19/24, Weak Point 20/25, 21 for the unnamed Linked Together pair. Two contiguous blocks of five - plausibly the drop quest, unmatched.
+- `SortOrderMaybe` - stable per-family constant (Dread 3, Vitality 0, Fortification 2, Sequestration 1), doesn't match `item.SortOrder`.
 
-## What this project uses
+## Implementation
 
-Only the **`_0131` ceiling**: main level 20, sub1 15, sub2 10, fixed by slot.
-Nothing else is modelled - a sharecard shows an endgame build, so the lower
-rarities and the whole lot system fall away, and the three levels are implied by
-position rather than stored per row.
+Only the **`_0131` ceiling**: main level 20, sub1 15, sub2 10, fixed by slot. Nothing else modelled - lower rarities and the lot system fall away; the three levels are implied by position, not stored per row.
 
-`_0130`'s 15 / 10 / 7 is deliberately not offered even though it is a real
-rarity-5 set: it is dominated by `_0131` at every slot, so a build worth sharing
-runs the top stone. There is no level-set control.
+`_0130`'s 15/10/7 deliberately not offered - dominated by `_0131` at every slot. No level-set control.
 
-The main trait is **one of the four named stones**, never free choice, which is
-what makes the derived name work. `wrightstone-prefixes.json` holds the four
-name pairs; their source is `item.ItemName` per family, and the four are exactly
-the four named `MainSkill` values, so the map is complete.
+Main trait = **one of the four named stones**, never free choice - what makes the derived name work. `wrightstone-prefixes.json` holds the four name pairs, sourced from `item.ItemName` per family; the four are exactly the four named `MainSkill` values.
 
-The sub traits are stored on the build rather than looked up, for the same
-reason a `+` sigil's second trait is (see [sigils.md](sigils.md)): they are a
-property of the stone a player rolled. `WRIGHTSTONE_SUB_POOL` bounds what the
-editor offers - the 72 - but which two came out is the player's, not the
-catalog's.
+Sub traits stored on the build, not looked up (same reason as a `+` sigil's second trait - see [sigils.md](sigils.md)): a property of the stone rolled. `WRIGHTSTONE_SUB_POOL` bounds what the editor offers - the 72 - not which two came out.

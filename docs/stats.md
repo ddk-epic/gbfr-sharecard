@@ -1,29 +1,19 @@
 # Stats and PWR
 
-Where a character's HP, ATK, Critical Hit Rate, Stun Power and PWR come from.
-Everything here is read out of the game archive (version 2.0.2) - the tables are
-named so any claim can be re-checked. See [archive.md](archive.md) for how the
-archive is extracted.
+Where HP, ATK, Critical Hit Rate, Stun Power and PWR come from. Archive version 2.0.2. See [archive.md](archive.md).
 
-**HP, ATK, Crit and Stun are solved and confirmed in game**, to the unit, against
-a maxed Io, and this project derives all four - see
-[what this project uses](#what-this-project-uses). PWR is not; its coefficient
-tables are located but the arithmetic that combines them is not settled. The
-check that proves the four is [below](#the-confirmed-builds).
+**HP, ATK, Crit, Stun: solved, confirmed in game to the unit** against a maxed Io - project derives all four. PWR: coefficient tables located, formula derived in research, not yet wired into the app. Check: [below](#worked-example).
 
-## The model: a flat sum, then a percentage
+## The model
 
-Every source contributes a flat number and they add. One stage of multiplication
-follows, and only ATK is known to reach it:
+The model is a flat sum, then a percentage. Every source contributes a flat number, they add. One multiplicative stage follows; only ATK is known to reach it.
 
 ```
 stat = (base + fate + weapon + masteries + master levels + traits + summons)
      x (1 + percentage traits)
 ```
 
-The percentage stage is what makes ATK look impossible to reconcile if it is
-missed. On the confirmed build it is a single trait worth **+70%**, and the flat
-sum is 33,216 against a displayed 56,467.
+Confirmed build: single trait worth **+70%**, flat sum 33,216 vs. displayed 56,467.
 
 | Source                                 | Table                                               | HP        | ATK       | Crit   | Stun   |
 | -------------------------------------- | --------------------------------------------------- | --------- | --------- | ------ | ------ |
@@ -36,57 +26,37 @@ sum is 33,216 against a displayed 56,467.
 | Master levels                          | `skillboard_unlock`                                 | +6000     | +3000     | -      | -      |
 | Summon equip                           | `summon_base_param`                                 | yes       | yes       | yes    | yes    |
 
-"Traits" is one row per trait level and covers sigils, the wrightstone and the
-weapon's five trait slots alike - they are the same `skill_status` ladder read at
-different levels.
+"Traits" = one row per trait level, covers sigils, wrightstone, weapon's five trait slots - same `skill_status` ladder at different levels.
 
 ## Character base
 
-`chara_status` is 19 rows per character covering levels 1 to 100, but **only the
-level 1 and level 100 rows carry `Stun` and `CritRate`**, and both hold **8** and
-**5** for all 29 characters. The 17 rows in between hold 0, meaning unchanged.
+`chara_status`: 19 rows/character, levels 1-100. **Only level 1 and 100 rows carry `Stun`/`CritRate`** - both **8** and **5** for all 29 characters. 17 rows between hold 0 (unchanged).
 
-So a level 1 character and a level 100 character have identical base crit and
-stun, and every point above those two numbers is equipment. `DefenseLikely` is 0
-on every row for every character - there is no player DEF stat here.
+Level 1 = level 100 base crit/stun; everything above is equipment. `DefenseLikely` = 0 every row - no player DEF stat.
 
-Io (`PL0400`) runs 144 HP / 9 ATK at level 1 to **3156 HP / 666 ATK** at 100.
+Io (`PL0400`): 144 HP / 9 ATK at level 1 → **3156 HP / 666 ATK** at 100.
 
 ## Fate episodes
 
-`chara_status_fate` is 9 rows per character, 261 rows in total, and every
-character's nine are identical: `10/15/20/25/50/70/100/150/200` HP against
-`3/5/7/10/15/20/25/30/50` ATK, for **+640 HP and +165 ATK** fully unlocked.
+`chara_status_fate`: 9 rows/character, 261 total, identical: `10/15/20/25/50/70/100/150/200` HP, `3/5/7/10/15/20/25/30/50` ATK - **+640 HP, +165 ATK** fully unlocked.
 
-Its three remaining columns should by shape be stun and crit. They are 0 on all
-261 rows, and the tool's own header says they "seem to do nothing". Fate episodes
-move HP and ATK only.
+Three remaining columns (should be stun/crit) = 0 on all 261 rows; tool header: "seem to do nothing." Fate episodes move HP/ATK only.
 
 ## Master levels
 
-`skillboard_unlock` is 50 rows, one per master level, with `HealthAdd`,
-`AttackAdd` and `DmgCapAdd` on every fifth. They total **+6000 HP, +3000 ATK and
-+100 DMG Cap** at master level 50.
+`skillboard_unlock`: 50 rows, `HealthAdd`/`AttackAdd`/`DmgCapAdd` every fifth. Total: **+6000 HP, +3000 ATK, +100 DMG Cap** at level 50.
 
-**The table stops at 50 and the stats stop with it.** Master level runs to 55,
-but levels 51-55 grant no master-trait points and no stats - they buy Unbound
-Master's damage cap, see
-[master-traits.md](master-traits.md#what-levels-51-55-buy). A master level 55
-character has the same +6000/+3000 as a master level 50 one. Confirmed in game.
+Table stops at 50; master level runs to 55 but 51-55 grant no points, no stats (buy Unbound Master's damage cap - [master-traits.md](master-traits.md#master-levels-51-55)). Level 55 = same +6000/+3000 as level 50. Confirmed in game.
 
 ## Weapons
 
-All four weapon stat tables carry `StunPower` and `CritRate` columns and they are
-zero on every weapon of every series - see [weapons.md](weapons.md#stats). A
-weapon reaches crit and stun only through its **trait slots**, which are ordinary
-`skill_status` traits.
+All four weapon stat tables carry `StunPower`/`CritRate` - zero on every weapon of every series ([weapons.md](weapons.md#stats)). Crit/stun reach a weapon only through **trait slots** (ordinary `skill_status` traits).
 
-The character HP offset is already baked into `weapon_status`: Io's level 150
-Defender reads 2599 there, which is the series' 2612 with her -13 applied.
+Character HP offset already baked into `weapon_status`: Io's level 150 Defender reads 2599 there (series' 2612 with -13 applied).
 
 ## The trait ladders
 
-`skill_status` stores each trait's per-level value in `LevelValue1`:
+`skill_status` per-trait, per-level value in `LevelValue1`:
 
 | Trait             | Key            | Levels | Ladder                | Format                        |
 | ----------------- | -------------- | ------ | --------------------- | ----------------------------- |
@@ -95,45 +65,32 @@ Defender reads 2599 there, which is the series' 2612 with her -13 applied.
 | Critical Hit Rate | `SKILL_003_00` | 45     | 5, 6, 7 … 50          | `Critical Hit Rate +{0:.1f}%` |
 | Stun Power        | `SKILL_004_00` | 45     | 0.5, 1, 1.5 … 10      | `Stun Power +{0:10}`          |
 
-ATK and HP are flat adds. Critical Hit Rate is in percentage points, added to the
-base 5. `{0:.1f}` is a precision spec and `{0:10}` a width spec - **neither is a
-multiplier**.
+ATK/HP flat adds. Critical Hit Rate: percentage points, added to base 5. `{0:.1f}` = precision spec, `{0:10}` = width spec - **neither is a multiplier**.
 
-The flat ATK trait is small: at its level 50 cap it is worth 2000, under a tenth
-of a maxed weapon. **Sigils barely move the ATK number.** What moves it is the
-percentage traits.
+Flat ATK trait small: level 50 cap = 2000, under a tenth of a maxed weapon. Sigils barely move ATK - percentage traits do.
 
-### Percentage traits compound, they do not add
+### Percentage traits
 
-Two percentage traits on one build **multiply**. Adding Tyranny at pooled level
-17 (ATK +37%) to the Ascension build, whose Supernova already gives +40%:
+Percentage traits compound, they do not add. Two percentage traits **multiply**. Tyranny at pooled level 17 (ATK +37%) added to Ascension build (Supernova +40%):
 
 ```
 additive   32944 x (1 + 0.40 + 0.37) = 58311     wrong
 compound   32944 x 1.40 x 1.37       = 63186.6   -> 63187, as reported
 ```
 
-A **negative** percentage compounds the same way, and on the final figure:
-Tyranny's Max HP -20% took 70761 HP to `70761 x 0.80 = 56608.8`, reported as
-**56609**.
+Negative percentage compounds the same way: Tyranny's Max HP -20% took 70761 HP to `70761 x 0.80 = 56608.8`, reported **56609**.
 
-### The percentage traits are the multiplicative stage
+### The multiplicative stage
 
-Around fifty traits carry an `ATK +{n}%` clause. The one that matters on a
-Terminus build is **Catastrophe Nova** (`1E1CECCE`), slot 1 of every transcended
-Terminus, whose 35-step ladder reaches **70% at level 35** - exactly the level a
-T7 weapon's slot 1 carries:
+The percentage traits are the multiplicative stage. ~50 traits carry `ATK +{n}%`. On a Terminus build: **Catastrophe Nova** (`1E1CECCE`), slot 1 of every transcended Terminus, 35-step ladder, **70% at level 35** - the T7 slot 1 level:
 
 | Level | 25  | 30  | 33  | 34  | 35     |
 | ----- | --- | --- | --- | --- | ------ |
 | ATK % | 50  | 60  | 66  | 68  | **70** |
 
-Its text reads _"When at {4} max HP or less: ATK +{0:.1f}% / DMG Cap +{1:.1f}%"_,
-so it is nominally conditional - but the pause-menu ATK **includes it
-unconditionally**, which is what the confirmed build proves.
+Text: _"When at {4} max HP or less: ATK +{0:.1f}% / DMG Cap +{1:.1f}%"_ - nominally conditional, but pause-menu ATK **includes it unconditionally**.
 
-**Not every `ATK +n%` source reaches the displayed ATK.** Six are confirmed not
-to, and the rule separating them is not established:
+**Not every `ATK +n%` source reaches displayed ATK.** Six confirmed not to; the separating rule isn't established:
 
 | Source                             | Reaches displayed ATK? |
 | ---------------------------------- | ---------------------- |
@@ -148,18 +105,11 @@ to, and the rule separating them is not established:
 | **Guard Payback**                  | **no**                 |
 | **Overdrive Assassin**             | **no**                 |
 
-The first four are the whole of `STAT_TRAIT_SOURCES`' percentage half. Every
-other `ATK +n%` trait is treated as not reaching the number, so a build that
-under-reports ATK is pointing at a fifth trait that belongs in the list.
+First four = the whole of `STAT_TRAIT_SOURCES`' percentage half. Any other `ATK +n%` trait treated as not reaching the number.
 
-### The Terminus slot 2 pool settles most of the list
+### The Terminus slot 2 pool
 
-Terminus slot 2 is a nine-trait pool, so swapping within it holds the level
-fixed at the T7 slot 2 level of 25 and changes one clause at a time. Sweeping it
-on the confirmed Terminus build, **only Tyranny and Glass Cannon move any
-number** - and since PWR moves with displayed ATK (see
-[the ATK channel](#the-atk-channel)), a trait that leaves PWR untouched has left
-ATK untouched too. That is what rules the other four out:
+The Terminus slot 2 pool settles most of the list. Terminus slot 2: nine-trait pool at fixed T7 level 25. Sweeping it, **only Tyranny and Glass Cannon move any number** (PWR moves with displayed ATK, so untouched PWR = untouched ATK):
 
 | Trait              | Lv 25 clause              | Moves ATK? |
 | ------------------ | ------------------------- | ---------- |
@@ -170,28 +120,15 @@ ATK untouched too. That is what rules the other four out:
 | Glass Cannon       | `ATK +45% / DMG Cap +45%` | **yes**    |
 | Tyranny            | `ATK +45% / Max HP -20%`  | **yes**    |
 
-Fatebreaker reads `ATK +{0}% / DEF +{1:.1f}% / DMG Cap +{2}%` and is confirmed in
-game to move the ATK figure by nothing at all. Io's Offense tree carries five
-`Attack +{0}%` nodes totalling 10%, and counting them would give a 1.80
-multiplier where the observed one is exactly 1.70.
+Fatebreaker (`ATK +{0}% / DEF +{1:.1f}% / DMG Cap +{2}%`): confirmed to move ATK by nothing. Io's Offense tree: five `Attack +{0}%` nodes, 10% total - counting them gives 1.80 multiplier vs. observed 1.70.
 
-Being conditional is _not_ the discriminator, and the pool sweep shows it fails
-in both directions. Catastrophe Nova's clause is conditional (_"When at {4} max
-HP or less"_) and it applies unconditionally, while Enmity's unconditional +90%
-
-- the largest ATK clause in the pool - does nothing. Size is not it either.
-  Glass Cannon and Guard Payback both read `ATK +45%` at level 25, in the same
-  slot of the same weapon, and only one of them lands.
+Conditionality isn't the discriminator: Catastrophe Nova's clause is conditional and applies unconditionally; Enmity's unconditional +90% (largest ATK clause in the pool) does nothing. Size isn't it either - Glass Cannon and Guard Payback both read `ATK +45%` at level 25, same slot, same weapon; only one lands.
 
 ## Masteries
 
-The Offense, Defense and Collection sections, and the Over Mastery section
-alongside them. **Masteries have their own page,
-[masteries.md](masteries.md)** - the four sections, the two archive readings that
-have to be right, and what each section grants.
+Offense, Defense, Collection sections, plus Over Mastery. Own page: [masteries.md](masteries.md).
 
-What the stat arithmetic below needs from it is the per-section totals, for Io
-with every node taken and all six weapons at T7:
+Per-section totals, Io, every node taken, all six weapons at T7:
 
 | Section    |        HP |      ATK |   Crit |    Stun |
 | ---------- | --------: | -------: | -----: | ------: |
@@ -199,36 +136,23 @@ with every node taken and all six weapons at T7:
 | Defense    | **33300** |        0 |      0 |       0 |
 | Collection | **23200** | **4120** | **38** | **4.8** |
 
-Offense gives only 4682 ATK against Defense's 33,300 HP. That asymmetry is real,
-not a reading error: the weapon supplies ATK, Masteries supply HP.
+Offense: 4682 ATK vs. Defense's 33,300 HP - real asymmetry. Weapon supplies ATK; Masteries supply HP.
 
-## Stun is stored at a tenth of what it shows
+## Stun storage
 
-`limit_bonus_param` marks its 41 stat-type-3 rows with `Unk19 = 10` and stores
-the over-mastery ladder as `0.1 … 2`.
-[overmasteries.md](overmasteries.md#stun-powers-fractions-are-the-archives-own)
-left open whether the game renders that or normalises it.
+Stun is stored at a tenth of what it shows. `limit_bonus_param`: 41 stat-type-3 rows `Unk19 = 10`, over-mastery ladder `0.1 … 2`.
 
-**It normalises it, and the rule is universal.** Every stun figure in the
-archive - `chara_status`'s base 8, the Masteries fractions, the over-mastery
-ladder, the `skill_status` trait's `0.5 … 10` - is a tenth of what the game
-prints. The confirmed build settles it:
+**Normalised, universally.** Every stun figure - `chara_status`'s base 8, Masteries fractions, over-mastery ladder, `skill_status` trait's `0.5 … 10` - is a tenth of the printed value. Confirmed build:
 
 ```
 (8 base + 10.9 masteries + 1.0 over-mastery) x 10 = 199
 ```
 
-So a character's base Stun Power reads **80** in game, not 8, and a maxed Stun
-Power trait is worth **100**, not 10. Nothing needs a per-source multiplier;
-stun is simply stored in tenths throughout.
+Base Stun Power reads **80** in game, not 8; maxed Stun Power trait = **100**, not 10. Stun is simply stored in tenths throughout.
 
-## The confirmed builds
+## Worked example
 
-Io, character level 100, master level 55, Masteries complete (150% Offense /
-150% Defense / 100% Collection), four over-masteries (Chain Burst DMG 10%, Skill
-DMG Cap 20%, Stun Power 10, Normal Attack DMG Cap 20%), **no summons equipped and
-no master-trait points spent**. Measured with two weapons, both maxed - level 150,
-awakening 10, T7, plus 99.
+Io, level 100, master level 55, Masteries complete (150% Offense/150% Defense/100% Collection), four over-masteries (Chain Burst DMG 10%, Skill DMG Cap 20%, Stun Power 10, Normal Attack DMG Cap 20%), **no summons, no master-trait points**. Two weapons, both maxed (level 150, awakening 10, T7, plus 99).
 
 | Reported                   |    HP |   ATK | Crit | Stun |   PWR |
 | -------------------------- | ----: | ----: | ---: | ---: | ----: |
@@ -238,9 +162,7 @@ awakening 10, T7, plus 99.
 | Terminus + Tyranny 25      | 56844 | 81877 |  83% |  199 | 46871 |
 | Terminus + Glass Cannon 25 | 71055 | 81877 |  83% |  199 | 47042 |
 
-The third is the second with one Tyranny sigil added, pooled to level 17. The
-last two are the first with a slot 2 pool trait chosen, so they carry no extra
-gear and differ from each other in one clause only.
+Third = second + one Tyranny sigil, pooled to level 17. Last two = first + a slot 2 pool trait chosen (no extra gear; differ in one clause).
 
 ### HP
 
@@ -271,14 +193,9 @@ gear and differ from each other in one clause only.
 | Product                    |   56467.2 |   46121.6 |
 | **Total, rounded**         | **56467** | **46122** |
 
-The two multipliers are each a single weapon trait at its T7 slot level:
-**Catastrophe Nova** at 35 is +70% and sits in Terminus slot 1; **Supernova** at
-15 is +40% and sits in Ascension slot 3. Ascension's slot 1 is the flat ATK trait
-instead, worth 600 at level 35.
+Multipliers: **Catastrophe Nova** at 35 = +70% (Terminus slot 1); **Supernova** at 15 = +40% (Ascension slot 3). Ascension's slot 1 = flat ATK trait, 600 at level 35.
 
-**The result is rounded, not truncated.** One build cannot tell the two apart -
-56467.2 gives 56467 either way - but 46121.6 truncates to 46121 against a
-reported 46122. Two measurements were needed to settle it.
+**Result is rounded, not truncated.** 56467.2 gives 56467 either way; 46121.6 truncates to 46121 vs. reported 46122.
 
 ### Crit and Stun
 
@@ -287,736 +204,59 @@ crit = 5 base + 40 Offense + 38 Collection (Stinger)                = 83   (both
 stun = (8 base + 6.1 Offense + 4.8 Collection (Stunner) + 1.0 OM)   = 19.9 x 10 = 199
 ```
 
-Crit is unchanged across the swap, as it must be: neither weapon's slots carry a
-crit trait, and the arithmetic closes without one. The same reasoning proves
-**no crit sigils and no stun sigils on this build**, and that the over-mastery
-Stun Power line reported as "10" is stored as `1.0`.
+Crit unchanged across the swap - neither weapon's slots carry a crit trait. Same reasoning: no crit or stun sigils on this build; the over-mastery "10" Stun Power line is stored as `1.0`.
 
-### The wrightstone belongs to the weapon
+### The wrightstone
 
-HP falls by exactly **3600** across the swap, which is the level 20 HP trait -
-the whole of the wrightstone's contribution. The imbued traits do not follow the
-character, so a Build's wrightstone is a property of the equipped weapon.
+The wrightstone belongs to the weapon. HP falls exactly **3600** across the swap = the level 20 HP trait, the whole wrightstone contribution. Imbued traits don't follow the character - a Build's wrightstone is a property of the equipped weapon.
 
-### Trait levels pool, and the pooled level indexes the ladder once
+### Trait levels
 
-Stun rises by exactly **10.0 stored** on the Ascension. Its slot 2 pool offers
-Stun Power, which at the T7 slot 2 level of 25 is worth `6.0` on its own - not
-10.0. A wrightstone Stun Power at level 20 is worth `5.5` on its own. Neither
-alone nor summed (`11.5`) gives the observed figure.
+Trait levels pool, and the pooled level indexes the ladder once. Stun rises exactly **10.0 stored** on the Ascension. Slot 2 pool offers Stun Power, worth `6.0` alone at T7 level 25 - not 10.0. Wrightstone Stun Power at level 20 = `5.5` alone. Neither alone nor summed (`11.5`) matches.
 
-Pooled, they do: level 25 + level 20 = **level 45**, and the ladder at 45 reads
-exactly **10.0**. This is the `Trait Level Totals` rule in
-[CONTEXT.md](../CONTEXT.md) confirmed against the game - **levels add, then the
-ladder is read once**, and reading each source's value separately and summing is
-wrong. It matters most for the traits with steep ladders.
+Pooled: level 25 + 20 = **level 45**, ladder at 45 = exactly **10.0**. `Trait Level Totals` rule ([CONTEXT.md](../CONTEXT.md)) confirmed - **levels add, then the ladder reads once**; summing separate readings is wrong. Matters most for steep ladders.
 
-The Tyranny sigil confirms it independently. It was equipped as `2 + 15`, and
-Tyranny's ladder reads `+35%` at level 15, `+36%` at 16 and **`+37%` at 17** -
-the reported figure. Summing two separate readings would have given `+8% and
-+35%`, not `+37%`.
+Tyranny sigil confirms independently: equipped as `2 + 15`, ladder reads `+35%` at 15, `+36%` at 16, **`+37%` at 17** - the reported figure, not `+8% and +35%`.
 
 ## PWR
 
-The game's own definition, `TXT_TIPS_BODY_CYC_PWR`:
+Game's own definition, `TXT_TIPS_BODY_CYC_PWR`:
 
 > PWR is an aggregate value of a character's level, gear, and Masteries.
 
-Six tables carry the coefficients, all prefixed `chara_power_`. The arithmetic
-that combines them is in the executable.
+Six tables, prefixed `chara_power_`, carry the coefficients; the combining arithmetic is in the executable, not in any table.
 
-**Those six are the whole of it.** Every `.tbl` in the archive is imported into
-`tables.sqlite` - the only files without a table are directories, `quest_prologue`
-and a fade-timing table. There is no further PWR table to find, and nothing in
-`skill`, `skill_status` or `status` carries a per-trait power value. What follows
-was therefore reconstructed by measurement, not read off.
+| Table                                    | Rows | Holds                                               |
+| ---------------------------------------- | ---- | --------------------------------------------------- |
+| `chara_power_adjust`                     | 19   | flat multiplier per input key                       |
+| `chara_power_attenuate`                  | 68   | diminishing-returns curve for the attenuated keys   |
+| `chara_power_rebuild_adjust`             | 6    | value per weapon series, unused by the formula      |
+| `chara_power_skillboard_rank_adjust`     | 3    | weight per master-trait rank, unused by the formula |
+| `chara_power_skillboard_category_adjust` | 11   | weight per master-trait category, all 1, unused     |
+| `chara_power_skill_adjust`               | 1    | single weight, 11, unused                           |
 
-**The largest term is Masteries, and it pays by MSP spent rather than by
-anything the nodes grant** - see [below](#masteries-pay-by-msp). That closes
-most of the absolute number; what is left unmatched is the weapon term. Nothing
-in this project depends on any of it - see
-[what this project uses](#what-this-project-uses).
-
-### The attenuation curve
-
-`chara_power_attenuate` is a piecewise diminishing-returns curve: rows of
-`(StatAmountForRange, PowerPerStatInRange)`, each row's rate applying from its
-own breakpoint to the next. **Only four stat keys attenuate**, and two share a
-curve exactly.
-
-| Key   | Rate by range                                                          |
-| ----- | ---------------------------------------------------------------------- |
-| 4     | 1.0 to 600, 0.2 to 2000, 0.167 to 60000, 0.008 beyond                  |
-| 5     | 0.5 to 3000, 0.2 to 10000, 0.02 to 30000, 0.01 to 300000, 0.005 beyond |
-| 7, 11 | 1.0 to 120, 0.5 to 800, 0.2 to 90000, 0.008 beyond                     |
-
-### The other five tables
-
-| Table                                    | Rows | Holds                                        |
-| ---------------------------------------- | ---- | -------------------------------------------- |
-| `chara_power_adjust`                     | 19   | a flat multiplier per stat key               |
-| `chara_power_rebuild_adjust`             | 6    | a value per weapon series, for transcendence |
-| `chara_power_skillboard_rank_adjust`     | 3    | a weight per master-trait rank               |
-| `chara_power_skillboard_category_adjust` | 11   | a weight per master-trait category, all 1    |
-| `chara_power_skill_adjust`               | 1    | a single weight, 11                          |
-
-`chara_power_adjust`, keyed 0 to 18:
+**The formula is derived in [research/pwr-formula.md](../research/pwr-formula.md)**, off Nenkai's disassembly and checked against every in-game reading this project has recorded. It resolves to nine flat inputs plus one rounding step:
 
 ```
-0:0   1:10   2:5   3:10   4:1     5:1     6:5     7:1     8:35   9:10
-10:1  11:0.1 12:1  13:1   14:35   15:0.04 16:0.04 17:0.02 18:5
+PWR = (base + level x 10 + weaponLevel x 5 + awakening x 10 + atk + hp
+       + traitLevels x 5 + msp + overMasteries x 35 + munitions x 10) + 0.5
+PWR = min(PWR, 99999)
 ```
 
-**`chara_power_rebuild_adjust` holds floats, not the hex integers its header
-claims.** The tool declares `Unk2|hex_uint`; the six values decode as exact
-IEEE-754 floats - `43480000` = 200, `43960000` = 300, `437A0000` = 250 - giving
-**200 / 300 / 200 / 300 / 250 / 300** across series 0-5. Which index is which
-series is not established. This is the pitfall
-[archive.md](archive.md#column-layouts) warns about: check a column's shape
-against its data before trusting its name.
+`atk`, `hp` and `msp` run through `chara_power_attenuate` first; the rest are flat. The full derivation, every measured reading, and the one open question (which attenuation band ATK uses) live in `research/pwr-formula.md` and its companion files - `pwr-sources.md`, `pwr-atk-channel-measurement.md`, `pwr-master-levels.md`, `pwr-atk-flat-and-cap.md`, `pwr-transcendence-ladder.md`, `weapon-pwr.md`.
 
-**`chara_power_skillboard_rank_adjust` skips EX.** Its three keys are
-`skillboard_group` hashes weighted **1 / 2 / 3**; `skillboard_group` is the four
-rank sections. The EX row `3B99904D` is absent - but the missing row is a
-**default of 1, not a zero**: EX cells pay the same as rank 1. See
-[the master-trait law](#master-traits-pay-50-a-cell-times-the-rank-weight).
+## Implementation
 
-### No table names the keys
+**All four stats, in `src/domain/status.ts`.** `deriveStatus` = this page as code: flat sum, one multiplicative stage, rounding. Three confirmed builds above = its test, `src/domain/status.test.ts`, reproduces every figure to the unit. `Status` no longer player-entered; `Weapon.critRate`/`Weapon.stun` gone (always zero).
 
-The 19 keys of `chara_power_adjust` are an engine-internal enum and **no table
-names them**. Four candidate enums were checked and none matches:
+**PWR stays player-entered** - the formula is derived in research but not yet wired into the app; the ATK channel's attenuation band is still open.
 
-- `limit_bonus_param`'s stat type: `0 ATK, 1 HP, 2 crit, 3 stun, 4 potion stock,
-9 sigil slot`, then a 100+ damage block. Wrong shape.
-- `summon_base_param.ParamID`: a 400-series enum. Wrong range.
-- `skillboard_category`: four rows. Wrong size.
-- `status`: the buff and ailment enum, running to `StatusId` 1021. Wrong thing
-  entirely - it holds no stat coefficients.
+Three assumptions the derivation makes (Build carries no field for any; card is a max-build card):
 
-The confirmed builds constrain it but do not close it. Reading key 4 as ATK and
-key 5 as HP on the Terminus build:
+- **Masteries complete** - 150% Offense, 150% Defense, every weapon transcended
+- **all nine fate episodes** unlocked
+- master level **at least 50** (editor's 51-55 range guarantees it)
 
-```
-attenuate(4, 56467) =  9976.0
-attenuate(5, 71055) =  3710.6
-                      --------
-                      13686.5     against a reported PWR of 46526
-```
+Two generated files carry the data: `character-stats.json` (level-100 base, Masteries total), `trait-stats.json` (per-level ladders, four flat traits, percentage traits confirmed to reach displayed ATK). Both from `scripts/extract.mjs`, which fails the run if Io stops matching the confirmed build.
 
-That leaves **32,839** unaccounted, and reading key 4 as ATK is wrong anyway -
-the ATK channel measures around `0.02` per point, not key 4's `0.167`. The bulk
-of the gap is Masteries, which pay **0.2 per point of MSP** and are worth 25,000
-complete; see [Masteries](#masteries-pay-by-msp).
-
-### Masteries pay by MSP
-
-The largest term in PWR, and the one that is **indifferent to what its nodes
-grant**. What it reads is the MSP the nodes cost:
-
-```
-masteries = attenuate(key 7, total MSP spent in Masteries)
-          = 0.2 per MSP up to 90000, then 0.008
-```
-
-Six single-node readings fix it, total miss 1.7, and the fourth of them crosses
-the curve's 90,000 breakpoint mid-node - which is what identifies the channel as
-key 7 rather than its twin key 11. A complete set of Masteries is worth 25,317
-PWR against **under 600** for everything its fifty most expensive nodes actually
-grant. The readings, the MSP prices and the one open offset are in
-[masteries.md](masteries.md#pwr-pays-by-msp-not-by-what-the-nodes-grant).
-
-Two things fall out of it for the rest of this page. **Keys 7 and 11 are
-separated**: Masteries show the raw 0.2, so they are the adjust-1 key 7, and ATK
-at roughly 0.02 is `0.1 x 0.2`, key 11. And the **damage-cap channel is 0.2 per
-percentage point**, the residual those six readings leave over their MSP.
-
-### PWR is not a function of the displayed HP and ATK
-
-Adding a Tyranny sigil to the Ascension build is a clean experiment: Tyranny
-changes ATK and HP and nothing else - no damage caps, no crit, no stun.
-
-| Stat | Before | After |
-| ---- | -----: | ----: |
-| ATK  |  46122 | 63187 |
-| HP   |  70761 | 56609 |
-| PWR  |  46044 | 46368 |
-
-**PWR rose by 324.** Every pairing of the four attenuating keys was tested
-against that:
-
-| ATK key | HP key | Predicted ΔPWR |
-| ------- | ------ | -------------: |
-| 4       | 5      |        +2201.6 |
-| 4       | 7      |         -487.3 |
-| 4       | 11     |        +2060.1 |
-| 5       | 4      |         -481.7 |
-| 5       | 11     |         -112.4 |
-| 7       | 5      |        +3271.5 |
-| 11      | 5      |         +199.8 |
-| 11      | 4      |         -311.1 |
-
-The closest is +199.8, off by 124, and nothing else is near. **No assignment of
-the attenuation keys to the displayed HP and ATK reproduces the observed
-change.**
-
-The flat-stat reading fails too, and harder. Tyranny is purely multiplicative:
-it leaves the flat subtotals (32,944 ATK and 70,761 HP) completely untouched. A
-PWR computed from pre-multiplier stats would therefore not move at all, and it
-moved by 324.
-
-So PWR is measuring something other than the four stats alone. The game's own
-wording - _"an aggregate value of a character's level, gear, and Masteries"_ -
-turns out to be literal: **there is a gear term on top of the stat term.**
-
-### The gear term is 5 per pooled trait level, capped
-
-Confirmed with sigils whose traits move no displayed stat at all, so the stat
-term is exactly zero and the whole reading is gear. Levels below are **trait**
-levels - the sigil's level plus the +2 from Sigil Booster, which PWR counts:
-
-| Sigil                           | Sigil Lv | Trait levels | Pooled | ΔPWR |
-| ------------------------------- | -------: | ------------ | -----: | ---: |
-| Quick Cooldown x2               |       15 | 17, 17       |     34 |  170 |
-| Quick Cooldown + Potion Hoarder |       11 | 13, 13       | 13, 13 |  130 |
-| Supplementary DMG x2            |       15 | 17, 17       |     34 |  170 |
-
-Levels from every copy of a trait pool, and the pooled level is then clamped to
-that trait's own maximum before PWR reads it. Adding a second Supplementary DMG
-x2 sigil pools to 68 against a cap of 45, and buys only the difference:
-
-| Build                       | Suppl pooled | Support | Gear | ΔPWR |
-| --------------------------- | -----------: | ------: | ---: | ---: |
-| Suppl x2 @15                |           34 |       - |  170 |  170 |
-| + a second Suppl x2 @15     | 68 -> **45** |       - |  225 |  +55 |
-| + Suppl-Support @15 instead | 51 -> **45** |      17 |  310 | +140 |
-
-`5 x 45 = 225` and `5 x 45 + 5 x 17 = 310` reproduce both readings exactly. So:
-
-```
-gear = sum over traits of 5 * min(pooled trait level, trait max level)
-```
-
-Every trait contributes, not just the primary, and a trait that does nothing to
-any stat still adds PWR. The rate is **5** for every trait measured so far,
-spanning three gem categories - Quick Cooldown (support), Potion Hoarder
-(utility) and Supplementary DMG (offensive) - plus the flat HP trait and the
-character traits.
-
-**Character traits are ordinary traits under this law.** They cap at level 15,
-so the Sigil Booster's bonus clips and each is worth a flat `5 x 15 = 75`.
-Mage's Awakening, which is two character traits and moves no stat at all, reads
-**150** in game.
-
-That rate is not fitted. `chara_power_adjust` lists 19 flat coefficients, and 5
-is one of them:
-
-| Key | Adjust | Key | Adjust | Key | Adjust |
-| --: | -----: | --: | -----: | --: | -----: |
-|   0 |      0 |   6 |      5 |  14 |     35 |
-|   1 |     10 |   7 |      1 |  15 |   0.04 |
-|   2 |      5 |   8 |     35 |  16 |   0.04 |
-|   3 |     10 |   9 |     10 |  17 |   0.02 |
-|   4 |      1 |  10 |      1 |  18 |      5 |
-|   5 |      1 |  11 |    0.1 |     |        |
-
-Only keys 4, 5, 7 and 11 have rows in `chara_power_attenuate`; the rest are flat
-rates, and one of the three 5s is the trait rate.
-
-**An earlier reading of this doc had `5L + 10` on sigil level and summed gear per
-instance rather than pooling.** Both are wrong. They agreed with the data by
-coincidence: a rate through the origin makes per-instance and pooled identical
-(`2 x 5 x 17 = 5 x 34`), so the two models only separate where a cap bites, and
-no early measurement capped.
-
-### Master traits pay 50 a cell, times the rank weight
-
-Master traits have their own term, and it is the same shape as gear: a flat rate
-per selection, weighted, and **completely indifferent to what the cell grants**.
-
-```
-master traits = 50 x sum over selected cells of rank weight
-```
-
-The weight is `chara_power_skillboard_rank_adjust`, **1 / 2 / 3** for ranks 1 to
-3, and the absent EX row behaves as **1**. Measured against the bare Terminus
-build's 46,526, on Io:
-
-| Cells taken         |   PWR | ΔPWR | Predicted |
-| ------------------- | ----: | ---: | --------: |
-| 1 rank 3            | 46676 |  150 |       150 |
-| 1 rank 3 + 3 EX     | 46826 |  300 |       300 |
-| 1 rank 3 + 5 EX     | 46926 |  400 |       400 |
-| 1 rank 3 + 7 EX     | 47026 |  500 |       500 |
-| 1 rank 1            | 46576 |   50 |        50 |
-| 1 rank 1 + 1 rank 2 | 46676 |  100 |       100 |
-
-Zero residual on all four ranks.
-
-**The cell's effect does not enter.** The first eight readings are all
-`DMG Cap +30%` cells - 240 percentage points of damage cap - and the PWR depends
-only on which rank each sat in. The last two are a charge-time cell and a
-cooldown cell, which grant no cap and no stat, and they pay the same 50 and 100
-as their ranks demand. So **master traits contribute no cap channel at
-all**, and an earlier reading of these numbers as a steeply attenuating cap curve
-was wrong - the "attenuation" was the single rank 3 cell sitting at the front.
-
-Two things fall out. The EX rank is **not** unweighted despite having no row, so
-a missing key defaults to 1. And `docs/master-traits.md` flags the rank 2 / rank
-3 key mapping as an assumption resting on `Unk3`; a rank 3 cell paying exactly
-three times an EX cell corroborates that `4A5DDC7B` is the weight 3 rank.
-
-### Weapon trait levels pool with sigil levels
-
-The trait level PWR reads is the sum of every source, and the game shows it as
-`bonus + base` - the weapon's own levels plus the Sigil Booster on the left, the
-sigils' printed levels on the right. Io's Ascension weapon carries ATK at 35, so
-a level 11 ATK sigil displays as `37+11` and lands at 48.
-
-This matters because a sigil's gear delta is the _change_ in the pooled level,
-not the sigil's own level, and it clips at the trait's maximum:
-
-| ATK sigil | Pooled       | Ladder value | Flat ΔATK | Displayed (x1.40) | Gear levels |
-| --------- | ------------ | -----------: | --------: | ----------------: | ----------: |
-| none      | 35           |          600 |         - |                 - |           - |
-| Lv 11     | 48           |         1700 |      1100 |             +1540 |          13 |
-| Lv 15     | 52 -> **50** |         2000 |      1400 |             +1960 |      **15** |
-
-Both observed exactly. The level 15 sigil overcaps, so it buys 15 levels of gear
-rather than 17 - the same clamp governs the stat and the gear.
-
-### The ATK channel
-
-Three builds on the Ascension weapon, against a bare-weapon PWR of 46044. Gear
-is `5` per pooled trait level as established above:
-
-| Build          | ΔPWR | Gear levels    | Gear | Residual |  ΔATK | DMG Cap value |
-| -------------- | ---: | -------------- | ---: | -------: | ----: | ------------: |
-| DmgCap-ATK @15 |  213 | 15 ATK + 17 DC |  160 |       53 | +1960 |            51 |
-| DmgCap-ATK @11 |  171 | 13 ATK + 13 DC |  130 |       41 | +1540 |            39 |
-| DMG Cap x2 @15 |  209 | 34 DC          |  170 |       39 |     0 |           106 |
-
-**DMG Cap is not stat-neutral.** The third build moves no displayed stat yet
-still leaves 39 over its gear, and the leftover tracks its cap percentage. It
-carries a PWR channel of its own, so it is a poor choice of control trait -
-Quick Cooldown, Potion Hoarder and Autorevive remain the clean ones.
-
-Taking DMG Cap's rate from the third build (`39/106`) and solving the other two
-for ATK gives three independent readings, the third from the Tyranny series:
-
-```
-DmgCap-ATK @15   0.01747 per displayed ATK point
-DmgCap-ATK @11   0.01731
-Tyranny          0.01718      (63187 -> 69182, assuming Tyranny gear rate 5)
-```
-
-They agree to 1.7% across 46k-69k ATK. That agreement is itself the evidence
-that **Tyranny's gear rate is also 5** - it was assumed to produce the third
-reading, and it landed on the other two rather than away from them. Rate 5 now
-holds for Quick Cooldown, Potion Hoarder, Supplementary DMG, DMG Cap, Tyranny
-and the Gem-0 ATK trait.
-
-Every one of those three readings is back-solved through the gear law and an
-assumed DMG Cap rate. **The pool sweep supersedes all of them**, because it
-cancels gear outright.
-
-### The pool sweep brackets ATK and HP
-
-Tyranny and Glass Cannon are the same slot of the same weapon at the same level
-25, so their gear terms are identical and drop out of the difference. Against
-the bare Terminus build:
-
-| Swap         | ΔHP    |   ΔATK | ΔDMG Cap | ΔPWR |
-| ------------ | ------ | -----: | -------- | ---: |
-| Tyranny 25   | -14211 | +25410 | -        |  345 |
-| Glass Cannon | -      | +25410 | +45%     |  516 |
-
-Writing `a` for PWR per displayed ATK point, `h` per displayed HP point and `c`
-for the whole of the +45% cap term:
-
-```
-Tyranny        25410a - 14211h = 345
-Glass Cannon   25410a +      c = 516
-difference             c + 14211h = 171
-```
-
-`c` and `h` cannot be negative, so the difference bounds them, and that bounds
-`a` from both sides:
-
-| Assumption |     c |       h |       a |
-| ---------- | ----: | ------: | ------: |
-| `c` = 0    |     0 | 0.01203 | 0.02031 |
-| `h` = 0.01 | 28.89 |    0.01 | 0.01917 |
-| `a` = 0.02 |   7.8 | 0.01148 |    0.02 |
-
-**`a` is between 0.01917 and 0.02031 however the split falls**, and `h` is at
-most 0.01203. The HP sigil below settles which row of that table is the real
-one - it is the middle one, so `h` is 0.01, `c` is 28.89 and **`a` is 0.01917**.
-
-Key 11 is exactly `0.1 x 0.2 = 0.02`, its `chara_power_adjust` coefficient times
-its 800-90000 band rate, and ATK runs 56,467 to 81,877 here, wholly inside that
-band. That was close enough to look like a match while `h` was unpinned. It is
-not one: 0.01917 misses it by 4.2%, far outside anything rounding can cover, and
-no other product of the tables is nearer. **Key 11 is still the only candidate**
-
-- the Masteries readings pin its twin key 7 at the raw 0.2 and separate the two by
-  their adjust - but the 4.2% is unexplained.
-
-**ATK above 90000 is still the test for the curve.** Keys 7 and 11 drop from 0.2
-to 0.008 there - a 25-fold collapse no other key has - and 81,877 is already
-close.
-
-### The HP channel is key 5
-
-A single HP sigil reads it, because HP is the only stat it moves. On the bare
-Terminus build the wrightstone already carries the HP trait at level 20, and
-Terminus's Sigil Booster is level 1, so a level 15 sigil pools to **36**. The
-ladder gives `6800 - 3600 = 3200` HP, observed exactly.
-
-The sigil is a character sigil, so it carries a character trait alongside the HP
-trait. Character traits cap at level 15, so the Sigil Booster's +1 clips and the
-gear law pays `5 x min(16, 15) = 75` for it - the same clamp the ATK sigil's
-overcap established, with nothing new added. **Mage's Awakening confirms the 75
-on its own**: two character traits, no stat moved at all, `2 x 75 = 150` PWR
-observed.
-
-```
-187 = 75 (character trait)  +  5 x 16 (HP trait levels)  +  3200h
-                                                     h = 32 / 3200 = 0.01
-```
-
-**0.01 is key 5** - adjust 1 times its 30000-300000 band rate - and it lands on
-the table exactly rather than near it. HP runs 71,055 to 74,255 here, well inside
-that band.
-
-Feeding `h = 0.01` back through the pool sweep closes both remaining unknowns of
-that pair: `c = 28.89` and `a = 0.01917`.
-
-**The DMG Cap channel reads 0.2 per percentage point.** That is the residual the
-six Masteries readings leave over their MSP once the two archive rates are applied,
-and it is the same 0.2 across cap sizes of 10, 12 and 15 points - see
-[Masteries](#masteries-pay-by-msp). It supersedes the two earlier figures,
-`0.642` from Glass Cannon and `0.368` from the DMG Cap sigil pair, both of which
-were back-solved through an assumed gear term rather than read directly. Neither
-is far enough off to matter to anything, and both were far too small for damage
-cap to be where the bulk of PWR lives - which Masteries now explain.
-
-### Over-masteries pay by roll level
-
-The meditation system - see [overmasteries.md](overmasteries.md) for the ladders
-and the roll pools. Every meditation grants exactly four bonuses, and each lands
-on one of the eight reachable rungs of its stat's ladder, levels 3 to 10.
-
-**A slot pays a flat rate times the level it rolled**, the same shape as the
-gear law's `5 x trait level` and master traits' `50 x rank`. The stat it
-rolled enters only twice: ATK and HP feed their own channels, and a stun slot
-pays a flat surcharge on top. The rate is **35.2**, close enough to 35 to have
-looked like it for a long time but not equal to it.
-
-Three stacked stun sigils settle the stat half of that. Each pairs a character
-trait with Stun Power at level 15, lifted to 16 by the Sigil Booster; Stun Power
-pools across all three and clamps at its maximum of 45.
-
-| pooled | clamped | ladder | stun gained | PWR gained | gear law      |
-| -----: | ------: | -----: | ----------: | ---------: | ------------- |
-|     16 |      16 |    5.1 |         +51 |        155 | `75 + 5 x 16` |
-|     32 |      32 |    6.9 |         +18 |        155 | `75 + 5 x 16` |
-|     48 |  **45** |     10 |         +31 |        140 | `75 + 5 x 13` |
-
-Six predictions, six exact hits, nothing fitted. The first two pay an identical
-155 while moving the stun stat by 51 and by 18, so **the stun stat carries no PWR
-channel at all** - the whole 155 is gear. The third is the clamp: pooling
-overshoots 45 by three levels, so it is paid for 13 rather than 16.
-
-The same readings settle the question [overmasteries.md](overmasteries.md) leaves
-open about stun's stored fractions: the game prints ten times the stored value.
-`5.1 / 6.9 / 10` read as `51 / 69 / 100`, and the differences are the measured
-`51 / 18 / 31`.
-
-#### One base, and a level rate that is not 35
-
-Every roll below was rolled on **the same build** - Io and a weapon, nothing
-else - apart from one session with three stun sigils on, which is set aside.
-So they all share one base, and that is a far tighter constraint than a base
-per session. It is what fixes the level rate.
-
-Two rolls carry no stun, no ATK and no HP, so each is the base plus its levels
-and nothing else, at whatever the rate turns out to be:
-
-```
-{7,8,8,10} 46488   sum 33
-{6,6,7,10} 46347   sum 29      4 x rate = 141 +- 1
-```
-
-**The rate is not 35.** At 35 those two disagree by a point, and worse, the
-low rolls - level sums 13 to 24 - come out about 3.5 _below_ the base the two
-above give. A slot paying less than its levels is not something a surcharge can
-explain, and nothing subtracts. A rate a little over 35 removes it, because the
-error grows with the level sum.
-
-#### The five parameters
-
-One base, one level rate, one flat surcharge per stun slot, and the ATK and HP
-channels. Ten rolls have their stats recorded; the admissible region is where
-one setting of the five lands every reading inside its half point:
-
-```
-base          45325.9
-level rate    35.2
-stun slot     +2.8 to +3.1   flat, not scaled by level
-HP channel    0.0075 to 0.0078
-ATK channel   0.032
-```
-
-| PWR   | levels       | stun | ATK |   HP | predicted |      miss |
-| ----- | ------------ | ---: | --: | ---: | --------: | --------: |
-| 46488 | 7, 10, 8, 8  |    - |   - |    - |  46487.50 |      0.50 |
-| 46347 | 7, 6, 6, 10  |    - |   - |    - |  46346.70 |      0.30 |
-| 46500 | 6, 9, 10, 8  |    - |   - | 1600 |  46499.74 |      0.26 |
-| 46408 | 7, 9, 5, 9   |    - | 800 |    - |  46407.50 |      0.50 |
-| 46439 | 8, 9, 8, 6   |    - | 700 |    - |  46439.50 |     -0.50 |
-| 46526 | 7, 7, 10, 10 |    1 |   - |    - |  46525.65 |      0.35 |
-| 46573 | 9, 9, 9, 8   |    1 |   - | 1600 |  46573.09 |     -0.09 |
-| 46561 | 9, 6, 10, 10 |    1 |   - |    - |  46560.85 |      0.15 |
-| 46040 | 3, 4, 6, 7   |    1 |   - | 1000 |  46040.50 |     -0.50 |
-| 45889 | 3, 3, 4, 6   |    2 |   - |    - |  45895.00 | **-6.00** |
-
-Nine of ten inside half a point, on five parameters and one base. The slots
-paying the plain rate cover **crit, Chain Burst, Skill, SBA, Normal Attack Cap,
-Skill Cap, SBA Cap and Skill Healing Cap, at levels 3 through 10** - eight
-distinct stats at one rate, which had been an assumption rather than a
-measurement.
-
-The stun surcharge is **flat**. An earlier reading of this section had it
-scaling as `k x level`; that was an artefact of giving each session its own
-base and pinning the rate at 35, and it does not survive the shared base.
-
-#### The one roll that misses
-
-`45889` is the only roll carrying **two** stun slots, and the only one that
-misses - by 6, twelve times what rounding allows. A second stun slot should add
-another 3; this roll reads as though the second one paid about **-3** instead,
-leaving the pair worth nothing.
-
-It is also the only roll containing a **level 6** stun slot, and those two facts
-cannot be separated with the rolls in hand. Either
-
-- a second stun slot in the same roll cancels the first, or
-- a level 6 stun slot alone pays about -3 while every other rung pays +3.
-
-**A roll with a single level 6 stun slot - Stun Power 8 - decides it.** If it
-reads +3 like the rest, the anomaly belongs to having two stun slots; if it
-reads -3, the anomaly is level 6 itself. Nothing else in the set can separate
-them.
-
-Until then the surcharge is `+3` per stun slot with a known exception, not a law.
-
-#### The base is a convention, not a measurement
-
-Every meditation grants exactly four bonuses, so a constant added to every slot
-is subtracted from the base and nothing observable changes - **no number of
-re-rolls can fix it**. The 45325.9 above is the figure under "a slot pays
-`35.2 x level`, counting the level as the game shows it". A _first_ meditation
-on a character that has never had one would pin it: the jump is
-`35.2 x sum of levels` if slots count that way, and less if they do not.
-
-#### Block 3 is unusable
-
-Five rolls - 46329, 46561, 46398, 46413, 46361 - were recorded as **levels only**,
-with no stat names, so their stun slots cannot be placed. Against the fit above
-two of them land (46413 misses 0.9, 46561 misses 3.1, which is one stun slot),
-and two miss by **+17.5 and +14.3** - five stun slots' worth in a roll that holds
-four.
-
-46361 makes the point without any model: it carries the same level sum as the
-46347 anchor and reads 14 higher. Nothing in the system pays 14 for identical
-levels.
-
-They are excluded rather than left contradicting. The 0.0375 ATK reading they
-once supplied goes with them.
-
-#### What over-mastery ATK reads
-
-Two rolls carry an ATK slot and nothing else unusual, and the shared fit puts
-both at **0.032**, tighter than either alone. That is not the `0.01917` the pool
-sweep gives. `chara_power_attenuate` key 4 turning over at 60000 is the standing
-suspect: the sweep spans 56k to 82k and averages across the boundary, while both
-of these sit below it. Untested.
-
-The HP channel comes out at `0.0075 to 0.0078`, against the HP sigil's `0.01`.
-Three rolls carry HP now and they agree with each other, so the gap to the sigil
-is real rather than a single-reading artefact, and unexplained.
-
-#### Recording a usable roll
-
-Every roll needs its **stat name and its displayed value**, not a level - the
-level is derived, and deriving it discards exactly the stun information that
-matters. Written the way the game shows them:
-
-```
-46526   Chain Burst +10%, Stun Power 10, Skill Cap +20%, Normal Attack Cap +20%
-```
-
-**Keep the build fixed and every roll ever recorded stays comparable.** The
-shared base is what fixed the level rate; sessions with their own bases hid it
-for a long time, because a free base per session absorbs a rate error. If the
-build does change, say so - those rolls then need their own anchor, meaning one
-roll carrying no stun, no ATK and no HP slot, which is the base outright.
-
-### Building the absolute number
-
-A survey of characters built up in stages, which is what turns the deltas above
-into an absolute figure. Every stage is 100% Offense / 100% Defense unless said
-otherwise, and the observed column is a range because it spans several
-characters:
-
-| Stage                                                                       |    Observed |
-| --------------------------------------------------------------------------- | ----------: |
-| No gear, base collection, all six weapons at level 150 only, master level 1 | 18.5k-20.0k |
-| + every weapon awakened, transcended and plus-capped                        |        37k+ |
-| + 24 sigil traits                                                           |        ~39k |
-| + 150% Offense / 150% Defense                                               |     55k-56k |
-
-**Two of the three steps are already accounted for.**
-
-The sigil step is the gear law at full scale: twelve sigils carry 24 traits, each
-at level 15 plus the Sigil Booster's 2, so `24 x 5 x 17 = 2040` - the observed
-~2k, with nothing fitted.
-
-The 150% step is the MSP law: 919,000 MSP at the tail rate, about 15,000 - see
-[masteries.md](masteries.md#what-masteries-are-worth).
-
-The base stage decomposes as far as the channels reach:
-
-| Term                                    |             PWR |
-| --------------------------------------- | --------------: |
-| Masteries, 35,423 MSP                   |           7,385 |
-| HP channel, key 5, roughly 36,700 HP    |           3,367 |
-| ATK channel, key 11, roughly 12,000 ATK |             270 |
-| **Known**                               |      **11,022** |
-| **Residual against 18.5k-20.0k**        | **7,500-9,000** |
-
-Both stat figures are estimates from the Masteries and weapon tables rather than
-in-game readings, so the residual is a bracket, not a measurement. What sits in
-it is the **character itself** - level 100, the fate episodes, master level 1 -
-and nothing else is left to occupy it.
-
-**The weapon step is the one big term still unmatched.** Upgrading all six
-weapons from level 150 to awakened, transcended and plus-capped is worth about
-18,000, of which the laws above explain roughly 4,000: 12,720 MSP of
-transcendence nodes at 0.2 is 2,544, the ATK and HP the weapon and its collection
-section add is under 1,000, and the weapon's own trait slots are a few hundred of
-gear. That leaves **about 14,000 for six weapons**, and the only table of that
-size is `chara_power_rebuild_adjust`, whose six floats sum to 1,550 - `x 9` is
-13,950, `x 7` is 10,850, `x 10` is 15,500. The survey's ranges cannot separate
-them.
-
-**Transcending one weapon one step at a time reads it directly**, the same way
-Masteries fell to one node at a time. It is the single measurement that would
-close the absolute number.
-
-### Where this stops
-
-The archive is exhausted. Everything above the gear law came out of paired
-in-game readings, and each further term needs its own build swap.
-
-What is solved:
-
-- **Masteries.** `0.2 per MSP` spent, up to 90,000, then `0.008` - the key 7
-  curve read on MSP rather than on any stat. Six single-node readings, total miss
-  1.7, and the node's own bonuses barely enter. It is the largest term in PWR:
-  25,000 for a complete set against under 600 for everything its
-  fifty most expensive nodes actually grant.
-- **Gear.** `5 x min(pooled trait level, trait max)` per trait, pooling weapon
-  slots, wrightstone, sigils and the Sigil Booster's +2. Six traits across four
-  gem categories, and the ATK sigil's overcap confirms the clamp governs gear and
-  stat alike.
-- **The HP channel is key 5**, `0.01` per displayed point in the 30000-300000
-  band. The HP sigil reads it exactly, and Mage's Awakening supplies the
-  character-trait term it is read against.
-- **Master traits.** `50 x rank weight` per cell, weights from
-  `chara_power_skillboard_rank_adjust` with the absent EX row defaulting to 1.
-  All four ranks measured, zero residual, and the cell's effect does not enter.
-- **Stun has no channel.** Two sigils pay an identical 155 while moving the stun
-  stat by 51 and by 18. Stun is gear and nothing else.
-- **Over-masteries.** `35.2 x level` per slot, plus the ATK and HP channels, plus
-  a flat `+3` on stun slots. Eight distinct stats across levels 3 to 10 pay the
-  plain rate. Nine of the ten rolls whose stats were recorded land inside half a
-  point on five parameters and a single shared base.
-
-What is measured but unmatched:
-
-- **The ATK channel**, and the two readings of it disagree. The pool sweep gives
-  `0.01917` across 56k-82k; the over-mastery rolls give `0.032` just under 60000.
-  Key 11's `0.1 x 0.2 = 0.02` is now the strong candidate, since the Masteries
-  readings identify its twin key 7 by the raw rate and separate the two by their
-  adjust. The pool sweep misses it by 4.2%, unexplained.
-- **The 2,989 MSP offset.** The Masteries fit needs a prior spend the `ap_tree_*`
-  tables do not price. Structural or per-character is decided by one reading on a
-  second character at a known Masteries state.
-- **The stun slot's surcharge**, `+3` flat on four rolls and apparently `-3` on
-  the one roll holding two stun slots. Whether that belongs to the doubling or to
-  level 6, which appears nowhere else, needs a roll with a single Stun Power 8
-  slot. No `chara_power_adjust` value is 3, so where it comes from is unknown
-  either way.
-- **The level rate 35.2**, which fits fourteen rolls but matches nothing in
-  `chara_power_adjust` - 35 is there, 35.2 is not. Either the rate is 35 and
-  something else grows with the level sum, or the table is not where it comes
-  from.
-
-What is left:
-
-- **The weapon term**, worth about 14,000 for six weapons fully upgraded and
-  matching nothing yet. `chara_power_rebuild_adjust`, whose floats decode as
-  200 / 300 / 200 / 300 / 250 / 300, is the only candidate of that size, and its
-  index-to-series mapping is unknown besides. Transcending one weapon a step at a
-  time reads it.
-- **The character term**, bracketed at 7,500-9,000 for a level 100 character at
-  master level 1 - level, fate episodes and master level together. It is a
-  bracket because the stat figures behind it are computed rather than read.
-
-Between them those two are the whole of what stands between the terms above and
-an absolute PWR.
-
-A note for anyone resuming: **DMG Cap is not a valid control trait** - it carries
-its own PWR channel, `0.2` per percentage point. Quick Cooldown, Potion Hoarder
-and Autorevive are the clean
-stat-neutral ones.
-
-## Reading it back
-
-The queries are single joins against `tables.sqlite`.
-`chara_power_attenuate` needs its rows read in `StatAmountForRange` order and
-treated as ranges rather than points. Masteries need both corrections above -
-`LimitBonusParamIndex` as a level, and `reqT = 7` as a replacement set.
-
-## What this project uses
-
-**All four stats, in `src/domain/status.ts`.** `deriveStatus` is this page as
-code: the flat sum, then the one multiplicative stage, then the rounding. The
-three confirmed builds above are its test, `src/domain/status.test.ts`, and it
-reproduces every figure to the unit. `Status` is no longer player-entered, and
-`Weapon.critRate` / `Weapon.stun` are gone with it - they were always zero.
-
-**PWR stays player-entered**: its arithmetic is in the executable, the archive
-holds no table that closes it, and the reconstruction is parked short of a
-formula.
-
-Three assumptions the derivation makes, because a Build carries no field for any
-of them and the card is a max-build card:
-
-- **Masteries are complete** - 150% Offense, 150% Defense, and every
-  weapon transcended, so the whole Collection is banked
-- **all nine fate episodes** are unlocked
-- master level is at least **50**, which the editor's 51-55 range guarantees
-
-Two generated files carry the data. `character-stats.json` holds each
-character's level-100 base and its Masteries total; `trait-stats.json` holds the
-per-level ladders, for the four flat traits and for the percentage traits
-confirmed to reach the displayed ATK. Both come out of `scripts/extract.mjs`,
-which fails the run if Io stops matching the confirmed build.
-
-**The percentage whitelist is the one place to look when a build is off.** It is
-hand-written in `STAT_TRAIT_SOURCES` and names Catastrophe Nova, Supernova,
-Tyranny and Glass Cannon, all four now measured in game. A trait outside it
-contributes nothing to ATK, so an under-reported ATK means a fifth trait belongs
-in the list - which is a one-line change once the game confirms it.
+**The percentage whitelist is the one place to look when a build is off** - `STAT_TRAIT_SOURCES`, hand-written: Catastrophe Nova, Supernova, Tyranny, Glass Cannon. A trait outside it contributes nothing to ATK.

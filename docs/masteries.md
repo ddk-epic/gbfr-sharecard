@@ -1,8 +1,6 @@
 # Masteries
 
-The per-character progression screen, bought with **MSP**. Everything here is
-read out of the game archive (version 2.0.2) - the tables are named so any claim
-can be re-checked. See [archive.md](archive.md) for how it is extracted.
+The per-character progression screen, bought with **MSP**. Archive version 2.0.2. See [archive.md](archive.md).
 
 ## Four sections, one system
 
@@ -13,54 +11,37 @@ can be re-checked. See [archive.md](archive.md) for how it is extracted.
 | **Collection**   | a section per weapon, banked once transcended | `ap_tree_wep`, `ap_tree_rebuild`      | MSP spent   |
 | **Over Mastery** | the four random lines a meditation rolls      | `limit_bonus_meditation`, `MED_EFF_*` | roll level  |
 
-Over Mastery is a section of Masteries, not a separate system; it has its own
-page, [overmasteries.md](overmasteries.md).
+Over Mastery is a section of Masteries, not separate - own page: [overmasteries.md](overmasteries.md).
 
-Two systems carry the word "master" and are **not** Masteries:
+Not Masteries, despite the word "master":
 
-- **Master traits** - the three Styles across four Style Ranks, `skillboard_*`.
-  See [master-traits.md](master-traits.md).
-- **Master level** - the 1-55 rank, which costs MSP and grants master-trait
-  points and flat stats.
+- **Master traits** - three Styles × four Style Ranks, `skillboard_*`. [master-traits.md](master-traits.md).
+- **Master level** - 1-55 rank, costs MSP, grants master-trait points and flat stats.
 
-The archive calls the whole thing an `ap_tree`, and older notes in this project
-called it a "board". Neither is the game's word. It is **Masteries**.
+Archive calls it `ap_tree`; Game's word: **Masteries**.
 
-Each `ap_tree_*` row names a `limit_bonus`, which names up to three
-`limit_bonus_param` rows.
+Each `ap_tree_*` row names a `limit_bonus`, which names up to three `limit_bonus_param` rows.
 
-## Two readings have to be right
+## Two readings
 
-Both are easy to get wrong in the obvious direction, and either one wrong makes
-the totals wildly wrong.
+### `LimitBonusParamIndex`
 
-### `LimitBonusParamIndex` is a level, not a param
+`LimitBonusParamIndex` is a level index. Not an index into `ParamId1/2/3` (runs to 7, only 3 params exist). It indexes the param's **value ladder**: a node grants `Lv{index+1}Value` of _every_ param the `limit_bonus` names.
 
-The name invites reading it as an index into `ParamId1/2/3`. **It is not** - it
-runs to 7 where there are only ever 3 params. It indexes the param's **value
-ladder**: a node grants `Lv{index+1}Value` of _every_ param the `limit_bonus`
-names.
-
-The ladders are per-node increments rather than cumulative totals, which is why
-they look strange in isolation:
+Ladders are per-node increments, not cumulative totals:
 
 ```
 LBP_EFF_ATK01   150, 250, 300, 100, 100, 100, 100, 100, 100, 100
 LBP_EFF_HP01    500, 300, 200, 200, 200, 200, 200, 200, 200, 200
 ```
 
-The first ATK node in Masteries is worth 150, the second 250, the third 300, and
-every one after that 100.
+First ATK node = 150, second = 250, third = 300, every one after = 100.
 
-### The `reqT = 7` rows replace, they do not add
+### The `reqT = 7` rows
 
-`ap_tree_rebuild` holds twelve rows per weapon: six at
-`ReqWepTranscensionLevel` 1 to 6, and six more at 7 that **mirror them
-one-for-one**. The T7 rows are the same nodes re-priced, not extra nodes.
+The `reqT = 7` rows replace, they do not add. `ap_tree_rebuild`: twelve rows per weapon - six at `ReqWepTranscensionLevel` 1-6, six more at 7 that **mirror them one-for-one**. T7 rows = same nodes re-priced, not extra.
 
-They are recognisable by their format string. A `<d>` in the format -
-`HP +{0}<d>+{1}<d>` - is the game's upgraded-value display, printing the old
-value and the new one:
+Recognisable by format string: a `<d>` (`HP +{0}<d>+{1}<d>`) is the upgraded-value display, old value + new:
 
 | Step | Node      | Param               | Value    |
 | ---- | --------- | ------------------- | -------- |
@@ -69,10 +50,9 @@ value and the new one:
 | T4   | Health Up | `Health Up`         | 5000     |
 | T7   | Health Up | `HP +{0}<d>+{1}<d>` | **5500** |
 
-Summing both sets double-counts. At T7 the correct reading is the six `reqT = 7`
-rows alone, which for Io's Defender is 8800 HP rather than 17,600.
+Summing both double-counts. Correct T7 reading: the six `reqT = 7` rows alone - Io's Defender = 8800 HP, not 17,600.
 
-## What each section grants
+## Per-section grants
 
 Io, every node taken, all six weapons at T7:
 
@@ -88,19 +68,13 @@ Io, every node taken, all six weapons at T7:
 | Collection - Terminus    |         0 |     2450 |      0 |       0 |
 | **Collection total**     | **23200** | **4120** | **38** | **4.8** |
 
-The sections are thematic: the Defender section is where the HP is, the Terminus
-and Ascension sections carry ATK, Stinger carries crit and Stunner carries stun.
-**A weapon's Collection section is worth having even if the weapon is never
-equipped** - the stats are permanent once the weapon is transcended, which is why
-Collection is tracked separately.
+Sections are thematic: Defender = HP, Terminus/Ascension = ATK, Stinger = crit, Stunner = stun. **A weapon's Collection section is worth having even unequipped** - stats permanent once transcended.
 
-Offense gives only 4682 ATK against Defense's 33,300 HP. That asymmetry is real,
-not a reading error: the weapon supplies ATK, Masteries supply HP.
+Offense: only 4682 ATK vs. Defense's 33,300 HP. Weapon supplies ATK; Masteries supply HP.
 
-### The 100% -> 150% extension is almost all damage cap
+### The 100%→150% extension
 
-Offense and Defense each carry 25 nodes past 100%, recognisable by a
-`DiffSeparatorMaybe` of 300 or more. Across both trees those fifty nodes grant:
+The 100%→150% extension is almost all damage cap. Offense/Defense: 25 nodes each past 100% (`DiffSeparatorMaybe` ≥ 300). Across both trees, fifty nodes grant:
 
 | What                                      |   Amount |
 | ----------------------------------------- | -------: |
@@ -110,13 +84,13 @@ Offense and Defense each carry 25 nodes past 100%, recognisable by a
 | Skill Healing Cap Up                      |       20 |
 | Stun Power Up                             |      3.0 |
 
-No ATK and no crit at all. Half the stat sheet's headline numbers do not move
-across the whole extension.
+No ATK, no crit at all.
 
-## What Masteries cost
+## Masteries cost, in MSP
 
-MSP per node, Cagliostro; every other character is within a few hundred MSP of
-this.
+`ap_tree_*.MspCost`, summed per character - `scripts/extract.mjs` writes this into `character-stats.json` as `msp`.
+
+Cagliostro:
 
 | Section                     | Nodes |     MSP |
 | --------------------------- | ----: | ------: |
@@ -126,84 +100,66 @@ this.
 | Collection, transcendence   |    36 |  12,720 |
 | Offense + Defense, 100-150% |    50 | 919,000 |
 
-**The extension costs 26 times everything before it.** Its nodes are priced
-12,000 to 40,000 each against 1 to 700 for every node up to 100%. That pricing is
-what makes it the dominant term in PWR, because PWR pays by MSP.
+**The extension costs 26x everything before it.** Nodes priced 12,000-40,000 each vs. 1-700 for every node up to 100% - the dominant PWR term.
 
-## PWR pays by MSP, not by what the nodes grant
+Identical for everyone: **exactly 50 nodes, 919,000 MSP, all 29 characters.**
 
-Masteries are the biggest term in PWR by an order of magnitude:
+### MSP by character
 
-```
-masteries = attenuate(key 7, total MSP spent in Masteries)
-          = 0.2 per MSP up to 90000, then 0.008
-```
+Collection: 36/36 base roster, 24/24 fewer-weapon characters. Extension omitted below (always 50/919,000).
 
-Read one node at a time on a Cagliostro sitting at 100% Offense / 100% Defense,
-buying into the extension. Each node grants damage cap and nothing else, and the
-damage-cap channel is **0.2 per percentage point**:
+| Character   | CharaId | Offense 0-100% | Defense 0-100% | Collection | Transcendence |   total |
+| ----------- | ------- | -------------: | -------------: | ---------: | ------------: | ------: |
+| The Captain | PL0000  |   189 / 19,158 |   161 / 17,355 | 36 / 1,104 |   36 / 12,720 | 969,337 |
+| The Captain | PL0100  |   189 / 19,158 |   161 / 17,355 | 36 / 1,104 |   36 / 12,720 | 969,337 |
+| Katalina    | PL0200  |   182 / 18,608 |   135 / 15,332 | 36 / 1,104 |   36 / 12,720 | 966,764 |
+| Rackam      | PL0300  |   179 / 18,500 |   121 / 13,886 | 36 / 1,104 |   36 / 12,720 | 965,210 |
+| Io          | PL0400  |   190 / 19,524 |   128 / 14,354 | 36 / 1,104 |   36 / 12,720 | 966,702 |
+| Eugen       | PL0500  |   189 / 19,542 |   129 / 14,317 | 36 / 1,104 |   36 / 12,720 | 966,683 |
+| Rosetta     | PL0600  |   181 / 18,715 |   137 / 15,204 | 36 / 1,104 |   36 / 12,720 | 966,743 |
+| Ferry       | PL0700  |   185 / 19,198 |   133 / 14,558 | 36 / 1,104 |   36 / 12,720 | 966,580 |
+| Lancelot    | PL0800  |   179 / 18,656 |   138 / 15,072 | 36 / 1,104 |   36 / 12,720 | 966,552 |
+| Vane        | PL0900  |   177 / 18,335 |   140 / 15,367 | 36 / 1,104 |   36 / 12,720 | 966,526 |
+| Percival    | PL1000  |   190 / 19,568 |   129 / 14,352 | 36 / 1,104 |   36 / 12,720 | 966,744 |
+| Siegfried   | PL1100  |   180 / 18,516 |   137 / 15,638 | 36 / 1,104 |   36 / 12,720 | 966,978 |
+| Charlotta   | PL1200  |   185 / 19,035 |   133 / 15,636 | 36 / 1,104 |   36 / 12,720 | 967,495 |
+| Yodarha     | PL1300  |   187 / 19,614 |   133 / 14,608 | 36 / 1,104 |   36 / 12,720 | 967,046 |
+| Narmaya     | PL1400  |   189 / 19,450 |   129 / 14,240 | 36 / 1,104 |   36 / 12,720 | 966,514 |
+| Ghandagoza  | PL1500  |   184 / 18,981 |   133 / 14,660 | 36 / 1,104 |   36 / 12,720 | 966,465 |
+| Zeta        | PL1600  |   192 / 20,009 |   125 / 14,746 | 36 / 1,104 |   36 / 12,720 | 967,579 |
+| Vaseraga    | PL1700  |   177 / 18,417 |   140 / 15,271 | 36 / 1,104 |   36 / 12,720 | 966,512 |
+| Cagliostro  | PL1800  |   185 / 19,115 |   133 / 15,204 | 36 / 1,104 |   36 / 12,720 | 967,143 |
+| Id          | PL1900  |   181 / 18,913 |   137 / 15,597 | 36 / 1,104 |   36 / 12,720 | 967,334 |
+| Sandalphon  | PL2100  |   196 / 23,005 |   134 / 15,628 |   24 / 736 |    24 / 8,480 | 966,849 |
+| Seofon      | PL2200  |   195 / 23,054 |   135 / 15,525 |   24 / 736 |    24 / 8,480 | 966,795 |
+| Tweyen      | PL2300  |   195 / 23,314 |   134 / 15,564 |   24 / 736 |    24 / 8,480 | 967,094 |
+| Gallanza    | PL2400  |   191 / 22,122 |   136 / 16,296 |   24 / 736 |    24 / 8,480 | 966,634 |
+| Maglielle   | PL2500  |   188 / 21,831 |   142 / 16,983 |   24 / 736 |    24 / 8,480 | 967,030 |
+| Beatrix     | PL2600  |   183 / 19,287 |   144 / 18,139 | 36 / 1,104 |   36 / 12,720 | 970,250 |
+| Eustace     | PL2700  |   180 / 18,669 |   129 / 14,074 | 36 / 1,104 |   36 / 12,720 | 965,567 |
+| Fraux       | PL2800  |   179 / 23,758 |   143 / 17,999 |   24 / 736 |    24 / 8,480 | 969,973 |
+| Fediel      | PL2900  |   187 / 23,892 |   144 / 17,408 |   24 / 736 |    24 / 8,480 | 969,516 |
 
-| Node bought     | MSP cost |   PWR | ΔPWR | Predicted |
-| --------------- | -------: | ----: | ---: | --------: |
-| _(start)_       |        - | 37330 |    - |         - |
-| NA Cap +10%     |    12000 | 39732 | 2402 |    2402.0 |
-| Skill Cap +10%  |    12000 | 42134 | 2402 |    2402.0 |
-| NA Cap +12%     |    13000 | 44737 | 2603 |    2602.4 |
-| Skill Cap +12%  |    13000 | 45202 |  465 |     465.1 |
-| N/S/SBA Cap +5% |    14000 | 45317 |  115 |     115.0 |
-| SBA Cap +10%    |    14000 | 45430 |  113 |     114.0 |
+`chara.CharaName`. **PL0000 and PL0100 both "The Captain"** (Gran/Djeeta), byte-identical trees; `characters.json` puts both on PL0000 (that field = `gem.PlayerReq` for sigil gating).
 
-Six readings, total miss 1.7, on one free parameter - the MSP the character
-already had invested. The two rates are read straight off
-`chara_power_attenuate`, not fitted: `2402 = 12000 x 0.2 + 10 x 0.2` and
-`115 = 14000 x 0.008 + 15 x 0.2`.
+Gran/Djeeta: outlier at **161 Defense nodes** vs. everyone else's 121-144.
 
-**The fourth node is the proof.** It is the same cell type at the same 13,000
-cost as the third and pays 465 where the third paid 2,603, because the running
-MSP total crosses **90,000** partway through it - the exact breakpoint where key
-7 collapses from 0.2 to 0.008, a 25-fold drop no other key has. Nothing about the
-node changed; only the total spent before it.
+### Node implementation
 
-That also **identifies keys 7 and 11**, which share a curve in
-`chara_power_attenuate` and differ only in their `chara_power_adjust`
-coefficient. The observed rate is the raw 0.2, so Masteries are the one with
-adjust **1** - key 7. ATK, measured at roughly 0.02, is `0.1 x 0.2` - key **11**.
-See [stats.md](stats.md#the-attenuation-curve) for the curve itself.
+Every node is implemented. Across 13,667 rows of the four trees: **no** blank `LimitBonusId`s, **no** references to a missing `limit_bonus`, **no** node costing 0 MSP. 219 of 908 referenced bonuses carry no stat param but resolve to an `AbilityId` - skill unlocks, exactly 7 per character (15 for Gran/Djeeta).
 
-### What Masteries are worth
+Extension split reads off `DiffSeparatorMaybe` (311-351 extension, 11-72 below 100%). Splitting by `MspCost >= 1000` instead agrees on all 13,667 rows.
 
-| State                                      |     MSP |    PWR |
-| ------------------------------------------ | ------: | -----: |
-| 100/100, base collection, no transcendence |  35,423 |  7,385 |
-| 100/100, every weapon transcended          |  48,143 |  9,929 |
-| 150/150, every weapon transcended          | 967,143 | 25,317 |
+## PWR
 
-**The extension is worth about 15,000 PWR** while everything its fifty nodes
-grant is worth **under 600** through the stat channels. The nodes' own bonuses
-are nearly irrelevant to the number they move.
+PWR pays by MSP spent. Masteries are the biggest term in PWR, by an order of magnitude - attenuated on `chara_power_attenuate` key 7 (`0.2` per MSP up to 90,000, then `0.008`), not by what any node grants. A complete 150%/150% build with every weapon transcended prices at 967,143 MSP → **25,317 PWR**, against under 600 through the stat channels its fifty most expensive nodes actually add.
 
-### The 2,989 MSP offset
-
-The fit puts Cagliostro's prior spend at **51,132** where the tables above price
-100/100 with every weapon transcended at **48,143** - a gap of 2,989 that no
-`ap_tree_*` row accounts for. It is not weapon-shaped (a weapon's transcendence
-section is 2,120) and no node costs it. Either some MSP sink outside the four
-`ap_tree_*` tables feeds the same channel, or the curve's input carries an
-offset.
-
-**A second character at a known Masteries state settles it.** If the same 2,989
-turns up, it is structural; if it differs, it is per-character spend.
+The derivation - single-node readings, the key 7/11 split, the unexplained 2,989 MSP offset - lives in [research/pwr-formula.md](../research/pwr-formula.md) and [research/pwr-sources.md](../research/pwr-sources.md#masteries-msp).
 
 ## Reading it back
 
-The queries are single joins against `tables.sqlite`, with both corrections
-above - `LimitBonusParamIndex` as a level, and `reqT = 7` as a replacement set.
-`scripts/extract.mjs` does exactly this to build `character-stats.json`, whose
-`masteries` field is each character's Masteries total.
+Single joins against `tables.sqlite`, with both corrections above (`LimitBonusParamIndex` as a level, `reqT = 7` as a replacement set). `scripts/extract.mjs` builds `character-stats.json`'s `masteries` field this way.
 
-## What this project uses
+## Implementation
 
-`deriveStatus` assumes **Masteries are complete** - 150% Offense, 150% Defense,
-and every weapon transcended, so the whole Collection is banked. The card is a
-max-build card and a Build carries no field for partial Masteries. See
-[stats.md](stats.md#what-this-project-uses).
+`deriveStatus` assumes **Masteries complete** - 150% Offense, 150% Defense, every weapon transcended. Card is a max-build card; a Build carries no field for partial Masteries. See [stats.md](stats.md#implementation).

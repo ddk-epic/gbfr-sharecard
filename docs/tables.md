@@ -1,18 +1,10 @@
 # The archive's tables
 
-Every table in `tables.sqlite`, grouped by what it is about. See
-[archive.md](archive.md) for how the extract is built and why it is the
-authority.
+Every table in `tables.sqlite`, grouped by subject. See [archive.md](archive.md).
 
-The extract holds **305 `.tbl` files** but **302 SQLite tables**. `tbl-to-sqlite`
-converts only tables it has a `.headers` file for, so three are skipped:
-`quest_prologue`, `short_story_startup_keep_fade` and `voice_text` (the last
-being the only `.tbl` in a subfolder).
+**305 `.tbl` files, 302 SQLite tables.** `tbl-to-sqlite` skips tables with no `.headers` file: `quest_prologue`, `short_story_startup_keep_fade`, `voice_text` (the only `.tbl` in a subfolder).
 
-Row counts are from the 2.0.2 extract. Where a table's columns are all `Unk`,
-the description says what the data looks like and no more - the column names in
-`Headers/` are reverse-engineered and a guess dressed as a fact is worse than an
-admitted gap.
+Row counts from the 2.0.2 extract. Where a table's columns are all `Unk`, the description states shape only - `Headers/` column names are reverse-engineered guesses.
 
 ## Characters
 
