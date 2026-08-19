@@ -47,7 +47,7 @@ const ARRANGEMENT_LAYOUT: Record<
   },
   list: {
     panelClass: "",
-    headingClass: "mb-2",
+    headingClass: "mb-1",
     listClass: "divide-line-soft -mb-2 grid grid-cols-1 divide-y",
     showDivider: false,
   },
