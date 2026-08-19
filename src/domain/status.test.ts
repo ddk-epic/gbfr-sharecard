@@ -56,6 +56,7 @@ describe("deriveStatus", () => {
     expect(deriveStatus(terminus)).toEqual({
       hp: 71055,
       atk: 56467,
+      atkBase: 33216,
       critRate: 83,
       stunPower: 199,
     });
@@ -65,6 +66,7 @@ describe("deriveStatus", () => {
     expect(deriveStatus(ascension)).toEqual({
       hp: 70761,
       atk: 46122,
+      atkBase: 32944,
       critRate: 83,
       stunPower: 299,
     });
@@ -76,6 +78,7 @@ describe("deriveStatus", () => {
     expect(deriveStatus(tyranny)).toEqual({
       hp: 56609,
       atk: 63187,
+      atkBase: 32944,
       critRate: 83,
       stunPower: 299,
     });

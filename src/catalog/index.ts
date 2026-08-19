@@ -4,6 +4,7 @@ import type {
   CharacterCatalog,
   CharacterStats,
   SigilLots,
+  PowerTables,
   SummonDef,
   SummonEquipTiers,
   TraitDef,
@@ -19,6 +20,7 @@ import sigilLotsJson from "./sigil-lots.json";
 import bonusTypesJson from "./bonus-types.json";
 import summonsJson from "./summons.json";
 import summonEquipTiersJson from "./summon-equip-tiers.json";
+import powerJson from "./power.json";
 import traitStatsJson from "./trait-stats.json";
 import characterStatsJson from "./character-stats.json";
 import weaponSeriesJson from "./weapon-series.json";
@@ -48,6 +50,8 @@ export const WEAPON_LEVELS = weaponLevelsJson as WeaponLevels;
 export const WRIGHTSTONE_PREFIXES =
   wrightstonePrefixesJson as WrightstonePrefixMap;
 export const SUMMON_EQUIP_TIERS = summonEquipTiersJson as SummonEquipTiers;
+// Bands widen to number[][] on import.
+export const POWER = powerJson as unknown as PowerTables;
 
 export const characterById = new Map(CHARACTERS.map((c) => [c.id, c]));
 export const traitById = new Map(TRAITS.map((t) => [t.id, t]));

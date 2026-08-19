@@ -13,6 +13,7 @@ import { MasterlevelBadge } from "@/components/build/MasterLvlBadge";
 import { PwrBadge } from "@/components/build/PwrBadge";
 import { StatusPanel } from "@/components/build/StatusPanel";
 import { deriveStatus } from "@/domain/status";
+import { derivePower } from "@/domain/power";
 import { BackdropFrame, ParchmentBackdrop } from "@/components/ui";
 
 export const CARD_WIDTH = 2880;
@@ -112,7 +113,12 @@ export function Card({ build }: { build: Build }) {
               top={-4}
               left={137}
             />
-            <PwrBadge power={56252} size={110} top={750} left={10} />
+            <PwrBadge
+              power={derivePower(build)}
+              size={110}
+              top={750}
+              left={10}
+            />
           </div>
           <NameBadge characterId={build.characterId} />
           <StatusPanel status={deriveStatus(build)} />

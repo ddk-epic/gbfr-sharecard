@@ -1,12 +1,14 @@
 import type { Build } from "./build";
 import type { BonusTypeId, TraitId } from "@/catalog/ids";
 import type { StatKey } from "@/catalog/types";
-import { CHARACTER_STATS, TRAIT_STATS } from "@/catalog";
+import { CHARACTER_STATS, POWER, TRAIT_STATS } from "@/catalog";
 import { resolveWeapon } from "./weapons";
 
 export type Status = {
   hp: number;
   atk: number;
+  /** ATK before the multiplicative traits; the ATK the PWR formula reads. */
+  atkBase: number;
   critRate: number;
   stunPower: number;
 };
@@ -15,7 +17,7 @@ export type Status = {
 const FATE = { hp: 640, atk: 165 };
 
 /** `skillboard_unlock` at master level 50; levels 51-55 award no stats. */
-const MASTER_LEVELS = { hp: 6000, atk: 3000 };
+const MASTER_LEVELS = POWER.masterLevel;
 
 /** Base crit and stun, equal at level 1 and level 100 on every character. */
 const BASE_CRIT = 5;
@@ -26,8 +28,8 @@ const STUN_SCALE = 10;
 
 const CRIT_CAP = 100;
 
-/** Weapon slot 4 on Ascension and Terminus; its level is the bonus each sigil gets. */
-const SIGIL_BOOSTER = "sigil-booster";
+/** Weapon slot 4 on Ascension and Terminus. */
+export const SIGIL_BOOSTER = "sigil-booster";
 
 const OVER_MASTERY_STAT: Record<BonusTypeId, StatKey> = {
   "attack-power-up": "atk",
@@ -117,6 +119,7 @@ export function deriveStatus(build: Build): Status {
   return {
     hp: Math.round(flat.hp * factor.hp),
     atk: Math.round(flat.atk * factor.atk),
+    atkBase: Math.round(flat.atk),
     critRate: Math.min(Math.round(flat.crit * factor.crit), CRIT_CAP),
     stunPower: Math.round(flat.stun * factor.stun * STUN_SCALE),
   };

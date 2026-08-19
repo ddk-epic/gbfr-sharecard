@@ -6,12 +6,10 @@ import { NameBadge } from "@/components/build/NameBadge";
 import { PwrBadge } from "@/components/build/PwrBadge";
 import { StatusPanel } from "@/components/build/StatusPanel";
 import { deriveStatus } from "@/domain/status";
+import { derivePower } from "@/domain/power";
 
 /** Mirrors Portrait's own PORTRAIT_BLEED_RIGHT, which it keeps private. */
 const PORTRAIT_BLEED_RIGHT = 130;
-
-/** Power placeholder. */
-const POWER = 56252;
 
 /** The PwrIcon offset. */
 const PWR_TOP = -150;
@@ -40,7 +38,12 @@ export function IdentityCol({ build, width }: { build: Build; width: number }) {
         left={137}
       />
       <div className="relative">
-        <PwrBadge power={POWER} size={110} top={PWR_TOP} left={10} />
+        <PwrBadge
+          power={derivePower(build)}
+          size={110}
+          top={PWR_TOP}
+          left={10}
+        />
       </div>
       <NameBadge characterId={build.characterId} className="relative" />
       <div className="relative z-2">

@@ -1,94 +1,117 @@
 {
   "gran": {
     "base": { "hp": 3430, "atk": 677 },
-    "masteries": { "hp": 56250, "atk": 8791, "crit": 78, "stun": 12 }
+    "masteries": { "hp": 56250, "atk": 8791, "crit": 78, "stun": 12 },
+    "msp": { "offense": 19158, "defense": 17355, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "djeeta": {
     "base": { "hp": 3430, "atk": 677 },
-    "masteries": { "hp": 56250, "atk": 8791, "crit": 78, "stun": 12 }
+    "masteries": { "hp": 56250, "atk": 8791, "crit": 78, "stun": 12 },
+    "msp": { "offense": 19158, "defense": 17355, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "katalina": {
     "base": { "hp": 3499, "atk": 656 },
-    "masteries": { "hp": 56200, "atk": 8812, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56200, "atk": 8812, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18608, "defense": 15332, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "rackam": {
     "base": { "hp": 3570, "atk": 631 },
-    "masteries": { "hp": 56150, "atk": 8832, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56150, "atk": 8832, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18500, "defense": 13886, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "io": {
     "base": { "hp": 3156, "atk": 666 },
-    "masteries": { "hp": 56500, "atk": 8802, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56500, "atk": 8802, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 19524, "defense": 14354, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "eugen": {
     "base": { "hp": 3637, "atk": 699 },
-    "masteries": { "hp": 56050, "atk": 8769, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56050, "atk": 8769, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 19542, "defense": 14317, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "rosetta": {
     "base": { "hp": 3327, "atk": 642 },
-    "masteries": { "hp": 56350, "atk": 8826, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56350, "atk": 8826, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18715, "defense": 15204, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "ferry": {
     "base": { "hp": 3256, "atk": 620 },
-    "masteries": { "hp": 56400, "atk": 8848, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56400, "atk": 8848, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 19198, "defense": 14558, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "lancelot": {
     "base": { "hp": 3462, "atk": 652 },
-    "masteries": { "hp": 56250, "atk": 8816, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56250, "atk": 8816, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18656, "defense": 15072, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "vane": {
     "base": { "hp": 3704, "atk": 689 },
-    "masteries": { "hp": 56000, "atk": 8779, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56000, "atk": 8779, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18335, "defense": 15367, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "percival": {
     "base": { "hp": 3604, "atk": 707 },
-    "masteries": { "hp": 56100, "atk": 8761, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56100, "atk": 8761, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 19568, "defense": 14352, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "siegfried": {
     "base": { "hp": 3535, "atk": 739 },
-    "masteries": { "hp": 56150, "atk": 8729, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56150, "atk": 8729, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18516, "defense": 15638, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "charlotta": {
     "base": { "hp": 3399, "atk": 665 },
-    "masteries": { "hp": 56250, "atk": 8803, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56250, "atk": 8803, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 19035, "defense": 15636, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "yodarha": {
     "base": { "hp": 3197, "atk": 730 },
-    "masteries": { "hp": 56450, "atk": 8738, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56450, "atk": 8738, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 19614, "defense": 14608, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "narmaya": {
     "base": { "hp": 3361, "atk": 708 },
-    "masteries": { "hp": 56300, "atk": 8760, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56300, "atk": 8760, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 19450, "defense": 14240, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "ghandagoza": {
     "base": { "hp": 3739, "atk": 741 },
-    "masteries": { "hp": 55950, "atk": 8727, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 55950, "atk": 8727, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18981, "defense": 14660, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "zeta": {
     "base": { "hp": 3293, "atk": 728 },
-    "masteries": { "hp": 56350, "atk": 8740, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56350, "atk": 8740, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 20009, "defense": 14746, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "vaseraga": {
     "base": { "hp": 3773, "atk": 720 },
-    "masteries": { "hp": 55950, "atk": 8748, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 55950, "atk": 8748, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18417, "defense": 15271, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "cagliostro": {
     "base": { "hp": 3227, "atk": 636 },
-    "masteries": { "hp": 56450, "atk": 8832, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56450, "atk": 8832, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 19115, "defense": 15204, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "id": {
     "base": { "hp": 3394, "atk": 687 },
-    "masteries": { "hp": 56250, "atk": 8781, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56250, "atk": 8781, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18913, "defense": 15597, "extension": 919000, "collection": 1104, "transcendence": 12720 }
   },
   "sandalphon": {
     "base": { "hp": 3630, "atk": 688 },
-    "masteries": { "hp": 56050, "atk": 8780, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56050, "atk": 8780, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 23005, "defense": 15628, "extension": 919000, "collection": 736, "transcendence": 8480 }
   },
   "seofon": {
     "base": { "hp": 3530, "atk": 709 },
-    "masteries": { "hp": 56150, "atk": 8759, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56150, "atk": 8759, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 23054, "defense": 15525, "extension": 919000, "collection": 736, "transcendence": 8480 }
   },
   "tweyen": {
     "base": { "hp": 3260, "atk": 686 },
-    "masteries": { "hp": 56420, "atk": 8782, "crit": 78, "stun": 10.9 }
+    "masteries": { "hp": 56420, "atk": 8782, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 23314, "defense": 15564, "extension": 919000, "collection": 736, "transcendence": 8480 }
   }
 }

@@ -135,10 +135,31 @@ export type TraitStat = {
 export type TraitStats = Record<TraitId, TraitStat[]>;
 
 /** `masteries` is every Masteries node taken - Offense, Defense and
- * every weapon's Collection section. */
+ * every weapon's Collection section. `msp` is what those nodes cost, per
+ * section, which is what the PWR formula reads rather than the stats. */
 export type CharacterStats = {
   base: { hp: number; atk: number };
   masteries: Record<StatKey, number>;
+  msp: {
+    offense: number; // 0-100%
+    defense: number; // 0-100%
+    extension: number; // 100-150%, always 919,000
+    collection: number;
+    transcendence: number;
+  };
+};
+
+/** The PWR coefficient tables, keyed by the engine's input-type enum, plus the
+ *  two ladders only the PWR formula reads: `dmgCap` is every trait that grants
+ *  general DMG Cap, percentage by level, and `masterLevel` the board's own
+ *  totals at level 50. */
+export type PowerTables = {
+  adjust: Record<string, number>;
+  attenuate: Record<string, [number, number][]>;
+  dmgCap: Record<TraitId, number[]>;
+  masterLevel: { hp: number; atk: number; dmgCap: number };
+  /** PWR per weapon transcendence stage, six of them. */
+  transcendence: number[];
 };
 
 export type WrightstonePrefixMap = Record<TraitId, string>; // main trait -> display prefix

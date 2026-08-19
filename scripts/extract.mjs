@@ -653,6 +653,39 @@ const baseStatus = database.prepare(
   "select * from chara_status where Key = ? and Level = 100",
 );
 
+// MSP spent per Masteries section, the PWR channel's input. `DiffSeparatorMaybe`
+// at 300 and over marks the 100-150% extension nodes, which Offense and Defense
+// carry 25 each of; the same split by MspCost >= 1000 agrees on every row.
+const MSP_TREES = Object.entries({
+  offense: "ap_tree_atk where CharaId = ? and DiffSeparatorMaybe < 300",
+  defense: "ap_tree_def where CharaId = ? and DiffSeparatorMaybe < 300",
+  offenseExtension: "ap_tree_atk where CharaId = ? and DiffSeparatorMaybe >= 300",
+  defenseExtension: "ap_tree_def where CharaId = ? and DiffSeparatorMaybe >= 300",
+  collection: "ap_tree_wep where CharaId = ?",
+  transcendence:
+    "ap_tree_rebuild where CharaId = ? and ReqWepTranscensionLevel = 7",
+}).map(([section, from]) => [
+  section,
+  database.prepare(`select coalesce(sum(MspCost), 0) as msp from ${from}`),
+]);
+
+const mspSpent = (playerId) => {
+  const spent = Object.fromEntries(
+    MSP_TREES.map(([section, query]) => [section, query.get(playerId).msp]),
+  );
+  return {
+    offense: spent.offense,
+    defense: spent.defense,
+    extension: spent.offenseExtension + spent.defenseExtension,
+    collection: spent.collection,
+    transcendence: spent.transcendence,
+  };
+};
+
+/** Every character's extension is the same 50 nodes; a change means the split
+    marker moved. */
+const MSP_EXTENSION = 919000;
+
 const characterStats = {};
 for (const character of JSON.parse(
   await readFile(new URL("characters.json", OUT_DIR), "utf8"),
@@ -665,9 +698,15 @@ for (const character of JSON.parse(
   // Stun stays in the archive's tenths; the derivation scales it once, at the end.
   for (const stat of Object.keys(masteries))
     masteries[stat] = +masteries[stat].toFixed(2);
+  const msp = mspSpent(character.playerId);
+  if (msp.extension !== MSP_EXTENSION)
+    throw new Error(
+      `${character.name} extension MSP is ${msp.extension}, not ${MSP_EXTENSION}`,
+    );
   characterStats[character.id] = {
     base: { hp: base.Hp, atk: base.Attack },
     masteries,
+    msp,
   };
 }
 
@@ -679,8 +718,8 @@ const inline = (stats) =>
     .join(", ")} }`;
 const characterStatsText = `{\n${Object.entries(characterStats)
   .map(
-    ([id, { base, masteries }]) =>
-      `  "${id}": {\n    "base": ${inline(base)},\n    "masteries": ${inline(masteries)}\n  }`,
+    ([id, { base, masteries, msp }]) =>
+      `  "${id}": {\n    "base": ${inline(base)},\n    "masteries": ${inline(masteries)},\n    "msp": ${inline(msp)}\n  }`,
   )
   .join(",\n")}\n}\n`;
 
@@ -689,13 +728,131 @@ const io = characterStats.io;
 const IO_EXPECTED = {
   base: { hp: 3156, atk: 666 },
   masteries: { hp: 56500, atk: 8802, crit: 78, stun: 10.9 },
+  msp: {
+    offense: 19524,
+    defense: 14354,
+    extension: 919000,
+    collection: 1104,
+    transcendence: 12720,
+  },
 };
 if (JSON.stringify(io) !== JSON.stringify(IO_EXPECTED))
   throw new Error(
     `Io no longer matches the confirmed build: ${JSON.stringify(io)}`,
   );
 
+// ---------------------------------------------------------------- power.json
+// `attenuate` rows are cumulative breakpoints, each rate running from its own
+// StatAmountForRange to the next, so runs of equal rates collapse to the row
+// that starts them. See docs/stats.md.
+const powerAdjust = Object.fromEntries(
+  database
+    .prepare("select Key, PowerAdjust from chara_power_adjust order by Key")
+    .all()
+    .map((row) => [row.Key, row.PowerAdjust]),
+);
+
+const powerAttenuate = {};
+for (const row of database
+  .prepare(
+    `select Key, StatAmountForRange, PowerPerStatInRange from chara_power_attenuate
+     order by Key, StatAmountForRange`,
+  )
+  .all()) {
+  const bands = (powerAttenuate[row.Key] ??= []);
+  if (bands.at(-1)?.[1] !== row.PowerPerStatInRange)
+    bands.push([row.StatAmountForRange, row.PowerPerStatInRange]);
+}
+
+// DMG Cap multiplies the ATK term, so its ladders are a PWR input rather than a
+// displayed stat and ride in power.json instead of trait-stats.json.
+//
+// A trait grants general DMG Cap when its level text carries a bare "DMG Cap
+// +{n}" clause; `{n}` names the LevelValue column, the same convention
+// STAT_TRAIT_SOURCES follows by hand. Type-scoped clauses ("SBA DMG Cap",
+// "Skill DMG Cap", "<d>/<d> Attack DMG Cap") are excluded by the lookbehind.
+//
+// The plain DMG Cap trait is the exception the rule cannot see: its text is
+// three type-scoped clauses at equal values, and Io's weapon reads 45 off a
+// level 15 of it, so it grants the general cap and is added by hand.
+// Conditional grants are kept - Catastrophe is gated on "when at X max HP or
+// less" and Ferry's ladder only closes with its 100 counted, so PWR reads the
+// raw value and ignores the condition. Whether the type-scoped traits pay is
+// untested; nothing measured so far moves one. See research/pwr-master-levels.md.
+const GENERAL_DMG_CAP =
+  /(?<!SBA |Skill |Shot |attack |Attack |Dealt )DMG Cap\s*\+\{(\d+)/;
+const DMG_CAP_KEY = "SKILL_020_00";
+if (idByKey.get(DMG_CAP_KEY) !== "dmg-cap")
+  throw new Error(`${DMG_CAP_KEY} no longer resolves to the DMG Cap trait`);
+
+const dmgCapColumns = new Map([[DMG_CAP_KEY, 1]]);
+for (const row of database
+  .prepare("select distinct Key, LevelDescription from skill_status")
+  .all()) {
+  if (!idByKey.has(row.Key) || dmgCapColumns.has(row.Key)) continue;
+  const match = english(row.LevelDescription)
+    ?.replace(/\s+/g, " ")
+    .match(GENERAL_DMG_CAP);
+  if (match) dmgCapColumns.set(row.Key, Number(match[1]) + 1);
+}
+
+const powerDmgCap = {};
+for (const [key, column] of dmgCapColumns) {
+  const rows = ladderOf.all(key);
+  rows.forEach((row, index) => {
+    if (row.Level !== index + 1)
+      throw new Error(`${key} skips level ${index + 1}`);
+  });
+  powerDmgCap[idByKey.get(key)] = rows.map((row) => row[`LevelValue${column}`]);
+}
+// The three the readings actually pin, so a parse that drifts fails loudly.
+const DMG_CAP_EXPECTED = {
+  catastrophe: [25, 100],
+  "catastrophe-nova": [35, 500],
+  "unbound-master": [55, 50],
+  "dmg-cap": [15, 45],
+};
+for (const [id, [level, value]] of Object.entries(DMG_CAP_EXPECTED))
+  if (powerDmgCap[id]?.[level - 1] !== value)
+    throw new Error(
+      `${id} level ${level} reads ${powerDmgCap[id]?.[level - 1]}, expected ${value}`,
+    );
+
+// The master level board's own grants, cumulative. `skillboard_unlock` holds
+// one row per level with the increment awarded at it. See research/pwr-master-levels.md.
+const masterLevelUnlock = database
+  .prepare(
+    "select HealthAdd, AttackAdd, DmgCapAdd from skillboard_unlock order by MasterLevel",
+  )
+  .all()
+  .reduce(
+    (total, row) => ({
+      hp: total.hp + row.HealthAdd,
+      atk: total.atk + row.AttackAdd,
+      dmgCap: total.dmgCap + row.DmgCapAdd,
+    }),
+    { hp: 0, atk: 0, dmgCap: 0 },
+  );
+
+// What each transcendence stage pays, stored as big-endian float bits in a hex
+// string. Six stages; a fully transcended weapon takes all of them.
+// See research/pwr-atk-flat-and-cap.md.
+const transcendence = database
+  .prepare("select Unk2 from chara_power_rebuild_adjust order by Unk1")
+  .all()
+  .map((row) => Buffer.from(row.Unk2, "hex").readFloatBE(0));
+const TRANSCENDENCE_EXPECTED = [200, 300, 200, 300, 250, 300];
+if (String(transcendence) !== String(TRANSCENDENCE_EXPECTED))
+  throw new Error(`transcendence reads ${transcendence}`);
+
 // ---------------------------------------------------------------- write all
+await writeJson("power.json", {
+  adjust: powerAdjust,
+  attenuate: powerAttenuate,
+  dmgCap: powerDmgCap,
+  masterLevel: masterLevelUnlock,
+  transcendence,
+});
 await writeJson("traits.json", traits);
 await writeJson("sigil-lots.json", sigilLots);
 await writeJson("bonus-types.json", bonusTypes);
