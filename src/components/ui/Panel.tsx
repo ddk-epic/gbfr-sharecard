@@ -37,7 +37,7 @@ export function Panel({
 }) {
   return (
     <div
-      className={`border-line flex flex-col gap-3 rounded-xl border bg-white/45 shadow-[0_8px_40px_rgba(23,60,90,0.18)] backdrop-blur-xs ${PANEL_PAD[pad]} ${className}`}
+      className={`border-line flex flex-col gap-3 rounded-xl border bg-white/75 shadow-[0_8px_40px_rgba(23,60,90,0.18)] backdrop-blur-xs ${PANEL_PAD[pad]} ${className}`}
     >
       {children}
     </div>

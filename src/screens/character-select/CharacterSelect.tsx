@@ -26,7 +26,7 @@ export function CharacterSelect({
           Build Card Maker
         </span>
       </div>
-      <Panel className="w-[66%] bg-white/75">
+      <Panel className="w-[66%]">
         <Heading>Character Select</Heading>
         <div className="grid grid-cols-8 gap-2.5">
           {CHARACTERS.map((character) => (
