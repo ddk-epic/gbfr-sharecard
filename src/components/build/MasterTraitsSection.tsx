@@ -8,6 +8,7 @@ import { sboardRankIconUrl, starBgUrl, starIconUrl } from "@/assets/urls";
 import { characterCatalog } from "@/catalog";
 import {
   Heading,
+  nameTracking,
   Tooltip,
   traitLabelFit,
   type TooltipPlacement,
@@ -17,6 +18,13 @@ const STYLE_BORDER: Record<StyleId, string> = {
   insight: "border-t-insight",
   essence: "border-t-essence",
   crux: "border-t-crux",
+};
+
+/** For the lightened style colors in the heading. */
+const STYLE_SOFT: Record<StyleId, string> = {
+  insight: "color-mix(in srgb, var(--insight) 65%, white)",
+  essence: "color-mix(in srgb, var(--essence) 65%, white)",
+  crux: "color-mix(in srgb, var(--crux) 65%, white)",
 };
 
 const STYLE_LABEL: Record<StyleId, string> = {
@@ -123,7 +131,7 @@ function MasterTraitStyleRank({
         </span>
       </div>
       {/** Cells */}
-      <div className="grid grid-cols-2 gap-1.5 pb-4.5">
+      <div className="grid grid-cols-2 gap-1.25">
         {cells.map((cell, i) => {
           const fit = traitLabelFit(cell.label, cell.perkRank);
           const interaction = cellInteraction?.(cell, style, rank);
@@ -164,6 +172,25 @@ function MasterTraitStyleRank({
   );
 }
 
+function StyleHeading({ style, title }: { style: StyleId; title: string }) {
+  return (
+    <h4 className="flex flex-none flex-col items-center gap-2 py-3">
+      <span
+        className="font-med text-2xl text-white [-webkit-text-stroke:3px_var(--ui)] [paint-order:stroke] [text-shadow:0_1px_5px_rgba(10,50,70,0.55)]"
+        style={{ letterSpacing: nameTracking(title) }}
+      >
+        {title}
+      </span>
+      <span
+        className="font-med text-xs tracking-[0.2em] uppercase"
+        style={{ color: STYLE_SOFT[style] }}
+      >
+        {STYLE_LABEL[style]}
+      </span>
+    </h4>
+  );
+}
+
 function MasterTraitStyleColumn({
   style,
   title,
@@ -183,23 +210,23 @@ function MasterTraitStyleColumn({
 }) {
   return (
     <div
-      className={`styleCol text-deep-ink relative flex min-h-0 flex-col rounded-lg border-t-4 p-4 ${STYLE_BORDER[style]}`}
+      className={`styleCol text-deep-ink relative flex min-h-0 flex-col rounded-lg border-t-4 px-4 pt-2 ${STYLE_BORDER[style]}`}
     >
-      <h4 className="flex-none pb-4 text-2xl font-bold text-white [text-shadow:0_1px_5px_rgba(10,50,70,0.55)]">
-        {STYLE_LABEL[style]}: {title}
-      </h4>
-      {RANKS.map((rank) => (
-        <MasterTraitStyleRank
-          key={rank}
-          style={style}
-          rank={rank}
-          cells={cellsByRank[rank]}
-          selected={selectedByRank[rank]}
-          perkHit={rank !== "ex" && perks[rank]}
-          cellInteraction={cellInteraction}
-          tooltipPlacement={tooltipPlacement}
-        />
-      ))}
+      <StyleHeading style={style} title={title} />
+      <div className="flex min-h-0 flex-1 flex-col justify-between pb-4.5">
+        {RANKS.map((rank) => (
+          <MasterTraitStyleRank
+            key={rank}
+            style={style}
+            rank={rank}
+            cells={cellsByRank[rank]}
+            selected={selectedByRank[rank]}
+            perkHit={rank !== "ex" && perks[rank]}
+            cellInteraction={cellInteraction}
+            tooltipPlacement={tooltipPlacement}
+          />
+        ))}
+      </div>
     </div>
   );
 }
