@@ -419,10 +419,10 @@ for (const row of database
 console.log(`skills: ${skillCount} rows -> ${(await readdir(skillsDirectory)).length} character folders`);
 
 // ---------------------------------------------------------- character art
-// Variant _0 is the whole illustration - the wiki's _2 is this same art cropped
-// mid-shin onto a wider canvas - so every other framing derives from it and
-// only this one ships. A grid or portrait crop is regenerated from the archive
-// when its size is settled, not stored alongside.
+// Two framings ship, both from the archive's own set: _0, the whole
+// illustration, as the card's art, and _4, the head-and-torso square, as the
+// select tile's thumbnail. The wiki's _2 is _0 cropped mid-shin onto a wider
+// canvas and is not used.
 //
 // 900px against a 3608x3660 native: the card's box draws it at 869 (70% of
 // 1080, background-sized to 115%), so this is the tallest anything needs today.
@@ -433,33 +433,52 @@ console.log(`skills: ${skillCount} rows -> ${(await readdir(skillsDirectory)).le
 // re-frames the card, editor and grid, so the switch is a visual decision, not
 // this script's to make.
 const CHARACTER_DIR = new URL("../public/characters/", import.meta.url);
+const THUMBNAIL_DIR = new URL("../public/thumbnails/", import.meta.url);
 const CARD_ART_HEIGHT = 900;
+// Variant _4 is the head-and-torso square the select tile wants, so the tile
+// needs no crop of its own - 1160px native down to the 600 the grid draws at.
+const THUMBNAIL_SIZE = 600;
 const charaRoot = `${EXTRACT_DIR}/ui/layouts/common/image_chara/noatlastextures`;
 
 const characters = JSON.parse(
   await readFile(new URL("characters.json", CATALOG_DIR)),
 );
 await mkdir(CHARACTER_DIR, { recursive: true });
+await mkdir(THUMBNAIL_DIR, { recursive: true });
 let characterCount = 0;
+let thumbnailCount = 0;
 for (const character of characters) {
   const stem = `cmn_imgchr_${character.artId}`;
-  const source = `${charaRoot}/${stem}/${stem}_0.png`;
-  if (!existsSync(source)) {
-    missing.push(`${stem}_0.png`);
-    continue;
-  }
-  const destination = new URL(`${character.id}.webp`, CHARACTER_DIR);
-  if (!existsSync(destination))
-    await writeFile(
-      destination,
-      await sharp(source)
-        .resize({ height: CARD_ART_HEIGHT })
-        .webp({ quality: WEBP_QUALITY })
-        .toBuffer(),
-    );
-  characterCount++;
+  const art = `${charaRoot}/${stem}/${stem}_0.png`;
+  const thumbnail = `${charaRoot}/${stem}/${stem}_4.png`;
+  if (existsSync(art)) {
+    const destination = new URL(`${character.id}.webp`, CHARACTER_DIR);
+    if (!existsSync(destination))
+      await writeFile(
+        destination,
+        await sharp(art)
+          .resize({ height: CARD_ART_HEIGHT })
+          .webp({ quality: WEBP_QUALITY })
+          .toBuffer(),
+      );
+    characterCount++;
+  } else missing.push(`${stem}_0.png`);
+  if (existsSync(thumbnail)) {
+    const destination = new URL(`${character.id}.webp`, THUMBNAIL_DIR);
+    if (!existsSync(destination))
+      await writeFile(
+        destination,
+        await sharp(thumbnail)
+          .resize(THUMBNAIL_SIZE, THUMBNAIL_SIZE)
+          .webp({ quality: WEBP_QUALITY })
+          .toBuffer(),
+      );
+    thumbnailCount++;
+  } else missing.push(`${stem}_4.png`);
 }
-console.log(`characters: ${characterCount} illustrations`);
+console.log(
+  `characters: ${characterCount} illustrations, ${thumbnailCount} thumbnails`,
+);
 
 // ---------------------------------------------------------- summon icons
 // public/icons/summon/<id>.webp - the equipped-summon portraits, diamond-cropped
