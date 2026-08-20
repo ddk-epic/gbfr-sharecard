@@ -1,7 +1,8 @@
-import { Fragment, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { Check, Copy, Download, Maximize2 } from "lucide-react";
 import type { Build } from "@/domain/build";
 import { Card, CARD_HEIGHT, CARD_WIDTH } from "@/screens/card/Card";
+import { CardFooter } from "@/screens/card/CardFooter";
 import { CardModal } from "@/screens/card/CardModal";
 import { canCopy, copyCard, downloadCard } from "@/screens/card/export";
 import { BackButton, Cta, Heading, Panel } from "@/components/ui";
@@ -22,30 +23,14 @@ const DOWNLOAD_IDLE = (
 const done = (text: string) => (
   <>
     <Check size={ICON} aria-hidden />
-    {text}
+    <span>{text}</span>
   </>
 );
 const FLASH_MS = 900;
 
-/** Fixed preview-box width; the card's aspect sets the height and the scale. */
+/** Fixed preview-box width. */
 const PREVIEW_WIDTH = 1190.4;
 const PREVIEW_SCALE = PREVIEW_WIDTH / CARD_WIDTH;
-
-const CREDITS = [
-  {
-    label: "PE Patch Tool",
-    href: "https://github.com/BitterG/GBFR-PE-Patch-Tool",
-  },
-  {
-    label: "calculator sheet",
-    href: "https://docs.google.com/spreadsheets/d/1RnNLfdqFCW7zWvfHnQsNRJoi7EtIjdOUg-uYB0xsZHQ",
-  },
-  {
-    label: "summon datamine",
-    href: "https://nenkai.github.io/relink-modding/resources/summon_trait_chances/",
-  },
-  { label: "relink.gbf.wiki", href: "https://relink.gbf.wiki" },
-];
 
 export function CardScreen({
   build,
@@ -110,7 +95,7 @@ export function CardScreen({
           </div>
           {/* Preview scales the full-size node down; click opens the 1:1 inspector. */}
           <div
-            className="group relative cursor-zoom-in overflow-hidden rounded-lg shadow-[0_4px_24px_rgba(23,60,90,0.25)]"
+            className="group relative cursor-zoom-in overflow-hidden shadow-[0_4px_24px_rgba(23,60,90,0.25)]"
             style={{
               width: PREVIEW_WIDTH,
               height: PREVIEW_WIDTH * (CARD_HEIGHT / CARD_WIDTH),
@@ -138,35 +123,9 @@ export function CardScreen({
           </div>
         </Panel>
       </div>
-      <div className="border-line/80 text-dim absolute right-0 bottom-0 left-0 z-2 flex h-13 items-center justify-center gap-2.25 border-t bg-white/40 text-[12.5px] backdrop-blur-[3px]">
-        <span>gbfr-sharecard</span>
-        <span className="text-line">·</span>
-        <span>fan project - Granblue Fantasy: Relink © Cygames</span>
-        <span className="text-line">·</span>
-        <span>data:</span>
-        {CREDITS.map((credit, i) => (
-          <Fragment key={credit.href}>
-            {i > 0 && <span className="text-line">·</span>}
-            <a
-              href={credit.href}
-              target="_blank"
-              rel="noreferrer"
-              className="text-deep-4 no-underline hover:underline"
-            >
-              {credit.label}
-            </a>
-          </Fragment>
-        ))}
-        <span className="text-line">·</span>
-        <a
-          href="https://github.com/ddk-epic/gbfr-sharecard"
-          target="_blank"
-          rel="noreferrer"
-          className="text-deep-4 no-underline hover:underline"
-        >
-          GitHub
-        </a>
-      </div>
+
+      <CardFooter />
+
       {zoomed && <CardModal build={build} onClose={() => setZoomed(false)} />}
     </>
   );

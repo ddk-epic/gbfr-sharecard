@@ -3,24 +3,26 @@ import { useEffect, useState, type ReactNode } from "react";
 export const STAGE_WIDTH = 1920;
 export const STAGE_HEIGHT = 1080;
 
-/**
- * Cover scale, the background-size: cover rule in numbers - the larger of the
- * two axis ratios, so the stage always spans the whole viewport and no shell
- * edge is ever visible. Whichever axis overflows is clipped evenly, and the
- * screens keep their content inside that safe middle band.
- */
+/** The larger axis ratio, so stage always covers the viewport. */
 const coverScale = () =>
   Math.max(window.innerWidth / STAGE_WIDTH, window.innerHeight / STAGE_HEIGHT);
 
-/**
- * The fixed stage, fitted to the viewport by wrapper transform only. Nothing
- * inside is ever scaled itself - the PNG export depends on that.
- */
+/** Published as `--stage-clip-x/y` so chrome can inset onto the viewport edge. */
+const geometry = () => {
+  const scale = coverScale();
+  return {
+    scale,
+    clipX: Math.max(0, (STAGE_WIDTH - window.innerWidth / scale) / 2),
+    clipY: Math.max(0, (STAGE_HEIGHT - window.innerHeight / scale) / 2),
+  };
+};
+
+/** The fixed stage, fitted to the viewport by the wrapper transform only. */
 export function Stage({ children }: { children: ReactNode }) {
-  const [scale, setScale] = useState(coverScale);
+  const [{ scale, clipX, clipY }, setGeometry] = useState(geometry);
 
   useEffect(() => {
-    const onResize = () => setScale(coverScale());
+    const onResize = () => setGeometry(geometry());
     addEventListener("resize", onResize);
     return () => removeEventListener("resize", onResize);
   }, []);
@@ -29,7 +31,13 @@ export function Stage({ children }: { children: ReactNode }) {
     <div className="relative h-dvh overflow-hidden">
       <div
         className="absolute top-1/2 left-1/2 h-[1080px] w-[1920px] origin-center"
-        style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
+        style={
+          {
+            transform: `translate(-50%, -50%) scale(${scale})`,
+            "--stage-clip-x": `${clipX}px`,
+            "--stage-clip-y": `${clipY}px`,
+          } as React.CSSProperties
+        }
       >
         {children}
       </div>
