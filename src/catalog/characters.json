@@ -205,5 +205,59 @@
     "portrait": "characters/tweyen.webp",
     "element": "Light",
     "enabled": false
+  },
+  {
+    "id": "gallanza",
+    "name": "Gallanza",
+    "artId": "em2000",
+    "playerId": "PL2400",
+    "portrait": "characters/gallanza.webp",
+    "element": "Earth",
+    "enabled": false
+  },
+  {
+    "id": "maglielle",
+    "name": "Maglielle",
+    "artId": "em2100",
+    "playerId": "PL2500",
+    "portrait": "characters/maglielle.webp",
+    "element": "Light",
+    "enabled": false
+  },
+  {
+    "id": "beatrix",
+    "name": "Beatrix",
+    "artId": "2600",
+    "playerId": "PL2600",
+    "portrait": "characters/beatrix.webp",
+    "element": "Water",
+    "enabled": false
+  },
+  {
+    "id": "eustace",
+    "name": "Eustace",
+    "artId": "2700",
+    "playerId": "PL2700",
+    "portrait": "characters/eustace.webp",
+    "element": "Wind",
+    "enabled": false
+  },
+  {
+    "id": "fraux",
+    "name": "Fraux",
+    "artId": "2800",
+    "playerId": "PL2800",
+    "portrait": "characters/fraux.webp",
+    "element": "Fire",
+    "enabled": false
+  },
+  {
+    "id": "fediel",
+    "name": "Fediel",
+    "artId": "2900",
+    "playerId": "PL2900",
+    "portrait": "characters/fediel.webp",
+    "element": "Dark",
+    "enabled": false
   }
 ]

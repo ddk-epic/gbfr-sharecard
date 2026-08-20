@@ -113,5 +113,35 @@
     "base": { "hp": 3260, "atk": 686 },
     "masteries": { "hp": 56420, "atk": 8782, "crit": 78, "stun": 10.9 },
     "msp": { "offense": 23314, "defense": 15564, "extension": 919000, "collection": 736, "transcendence": 8480 }
+  },
+  "gallanza": {
+    "base": { "hp": 3704, "atk": 730 },
+    "masteries": { "hp": 55940, "atk": 8738, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 22122, "defense": 16296, "extension": 919000, "collection": 736, "transcendence": 8480 }
+  },
+  "maglielle": {
+    "base": { "hp": 3154, "atk": 636 },
+    "masteries": { "hp": 56490, "atk": 8832, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 21831, "defense": 16983, "extension": 919000, "collection": 736, "transcendence": 8480 }
+  },
+  "beatrix": {
+    "base": { "hp": 3534, "atk": 700 },
+    "masteries": { "hp": 56110, "atk": 8768, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 19287, "defense": 18139, "extension": 919000, "collection": 1104, "transcendence": 12720 }
+  },
+  "eustace": {
+    "base": { "hp": 3604, "atk": 728 },
+    "masteries": { "hp": 56040, "atk": 8740, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 18669, "defense": 14074, "extension": 919000, "collection": 1104, "transcendence": 12720 }
+  },
+  "fraux": {
+    "base": { "hp": 3324, "atk": 707 },
+    "masteries": { "hp": 56320, "atk": 8761, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 23758, "defense": 17999, "extension": 919000, "collection": 736, "transcendence": 8480 }
+  },
+  "fediel": {
+    "base": { "hp": 3404, "atk": 730 },
+    "masteries": { "hp": 56880, "atk": 8903, "crit": 78, "stun": 10.9 },
+    "msp": { "offense": 23892, "defense": 17408, "extension": 919000, "collection": 736, "transcendence": 8480 }
   }
 }

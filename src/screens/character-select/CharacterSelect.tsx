@@ -5,8 +5,6 @@ import { CHARACTERS } from "@/catalog";
 import { hasBuild } from "@/infra/storage";
 import { Heading, Panel } from "@/components/ui";
 
-const UNREVEALED_SLOTS = 6;
-
 const SOON =
   "absolute inset-0 flex items-center justify-center text-[30px] font-extrabold tracking-[0.14em] uppercase text-[#05283f]";
 
@@ -35,14 +33,6 @@ export function CharacterSelect({
               character={character}
               onCharacterPick={onCharacterPick}
             />
-          ))}
-          {Array.from({ length: UNREVEALED_SLOTS }, (_, slot) => (
-            <div
-              key={`unrevealed-${slot}`}
-              className="relative aspect-square cursor-default overflow-hidden rounded-lg bg-white/35 shadow-[inset_0_0_0_1px_var(--line-soft)]"
-            >
-              <div className={`${SOON} opacity-55`}>Soon</div>
-            </div>
           ))}
         </div>
       </Panel>
