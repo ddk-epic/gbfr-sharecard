@@ -20,7 +20,6 @@ export type Character = {
   /** `gem.PlayerReq`, gating the character's own sigils. Gran and Djeeta share
       The Captain's `PL0000`; Id's differs from its artId. */
   playerId: string;
-  portrait: string; // path
   element: string;
   enabled: boolean;
 };

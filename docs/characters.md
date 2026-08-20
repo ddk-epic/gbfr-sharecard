@@ -32,39 +32,37 @@ Every per-character table keys on `CharaId`, `PL0400` for Io. `characters.json` 
 
 Element: `0` Fire, `1` Water, `2` Earth, `3` Wind, `4` Light, `5` Dark, the order `ElementId` uses in `src/catalog/types.ts`. Gender: `1` male, `2` female.
 
-| CharaId | Name        | Element | UI order | Version | Weapons | In `characters.json` |
-| ------- | ----------- | ------- | -------: | :-----: | ------: | -------------------- |
-| PL0000  | The Captain | Wind    |        0 |    -    |       6 | `gran`               |
-| PL0100  | The Captain | Wind    |        1 |    -    |       6 | `djeeta`, as PL0000  |
-| PL0200  | Katalina    | Water   |        2 |    -    |       6 | yes                  |
-| PL0300  | Rackam      | Fire    |        3 |    -    |       6 | yes                  |
-| PL0400  | Io          | Light   |        4 |    -    |       6 | yes                  |
-| PL0500  | Eugen       | Earth   |        5 |    -    |       6 | yes                  |
-| PL0600  | Rosetta     | Dark    |        6 |    -    |       6 | yes                  |
-| PL1200  | Charlotta   | Light   |        7 |    -    |       6 | yes                  |
-| PL1500  | Ghandagoza  | Fire    |        8 |    -    |       6 | yes                  |
-| PL0700  | Ferry       | Light   |        9 |    -    |       6 | yes                  |
-| PL1400  | Narmaya     | Dark    |       10 |    -    |       6 | yes                  |
-| PL0800  | Lancelot    | Water   |       11 |    -    |       6 | yes                  |
-| PL0900  | Vane        | Water   |       12 |    -    |       6 | yes                  |
-| PL1000  | Percival    | Fire    |       13 |    -    |       6 | yes                  |
-| PL1100  | Siegfried   | Earth   |       14 |    -    |       6 | yes                  |
-| PL1800  | Cagliostro  | Earth   |       15 |    -    |       6 | yes                  |
-| PL1300  | Yodarha     | Wind    |       16 |    -    |       6 | yes                  |
-| PL1600  | Zeta        | Fire    |       17 |    -    |       6 | yes                  |
-| PL1700  | Vaseraga    | Dark    |       18 |    -    |       6 | yes                  |
-| PL2600  | Beatrix     | Water   |       19 |    5    |       6 | yes                  |
-| PL2700  | Eustace     | Wind    |       20 |    5    |       6 | yes                  |
-| PL2200  | Seofon      | Wind    |       21 |    3    |       4 | yes                  |
-| PL2300  | Tweyen      | Light   |       22 |    3    |       4 | yes                  |
-| PL2100  | Sandalphon  | Light   |       23 |    4    |       4 | yes                  |
-| PL2800  | Fraux       | Fire    |       24 |    5    |       4 | yes                  |
-| PL2900  | Fediel      | Dark    |       25 |    5    |       4 | yes                  |
-| PL1900  | Id          | Dark    |      100 |    -    |       6 | yes                  |
-| PL2400  | Gallanza    | Earth   |      101 |    5    |       4 | yes                  |
-| PL2500  | Maglielle   | Light   |      102 |    5    |       4 | yes                  |
-
-`MinLvlForOverMasteries` is 80 and `MaxLevelMaybe` is 100 for all 29.
+| CharaId | Name        | Element | UI order | Weapons | In `characters.json` |
+| ------- | ----------- | ------- | -------: | ------: | -------------------- |
+| PL0000  | The Captain | Wind    |        0 |       6 | `gran`               |
+| PL0100  | The Captain | Wind    |        1 |       6 | `djeeta`, as PL0000  |
+| PL0200  | Katalina    | Water   |        2 |       6 | yes                  |
+| PL0300  | Rackam      | Fire    |        3 |       6 | yes                  |
+| PL0400  | Io          | Light   |        4 |       6 | yes                  |
+| PL0500  | Eugen       | Earth   |        5 |       6 | yes                  |
+| PL0600  | Rosetta     | Dark    |        6 |       6 | yes                  |
+| PL1200  | Charlotta   | Light   |        7 |       6 | yes                  |
+| PL1500  | Ghandagoza  | Fire    |        8 |       6 | yes                  |
+| PL0700  | Ferry       | Light   |        9 |       6 | yes                  |
+| PL1400  | Narmaya     | Dark    |       10 |       6 | yes                  |
+| PL0800  | Lancelot    | Water   |       11 |       6 | yes                  |
+| PL0900  | Vane        | Water   |       12 |       6 | yes                  |
+| PL1000  | Percival    | Fire    |       13 |       6 | yes                  |
+| PL1100  | Siegfried   | Earth   |       14 |       6 | yes                  |
+| PL1800  | Cagliostro  | Earth   |       15 |       6 | yes                  |
+| PL1300  | Yodarha     | Wind    |       16 |       6 | yes                  |
+| PL1600  | Zeta        | Fire    |       17 |       6 | yes                  |
+| PL1700  | Vaseraga    | Dark    |       18 |       6 | yes                  |
+| PL2600  | Beatrix     | Water   |       19 |       6 | yes                  |
+| PL2700  | Eustace     | Wind    |       20 |       6 | yes                  |
+| PL2200  | Seofon      | Wind    |       21 |       4 | yes                  |
+| PL2300  | Tweyen      | Light   |       22 |       4 | yes                  |
+| PL2100  | Sandalphon  | Light   |       23 |       4 | yes                  |
+| PL2800  | Fraux       | Fire    |       24 |       4 | yes                  |
+| PL2900  | Fediel      | Dark    |       25 |       4 | yes                  |
+| PL1900  | Id          | Dark    |      100 |       6 | yes                  |
+| PL2400  | Gallanza    | Earth   |      101 |       4 | yes                  |
+| PL2500  | Maglielle   | Light   |      102 |       4 | yes                  |
 
 ### UI order
 
@@ -108,7 +106,7 @@ Offense and Defense node counts vary per character, see [masteries.md](masteries
 
 ## Implementation
 
-`characters.json` is hand-authored and holds `id`, `name`, `artId`, `playerId`, `portrait`, `element`, `enabled` per character. `scripts/extract.mjs` checks that `playerId` still matches a `gem.PlayerReq` and does not generate the file.
+`characters.json` is hand-authored and holds `id`, `name`, `artId`, `playerId`, `element`, `enabled` per character. `scripts/extract.mjs` checks that `playerId` still matches a `gem.PlayerReq` and does not generate the file.
 
 All 29 characters are in the file, and all 29 carry a `character-stats.json` row. Six are enabled: Katalina, Rackam, Io, Charlotta, Narmaya, Cagliostro. The six flag-5 characters have an entry, stats and art, but no per-character catalog.
 

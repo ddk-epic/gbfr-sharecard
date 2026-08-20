@@ -4,7 +4,6 @@
     "name": "Gran",
     "artId": "0001",
     "playerId": "PL0000",
-    "portrait": "characters/gran.webp",
     "element": "Wind",
     "enabled": false
   },
@@ -13,7 +12,6 @@
     "name": "Djeeta",
     "artId": "0101",
     "playerId": "PL0000",
-    "portrait": "characters/djeeta.webp",
     "element": "Wind",
     "enabled": false
   },
@@ -22,7 +20,6 @@
     "name": "Katalina",
     "artId": "0200",
     "playerId": "PL0200",
-    "portrait": "characters/katalina.webp",
     "element": "Water",
     "enabled": true
   },
@@ -31,7 +28,6 @@
     "name": "Rackam",
     "artId": "0300",
     "playerId": "PL0300",
-    "portrait": "characters/rackam.webp",
     "element": "Fire",
     "enabled": true
   },
@@ -40,7 +36,6 @@
     "name": "Io",
     "artId": "0400",
     "playerId": "PL0400",
-    "portrait": "characters/io.webp",
     "element": "Light",
     "enabled": true
   },
@@ -49,7 +44,6 @@
     "name": "Eugen",
     "artId": "0500",
     "playerId": "PL0500",
-    "portrait": "characters/eugen.webp",
     "element": "Earth",
     "enabled": false
   },
@@ -58,7 +52,6 @@
     "name": "Rosetta",
     "artId": "0600",
     "playerId": "PL0600",
-    "portrait": "characters/rosetta.webp",
     "element": "Dark",
     "enabled": false
   },
@@ -67,7 +60,6 @@
     "name": "Ferry",
     "artId": "0700",
     "playerId": "PL0700",
-    "portrait": "characters/ferry.webp",
     "element": "Light",
     "enabled": false
   },
@@ -76,7 +68,6 @@
     "name": "Lancelot",
     "artId": "0800",
     "playerId": "PL0800",
-    "portrait": "characters/lancelot.webp",
     "element": "Water",
     "enabled": false
   },
@@ -85,7 +76,6 @@
     "name": "Vane",
     "artId": "0900",
     "playerId": "PL0900",
-    "portrait": "characters/vane.webp",
     "element": "Water",
     "enabled": false
   },
@@ -94,7 +84,6 @@
     "name": "Percival",
     "artId": "1000",
     "playerId": "PL1000",
-    "portrait": "characters/percival.webp",
     "element": "Fire",
     "enabled": false
   },
@@ -103,7 +92,6 @@
     "name": "Siegfried",
     "artId": "1100",
     "playerId": "PL1100",
-    "portrait": "characters/siegfried.webp",
     "element": "Earth",
     "enabled": false
   },
@@ -112,7 +100,6 @@
     "name": "Charlotta",
     "artId": "1200",
     "playerId": "PL1200",
-    "portrait": "characters/charlotta.webp",
     "element": "Light",
     "enabled": true
   },
@@ -121,7 +108,6 @@
     "name": "Yodarha",
     "artId": "1300",
     "playerId": "PL1300",
-    "portrait": "characters/yodarha.webp",
     "element": "Wind",
     "enabled": false
   },
@@ -130,7 +116,6 @@
     "name": "Narmaya",
     "artId": "1400",
     "playerId": "PL1400",
-    "portrait": "characters/narmaya.webp",
     "element": "Dark",
     "enabled": true
   },
@@ -139,7 +124,6 @@
     "name": "Ghandagoza",
     "artId": "1500",
     "playerId": "PL1500",
-    "portrait": "characters/ghandagoza.webp",
     "element": "Fire",
     "enabled": false
   },
@@ -148,7 +132,6 @@
     "name": "Zeta",
     "artId": "1600",
     "playerId": "PL1600",
-    "portrait": "characters/zeta.webp",
     "element": "Fire",
     "enabled": false
   },
@@ -157,7 +140,6 @@
     "name": "Vaseraga",
     "artId": "1700",
     "playerId": "PL1700",
-    "portrait": "characters/vaseraga.webp",
     "element": "Dark",
     "enabled": false
   },
@@ -166,7 +148,6 @@
     "name": "Cagliostro",
     "artId": "1800",
     "playerId": "PL1800",
-    "portrait": "characters/cagliostro.webp",
     "element": "Earth",
     "enabled": true
   },
@@ -175,7 +156,6 @@
     "name": "Id",
     "artId": "1901",
     "playerId": "PL1900",
-    "portrait": "characters/id.webp",
     "element": "Dark",
     "enabled": false
   },
@@ -184,7 +164,6 @@
     "name": "Sandalphon",
     "artId": "2100",
     "playerId": "PL2100",
-    "portrait": "characters/sandalphon.webp",
     "element": "Light",
     "enabled": false
   },
@@ -193,7 +172,6 @@
     "name": "Seofon",
     "artId": "2200",
     "playerId": "PL2200",
-    "portrait": "characters/seofon.webp",
     "element": "Wind",
     "enabled": false
   },
@@ -202,7 +180,6 @@
     "name": "Tweyen",
     "artId": "2300",
     "playerId": "PL2300",
-    "portrait": "characters/tweyen.webp",
     "element": "Light",
     "enabled": false
   },
@@ -211,7 +188,6 @@
     "name": "Gallanza",
     "artId": "em2000",
     "playerId": "PL2400",
-    "portrait": "characters/gallanza.webp",
     "element": "Earth",
     "enabled": false
   },
@@ -220,7 +196,6 @@
     "name": "Maglielle",
     "artId": "em2100",
     "playerId": "PL2500",
-    "portrait": "characters/maglielle.webp",
     "element": "Light",
     "enabled": false
   },
@@ -229,7 +204,6 @@
     "name": "Beatrix",
     "artId": "2600",
     "playerId": "PL2600",
-    "portrait": "characters/beatrix.webp",
     "element": "Water",
     "enabled": false
   },
@@ -238,7 +212,6 @@
     "name": "Eustace",
     "artId": "2700",
     "playerId": "PL2700",
-    "portrait": "characters/eustace.webp",
     "element": "Wind",
     "enabled": false
   },
@@ -247,7 +220,6 @@
     "name": "Fraux",
     "artId": "2800",
     "playerId": "PL2800",
-    "portrait": "characters/fraux.webp",
     "element": "Fire",
     "enabled": false
   },
@@ -256,7 +228,6 @@
     "name": "Fediel",
     "artId": "2900",
     "playerId": "PL2900",
-    "portrait": "characters/fediel.webp",
     "element": "Dark",
     "enabled": false
   }

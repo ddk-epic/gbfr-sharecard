@@ -424,17 +424,16 @@ console.log(`skills: ${skillCount} rows -> ${(await readdir(skillsDirectory)).le
 // select tile's thumbnail. The wiki's _2 is _0 cropped mid-shin onto a wider
 // canvas and is not used.
 //
-// 900px against a 3608x3660 native: the card's box draws it at 869 (70% of
-// 1080, background-sized to 115%), so this is the tallest anything needs today.
-//
-// NOTE: the files committed under public/characters/ are the wiki's _2, not the
-// _0 written here, and existing files are left alone. The framing offsets in
-// src/assets/art-metrics.ts are hand-tuned to that crop - swapping the source
-// re-frames the card, editor and grid, so the switch is a visual decision, not
-// this script's to make.
+// The card's own art is shipped as PNG at 40% of native (~1443x1464 against the
+// 3608x3660 example) rather than WebP - at the sizes the card draws it (up to
+// 869px, 70% of 1080 background-sized to 115%), WebP's quality-88 compression
+// was visibly softer than the source art deserves, and 25% still read as
+// washed out. The thumbnail grid stays WebP: 30 of them load on every visit to
+// the select screen, so their size matters far more than one character's card
+// art does.
 const CHARACTER_DIR = new URL("../public/characters/", import.meta.url);
 const THUMBNAIL_DIR = new URL("../public/thumbnails/", import.meta.url);
-const CARD_ART_HEIGHT = 900;
+const CARD_ART_SCALE = 0.4;
 // Variant _4 is the head-and-torso square the select tile wants, so the tile
 // needs no crop of its own - 1160px native down to the 600 the grid draws at.
 const THUMBNAIL_SIZE = 600;
@@ -452,15 +451,17 @@ for (const character of characters) {
   const art = `${charaRoot}/${stem}/${stem}_0.png`;
   const thumbnail = `${charaRoot}/${stem}/${stem}_4.png`;
   if (existsSync(art)) {
-    const destination = new URL(`${character.id}.webp`, CHARACTER_DIR);
-    if (!existsSync(destination))
+    const destination = new URL(`${character.id}.png`, CHARACTER_DIR);
+    if (!existsSync(destination)) {
+      const { width } = await sharp(art).metadata();
       await writeFile(
         destination,
         await sharp(art)
-          .resize({ height: CARD_ART_HEIGHT })
-          .webp({ quality: WEBP_QUALITY })
+          .resize({ width: Math.round(width * CARD_ART_SCALE) })
+          .png({ compressionLevel: 9 })
           .toBuffer(),
       );
+    }
     characterCount++;
   } else missing.push(`${stem}_0.png`);
   if (existsSync(thumbnail)) {

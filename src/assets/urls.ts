@@ -6,11 +6,10 @@ import type {
   TraitId,
 } from "@/catalog/ids";
 import type { ElementId } from "@/catalog/types";
-import { characterById } from "@/catalog";
 import iconIndexJson from "./icon-index.json";
 
 export const portraitUrl = (characterId: CharacterId) =>
-  `${import.meta.env.BASE_URL}${characterById.get(characterId)?.portrait ?? ""}`;
+  `${import.meta.env.BASE_URL}characters/${characterId}.png`;
 
 export const thumbUrl = (characterId: CharacterId) =>
   `${import.meta.env.BASE_URL}thumbnails/${characterId}.webp`;
