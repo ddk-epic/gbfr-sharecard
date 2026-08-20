@@ -1,18 +1,15 @@
 import type { CellId, StyleId, StyleRank } from "@/catalog/ids";
-import { rankPointsLeft, toggleCell } from "@/domain/master-traits";
+import { clearStyle, rankPointsLeft, toggleCell } from "@/domain/master-traits";
 import { MasterTraitsSection } from "@/components/build/MasterTraitsSection";
 import type { PaneProps } from "@/screens/editor/controls";
 
-/** The card's Master Traits block: col 3 of Card.tsx's upper row. */
 const DESIGN_WIDTH = 1481;
 
-/** Shrinks the block to sit snug in the editor body's height. */
 const ZOOM = 0.74;
 
-/** Picked cells keep the card's own ring, so only empty ones take the hover. */
+/** Hover effect on the empty cells. */
 const HOVER_RING = "cursor-pointer hover:shadow-[inset_0_0_0_1px_#7fd4f8]";
 
-/** A rank whose shared pool is spent takes no more picks. */
 const NO_POINTS = "cursor-not-allowed opacity-50";
 
 const TOOLTIP_PLACEMENT = "top" as const;
@@ -32,6 +29,12 @@ export function MasterTraitsPane({ build, onChange }: PaneProps) {
       <MasterTraitsSection
         build={build}
         tooltipPlacement={TOOLTIP_PLACEMENT}
+        onClearStyle={(style) =>
+          onChange({
+            ...build,
+            masterTraits: clearStyle(build.masterTraits, style),
+          })
+        }
         cellInteraction={(cell, style, rank) => {
           const picked = build.masterTraits[style][rank].includes(cell.id);
           const spent =

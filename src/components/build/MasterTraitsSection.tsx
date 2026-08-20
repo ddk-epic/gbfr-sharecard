@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { RotateCcw } from "lucide-react";
 import type { Build } from "@/domain/build";
 import type { CellId, PerkRank, StyleId, StyleRank } from "@/catalog/ids";
 import { PERK_RANKS, RANKS, STYLES } from "@/catalog/ids";
@@ -191,6 +192,33 @@ function StyleHeading({ style, title }: { style: StyleId; title: string }) {
   );
 }
 
+function ClearStyleButton({
+  label,
+  disabled,
+  onClear,
+}: {
+  label: string;
+  disabled: boolean;
+  onClear: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      title={`clear ${label}`}
+      aria-label={`clear ${label}`}
+      disabled={disabled}
+      onClick={onClear}
+      className={`text-deep-mute absolute top-4.5 right-3 rounded-sm p-1 ${
+        disabled
+          ? "cursor-default opacity-35"
+          : "cursor-pointer hover:text-white"
+      }`}
+    >
+      <RotateCcw size={20} aria-hidden />
+    </button>
+  );
+}
+
 function MasterTraitStyleColumn({
   style,
   title,
@@ -198,6 +226,7 @@ function MasterTraitStyleColumn({
   selectedByRank,
   perks,
   cellInteraction,
+  onClear,
   tooltipPlacement,
 }: {
   style: StyleId;
@@ -206,6 +235,7 @@ function MasterTraitStyleColumn({
   selectedByRank: Record<StyleRank, CellId[]>;
   perks: Record<PerkRank, boolean>;
   cellInteraction?: CellInteraction;
+  onClear?: () => void;
   tooltipPlacement: TooltipPlacement;
 }) {
   return (
@@ -213,6 +243,13 @@ function MasterTraitStyleColumn({
       className={`styleCol text-deep-ink relative flex min-h-0 flex-col rounded-lg border-t-4 px-4 pt-2 ${STYLE_BORDER[style]}`}
     >
       <StyleHeading style={style} title={title} />
+      {onClear && (
+        <ClearStyleButton
+          label={STYLE_LABEL[style]}
+          disabled={RANKS.every((rank) => selectedByRank[rank].length === 0)}
+          onClear={onClear}
+        />
+      )}
       <div className="flex min-h-0 flex-1 flex-col justify-between pb-4.5">
         {RANKS.map((rank) => (
           <MasterTraitStyleRank
@@ -234,10 +271,12 @@ function MasterTraitStyleColumn({
 export function MasterTraitsSection({
   build,
   cellInteraction,
+  onClearStyle,
   tooltipPlacement = "top",
 }: {
   build: Build;
   cellInteraction?: CellInteraction;
+  onClearStyle?: (style: StyleId) => void;
   tooltipPlacement?: TooltipPlacement;
 }) {
   const catalog = characterCatalog(build.characterId);
@@ -275,6 +314,7 @@ export function MasterTraitsSection({
             selectedByRank={build.masterTraits[style]}
             perks={perks[style]}
             cellInteraction={cellInteraction}
+            onClear={onClearStyle && (() => onClearStyle(style))}
             tooltipPlacement={tooltipPlacement}
           />
         ))}

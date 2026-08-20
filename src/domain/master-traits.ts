@@ -3,11 +3,8 @@ import type { CellId, PerkRank, StyleId, StyleRank } from "@/catalog/ids";
 import { PERK_RANKS, STYLES } from "@/catalog/ids";
 
 /**
- * A style's rank perk activates when that rank section holds `thresholds[rank]`
- * selections *and* the rank below it has already activated - so the active
- * perks are always a prefix, and an empty rank 2 kills rank 3 however full it
- * is. Selections in other ranks of the same style never count, and EX has no
- * perk at all. Displayed, never enforced.
+ * Each style's perk state per rank. A rank's perk is active when that rank holds
+ * `thresholds[rank]` picks and every rank below it is active. EX has no perk.
  */
 export function stylePerkStates(
   selections: MasterTraitSelections,
@@ -32,7 +29,6 @@ export const STYLE_RANK_BUDGETS: Record<StyleRank, number> = {
   ex: 20,
 };
 
-/** Points spent in a rank section. The pool is shared by all three styles. */
 export function rankSpend(
   selections: MasterTraitSelections,
   rank: StyleRank,
@@ -40,7 +36,6 @@ export function rankSpend(
   return STYLES.reduce((n, style) => n + selections[style][rank].length, 0);
 }
 
-/** Negative on a build saved before the budget was enforced. */
 export function rankPointsLeft(
   selections: MasterTraitSelections,
   rank: StyleRank,
@@ -58,11 +53,16 @@ const withRank = (
   [style]: { ...selections[style], [rank]: cells },
 });
 
-/**
- * Deselecting is always allowed, so an overspent build can only shrink;
- * selecting needs a point left in the rank's shared pool. Refusing returns the
- * same object, letting the caller toggle unconditionally.
- */
+export function clearStyle(
+  selections: MasterTraitSelections,
+  style: StyleId,
+): MasterTraitSelections {
+  return {
+    ...selections,
+    [style]: { r1: [], r2: [], r3: [], ex: [] },
+  };
+}
+
 export function toggleCell(
   selections: MasterTraitSelections,
   style: StyleId,
