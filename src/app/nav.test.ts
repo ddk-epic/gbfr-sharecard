@@ -25,29 +25,25 @@ async function redirectFor(url: string): Promise<string | null> {
 
 describe("URL canonicalisation", () => {
   test.each([
-    ["unknown character", "/?character=bogus&screen=editor", "/"],
-    ["not-yet-added character", "/?character=vaseraga&screen=card", "/"],
-    ["screen with no character", "/?screen=editor", "/"],
-    ["unknown screen", "/?character=io&screen=nope", "/"],
-    ["character with no screen", "/?character=io", "/"],
-    [
-      "stray param",
-      "/?character=io&screen=editor&page=99",
-      "/?character=io&screen=editor",
-    ],
-    [
-      "junk param",
-      "/?character=io&screen=card&page=abc",
-      "/?character=io&screen=card",
-    ],
+    ["unknown character", "/?c=bogus&v=skills", "/"],
+    ["not-yet-added character", "/?c=vaseraga&v=card", "/"],
+    ["view with no character", "/?v=skills", "/"],
+    ["unknown view", "/?c=io&v=nope", "/"],
+    ["the editor screen, which is no longer a view", "/?c=io&v=editor", "/"],
+    ["character with no view", "/?c=io", "/"],
+    ["the old spelling", "/?character=io&screen=editor", "/"],
+    ["stray param", "/?c=io&v=gear&page=99", "/?c=io&v=gear"],
+    ["junk param", "/?c=io&v=card&page=abc", "/?c=io&v=card"],
   ])("%s is rewritten", async (_, url, expected) => {
     expect(await redirectFor(url)).toBe(expected);
   });
 
   test.each([
     ["the grid", "/"],
-    ["the editor", "/?character=io&screen=editor"],
-    ["the card", "/?character=io&screen=card"],
+    ["the skills pane", "/?c=io&v=skills"],
+    ["the gear pane", "/?c=io&v=gear"],
+    ["the master traits pane", "/?c=io&v=mt"],
+    ["the card", "/?c=io&v=card"],
   ])("%s is left alone", async (_, url) => {
     expect(await redirectFor(url)).toBeNull();
   });
@@ -55,10 +51,11 @@ describe("URL canonicalisation", () => {
   // A target that itself redirects would loop until the router gives up.
   test("every rewrite lands somewhere final", async () => {
     const targets = [
-      "/?character=bogus&screen=editor",
-      "/?screen=editor",
-      "/?character=io",
-      "/?character=io&screen=editor&page=99",
+      "/?c=bogus&v=skills",
+      "/?v=skills",
+      "/?c=io",
+      "/?character=io&screen=editor",
+      "/?c=io&v=gear&page=99",
     ];
     for (const url of targets) {
       const target = await redirectFor(url);

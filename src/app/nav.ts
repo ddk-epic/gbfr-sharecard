@@ -1,30 +1,29 @@
 import { asCharacterId } from "@/catalog";
 import type { CharacterId } from "@/catalog/ids";
+import { EDITOR_VIEWS, type EditorView } from "@/screens/editor/views";
 
-/**
- * The one route's search params. Only the select screen has no character.
- * The editor's open tab is deliberately absent - presentation state.
- */
+export type { EditorView };
+
+export type View = "select" | EditorView | "card";
+
 export type Nav =
-  | { screen: "select" }
-  | { screen: "editor"; character: CharacterId }
-  | { screen: "card"; character: CharacterId };
+  | { view: "select" }
+  | { view: Exclude<View, "select">; character: CharacterId };
 
-export const SELECT = { screen: "select" } as const;
+export const SELECT = { view: "select" } as const;
 
-/** Unparseable input decodes to the character select grid, never throws. */
+const LINKABLE: readonly string[] = [...EDITOR_VIEWS, "card"];
+
 export function decodeNav(raw: Record<string, unknown>): Nav {
-  const character = asCharacterId(raw.character);
-  if (!character) return SELECT;
-  if (raw.screen === "editor" || raw.screen === "card")
-    return { screen: raw.screen, character };
-  return SELECT;
+  const character = asCharacterId(raw.c);
+  const view = raw.v;
+  if (!character || typeof view !== "string" || !LINKABLE.includes(view))
+    return SELECT;
+  return { view: view as Exclude<View, "select">, character };
 }
 
 export const encodeNav = (nav: Nav): Record<string, string> =>
-  nav.screen === "select"
-    ? {}
-    : { character: nav.character, screen: nav.screen };
+  nav.view === "select" ? {} : { c: nav.character, v: nav.view };
 
 /** Whether the params already match encodeNav's output exactly. */
 export function isCanonical(raw: Record<string, unknown>): boolean {
@@ -36,5 +35,6 @@ export function isCanonical(raw: Record<string, unknown>): boolean {
   );
 }
 
+/** The track slot a view sits on. The editor's panes all share slot 1. */
 export const depthOf = (nav: Nav) =>
-  nav.screen === "card" ? 2 : nav.screen === "editor" ? 1 : 0;
+  nav.view === "select" ? 0 : nav.view === "card" ? 2 : 1;

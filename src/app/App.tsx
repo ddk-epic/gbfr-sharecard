@@ -13,6 +13,7 @@ import {
   encodeNav,
   isCanonical,
   SELECT,
+  type EditorView,
   type Nav,
 } from "./nav";
 import { CharacterSelect } from "@/screens/character-select/CharacterSelect";
@@ -24,22 +25,16 @@ import { readBuild, writeBuild } from "@/infra/storage";
 import { defaultWeapon } from "@/domain/weapons";
 import { ParchmentBackdrop } from "@/components/ui";
 
-/**
- * No `validateSearch` on the route: on read the router merges its result over
- * the raw params, so it can add but never reject; on write it re-runs against
- * the destination and injects `screen=select` back into the URL.
- */
+/** Params arrive untyped, so `beforeLoad` drops junk ones and keeps the
+    grid on a bare `/`. */
 const rawSearch = (search: unknown) => search as Record<string, unknown>;
-
-/** One screen per track slot, each a full stage height below the last. */
-const SCREEN_TOP = ["top-0", "top-[1080px]", "top-[2160px]"];
 
 export const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
   component: App,
-  // Replaces, to keep the junk URL out of history. encodeNav's output is
-  // canonical, so this settles in one hop.
+  // Rewrites any URL that is not what encodeNav would have written.
+  // Replaces, so the junk URL stays out of history.
   beforeLoad: ({ search }) => {
     const raw = rawSearch(search);
     if (!isCanonical(raw))
@@ -51,15 +46,10 @@ export const indexRoute = createRoute({
   },
 });
 
-/**
- * What the screens draw, as distinct from where the user is. The URL commits
- * instantly; the track takes a scroll to arrive, so the screen being left still
- * has to render. Advances only when a *different* character arrives.
- */
 type Scene = { character: CharacterId; build: Build };
 
 const sceneFor = (nav: Nav): Scene | null =>
-  nav.screen === "select"
+  nav.view === "select"
     ? null
     : {
         character: nav.character,
@@ -70,9 +60,9 @@ const sceneFor = (nav: Nav): Scene | null =>
 
 function useScene(nav: Nav) {
   const [scene, setScene] = useState(() => sceneFor(nav));
-  // In render, not an effect: an effect commits one frame of the outgoing
+  // In render, not an effect: an effect paints one frame of the outgoing
   // character first.
-  if (nav.screen !== "select" && nav.character !== scene?.character)
+  if (nav.view !== "select" && nav.character !== scene?.character)
     setScene(sceneFor(nav));
 
   const editBuild = (build: Build) => {
@@ -82,46 +72,47 @@ function useScene(nav: Nav) {
   return [scene, editBuild] as const;
 }
 
-/**
- * One route, three screens on a single vertical track (select, editor, card).
- * Every transition is the same scroll-down motion: the arriving screen fades in.
- */
+/** One route, three screens stacked on a single vertical: select, editor, card. */
 export function App() {
   const nav = decodeNav(rawSearch(indexRoute.useSearch()));
   const navigate = useNavigate();
   const history = useRouter().history;
   const [scene, editBuild] = useScene(nav);
 
+  /** navigation primitives */
   const go = (next: Nav) => navigate({ to: "/", search: encodeNav(next) });
-  /**
-   * Only `go` pushes, so history is always a stack of increasing depth and a
-   * pop lands on the screen below. Deep links start at the bottom of the stack
-   * with nothing to pop to, so those rewrite the entry instead of stranding the
-   * user on the page they arrived from.
-   */
+
   const goBack = (next: Nav) =>
     history.canGoBack()
       ? history.back()
       : navigate({ to: "/", search: encodeNav(next), replace: true });
-  const depth = depthOf(nav);
 
-  // Index is the track slot, so this order is the scroll order.
+  /** A pane flip stays on one depth, so it replaces the current entry instead. */
+  const goPane = (next: Nav) =>
+    navigate({ to: "/", search: encodeNav(next), replace: true });
+  const depth = depthOf(nav);
+  // A card URL names no pane, so the editor below keeps the one it is showing.
+  const editorView: EditorView | undefined =
+    nav.view === "select" || nav.view === "card" ? undefined : nav.view;
+
   const screens = [
     <CharacterSelect
-      onCharacterPick={(character) => go({ screen: "editor", character })}
+      onCharacterPick={(character) => go({ view: "skills", character })}
     />,
     scene && (
       <Editor
         build={scene.build}
         onChange={editBuild}
+        view={editorView}
+        onView={(view) => goPane({ view, character: scene.character })}
         onBack={() => goBack(SELECT)}
-        onGenerate={() => go({ screen: "card", character: scene.character })}
+        onGenerate={() => go({ view: "card", character: scene.character })}
       />
     ),
     scene && (
       <CardScreen
         build={scene.build}
-        onBack={() => goBack({ screen: "editor", character: scene.character })}
+        onBack={() => goBack({ view: "skills", character: scene.character })}
       />
     ),
   ];
@@ -134,20 +125,24 @@ export function App() {
           className="absolute inset-0 z-1 h-[3240px] transition-transform duration-550"
           style={{ transform: `translateY(${-STAGE_HEIGHT * depth}px)` }}
         >
-          {screens.map((screen, i) => (
-            <div
-              key={i}
-              className={`absolute left-0 h-[1080px] w-full ${SCREEN_TOP[i]}`}
-            >
+          {screens.map((screen, i) => {
+            const SCREEN_TOP = ["top-0", "top-[1080px]", "top-[2160px]"];
+
+            return (
               <div
-                className={`absolute inset-0 transition-opacity duration-550 ease-[ease] ${
-                  depth === i ? "opacity-100" : "opacity-0"
-                }`}
+                key={i}
+                className={`absolute left-0 h-[1080px] w-full ${SCREEN_TOP[i]}`}
               >
-                {screen}
+                <div
+                  className={`absolute inset-0 transition-opacity duration-550 ease-[ease] ${
+                    depth === i ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  {screen}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </Stage>

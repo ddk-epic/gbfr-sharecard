@@ -9,8 +9,13 @@ import { SkillsPane } from "./panes/SkillsPane";
 import { GearPane } from "./panes/GearPane";
 import { MasterTraitsPane } from "./panes/MasterTraitsPane";
 import { BackButton, Cta, Heading } from "@/components/ui";
+import { EDITOR_VIEWS, type EditorView } from "./views";
 
-const PANE_LABELS = ["Skills & Summons", "Gear & Sigils", "Master Traits"];
+const PANE_LABELS: Record<EditorView, string> = {
+  skills: "Skills & Summons",
+  gear: "Gear & Sigils",
+  mt: "Master Traits",
+};
 
 /** The pager chevrons stand in for a 150px glyph. Half the box is padding,
     so the drawn chevron is ARROW_SIZE/2 tall. */
@@ -20,8 +25,11 @@ const ARROW_SIZE = 150;
 const FLIP_OFFSET_PX = 1900;
 const FLIP_MS = 120;
 
-/* Per window floors of the pages. Master Traits sizes to its own zoomed block. */
-const WINDOW_MIN_WIDTH = ["w-auto", "w-[46%]", "w-auto"];
+const WINDOW_MIN_WIDTH: Record<EditorView, string> = {
+  skills: "w-auto",
+  gear: "w-[46%]",
+  mt: "w-auto",
+};
 
 const TAB =
   "cursor-pointer rounded-[5px] px-6.5 py-2.25 text-[14.5px] font-bold tracking-[0.09em] uppercase";
@@ -29,27 +37,37 @@ const TAB =
 const ARROW_BUTTON =
   "text-ink-strong/35 hover:text-ink-strong flex flex-1 cursor-pointer items-center leading-none";
 
-/**
- * Windowed 3-pane carousel. A pane flip rolls the whole window off one side
- * and back in from the opposite side; content never slides inside the frame.
- */
+/** Windowed 3-pane carousel. */
 export function Editor({
   build,
   onChange,
+  view,
+  onView,
   onBack,
   onGenerate,
-}: PaneProps & { onBack: () => void; onGenerate: () => void }) {
-  const [pane, setPane] = useState(0);
+}: PaneProps & {
+  view: EditorView | undefined;
+  onView: (view: EditorView) => void;
+  onBack: () => void;
+  onGenerate: () => void;
+}) {
+  const [pane, setPane] = useState<EditorView>(view ?? "skills");
   const [checklistOpen, setChecklistOpen] = useState(true);
   const windowRef = useRef<HTMLDivElement>(null);
   const flippingRef = useRef(false);
+  const paneIndex = EDITOR_VIEWS.indexOf(pane);
+
+  // snaps to pane without animation
+  if (view && view !== pane && !flippingRef.current) setPane(view);
 
   const flipTo = (target: number, direction?: number) => {
-    const next = (target + PANE_LABELS.length) % PANE_LABELS.length;
+    const wrapped = (target + EDITOR_VIEWS.length) % EDITOR_VIEWS.length;
+    const next = EDITOR_VIEWS[wrapped];
     if (flippingRef.current || next === pane) return;
-    const dir = direction ?? (next > pane ? 1 : -1);
+    const dir = direction ?? (wrapped > paneIndex ? 1 : -1);
     const win = windowRef.current!;
     flippingRef.current = true;
+    onView(next);
     win.style.transition = `transform ${FLIP_MS}ms ease-in`;
     win.style.transform = `translateX(${-dir * FLIP_OFFSET_PX}px)`;
     setTimeout(() => {
@@ -74,8 +92,8 @@ export function Editor({
     const onKey = (e: KeyboardEvent) => {
       const tag = (document.activeElement as HTMLElement)?.tagName;
       if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
-      if (e.key === "ArrowLeft") flipTo(pane - 1, -1);
-      if (e.key === "ArrowRight") flipTo(pane + 1, 1);
+      if (e.key === "ArrowLeft") flipTo(paneIndex - 1, -1);
+      if (e.key === "ArrowRight") flipTo(paneIndex + 1, 1);
     };
     addEventListener("keydown", onKey);
     return () => removeEventListener("keydown", onKey);
@@ -91,17 +109,17 @@ export function Editor({
             <BackButton inline label="Character" onClick={onBack} />
           </div>
           <div className="flex items-center justify-center gap-2">
-            {PANE_LABELS.map((label, i) => (
+            {EDITOR_VIEWS.map((paneView, i) => (
               <button
-                key={label}
+                key={paneView}
                 className={`${TAB} ${
-                  i === pane
+                  paneView === pane
                     ? "from-band via-band-soft text-ink-strong bg-linear-90 from-0% via-60% to-[#b9d7e8] to-100%"
                     : "text-dim bg-white/55 shadow-[inset_0_0_0_1px_var(--line-soft)] hover:bg-white/90"
                 }`}
                 onClick={() => flipTo(i)}
               >
-                {label}
+                {PANE_LABELS[paneView]}
               </button>
             ))}
           </div>
@@ -112,7 +130,7 @@ export function Editor({
           <button
             className={`${ARROW_BUTTON} justify-start pl-27.5 hover:bg-linear-90 hover:from-white/40 hover:to-white/0`}
             aria-label="previous pane"
-            onClick={() => flipTo(pane - 1, -1)}
+            onClick={() => flipTo(paneIndex - 1, -1)}
           >
             <ChevronLeft size={ARROW_SIZE} strokeWidth={1} aria-hidden />
           </button>
@@ -120,10 +138,10 @@ export function Editor({
             ref={windowRef}
             className={`relative h-full flex-none ${WINDOW_MIN_WIDTH[pane]}`}
           >
-            {pane === 0 && <SkillsPane {...paneProps} />}
-            {pane === 1 && <GearPane {...paneProps} />}
-            {pane === 2 && <MasterTraitsPane {...paneProps} />}
-            {pane !== 2 &&
+            {pane === "skills" && <SkillsPane {...paneProps} />}
+            {pane === "gear" && <GearPane {...paneProps} />}
+            {pane === "mt" && <MasterTraitsPane {...paneProps} />}
+            {pane !== "mt" &&
               (checklistOpen ? (
                 <TraitChecklist
                   build={build}
@@ -141,7 +159,7 @@ export function Editor({
           <button
             className={`${ARROW_BUTTON} justify-end pr-27.5 hover:bg-linear-270 hover:from-white/40 hover:to-white/0`}
             aria-label="next pane"
-            onClick={() => flipTo(pane + 1, 1)}
+            onClick={() => flipTo(paneIndex + 1, 1)}
           >
             <ChevronRight size={ARROW_SIZE} strokeWidth={1} aria-hidden />
           </button>
@@ -158,9 +176,6 @@ export function Editor({
 const CHECKLIST_ROW =
   "border-line-soft text-ui flex items-center justify-between gap-2.5 border-b py-2 text-xl last:border-b-0";
 
-/** Trait levels totalled over sigils, the Sigil Booster, the wrightstone, the
-    weapon's slots and summons. Uncapped, so a total past the max reads as an
-    overcap. Editor-only. */
 function TraitChecklist({
   build,
   onClose,
@@ -172,8 +187,6 @@ function TraitChecklist({
     (a, b) => b[1] - a[1],
   );
   return (
-    // Positioned at 1:1, zoomed inside: offset is on-screen px, panel size
-    // matches the pages'. Marked lit, so a popover's scrim leaves it readable.
     <div
       data-popover-lit
       className="font-med absolute top-0 left-[calc(100%+4px)] z-3"
