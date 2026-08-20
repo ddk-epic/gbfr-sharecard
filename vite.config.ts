@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // Project page under a subpath — absolute-root asset URLs would 404 (SPEC §1).
 export default defineConfig({
-  base: "/gbfr-sharecard/",
+  base: "/gbfr/",
   plugins: [react(), tailwindcss()],
   // Root-relative so no node path helpers (and no @types/node) are needed.
   // Vitest reads this config, so tests resolve @/ without extra setup.
