@@ -19,9 +19,8 @@ import { PINNED_TRAITS } from "./trait-checklist";
 
 type Row = { trait: TraitId; level: number; max: number };
 
-/** The pinned traits of each category, then the build's other traits in name
-    order. Weapon traits are excluded: nothing equippable changes their level. */
-function rowsByGroup(build: Build): Map<TraitCategory, Row[]> {
+/** The pinned traits of each category. */
+function rowsByCategory(build: Build): Map<TraitCategory, Row[]> {
   const totals = traitLevelTotals(build);
   const pinned = [...PINNED_TRAITS, ...characterTraits(build.characterId)];
   const seen = new Set(pinned);
@@ -33,19 +32,19 @@ function rowsByGroup(build: Build): Map<TraitCategory, Row[]> {
     )
     .sort((a, b) => traitName(a).localeCompare(traitName(b)));
 
-  const groups = new Map<TraitCategory, Row[]>(
-    TRAIT_CATEGORIES.map((group) => [group, []]),
+  const categories = new Map<TraitCategory, Row[]>(
+    TRAIT_CATEGORIES.map((category) => [category, []]),
   );
   for (const trait of [...pinned, ...extra]) {
     const def = traitById.get(trait);
     if (!def) continue;
-    groups.get(traitCategoryOf(def))!.push({
+    categories.get(traitCategoryOf(def))!.push({
       trait,
       level: totals.get(trait) ?? 0,
       max: def.maxLevel,
     });
   }
-  return groups;
+  return categories;
 }
 
 /** Green from maxLevel, warning above maxLevel + booster. */
@@ -59,7 +58,7 @@ export function TraitChecklist({
   build: Build;
   onClose: () => void;
 }) {
-  const groups = rowsByGroup(build);
+  const categories = rowsByCategory(build);
   const booster = sigilBoosterLevel(build);
   return (
     <div className="font-med absolute inset-y-0 left-[calc(100%+2px)] z-3">
@@ -83,12 +82,12 @@ export function TraitChecklist({
           </button>
         </Heading>
         <div className="min-h-0 flex-1 overflow-y-scroll pt-2.5 pr-1.5 text-xl">
-          {TRAIT_CATEGORIES.map((group) => {
-            const rows = groups.get(group)!;
+          {TRAIT_CATEGORIES.map((category) => {
+            const rows = categories.get(category)!;
             if (rows.length === 0) return null;
             return (
-              <div key={group} className="pb-3">
-                <PopoverHeading>{traitCategoryLabel[group]}</PopoverHeading>
+              <div key={category} className="pb-3">
+                <PopoverHeading>{traitCategoryLabel[category]}</PopoverHeading>
                 {rows.map(({ trait, level, max }) => (
                   <div
                     className={`text-ui flex items-center justify-between gap-1.5 py-0.5 ${level === 0 ? "opacity-40" : ""}`}

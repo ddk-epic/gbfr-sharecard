@@ -55,14 +55,14 @@ export function TraitPicker({
               className="pointer-events-none absolute inset-0 z-10 -mt-0.5 bg-white/40"
             />
           )}
-          {TRAIT_CATEGORIES.map((group) => {
+          {TRAIT_CATEGORIES.map((category) => {
             const rows = matches.filter(
-              (trait) => traitCategoryOf(trait) === group,
+              (trait) => traitCategoryOf(trait) === category,
             );
             if (rows.length === 0) return null;
             return (
-              <div key={group}>
-                <PopoverHeading>{traitCategoryLabel[group]}</PopoverHeading>
+              <div key={category}>
+                <PopoverHeading>{traitCategoryLabel[category]}</PopoverHeading>
                 <div className="mb-1.5">
                   {rows.map((trait) => (
                     <button
