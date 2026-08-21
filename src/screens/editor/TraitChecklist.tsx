@@ -67,18 +67,17 @@ export function TraitChecklist({
         className="border-line flex max-h-full w-82 flex-col rounded-lg border bg-white/90 pt-3.25 pb-0.5 pl-3.5 shadow-[0_10px_34px_rgba(23,60,90,0.3)]"
         style={{ zoom: EDITOR_ZOOM }}
       >
-        <Heading
-          size="lg"
-          className="mr-3.5 flex flex-none items-center justify-between py-1.5!"
-        >
-          <span>Trait Checklist</span>
+        <Heading size="lg" className="mr-3.5 flex-none py-1.25!">
           <button
-            className="text-dim hover:text-ink-strong -mr-4 cursor-pointer"
+            className="group flex w-full cursor-pointer items-center justify-between uppercase"
             title="close"
             aria-label="close"
             onClick={onClose}
           >
-            <X size={20} aria-hidden />
+            <span>Trait Checklist</span>
+            <span className="text-dim group-hover:text-ink-strong -mr-4">
+              <X size={20} aria-hidden />
+            </span>
           </button>
         </Heading>
         <div className="min-h-0 flex-1 overflow-y-scroll pt-2.5 pr-1.5 text-xl">
