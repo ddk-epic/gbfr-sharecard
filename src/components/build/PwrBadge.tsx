@@ -22,7 +22,7 @@ const PWR_DEF = {
   num: { dx: 0, dy: 50, cap: 58 },
 } as const;
 
-const SHADOW = { dy: 3, blur: 8, color: "var(--deep-8)", opacity: 0.55 };
+const SHADOW = { dy: 4.5, blur: 12, color: "var(--deep-8)", opacity: 0.75 };
 const SHADOW_COLOR = `color-mix(in srgb, ${SHADOW.color} ${SHADOW.opacity * 100}%, transparent)`;
 
 export function PwrBadge({
