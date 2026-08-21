@@ -1,23 +1,17 @@
 import { useState } from "react";
 import type { TraitId } from "@/catalog/ids";
-import type { TraitCategory, TraitDef } from "@/catalog/types";
+import type { TraitDef } from "@/catalog/types";
+import {
+  TRAIT_CATEGORIES,
+  traitCategoryLabel,
+  traitCategoryOf,
+} from "@/domain/naming";
 import { TraitIcon } from "@/components/build/TraitIcon";
 import { PopoverHeading } from "@/screens/editor/popovers/Popover";
-
-const CATEGORY_LABEL: Record<TraitCategory, string> = {
-  basic: "Basic",
-  attack: "Attack",
-  defense: "Defense",
-  special: "Special",
-  support: "Support",
-};
-const CATEGORY_ORDER = Object.keys(CATEGORY_LABEL) as TraitCategory[];
 
 /** Fixed, so the panel keeps its height as the filter narrows the list. */
 const LIST_HEIGHT = "h-[31em]";
 
-/** Filtered, category-grouped trait list. The pool and what a pick means are
-    the caller's. */
 export function TraitPicker({
   pool,
   heading = "Trait",
@@ -26,7 +20,6 @@ export function TraitPicker({
 }: {
   pool: TraitDef[];
   heading?: string;
-  /** Disables the rows only. Filtering and scrolling still work. */
   disabled?: boolean;
   onPick: (trait: TraitId) => void;
 }) {
@@ -62,22 +55,16 @@ export function TraitPicker({
               className="pointer-events-none absolute inset-0 z-10 -mt-0.5 bg-white/40"
             />
           )}
-          {/* Uncategorised traits are listed last, under "Other", instead of
-              being left out. */}
-          {[...CATEGORY_ORDER, "other" as const].map((category) => {
-            const group = matches.filter((trait) =>
-              category === "other"
-                ? !trait.category
-                : trait.category === category,
+          {TRAIT_CATEGORIES.map((group) => {
+            const rows = matches.filter(
+              (trait) => traitCategoryOf(trait) === group,
             );
-            if (group.length === 0) return null;
+            if (rows.length === 0) return null;
             return (
-              <div key={category}>
-                <PopoverHeading>
-                  {category === "other" ? "Other" : CATEGORY_LABEL[category]}
-                </PopoverHeading>
+              <div key={group}>
+                <PopoverHeading>{traitCategoryLabel[group]}</PopoverHeading>
                 <div className="mb-1.5">
-                  {group.map((trait) => (
+                  {rows.map((trait) => (
                     <button
                       key={trait.id}
                       type="button"
