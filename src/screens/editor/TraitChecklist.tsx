@@ -97,8 +97,10 @@ export function TraitChecklist({
                     <span className="min-w-0 flex-1">{traitName(trait)}</span>
                     <span className="flex flex-none items-baseline gap-1">
                       <span className="font-sans text-[0.72em]">Lvl</span>
-                      <div className={levelTone(level, max, booster)}>
-                        <span className="inline-block min-w-[2ch] text-right tabular-nums">
+                      <div>
+                        <span
+                          className={`inline-block min-w-[2ch] text-right tabular-nums ${levelTone(level, max, booster)}`}
+                        >
                           {level}
                         </span>
                         <span className="font-sans text-[0.72em]">
