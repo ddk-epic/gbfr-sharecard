@@ -18,3 +18,19 @@ export type CellId = string;
 export const STYLES: StyleId[] = ["insight", "essence", "crux"];
 export const RANKS: StyleRank[] = ["r1", "r2", "r3", "ex"];
 export const PERK_RANKS: PerkRank[] = ["r1", "r2", "r3"];
+
+/** Cells per rank section. */
+export const RANK_CELL_COUNTS: Record<StyleRank, number> = {
+  r1: 4,
+  r2: 8,
+  r3: 8,
+  ex: 10,
+};
+
+/** One rank section's cell ids (left to right, top to bottom). */
+export function rankCellIds(style: StyleId, rank: StyleRank): CellId[] {
+  return Array.from(
+    { length: RANK_CELL_COUNTS[rank] },
+    (_, i) => `${style}.${rank}.${i + 1}`,
+  );
+}

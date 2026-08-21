@@ -26,7 +26,7 @@ export const SIGIL_DEFAULT_LEVEL = 15;
 export const WRIGHTSTONE_LEVELS = [20, 15, 10];
 
 export type Build = {
-  schemaVersion: 5;
+  schemaVersion: 6;
   characterId: CharacterId; // slug, e.g. "io"
   masterLevel: number; // Levels 51-55
   skills: (SkillId | null)[]; // exactly 4
@@ -88,7 +88,7 @@ export function emptyMasterTraits(): MasterTraitSelections {
     does not read. */
 export function emptyBuild(characterId: CharacterId, weapon: Weapon): Build {
   return {
-    schemaVersion: 5,
+    schemaVersion: 6,
     characterId,
     masterLevel: MASTER_LEVEL_DEFAULT,
     skills: [null, null, null, null],

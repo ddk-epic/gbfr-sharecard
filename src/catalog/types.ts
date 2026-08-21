@@ -174,6 +174,18 @@ export type MasterTraitCell = {
   perkRank?: 1 | 2 | 3;
 };
 
+/** A cell minus its `id`. */
+export type MasterTraitCellBody = Omit<MasterTraitCell, "id">;
+
+/** Cell bodies identical for every character, keyed by `CellId`. */
+export type SharedMasterTraitCells = Record<CellId, MasterTraitCellBody>;
+
+/** The style titles, and every cell `SharedMasterTraitCells` does not cover. */
+export type CharacterMasterTraits = {
+  titles: Record<StyleId, string>;
+  cells: Record<CellId, MasterTraitCellBody>;
+};
+
 /** `title` is the character-specific half of the style's in-game heading
  *  ("Insight: Pure Concentration"). */
 export type MasterTraitSections = Record<
@@ -196,4 +208,10 @@ export type CharacterCatalog = {
   weapons: Record<string, WeaponEntry>; // keyed by series-row id, the character's owned series
   weaponHpOffset: number; // added to series.hp; one integer per character (Terminus exempt)
   weaponSignatureTrait?: TraitId; // the per-character Ascension/Terminus slot-2 trait
+};
+
+/** `<character>.json` as written. `characterCatalog` expands its cells against
+ *  `SharedMasterTraitCells` into a `CharacterCatalog`. */
+export type CharacterCatalogFile = Omit<CharacterCatalog, "masterTraits"> & {
+  masterTraits: CharacterMasterTraits;
 };

@@ -38,7 +38,7 @@ function hydrate(characterId: CharacterId): Build | null {
     const raw = localStorage.getItem(storageKey(characterId));
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Build;
-    if (parsed.schemaVersion !== 5 || parsed.characterId !== characterId)
+    if (parsed.schemaVersion !== 6 || parsed.characterId !== characterId)
       return null;
     return parsed;
   } catch {

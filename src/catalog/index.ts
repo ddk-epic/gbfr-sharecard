@@ -2,7 +2,10 @@ import type {
   BonusTypeDef,
   Character,
   CharacterCatalog,
+  CharacterCatalogFile,
   CharacterStats,
+  MasterTraitSections,
+  SharedMasterTraitCells,
   SigilLots,
   PowerTables,
   SummonDef,
@@ -13,7 +16,9 @@ import type {
   WeaponSeries,
   WrightstonePrefixMap,
 } from "./types";
+import { RANKS, STYLES, rankCellIds } from "./ids";
 import type { CharacterId } from "./ids";
+import masterTraitSharedJson from "./master-trait-shared.json";
 import charactersJson from "./characters.json";
 import traitsJson from "./traits.json";
 import sigilLotsJson from "./sigil-lots.json";
@@ -65,17 +70,49 @@ export const asCharacterId = (value: unknown): CharacterId | null =>
     ? (value as CharacterId)
     : null;
 
-const CATALOGS = {
+export const MASTER_TRAIT_SHARED =
+  masterTraitSharedJson as SharedMasterTraitCells;
+
+function resolveMasterTraits(file: CharacterCatalogFile): MasterTraitSections {
+  const { titles, cells } = file.masterTraits;
+  return Object.fromEntries(
+    STYLES.map((style) => [
+      style,
+      {
+        title: titles[style],
+        ...Object.fromEntries(
+          RANKS.map((rank) => [
+            rank,
+            rankCellIds(style, rank).map((id) => {
+              const body = cells[id] ?? MASTER_TRAIT_SHARED[id];
+              if (!body)
+                throw new Error(`${file.id}: no master-trait cell for ${id}`);
+              return { id, ...body };
+            }),
+          ]),
+        ),
+      },
+    ]),
+  ) as MasterTraitSections;
+}
+
+export const CATALOG_FILES = {
   io: ioJson,
   katalina: katalinaJson,
   narmaya: narmayaJson,
   cagliostro: cagliostroJson,
   rackam: rackamJson,
   charlotta: charlottaJson,
-} as unknown as Record<string, CharacterCatalog>;
+} as unknown as Record<string, CharacterCatalogFile>;
+
+const CATALOGS = new Map<string, CharacterCatalog>();
 
 export function characterCatalog(id: CharacterId): CharacterCatalog {
-  const catalog = CATALOGS[id];
-  if (!catalog) throw new Error(`no catalog for character: ${id}`);
+  const cached = CATALOGS.get(id);
+  if (cached) return cached;
+  const file = CATALOG_FILES[id];
+  if (!file) throw new Error(`no catalog for character: ${id}`);
+  const catalog = { ...file, masterTraits: resolveMasterTraits(file) };
+  CATALOGS.set(id, catalog);
   return catalog;
 }
