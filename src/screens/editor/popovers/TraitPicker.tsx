@@ -3,6 +3,7 @@ import type { TraitId } from "@/catalog/ids";
 import type { TraitDef } from "@/catalog/types";
 import {
   TRAIT_CATEGORIES,
+  searchKeys,
   traitCategoryLabel,
   traitCategoryOf,
 } from "@/domain/naming";
@@ -24,9 +25,9 @@ export function TraitPicker({
   onPick: (trait: TraitId) => void;
 }) {
   const [query, setQuery] = useState("");
-  const needle = query.trim().toLowerCase();
+  const term = query.trim().toLowerCase();
   const matches = pool.filter((trait) =>
-    trait.name.toLowerCase().includes(needle),
+    searchKeys(trait.name).some((key) => key.includes(term)),
   );
 
   return (

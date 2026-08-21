@@ -31,5 +31,18 @@ export const traitName = (id: TraitId | null | undefined) => {
   return trait ? (trait.short ?? trait.name) : id;
 };
 
+/** the trait name now gets an extra searchable spelling, 
+    and the raw query is matched against both. */
+const SEARCH_ALIASES: [RegExp, string][] = [[/dmg/g, "damage"]];
+
+export const searchKeys = (name: string) => {
+  const written = name.toLowerCase();
+  const expanded = SEARCH_ALIASES.reduce(
+    (key, [abbreviation, spelledOut]) => key.replace(abbreviation, spelledOut),
+    written,
+  );
+  return expanded === written ? [written] : [written, expanded];
+};
+
 export const bonusValueText = (bonusType: BonusTypeId, value: number) =>
   bonusTypeById.get(bonusType)?.unit === "percent" ? `+${value}%` : `+${value}`;
