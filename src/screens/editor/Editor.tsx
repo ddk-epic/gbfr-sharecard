@@ -1,14 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { Build } from "@/domain/build";
-import { traitLevelTotals } from "@/domain/status";
-import { traitById } from "@/catalog";
-import { traitName } from "@/domain/naming";
-import { EDITOR_ZOOM, type PaneProps } from "./controls";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { type PaneProps } from "./controls";
 import { SkillsPane } from "./panes/SkillsPane";
 import { GearPane } from "./panes/GearPane";
 import { MasterTraitsPane } from "./panes/MasterTraitsPane";
-import { BackButton, Cta, Heading } from "@/components/ui";
+import { TraitChecklist } from "./TraitChecklist";
+import { BackButton, Cta } from "@/components/ui";
 import { EDITOR_VIEWS, type EditorView } from "./views";
 
 const PANE_LABELS: Record<EditorView, string> = {
@@ -17,8 +14,6 @@ const PANE_LABELS: Record<EditorView, string> = {
   mt: "Master Traits",
 };
 
-/** The pager chevrons stand in for a 150px glyph. Half the box is padding,
-    so the drawn chevron is ARROW_SIZE/2 tall. */
 const ARROW_SIZE = 150;
 
 /** Clears the stage edge including the checklist popover docked to the right. */
@@ -168,61 +163,6 @@ export function Editor({
           <span>Generate Card</span>
           <ChevronDown size={16} aria-hidden />
         </Cta>
-      </div>
-    </div>
-  );
-}
-
-const CHECKLIST_ROW =
-  "border-line-soft text-ui flex items-center justify-between gap-2.5 border-b py-2 text-xl last:border-b-0";
-
-function TraitChecklist({
-  build,
-  onClose,
-}: {
-  build: Build;
-  onClose: () => void;
-}) {
-  const totals = [...traitLevelTotals(build).entries()].sort(
-    (a, b) => b[1] - a[1],
-  );
-  return (
-    <div
-      data-popover-lit
-      className="font-med absolute top-0 left-[calc(100%+4px)] z-3"
-    >
-      <div
-        className="border-line w-85 rounded-lg border bg-white/90 px-3.5 py-3.5 shadow-[0_10px_34px_rgba(23,60,90,0.3)]"
-        style={{ zoom: EDITOR_ZOOM }}
-      >
-        <Heading size="lg" className="mb-2 flex items-center justify-between">
-          Trait Checklist
-          <button
-            className="text-dim hover:text-ink-strong -mr-4 cursor-pointer"
-            title="close"
-            aria-label="close"
-            onClick={onClose}
-          >
-            <X size={20} aria-hidden />
-          </button>
-        </Heading>
-        {totals.length === 0 && (
-          <div className={`${CHECKLIST_ROW} text-dim`}>no traits yet</div>
-        )}
-        {totals.map(([trait, level]) => (
-          <div className={CHECKLIST_ROW} key={trait}>
-            <span>{traitName(trait)}</span>
-            <span className="flex flex-none items-baseline gap-1">
-              <span className="font-sans text-base">Lvl</span>
-              <div>
-                <span>{level}</span>
-                <span className="font-sans text-base">
-                  /{traitById.get(trait)?.maxLevel}
-                </span>
-              </div>
-            </span>
-          </div>
-        ))}
       </div>
     </div>
   );

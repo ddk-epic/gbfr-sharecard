@@ -34,7 +34,6 @@ for (const [one, other] of SIGIL_LOTS.pairs) {
 
 const CHARACTER_LOCKED = new Set(Object.values(SIGIL_LOTS.characters).flat());
 
-/** Open traits are the same for every build, so each slot's share is built once. */
 const FIRST_OPEN_POOL: TraitDef[] = poolOf(
   Object.values(LOTS)
     .filter((lot) => lot.firstSlot)
@@ -42,7 +41,6 @@ const FIRST_OPEN_POOL: TraitDef[] = poolOf(
     .filter((id) => !CHARACTER_LOCKED.has(id)),
 );
 
-/** A lot's second pool never varies, so it is resolved once per lot. */
 const secondPoolByLot = new Map<SigilLot, TraitDef[]>(
   Object.values(LOTS).map((lot) => [
     lot,
@@ -50,12 +48,20 @@ const secondPoolByLot = new Map<SigilLot, TraitDef[]>(
   ]),
 );
 
+const WEAPON_ONLY = new Set(LOTS.weaponOnly.traits);
+
+export const isWeaponTrait = (trait: TraitId) => WEAPON_ONLY.has(trait);
+
+export function characterTraits(characterId: CharacterId): TraitId[] {
+  const playerId = characterById.get(characterId)?.playerId;
+  return (playerId ? SIGIL_LOTS.characters[playerId] : undefined) ?? [];
+}
+
 /** The character's pool for a sigil's own trait: the open traits plus their
     own. `gem.PlayerReq` keeps one character's out of another's pool. */
 export function sigilTraitPool(characterId: CharacterId): TraitDef[] {
-  const playerId = characterById.get(characterId)?.playerId;
-  const own = playerId ? SIGIL_LOTS.characters[playerId] : undefined;
-  return own ? [...FIRST_OPEN_POOL, ...poolOf(own)] : FIRST_OPEN_POOL;
+  const own = characterTraits(characterId);
+  return own.length ? [...FIRST_OPEN_POOL, ...poolOf(own)] : FIRST_OPEN_POOL;
 }
 
 /** The trait this one's sigil always carries second, if the slot is pinned. */

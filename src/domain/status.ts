@@ -7,7 +7,7 @@ import { resolveWeapon } from "./weapons";
 export type Status = {
   hp: number;
   atk: number;
-  /** ATK before the multiplicative traits; the ATK the PWR formula reads. */
+  /** ATK before the multiplicative traits. */
   atkBase: number;
   critRate: number;
   stunPower: number;
@@ -38,6 +38,15 @@ const OVER_MASTERY_STAT: Record<BonusTypeId, StatKey> = {
   "stun-power-up": "stun",
 };
 
+export function sigilBoosterLevel(build: Build): number {
+  const weapon = resolveWeapon(
+    build.characterId,
+    build.weapon,
+    build.masterLevel,
+  );
+  return weapon.slots.find((slot) => slot.trait === SIGIL_BOOSTER)?.level ?? 0;
+}
+
 /** A trait's level summed over every source; allowed to overcap. */
 export function traitLevelTotals(build: Build): Map<TraitId, number> {
   const levels = new Map<TraitId, number>();
@@ -53,8 +62,7 @@ export function traitLevelTotals(build: Build): Map<TraitId, number> {
   for (const slot of weapon.slots) add(slot.trait, slot.level);
 
   // The booster credits each sigil slot, so a two-trait sigil takes it twice.
-  const booster =
-    weapon.slots.find((slot) => slot.trait === SIGIL_BOOSTER)?.level ?? 0;
+  const booster = sigilBoosterLevel(build);
   for (const sigil of build.sigils) {
     if (!sigil) continue;
     add(sigil.primaryTrait, sigil.level + booster);

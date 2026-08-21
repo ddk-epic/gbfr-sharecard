@@ -19,7 +19,9 @@
   --ui: #325f7d; /* body text */
   --ink-strong: #0e3348; /* headings, buttons, pager arrows */
   --dim: #5f7188; /* muted and secondary text */
-  --value: #b06e12; /* numbers, always */
+
+  --ok: #1f8a5c; /* success */
+  --warn: #c2531f; /* warning */
 
   --line: #c3d4e4; /* panel and container borders */
   --line-soft: #dbe6f0; /* inner hairlines: row rules and inset rings */
@@ -66,7 +68,9 @@
   --color-ui: var(--ui);
   --color-ink-strong: var(--ink-strong);
   --color-dim: var(--dim);
-  --color-value: var(--value);
+
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
 
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);
