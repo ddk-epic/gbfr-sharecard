@@ -104,7 +104,7 @@ export function TraitChecklist({
                           {level}
                         </span>
                         <span className="font-sans text-[0.72em]">
-                          /
+                          <span className="pr-px pl-0.5">/</span>
                           <span className="inline-block min-w-[2ch] text-right tabular-nums">
                             {max}
                           </span>

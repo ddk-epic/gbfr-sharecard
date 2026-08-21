@@ -20,8 +20,8 @@
   --ink-strong: #0e3348; /* headings, buttons, pager arrows */
   --dim: #5f7188; /* muted and secondary text */
 
-  --ok: #1f8a5c; /* success */
-  --warn: #c2531f; /* warning */
+  --ok: #13ad6d; /* success */
+  --warn: #ef9815; /* warning */
 
   --line: #c3d4e4; /* panel and container borders */
   --line-soft: #dbe6f0; /* inner hairlines: row rules and inset rings */
@@ -49,7 +49,7 @@
   --deep-4: #10719c;
   --deep-5: #0a5d86;
   --deep-6: #053f63;
-  --deep-7: #04304f; /* only .styleCol goes this far currently */
+  --deep-7: #04304f;
   --deep-8: #02203a;
 
   /* what sits on any surface painted from that ramp - the .styleCol panel and

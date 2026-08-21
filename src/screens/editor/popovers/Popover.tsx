@@ -184,7 +184,7 @@ function Scrim({
 /** Popover section label, small and quiet: the panels are dense. */
 export function PopoverHeading({ children }: { children: ReactNode }) {
   return (
-    <h4 className="text-dim mb-1.5 text-[0.85em] font-bold tracking-[0.09em] uppercase">
+    <h4 className="text-dim mb-1.5 text-[0.85em] tracking-[0.09em] uppercase">
       {children}
     </h4>
   );
