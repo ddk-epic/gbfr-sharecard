@@ -13,7 +13,7 @@ import { SummonsPopover } from "@/screens/editor/popovers/SummonsPopover";
 import { EmptySlot } from "@/screens/editor/controls";
 import { BonusIconStrut } from "@/components/build/BonusIcon";
 import { EditOverlay } from "@/components/ui";
-import { traitIconBox } from "@/components/build/TraitIcon";
+import { TraitIconStrut } from "@/components/build/TraitIcon";
 
 const DESIGN_WIDTH = 560;
 const ZOOM = EDITOR_ZOOM;
@@ -91,12 +91,12 @@ export function SkillsPane({ build, onChange }: PaneProps) {
               </div>
             ),
             trait: (
-              <div className="text-dim/70 flex min-w-0 items-center">
+              <div className="text-dim/70 flex min-w-0 items-center text-xl">
                 <span
                   aria-hidden
                   className="w-0 flex-none overflow-hidden pl-1"
                 >
-                  <span className={`block ${traitIconBox(18)}`} />
+                  <TraitIconStrut className="block" />
                 </span>
                 <span className="text-base tracking-[0.08em] uppercase">
                   no trait

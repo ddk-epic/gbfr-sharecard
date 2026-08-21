@@ -81,7 +81,7 @@ export function WeaponPopover({
                 }`}
                 onClick={() => pickPoolTrait(ordinal, trait)}
               >
-                <TraitIcon trait={trait} size="em" placeholder />
+                <TraitIcon trait={trait} placeholder />
                 <span className="min-w-0 flex-1">{traitName(trait)}</span>
               </button>
             ))}

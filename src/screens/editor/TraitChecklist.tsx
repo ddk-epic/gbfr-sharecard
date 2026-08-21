@@ -65,7 +65,7 @@ export function TraitChecklist({
     <div className="font-med absolute inset-y-0 left-[calc(100%+2px)] z-3">
       <div
         data-popover-lit
-        className="border-line flex max-h-full w-85 flex-col rounded-lg border bg-white/90 pt-3.25 pb-0.5 pl-3.5 shadow-[0_10px_34px_rgba(23,60,90,0.3)]"
+        className="border-line flex max-h-full w-82 flex-col rounded-lg border bg-white/90 pt-3.25 pb-0.5 pl-3.5 shadow-[0_10px_34px_rgba(23,60,90,0.3)]"
         style={{ zoom: EDITOR_ZOOM }}
       >
         <Heading
@@ -82,7 +82,7 @@ export function TraitChecklist({
             <X size={20} aria-hidden />
           </button>
         </Heading>
-        <div className="min-h-0 flex-1 overflow-y-scroll pt-1.5 pr-1.5 text-base">
+        <div className="min-h-0 flex-1 overflow-y-scroll pt-2.5 pr-1.5 text-xl">
           {TRAIT_CATEGORIES.map((group) => {
             const rows = groups.get(group)!;
             if (rows.length === 0) return null;
@@ -97,12 +97,12 @@ export function TraitChecklist({
                     <TraitIcon trait={trait} placeholder />
                     <span className="min-w-0 flex-1">{traitName(trait)}</span>
                     <span className="flex flex-none items-baseline gap-1">
-                      <span className="font-sans text-[0.8em]">Lvl</span>
+                      <span className="font-sans text-[0.72em]">Lvl</span>
                       <div className={levelTone(level, max, booster)}>
                         <span className="inline-block min-w-[2ch] text-right tabular-nums">
                           {level}
                         </span>
-                        <span className="font-sans text-[0.8em]">
+                        <span className="font-sans text-[0.72em]">
                           /
                           <span className="inline-block min-w-[2ch] text-right tabular-nums">
                             {max}

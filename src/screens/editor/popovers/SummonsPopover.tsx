@@ -104,7 +104,7 @@ export function SummonsPopover({
             >
               <ChevronLeft size={18} aria-hidden />
             </button>
-            <TraitIcon trait={trait} size="em" placeholder />
+            <TraitIcon trait={trait} placeholder />
             <span className="min-w-0 flex-1 text-[1em] font-semibold">
               {traitName(trait)}
             </span>

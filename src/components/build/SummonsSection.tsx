@@ -8,7 +8,7 @@ import {
 } from "@/assets/art-metrics";
 import { summonById } from "@/catalog";
 import { traitName } from "@/domain/naming";
-import { TraitIcon, traitIconBox } from "@/components/build/TraitIcon";
+import { TraitIcon, TraitIconStrut } from "@/components/build/TraitIcon";
 import { Heading, SectionPanel, nameTracking } from "@/components/ui";
 import { BONUS_ICON_EM, BonusIconStrut, BonusLine } from "./BonusIcon";
 import { LvlDisplay } from "./LvlDisplay";
@@ -59,8 +59,8 @@ const CELL_LAYOUT: Record<
 
 const summonName = (slot: SummonSlot) => summonById.get(slot.summonId)?.name;
 
-// Trait glyph/Lvl are preset to 16/18/22.
-const TRAIT_ICON = 18;
+/** Set on the row, not the label: the trait glyph scales off it. */
+const TRAIT_ROW = "flex min-w-0 items-center gap-1 text-xl";
 
 const BONUS_ROW = "flex min-w-0 items-center gap-1.25 pl-1 text-[18px]";
 
@@ -95,10 +95,10 @@ function SummonNameBand({ slot }: { slot: SummonSlot }) {
 function TraitRow({ slot }: { slot: SummonSlot }) {
   const traitLabel = traitName(slot.trait);
   return (
-    <div className="flex min-w-0 items-center gap-1">
-      <TraitIcon trait={slot.trait} size={TRAIT_ICON} />
+    <div className={TRAIT_ROW}>
+      <TraitIcon trait={slot.trait} />
       <span
-        className="font-med text-ui text-xl whitespace-nowrap"
+        className="font-med text-ui whitespace-nowrap"
         style={{ letterSpacing: nameTracking(traitLabel) }}
       >
         {traitLabel}
@@ -156,14 +156,12 @@ function defaultCompactEmpty(): { name: ReactNode; trait: ReactNode } {
       </div>
     ),
     trait: (
-      <div className="flex min-w-0 items-center gap-1">
-        {/* Strut: the real row's text-xl label sets its height, not the icon. */}
-        <span aria-hidden className="w-0 overflow-hidden text-xl select-none">
+      <div className={TRAIT_ROW}>
+        {/* Strut: the real row's label sets its height, not the icon. */}
+        <span aria-hidden className="w-0 overflow-hidden select-none">
           &nbsp;
         </span>
-        <span
-          className={`bg-slanted-bar flex-none rounded-sm ${traitIconBox(TRAIT_ICON)}`}
-        />
+        <TraitIconStrut className="bg-slanted-bar rounded-sm" />
         <span className="bg-slanted-bar h-3.5 w-28 rounded-sm" />
       </div>
     ),
