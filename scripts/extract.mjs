@@ -245,14 +245,14 @@ if (unreachableRolls.length)
   );
 
 // A character trait is never freely offerable as a second trait, however wide
-// synthesis gets. Each style owns two paired traits and a Warpath, and the pair
-// is the only character combination that exists: one of the two can follow the
+// synthesis gets. Each character owns two paired traits and a Warpath, and the
+// pair is the only combination that exists: one of the two can follow the
 // other, in either order. A Warpath leads only - every `Warpath+` rolls its
 // second from lot 15 - and so do Ain and the two Boundaries.
 // The pairing is read off the gems that carry two character traits at once (the
-// `_90` awakenings), which is exactly 28, one per style. Deriving it from the
-// `SKILL_<style>_00/_01` key order would miss the six DLC styles, whose `_00`
-// and `_02` rows carry unresolved key hashes.
+// `_90` awakenings), which is exactly 28, one per character. Deriving it from
+// the `SKILL_<n>_00/_01` key order would miss the six DLC characters, whose
+// `_00` and `_02` rows carry unresolved key hashes.
 const characterKeys = new Set(characterByKey.keys());
 const pairedWith = new Map();
 for (const gem of gems) {
@@ -261,11 +261,11 @@ for (const gem of gems) {
   pairedWith.set(gem.SkillId1, gem.SkillId2);
   pairedWith.set(gem.SkillId2, gem.SkillId1);
 }
-const styles = new Set(
+const characters = new Set(
   [...pairedWith.keys()].map((key) => characterByKey.get(key)),
 );
-if (styles.size !== 28)
-  throw new Error(`expected 28 paired styles, found ${styles.size}`);
+if (characters.size !== 28)
+  throw new Error(`expected 28 paired characters, found ${characters.size}`);
 
 // So the free second-trait pool is the character-locked traits taken back out.
 for (const key of characterKeys) secondKeys.delete(key);
@@ -408,7 +408,7 @@ const lots = Object.fromEntries(
   ]),
 );
 
-// One tuple per style, read off the same `_90` awakenings `pairedWith` came from.
+// One tuple per character, read off the same `_90` awakenings `pairedWith` came from.
 const pairs = [
   ...new Map(
     [...pairedWith].map(([key, partner]) => [
@@ -418,16 +418,16 @@ const pairs = [
   ).values(),
 ].sort();
 
-const traitsByStyle = {};
+const traitsByCharacter = {};
 for (const [key, playerId] of characterByKey) {
-  (traitsByStyle[playerId] ??= []).push(idByKey.get(key));
+  (traitsByCharacter[playerId] ??= []).push(idByKey.get(key));
 }
-for (const owned of Object.values(traitsByStyle)) owned.sort();
+for (const owned of Object.values(traitsByCharacter)) owned.sort();
 
 const sigilLots = {
   lots,
   pairs,
-  styles: Object.fromEntries(Object.entries(traitsByStyle).sort()),
+  characters: Object.fromEntries(Object.entries(traitsByCharacter).sort()),
 };
 
 const lotted = Object.values(lots).reduce((n, lot) => n + lot.traits.length, 0);

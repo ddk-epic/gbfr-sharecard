@@ -56,12 +56,13 @@ export type SigilLot = {
   traits: TraitId[];
 };
 
-/** `pairs` are the two traits of a style that may follow each other, one tuple
-    per style. `styles` keys a style's own traits by `Character.playerId`. */
+/** `pairs` are the two traits of a character that may follow each other, one
+    tuple per character. `characters` keys a character's own traits by
+    `Character.playerId`. */
 export type SigilLots = {
   lots: Record<SigilLotId, SigilLot>;
   pairs: [TraitId, TraitId][];
-  styles: Record<string, TraitId[]>;
+  characters: Record<string, TraitId[]>;
 };
 
 export type BonusTypeDef = {

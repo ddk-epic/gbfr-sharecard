@@ -263,7 +263,7 @@
     ["veterans-insight", "veterans-vision"],
     ["white-dragons-glory", "white-dragons-oath"]
   ],
-  "styles": {
+  "characters": {
     "PL0000": ["fearless-drive", "fearless-heart", "fearless-spirit"],
     "PL0200": ["guardians-conviction", "guardians-honor", "guardians-warpath"],
     "PL0300": [

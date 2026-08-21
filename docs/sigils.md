@@ -90,60 +90,60 @@ Categories are the colour groups. `Category` 1-5, with rarity, picks frame art -
 
 Every character sigil individually named - no generic _Warpath_, _Boundary_ or "character sigil" in the archive (third-party umbrella entries).
 
-Each character has a **style**, owning three traits keyed `SKILL_<style>_00/_01/_02`. **`_02` = Warpath slot, all 28 styles** - 26 name it "…'s Warpath", two name it _Fearless Heart_ (The Captain) and _Versalis Heart_ (Id). Structural slot, wording varies.
+Each character owns three traits keyed `SKILL_<n>_00/_01/_02`. **`_02` = Warpath slot, all 28 characters** - 26 name it "…'s Warpath", two name it _Fearless Heart_ (The Captain) and _Versalis Heart_ (Id). Structural slot, wording varies.
 
-Sigils: `GEEN_<style>_64`, Category 5, Rarity 5. Style's icon `cmn_icskill_05_pl<charid>` resolves style→character.
+Sigils: `GEEN_<n>_64`, Category 5, Rarity 5. The icon `cmn_icskill_05_pl<charid>` resolves the number to its character.
 
-| Style | Character   | Traits                                                        |
-| ----- | ----------- | ------------------------------------------------------------- |
-| 114   | The Captain | Fearless Drive · Spirit · Heart                               |
-| 115   | Katalina    | Guardian's Conviction · Honor · Warpath                       |
-| 116   | Rackam      | Helmsman's Navigation · Tenacity · Warpath                    |
-| 117   | Io          | Mage's Aspiration · Savvy · Warpath                           |
-| 118   | Eugen       | Veteran's Insight · Vision · Warpath                          |
-| 119   | Rosetta     | Rose's Blooming · Profusion · Warpath                         |
-| 120   | Ferry       | Phantasm's Concord · Harmony · Warpath                        |
-| 121   | Lancelot    | White Dragon's Oath · Glory · Warpath                         |
-| 122   | Vane        | Hero's Creed · Will · Warpath                                 |
-| 123   | Percival    | Lord's Procession · Ambition · Warpath                        |
-| 124   | Siegfried   | Dragonslayer's Dominance · Ingenuity · Warpath                |
-| 125   | Charlotta   | Holy Knight's Luster · Grandeur · Warpath                     |
-| 126   | Yodarha     | Swordmaster's Prowess · Art · Warpath                         |
-| 127   | Narmaya     | Butterfly's Grace · Valor · Warpath                           |
-| 128   | Ghandagoza  | Eternal Rage's Mettle · Ethos · Warpath                       |
-| 129   | Cagliostro  | Founder's Strategy · Truth · Warpath                          |
-| 130   | Id          | Versalis Foundation · Ignition · Heart                        |
-| 131   | Zeta        | Crimson's Clout · Flight · Warpath                            |
-| 132   | Vaseraga    | Ebony's Presence · Poise · Warpath                            |
-| 170   | Seofon      | Spirit Edge's Rally · Fury · Warpath · Seven-Star Boundary    |
-| 171   | Tweyen      | Dark Huntress's Volley · Surge · Warpath · Two-Crown Boundary |
-| 172   | Sandalphon  | Supreme Primarch's Awe · Nimbus · Warpath · Ain               |
-| 173   | Gallanza    | Gladiator's Frenzy · Top · Warpath                            |
-| 174   | Maglielle   | Bladequeen's Serenade · Circuit · Warpath                     |
-| 175   | Beatrix     | Ultramarine's Flash · Adversity · Warpath                     |
-| 176   | Eustace     | Thunderwolf's Recharge · Acuity · Warpath                     |
-| 177   | Fraux       | Enchantress's Blessing · Rhythm · Warpath                     |
-| 178   | Fediel      | The Black's Mark · Impulse · Warpath                          |
+| #   | Character   | Traits                                                        |
+| --- | ----------- | ------------------------------------------------------------- |
+| 114 | The Captain | Fearless Drive · Spirit · Heart                               |
+| 115 | Katalina    | Guardian's Conviction · Honor · Warpath                       |
+| 116 | Rackam      | Helmsman's Navigation · Tenacity · Warpath                    |
+| 117 | Io          | Mage's Aspiration · Savvy · Warpath                           |
+| 118 | Eugen       | Veteran's Insight · Vision · Warpath                          |
+| 119 | Rosetta     | Rose's Blooming · Profusion · Warpath                         |
+| 120 | Ferry       | Phantasm's Concord · Harmony · Warpath                        |
+| 121 | Lancelot    | White Dragon's Oath · Glory · Warpath                         |
+| 122 | Vane        | Hero's Creed · Will · Warpath                                 |
+| 123 | Percival    | Lord's Procession · Ambition · Warpath                        |
+| 124 | Siegfried   | Dragonslayer's Dominance · Ingenuity · Warpath                |
+| 125 | Charlotta   | Holy Knight's Luster · Grandeur · Warpath                     |
+| 126 | Yodarha     | Swordmaster's Prowess · Art · Warpath                         |
+| 127 | Narmaya     | Butterfly's Grace · Valor · Warpath                           |
+| 128 | Ghandagoza  | Eternal Rage's Mettle · Ethos · Warpath                       |
+| 129 | Cagliostro  | Founder's Strategy · Truth · Warpath                          |
+| 130 | Id          | Versalis Foundation · Ignition · Heart                        |
+| 131 | Zeta        | Crimson's Clout · Flight · Warpath                            |
+| 132 | Vaseraga    | Ebony's Presence · Poise · Warpath                            |
+| 170 | Seofon      | Spirit Edge's Rally · Fury · Warpath · Seven-Star Boundary    |
+| 171 | Tweyen      | Dark Huntress's Volley · Surge · Warpath · Two-Crown Boundary |
+| 172 | Sandalphon  | Supreme Primarch's Awe · Nimbus · Warpath · Ain               |
+| 173 | Gallanza    | Gladiator's Frenzy · Top · Warpath                            |
+| 174 | Maglielle   | Bladequeen's Serenade · Circuit · Warpath                     |
+| 175 | Beatrix     | Ultramarine's Flash · Adversity · Warpath                     |
+| 176 | Eustace     | Thunderwolf's Recharge · Acuity · Warpath                     |
+| 177 | Fraux       | Enchantress's Blessing · Rhythm · Warpath                     |
+| 178 | Fediel      | The Black's Mark · Impulse · Warpath                          |
 
-Styles 170-172 carry a **fourth** trait - Boundary (Seofon, Tweyen) or _Ain_ (Sandalphon).
+Keys 170-172 carry a **fourth** trait - Boundary (Seofon, Tweyen) or _Ain_ (Sandalphon).
 
-Style numbers not contiguous or in character order: 129 = Cagliostro (`pl1800`), 130 = Id (`pl1900`), 131-132 = Zeta (`pl1600`)/Vaseraga (`pl1700`). 133-168 in `SKILL_1xx` space = ordinary traits (_Catastrophe_, _Berserker_, _Greater Aegis_, _Alpha_/_Beta_/_Gamma_). Resolve style through the icon's `pl` id, never key arithmetic.
+Key numbers not contiguous or in character order: 129 = Cagliostro (`pl1800`), 130 = Id (`pl1900`), 131-132 = Zeta (`pl1600`)/Vaseraga (`pl1700`). 133-168 in `SKILL_1xx` space = ordinary traits (_Catastrophe_, _Berserker_, _Greater Aegis_, _Alpha_/_Beta_/_Gamma_). Resolve the character through the icon's `pl` id, never key arithmetic.
 
 ### The DLC six
 
-The DLC six carry hashed keys. Styles **173-178** (Gallanza, Maglielle, Beatrix, Eustace, Fraux, Fediel): all three traits in `skill`, but only `_01` has a resolved `SKILL_<style>_01` key. `_00`/`_02` rows keyed by **unresolved hash**:
+The DLC six carry hashed keys. Numbers **173-178** (Gallanza, Maglielle, Beatrix, Eustace, Fraux, Fediel): all three traits in `skill`, but only `_01` has a resolved `SKILL_<n>_01` key. `_00`/`_02` rows keyed by **unresolved hash**:
 
-| Style | `_00`                            | `_01`                               | `_02`                           |
-| ----- | -------------------------------- | ----------------------------------- | ------------------------------- |
-| 174   | `7B5B081D` Bladequeen's Serenade | `SKILL_174_01` Bladequeen's Circuit | `79266456` Bladequeen's Warpath |
+| #   | `_00`                            | `_01`                               | `_02`                           |
+| --- | -------------------------------- | ----------------------------------- | ------------------------------- |
+| 174 | `7B5B081D` Bladequeen's Serenade | `SKILL_174_01` Bladequeen's Circuit | `79266456` Bladequeen's Warpath |
 
 Rows present and complete (names, glyphs) - only key strings missing from the hash list. `Key LIKE 'SKILL_174_%'` finds one of three; `IconId1` `05_pl<charid>` finds all three.
 
-**Never enumerate a style's traits by key arithmetic.** Match on the glyph, or read pairs off the `_90` awakening gems.
+**Never enumerate a character's traits by key arithmetic.** Match on the glyph, or read pairs off the `_90` awakening gems.
 
 ## Awakening sigils
 
-35 sigils carry `CanOnlyHoldOne` (no duplicates). 28 = `GEEN_<style>_90`, one per style (_Mage's Awakening+_, _Guardian's Awakening+_). Rest are curio one-offs (_Crabby Resonance_, _Crabvestment Returns_, _Sumo Force_).
+35 sigils carry `CanOnlyHoldOne` (no duplicates). 28 = `GEEN_<n>_90`, one per character (_Mage's Awakening+_, _Guardian's Awakening+_). Rest are curio one-offs (_Crabby Resonance_, _Crabvestment Returns_, _Sumo Force_).
 
 `IsLuciliusGem`: three-value column - **1 on exactly three sigils** (_Alpha+_, _Beta+_, _Gamma+_), **2 on 199** (every character sigil and `_90` awakening). Boolean reading pulls in all 202.
 
@@ -195,7 +195,7 @@ A second slot is settled (not offered) when three conditions hold together:
 
 Drop any one and the slot reopens (a `Warpath+` rolls on lot 15; an awakening shares its trait with a rolling `+`; a generic `<Trait> V+` goes in the pot). Six traits satisfy all three: _Alpha_, _Beta_, _Gamma_ on _DMG Cap_; _Ain_, _Seven-Star Boundary_, _Two-Crown Boundary_ on _Regen_. `IsLuciliusGem` alone would name the first three, miss the other three.
 
-Editor fills the second slot the moment the first is picked, pool collapses to one entry - _Ain_ is in `boundary` and listed under its style (Sandalphon offered it, nobody else), _Regen_ lands automatically. Pinning a second says nothing about the trait following anything - all six still lead only.
+Editor fills the second slot the moment the first is picked, pool collapses to one entry - _Ain_ is in `boundary` and listed under its character (Sandalphon offered it, nobody else), _Regen_ lands automatically. Pinning a second says nothing about the trait following anything - all six still lead only.
 
 ## The second-trait pool
 
@@ -207,7 +207,7 @@ The second-trait pool is 80 open, plus one paired. Rarity-5 `+` sigils ("legenda
 | rolled from a lot | 197  | 72              |
 | neither           | 3    | -               |
 
-Union = 103. Fixed side contributes **31 the roll pool never reaches**: 28 character traits (every style's `_01`, paired by the awakening sigils: _Guardian's Awakening+_ = _Conviction_ + _Honor_), plus _Divergence_ from _War Elemental+_, _Crabmiration_/_Crabvestment Returns_ from crab curios.
+Union = 103. Fixed side contributes **31 the roll pool never reaches**: 28 character traits (every character's `_01`, paired by the awakening sigils: _Guardian's Awakening+_ = _Conviction_ + _Honor_), plus _Divergence_ from _War Elemental+_, _Crabmiration_/_Crabvestment Returns_ from crab curios.
 
 Synthesis output's first trait is drawn from all four input traits, second from the remaining three - any **open** trait an eligible sigil carries can land second (draw is random and repeatable, every combination eventually comes out). Resolving eligible sigils' own traits, fixed seconds, roll lots, dropping character-locked ones: **80**.
 
@@ -217,15 +217,15 @@ The 72 that roll are a strict subset of the 80.
 
 ### Character traits
 
-Character traits do not join that pool. A character trait is never freely offerable behind an arbitrary first trait. Each style owns **two paired traits and a Warpath** - the only character combination that exists:
+Character traits do not join that pool. A character trait is never freely offerable behind an arbitrary first trait. Each character owns **two paired traits and a Warpath** - the only combination that exists:
 
 - one of two paired traits may follow the other, **in either order**;
 - a **Warpath leads only** - never follows;
 - so do _Ain_ and the two Boundaries.
 
-56 paired traits (two per style), 28 Warpaths, 3 loners = 87 character-locked traits. Only the 56 can sit second, and only behind their own partner.
+56 paired traits (two per character), 28 Warpaths, 3 loners = 87 character-locked traits. Only the 56 can sit second, and only behind their own partner.
 
-Pairing read off gems carrying **two** character traits at once (`_90` awakenings, exactly 28, one per style). Deriving from `SKILL_<style>_00/_01` key order instead misses the six DLC styles (unresolved key hashes on `_00`/`_02`).
+Pairing read off gems carrying **two** character traits at once (`_90` awakenings, exactly 28, one per character). Deriving from `SKILL_<n>_00/_01` key order instead misses the six DLC characters (unresolved key hashes on `_00`/`_02`).
 
 Duplicates legal: synthesis can land the same trait in both slots.
 
@@ -307,16 +307,16 @@ A lot's `eligibleSecondTraits` names the **lots** its second slot accepts - "ope
 
 Per-trait (not per-lot) facts beside the lots:
 
-- `pairs` - 28 tuples, the two traits of a style that may follow each other, read off the `_90` gems.
-- `styles` - a style's own traits, keyed by `Character.playerId`.
+- `pairs` - 28 tuples, the two traits of a character that may follow each other, read off the `_90` gems.
+- `characters` - a character's own traits, keyed by `Character.playerId`.
 
 Three traps this shape avoids:
 
 - `firstSlot` reads **`SkillId1` only**. Reading `SkillId2` too happens to give the same 188 today (no trait is second-only) - but would offer a second-only trait as a first trait the moment one exists.
 - Leading and following are **independent**. `firstTraitOnly` and `standard` behave identically in a first slot, identical second pool - they differ only in whether the trait may follow, downstream of synthesis refusing it.
-- "Open" means "follows _anything_" - no style trait is in `standard` or `synthesisOnly`. A style trait's eligibility is conditional, lives in `pairs`.
+- "Open" means "follows _anything_" - no character trait is in `standard` or `synthesisOnly`. A character trait's eligibility is conditional, lives in `pairs`.
 
-`standard` = exactly the wrightstone roll pool; open pool is a strict superset. `extract.mjs` throws if that stops holding, if lots stop covering all 200 traits, or pairings don't cover exactly 28 styles.
+`standard` = exactly the wrightstone roll pool; open pool is a strict superset. `extract.mjs` throws if that stops holding, if lots stop covering all 200 traits, or pairings don't cover exactly 28 characters.
 
 ### Editor trait pools
 

@@ -94,12 +94,12 @@ describe("sigil lots", () => {
   });
 });
 
-describe("pairs and styles", () => {
-  test("one pair per style, and both halves belong to it", () => {
+describe("pairs and characters", () => {
+  test("one pair per character, and both halves belong to it", () => {
     expect(SIGIL_LOTS.pairs).toHaveLength(28);
-    expect(Object.keys(SIGIL_LOTS.styles)).toHaveLength(28);
+    expect(Object.keys(SIGIL_LOTS.characters)).toHaveLength(28);
     for (const [one, other] of SIGIL_LOTS.pairs) {
-      const owner = Object.entries(SIGIL_LOTS.styles).find(([, owned]) =>
+      const owner = Object.entries(SIGIL_LOTS.characters).find(([, owned]) =>
         owned.includes(one),
       );
       expect(owner, one).toBeDefined();
@@ -107,17 +107,17 @@ describe("pairs and styles", () => {
     }
   });
 
-  test("a style owns three traits, or four with a Boundary", () => {
-    for (const [playerId, owned] of Object.entries(SIGIL_LOTS.styles)) {
+  test("a character owns three traits, or four with a Boundary", () => {
+    for (const [playerId, owned] of Object.entries(SIGIL_LOTS.characters)) {
       const boundaries = owned.filter((id) => lot("boundary").includes(id));
       expect(owned, playerId).toHaveLength(3 + boundaries.length);
       expect(boundaries.length, playerId).toBeLessThanOrEqual(1);
     }
   });
 
-  test("no style trait is ever freely offered as a second", () => {
+  test("no character trait is ever freely offered as a second", () => {
     const open = [...lot("standard"), ...lot("synthesisOnly")];
-    const owned = new Set(Object.values(SIGIL_LOTS.styles).flat());
+    const owned = new Set(Object.values(SIGIL_LOTS.characters).flat());
     expect(open.filter((id) => owned.has(id))).toEqual([]);
   });
 });
@@ -125,13 +125,13 @@ describe("pairs and styles", () => {
 describe("sigil trait pool", () => {
   test("every playable character owns sigils", () => {
     for (const entry of CHARACTERS) {
-      const owned = SIGIL_LOTS.styles[entry.playerId] ?? [];
+      const owned = SIGIL_LOTS.characters[entry.playerId] ?? [];
       expect(owned.length, entry.id).toBeGreaterThanOrEqual(3);
     }
   });
 
   test("a pool is the open traits plus that character's own", () => {
-    const owned = new Set(Object.values(SIGIL_LOTS.styles).flat());
+    const owned = new Set(Object.values(SIGIL_LOTS.characters).flat());
     const openTraits = sigilTraitPool(character("io")).filter(
       (trait) => !owned.has(trait.id),
     ).length;
@@ -140,14 +140,16 @@ describe("sigil trait pool", () => {
       const own = pool.filter((trait) => owned.has(trait.id));
       expect(pool).toHaveLength(openTraits + own.length);
       for (const trait of own)
-        expect(SIGIL_LOTS.styles[entry.playerId], trait.id).toContain(trait.id);
+        expect(SIGIL_LOTS.characters[entry.playerId], trait.id).toContain(
+          trait.id,
+        );
     }
   });
 
   test("Gran and Djeeta share The Captain's sigils", () => {
     const captain = CHARACTERS.filter((c) => c.playerId === "PL0000");
     expect(captain.map((c) => c.id)).toEqual(["gran", "djeeta"]);
-    expect(SIGIL_LOTS.styles.PL0000).toHaveLength(3);
+    expect(SIGIL_LOTS.characters.PL0000).toHaveLength(3);
   });
 
   test("no character sees another's sigils", () => {
@@ -185,7 +187,7 @@ describe("second trait pool", () => {
   });
 
   test("a Warpath leads only - it never follows anything", () => {
-    const owned = Object.values(SIGIL_LOTS.styles).flat();
+    const owned = Object.values(SIGIL_LOTS.characters).flat();
     const paired = new Set(SIGIL_LOTS.pairs.flat());
     const leaders = owned.filter((id) => !paired.has(id));
     // 28 Warpath slots, plus Ain and the two Boundaries.

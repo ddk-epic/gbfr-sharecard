@@ -33,7 +33,7 @@ Header column names aren't always right: `limit_bonus_param` labels a stat-type 
 
 Tables hold keys; a trait row carries `Name` = `TXT_SKILL_000_00`; the string `ATK` comes from the `.msg` side.
 
-The two can disagree: six character styles have all three trait rows in `skill` but only one resolved key between them - a key-filtered query finds one row of three. See [sigils.md](sigils.md#the-dlc-six).
+The two can disagree: six characters have all three trait rows in `skill` but only one resolved key between them - a key-filtered query finds one row of three. See [sigils.md](sigils.md#the-dlc-six).
 
 ## The tables behind these docs
 
