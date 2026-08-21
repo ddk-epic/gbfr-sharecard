@@ -133,23 +133,25 @@ export function Editor({
             ref={windowRef}
             className={`relative h-full flex-none ${WINDOW_MIN_WIDTH[pane]}`}
           >
-            {pane === "skills" && <SkillsPane {...paneProps} />}
-            {pane === "gear" && <GearPane {...paneProps} />}
-            {pane === "mt" && <MasterTraitsPane {...paneProps} />}
-            {pane !== "mt" &&
-              (checklistOpen ? (
-                <TraitChecklist
-                  build={build}
-                  onClose={() => setChecklistOpen(false)}
-                />
-              ) : (
+            <div className="relative h-full w-fit">
+              {pane === "skills" && <SkillsPane {...paneProps} />}
+              {pane === "gear" && <GearPane {...paneProps} />}
+              {pane === "mt" && <MasterTraitsPane {...paneProps} />}
+              {pane !== "mt" && !checklistOpen && (
                 <button
                   className="from-band to-band-soft text-ink-strong absolute top-2.5 left-full z-3 cursor-pointer rounded-r-lg bg-linear-to-b px-1.75 py-3 text-[14px] font-bold tracking-[0.08em] shadow-[2px_2px_10px_rgba(23,60,90,0.25)] [writing-mode:vertical-rl] hover:from-[#8cc2dd] hover:to-[#b0d2e5]"
                   onClick={() => setChecklistOpen(true)}
                 >
-                  Σ Checklist
+                  Checklist
                 </button>
-              ))}
+              )}
+            </div>
+            {pane !== "mt" && checklistOpen && (
+              <TraitChecklist
+                build={build}
+                onClose={() => setChecklistOpen(false)}
+              />
+            )}
           </div>
           <button
             className={`${ARROW_BUTTON} justify-end pr-27.5 hover:bg-linear-270 hover:from-white/40 hover:to-white/0`}
