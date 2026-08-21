@@ -23,15 +23,12 @@ export function TraitPicker({
   heading = "Trait",
   disabled = false,
   onPick,
-  trailing,
 }: {
   pool: TraitDef[];
   heading?: string;
   /** Disables the rows only. Filtering and scrolling still work. */
   disabled?: boolean;
   onPick: (trait: TraitId) => void;
-  /** Rendered at the right of each row, e.g. a picked count. */
-  trailing?: (trait: TraitDef) => React.ReactNode;
 }) {
   const [query, setQuery] = useState("");
   const needle = query.trim().toLowerCase();
@@ -90,7 +87,6 @@ export function TraitPicker({
                     >
                       <TraitIcon trait={trait.id} size="em" placeholder />
                       <span className="min-w-0 flex-1">{trait.name}</span>
-                      {trailing?.(trait)}
                     </button>
                   ))}
                 </div>
