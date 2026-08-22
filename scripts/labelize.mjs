@@ -254,39 +254,43 @@ export function perkRankOf(description) {
 // outside knowledge (game mechanics, or a deliberate call to drop a value) to
 // reach, not a sentence shape another cell will ever repeat. Applied after
 // derivation, so --force can reseed everything else without losing these.
+// Keys are current masterTraits.cells ids (style.rank.n). A prior schema
+// numbered cells differently (continuously per style rather than restarting
+// per rank); these were re-keyed by matching each override's label text
+// against the committed file to find where it actually lands today.
 const OVERRIDES = {
   "narmaya.json": {
-    "insight.r2.7": "Zone Attack Charge Speed +20%",
+    "insight.r2.3": "Zone Attack Charge Speed +20%",
   },
   "cagliostro.json": {
-    "insight.r2.5": "Collapse ++ ATK +5% Cap +10%",
-    "insight.r3.13": "Collapse ++ ATK +5% Cap +10%",
-    "insight.r3.14": "Combo Finisher Debuff +10%",
-    "essence.r3.15": "Instant Collapse: Cap +30%",
-    "crux.r2.5": "Rhizomata: Phantasmagoria to all",
-    "crux.r2.6": "Phantasmagoria Dur +10%",
-    "crux.r3.14": "Phantasmagoria grants Cap↑", // value varies by tier, not worth showing
-    "crux.r3.15": "Collapse ++: 20% chance to reset CD",
-    "crux.ex.21": "Phantasmagoria grants Cap↑",
+    "insight.r2.1": "Collapse ++ ATK +5% Cap +10%",
+    "insight.r3.1": "Collapse ++ ATK +5% Cap +10%",
+    "insight.r3.2": "Combo Finisher Debuff +10%",
+    "essence.r3.3": "Instant Collapse: Cap +30%",
+    "crux.r2.1": "Rhizomata: Phantasmagoria to all",
+    "crux.r2.2": "Phantasmagoria Dur +10%",
+    "crux.r3.2": "Phantasmagoria grants Cap↑", // value varies by tier, not worth showing
+    "crux.r3.3": "Collapse ++: 20% chance to reset CD",
+    "crux.ex.1": "Phantasmagoria grants Cap↑",
   },
   "rackam.json": {
-    "essence.ex.23": "Wild Gunsmoke: add. ATK +5% / Dur +10%", // two effects in one cell
-    "crux.r2.5": "Post-Collateral: HP +10%",
+    "essence.ex.3": "Wild Gunsmoke: add. ATK +5% / Dur +10%", // two effects in one cell
+    "crux.r2.1": "Post-Collateral: HP +10%",
   },
   "charlotta.json": {
-    "insight.ex.21": "Noble Order: +50k dmg buffer",
-    "insight.r3.14": "Noble Order ATK +10% Cap +10%",
-    "essence.r3.13": "Diamond Cutter Cap +20%/lvl",
-    "essence.r3.15": "Charged block window +10%",
-    "essence.ex.21": "Diamond Cutter Cap +20%/lvl",
-    "crux.r3.15": "Enhanced Noble Stance: Cap +30%",
+    "insight.ex.1": "Noble Order: +50k dmg buffer",
+    "insight.r3.2": "Noble Order ATK +10% Cap +10%",
+    "essence.r3.1": "Diamond Cutter Cap +20%/lvl",
+    "essence.r3.3": "Charged block window +10%",
+    "essence.ex.1": "Diamond Cutter Cap +20%/lvl",
+    "crux.r3.3": "Enhanced Noble Stance: Cap +30%",
   },
   "io.json": {
-    "essence.ex.21": "Freeze+Lightning Debuff +10%",
+    "essence.ex.1": "Freeze+Lightning Debuff +10%",
   },
   "katalina.json": {
-    "crux.r2.5": "Blade Blue ATK +3% Cap +5%/lvl",
-    "crux.r3.14": "Blade Blue ATK +3% Cap +5%/lvl",
+    "crux.r2.1": "Blade Blue ATK +3% Cap +5%/lvl",
+    "crux.r3.2": "Blade Blue ATK +3% Cap +5%/lvl",
   },
 };
 
@@ -301,48 +305,72 @@ if (entryPoint && import.meta.url === pathToFileURL(entryPoint).href) {
   const dry = process.argv.includes("--dry");
   const dir = new URL("../src/catalog/characters/", import.meta.url);
 
-  // keep the hand-authored layout: one cell per line, scalar arrays inline
-  const serialize = (value) =>
-    JSON.stringify(value, null, 2)
-      .replace(
-        /\{\n\s*([^{}[\]]+?)\n\s*\}/g,
-        (_, body) => `{ ${body.trim().replace(/\s*\n\s*/g, " ")} }`,
-      )
-      .replace(
-        /\[\n\s*((?:\d+,\n\s*)*\d+)\n\s*\]/g,
-        (_, body) => `[${body.replace(/\s*\n\s*/g, " ")}]`,
-      ) + "\n";
+  // keep the hand-authored layout: one cell per line, scalar arrays inline,
+  // a blank line between each style's block of cells
+  const serialize = (value) => {
+    const text =
+      JSON.stringify(value, null, 2)
+        .replace(
+          /\{\n\s*([^{}[\]]+?)\n\s*\}/g,
+          (_, body) => `{ ${body.trim().replace(/\s*\n\s*/g, " ")} }`,
+        )
+        .replace(
+          /\[\n\s*((?:\d+,\n\s*)*\d+)\n\s*\]/g,
+          (_, body) => `[${body.replace(/\s*\n\s*/g, " ")}]`,
+        )
+        // masterTraits.titles is hand-formatted one key per line; the
+        // generic collapse above flattens it, so put it back
+        .replace(
+          /"titles": \{ "insight": ("[^"]*"), "essence": ("[^"]*"), "crux": ("[^"]*") \}/,
+          (_, insight, essence, crux) =>
+            `"titles": {\n      "insight": ${insight},\n      "essence": ${essence},\n      "crux": ${crux}\n    }`,
+        ) + "\n";
+    const out = [];
+    let lastStyle = null;
+    for (const line of text.split("\n")) {
+      const gate = line.match(/^\s*"(insight|essence|crux)\./);
+      if (gate) {
+        if (lastStyle && gate[1] !== lastStyle) out.push("");
+        lastStyle = gate[1];
+      }
+      out.push(line);
+    }
+    return out.join("\n");
+  };
 
   for (const file of (await readdir(dir)).filter((f) => f.endsWith(".json"))) {
     const path = new URL(file, dir);
     const character = JSON.parse(await readFile(path));
     const selfName = character.id[0].toUpperCase() + character.id.slice(1);
     const overrides = OVERRIDES[file] ?? {};
+    const cells = character.masterTraits?.cells;
+    if (!cells) continue;
     let derived = 0,
       kept = 0,
       overridden = 0;
     const long = [];
-    for (const ranks of Object.values(character.masterTraits))
-      for (const [key, cells] of Object.entries(ranks)) {
-        if (key === "title") continue;
-        for (const cell of cells) {
-          if (overrides[cell.id]) {
-            cell.label = overrides[cell.id];
-            overridden++;
-          } else if (cell.label && !force) kept++;
-          else {
-            cell.label = labelize(cell.description, selfName);
-            derived++;
-          }
-          // Legacy labels carried the gate as a "(I)" prefix; it now lives in
-          // perkRank, read from the description (the archive truth).
-          cell.label = cell.label.replace(/^\(I{1,3}\)\s*/, "");
-          const rank = perkRankOf(cell.description);
-          if (rank) cell.perkRank = rank;
-          else delete cell.perkRank;
-          if (cell.label.length > SOFT) long.push(cell.label);
-        }
+    for (const [id, cell] of Object.entries(cells)) {
+      let label;
+      if (overrides[id]) {
+        label = overrides[id];
+        overridden++;
+      } else if (cell.label && !force) {
+        label = cell.label;
+        kept++;
+      } else {
+        label = labelize(cell.description, selfName);
+        derived++;
       }
+      // Legacy labels carried the gate as a "(I)" prefix; it now lives in
+      // perkRank, read from the description (the archive truth).
+      label = label.replace(/^\(I{1,3}\)\s*/, "");
+      const rank = perkRankOf(cell.description);
+      // key order: label, description, perkRank
+      cells[id] = rank
+        ? { label, description: cell.description, perkRank: rank }
+        : { label, description: cell.description };
+      if (label.length > SOFT) long.push(label);
+    }
     if (!dry) await writeFile(path, serialize(character));
     console.log(
       `${file}: ${derived} derived, ${kept} kept, ${overridden} overridden${dry ? " (dry run)" : ""}`,
